@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Login</title>
+    </head>
+    <body>
+        <table class="login-table">
+            <tr>
+                <th colspan="2">Login</th>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td><input class="input-text" type="text" [(ngModel)]="username"></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input class="input-text" type="password" [(ngModel)]="password"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="align-right"><button class="login-button" (click)="sendLoginRequest()">Login</button></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="align-right">{{response}}</td>
+            </tr>
+        </table>
+    </body>
+</html>
