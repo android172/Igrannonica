@@ -1,0 +1,1 @@
+Napraviti mini aplikaciju gde se povezuje .net i angular. Smestiti je u folder sandbox/miniprojekat/ime i prezime.
