@@ -1,0 +1,21 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Departman ID</th>
+            <th>Naziv Departmana</th>
+            <th>Opcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dataItem of DepartmentList">
+            <td>{{dataItem.DepartmanId}}</td>
+            <td>{{dataItem.Naziv}}</td>
+            <td>
+                <button type="button" class="btn btn-light mr-1">Edit</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-light mr-1">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
