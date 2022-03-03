@@ -1,0 +1,51 @@
+<!-- Button trigger modal -->
+<div class="d-flex justify-content-center">
+<button type="button" class="m-1 btn btn-light btn-outline-primary float-right" (click)="addDugme()"
+data-bs-toggle="modal" data-bs-target="#exampleModal" data-backdrop="static" data-keyboard="false">Dodaj film</button></div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl container mmm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{ModalTitle}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeDugme()"></button>
+        </div>
+        <div class="modal-body">
+          <app-add-edit [movie]="movie" *ngIf="ActivateAddEdit"></app-add-edit>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row pretraga">
+    <input [(ngModel)]="filmNazivFilter" class="form-control" (keyup)="filter()" placeholder="Pretraga po nazivu">
+  </div>
+
+<div id="pom"></div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Film ID</th>
+            <th>Naziv</th>
+            <th>Zanr</th>
+            <th>Ocena</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let film of FilmList">
+            <td>{{film.filmId}}</td>
+            <td>{{film.filmNaziv}}</td>
+            <td>{{film.filmZanr}}</td>
+            <td>{{film.filmOcena}}</td>
+            <td>
+                <button type="button" class="m-1 btn btn-light btn-outline-primary klasa"
+                (click)="editDugme(film)" data-bs-toggle="modal" data-bs-target="#exampleModal" 
+                data-backdrop="static" data-keyboard="false">Izmeni</button>
+
+                <button type="button" class="m-1 btn btn-light btn-outline-primary" (click)="deleteDugme(film)">Obrisi</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
