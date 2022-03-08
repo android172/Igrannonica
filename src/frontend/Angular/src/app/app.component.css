@@ -12,8 +12,8 @@
 
 #naslov img
 {
-    width: 329px;
-    height: 128px;
+    width: 470px;
+    height: 182px;
 }
 #naslov
 {
@@ -31,7 +31,7 @@
 {
     margin-top: auto;
     margin-bottom: auto;
-    margin-right: 30px;
+    margin-right: 40px;
 }
 #pomoc
 {
@@ -45,8 +45,8 @@
 
 #prijava, #pomocDugme1
 {
-    width: 90px;
-    height: 40px;
+    width: 100px;
+    height: 50px;
 
     background: rgba(229, 229, 229, 0.25);
     border: 3px solid #E5E5E5;
@@ -56,15 +56,15 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-style: normal;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 33px;
     color: #E5E5E5;
 }
 
 #registracija, #pomocDugme2
 {
-    width: 110px;
-    height: 40px;
+    width: 120px;
+    height: 50px;
 
     background: rgba(243, 48, 95, 0.46);
     border: 3px solid rgba(243, 48, 95, 0.85);
@@ -74,7 +74,7 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-style: normal;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 33px;
     color: #FFFFFF;
 }
