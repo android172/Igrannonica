@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Data;
 
-namespace Aplikacija
+namespace dotNet
 {
     public class DBKonekcija
     {
