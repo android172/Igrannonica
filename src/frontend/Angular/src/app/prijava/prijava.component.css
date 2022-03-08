@@ -1,5 +1,21 @@
-p
-{
-    color: black;
-    font-size: 30px;
+.box{
+    width: 380px;
+    height: 500px;
+    margin: auto;
+}
+
+#divbox{
+    width: 380px;
+    height: 500px;
+    padding: 40px;
+    text-align: center;
+}
+
+#koriloz{
+    color: white;
+    
+}
+
+p,a{
+    color: white;
 }
