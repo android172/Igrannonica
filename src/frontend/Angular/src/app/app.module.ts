@@ -7,8 +7,7 @@ import { PocetnaStranaComponent } from './pocetna-strana/pocetna-strana.componen
 import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderComponent } from './header/header.component';
-
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
     HeaderComponent,
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule
