@@ -91,7 +91,7 @@ input:focus, textarea:focus, select:focus{
     opacity: 1;
     color: #D74971;
     margin: auto;
-    
+    float: left;
 }
 #linijaD{
 
