@@ -8,5 +8,6 @@
         public string Sifra { get; set; }
         public string Sifra2 { get; set; }
         public string Email { get; set; }
+        public string Telefon { get; set; }
     }
 }

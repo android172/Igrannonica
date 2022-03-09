@@ -16,7 +16,7 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-
+        DBKonekcija db = new DBKonekcija();
         public AuthController(IConfiguration config)
         {
             _config = config;
@@ -55,6 +55,10 @@ namespace dotNet.Controllers
 
         private Korisnik Authenticate(KorisnikDto korisnik)
         {
+            Korisnik kor = db.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
+            if (korisnik == null)
+                return null;
+            return kor;
             //Ovde se poziva baza i proverava da li korisnik postoji u njoj
             if (korisnik.KorisnickoIme == "admin" && korisnik.Sifra == "admin") return new Korisnik(1, "admin", "admin", "admin", "admin@admin.com", "123456789");
             return null;
@@ -64,6 +68,12 @@ namespace dotNet.Controllers
         public IActionResult Register(KorisnikRegister request) {
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
+            if (request.Sifra != request.Sifra2) return BadRequest("Losa sifra2");
+            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email, request.Telefon)))
+            {
+                return Ok("Registrovan korisnik");
+            }
+            return BadRequest("Vec postoji");
 
             string odgovor = "Registrovan";
             return Ok(new { odgovor }); ;
