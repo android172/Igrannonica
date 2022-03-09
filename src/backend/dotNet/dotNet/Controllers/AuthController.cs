@@ -1,5 +1,6 @@
 ﻿using dotNet.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+
+
 
 namespace dotNet.Controllers
 {
@@ -42,6 +45,7 @@ namespace dotNet.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+ 
                 new Claim(ClaimTypes.Name,user.KorisnickoIme),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.MobilePhone,user.Telefon),
@@ -58,11 +62,11 @@ namespace dotNet.Controllers
             Korisnik kor = db.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
             return kor;
         }
-
         [HttpPost("register")]
         public IActionResult Register(KorisnikRegister request) {
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
+            Console.WriteLine(request.KorisnickoIme);
             if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email,"")))
             {
                 return Ok("Registrovan korisnik");
