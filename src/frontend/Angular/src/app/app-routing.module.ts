@@ -5,6 +5,7 @@ import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 
 const routes: Routes = [
+  {path:"", redirectTo: "/pocetnastrana", pathMatch: "full"},
   {path:'pocetnastrana', component:PocetnaStranaComponent},
   {path:'prijava', component:PrijavaComponent},
   {path:'registracija', component:RegistracijaComponent}

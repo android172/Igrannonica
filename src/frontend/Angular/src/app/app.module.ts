@@ -7,11 +7,7 @@ import { PocetnaStranaComponent } from './pocetna-strana/pocetna-strana.componen
 import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
+
 
 @NgModule({
   declarations: [
@@ -23,12 +19,7 @@ import {MatCardModule} from '@angular/material/card';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    FlexLayoutModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
