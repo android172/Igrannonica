@@ -18,7 +18,7 @@ export class RegistracijaComponent implements OnInit {
     var ime = (<HTMLInputElement>document.getElementById("ime")).value;
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
     var sifra2= (<HTMLInputElement>document.getElementById("sifra2")).value;
-    this.http.post('http://localhost:5008/api/Auth/register',{"KorisnickoIme":korisnickoIme,"Ime":ime,"Sifra":sifra,"Email":email}).subscribe(
+    this.http.post('http://localhost:5008/api/Auth/register',{"KorisnickoIme":korisnickoIme,"Ime":ime,"Sifra":sifra,"Email":email},{responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
       }
