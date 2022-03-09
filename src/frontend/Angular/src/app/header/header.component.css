@@ -36,6 +36,7 @@
 #pomoc
 {
     visibility: hidden;
+    margin-right: 40px;
 }
 
 #prijava, #registracija
