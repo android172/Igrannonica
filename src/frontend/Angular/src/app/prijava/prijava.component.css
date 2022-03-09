@@ -51,7 +51,11 @@ input[type=text],input[type=password]{
     background: transparent;
     border: none;
     border-bottom: 1px solid #fff;
+    color:white;
+}
 
+input:focus,textarea:focus,select:focus{
+    outline: none;
 }
 
 #dgm{
@@ -106,6 +110,7 @@ input[type=text],input[type=password]{
     opacity: 1;
     color: #D74971;
     margin: auto;
+    float: left;
 }
 
 #l1{

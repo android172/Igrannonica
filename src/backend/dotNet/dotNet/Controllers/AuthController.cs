@@ -1,5 +1,6 @@
 ﻿using dotNet.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+
+
 
 namespace dotNet.Controllers
 {
@@ -42,6 +45,7 @@ namespace dotNet.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+ 
                 new Claim(ClaimTypes.Name,user.KorisnickoIme),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.MobilePhone,user.Telefon),
@@ -56,27 +60,18 @@ namespace dotNet.Controllers
         private Korisnik Authenticate(KorisnikDto korisnik)
         {
             Korisnik kor = db.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
-            if (korisnik == null)
-                return null;
             return kor;
-            //Ovde se poziva baza i proverava da li korisnik postoji u njoj
-            if (korisnik.KorisnickoIme == "admin" && korisnik.Sifra == "admin") return new Korisnik(1, "admin", "admin", "admin", "admin@admin.com", "123456789");
-            return null;
         }
-
         [HttpPost("register")]
         public IActionResult Register(KorisnikRegister request) {
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
-            if (request.Sifra != request.Sifra2) return BadRequest("Losa sifra2");
-            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email, request.Telefon)))
+            Console.WriteLine(request.KorisnickoIme);
+            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email,"")))
             {
                 return Ok("Registrovan korisnik");
             }
             return BadRequest("Vec postoji");
-
-            string odgovor = "Registrovan";
-            return Ok(new { odgovor }); ;
         }
         private void CreatePasswordHash(string password ,out byte[] passwordHash,out byte[] passwordSalt)
         {
