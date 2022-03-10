@@ -7,4 +7,13 @@
     height: 100px;
     position: fixed;
     bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#footer img
+{
+    width: 155px;
+    height: 157px;
+    margin-top: -20px;
 }
