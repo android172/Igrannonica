@@ -1,0 +1,124 @@
+/*body{
+
+}*/
+
+.box{
+    width: 380px;
+    height: 500px;
+    top: 50%;
+    left: 50%;
+    background: rgba(32, 35, 66, 0.79);
+    transform: translate(-50%,-50%);
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+}
+
+#divbox{
+    width: 360px;
+    height: 440px;
+    padding-bottom: 55px;
+    padding-left: 55px;
+    padding-right: 55px;
+    padding-top: 10px;
+    margin: auto;
+
+}
+
+#koriloz{
+    color: white;
+    
+}
+
+p{
+    color: white;
+    opacity: 0.5;
+    height: 30px;
+    float: left;
+    margin-top: 65px;
+    margin-bottom: 10px;
+}
+
+a{
+    color: white;
+    opacity: 0.5;
+}
+
+input[type=text],input[type=password]{
+    width: 250px;
+    height: 45px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    color:white;
+}
+
+input:focus,textarea:focus,select:focus{
+    outline: none;
+}
+
+#dgm{
+    width: 250px;
+    height: 35px;
+    background: #D74971;
+    border-radius: 3px;
+    box-shadow: 4px 6px 7px 2px rgba(0, 0, 0, 0.25);
+    color: #fff;
+}
+
+#koriloz
+{
+    padding-top: 15px;
+    color: #fff;
+}
+
+#dugmepr{
+    float: left;
+    color: #fff;
+    background: none;
+    border: none;
+    padding-left: 38px;
+    padding-right: 42px;
+}
+
+#dugmerg{
+    float: left;
+    color: #fff;
+    background: none;
+    border: none;
+    padding-left: 18px;
+    padding-right: 22px;
+    opacity: 0.8;
+}
+
+#divdugme{
+    float: left;
+    padding-top: 75px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+#divdugmad{
+    height: 50px;
+    padding-bottom: 100px;
+}
+
+#l2{
+    width: 125px;
+    height: 1.5px;
+    opacity: 1;
+    color: #D74971;
+    margin: auto;
+    float: left;
+}
+
+#l1{
+    width: 125px;
+    height: 4px;
+    opacity: 1;
+    color: #D74971;
+    margin: auto;
+    border-radius: 1px;
+    float: left;
+}
