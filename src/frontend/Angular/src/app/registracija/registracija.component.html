@@ -8,22 +8,22 @@
             </div>
 
             <div id="podaci">Korisnicko ime:</div>
-            <input type="text" name="" >
+            <input id="korisnickoIme" type="text" name="" >
             
             <div id="podaci">E-mail:</div> 
-            <input type="text" name="" >
+            <input id="email" type="text" name="" >
             
             <div id="podaci">Ime i prezime:</div> 
-            <input type="text" name="" >
+            <input id="ime" type="text" name="" >
             
             <div id="podaci">Lozinka:</div>
-            <input type="password" name="">
+            <input id="sifra" type="password" name="">
             
-            <div id="podaci">Potvrdite lozinku:</div>
-            <input type="password" name="">
+            <div id="podaci">Ponovite lozinku:</div>
+            <input id="sifra2" type="text" name="">
             
             <div id="submitDugme">
-                <button id="button" type="submit">Registruj se</button> 
+                <button id="button" (click)="registracija()">Registruj se</button> 
             </div>
         </div>  
     </div>
