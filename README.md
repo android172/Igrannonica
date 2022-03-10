@@ -1,0 +1,1 @@
+![Logo firme](slike/neuralnetic-git.png)
