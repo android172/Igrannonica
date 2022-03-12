@@ -9,14 +9,31 @@ from torch.utils.data import DataLoader
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class ANN:
-    def __init__(self, annSettings) -> None:
+    
+    
+    def __init__(self, annSettings = None) -> None:
+        if (annSettings != None):
+            self.load_settings(annSettings)
+            return
+        self.learning_rate = 0
+        self.batch_size    = 0
+        self.num_epochs    = 0
+        self.input_size    = 0
+        self.output_size   = 0
+        self.model         = None
+        self.train_loader  = None
+        self.test_loader   = None
+        self.optimizer     = None
+        self.criterion     = None
+        
+    def load_settings(self, annSettings):
         # Load settings
         self.learning_rate = annSettings.learningRate
         self.batch_size    = annSettings.batchSize
         self.num_epochs    = annSettings.numberOfEpochs
         self.input_size    = annSettings.inputSize
         self.output_size   = annSettings.outputSize
-        num_of_layers = len(annSettings.hiddenLayers)
+        num_of_layers  = len(annSettings.hiddenLayers)
          
         # Create ANN according to the given settings
         model = NN().to(device)
