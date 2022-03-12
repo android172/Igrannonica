@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MeniService } from '../meni.service';
 
 @Component({
   selector: 'app-header',
@@ -7,12 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  public prikaziMeni_1:any
+  constructor(private prikaziMeni: MeniService) {
+    this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
+  }
 
   ngOnInit(): void {
   }
 
   proba(){
   }
+  
 
 }
