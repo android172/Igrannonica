@@ -1,4 +1,5 @@
 import socket
+from ANN import ANN
 from MLClientInstance import MLClientInstance
 
 from MLConnection import MLConnection

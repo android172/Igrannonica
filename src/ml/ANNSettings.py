@@ -1,4 +1,7 @@
 
+import json
+
+
 class ANNSettings:
     def __init__(self) -> None:
         self.problemType         = 0
@@ -20,6 +23,17 @@ class ANNSettings:
         self.outputSize          = outputSize
         self.hiddenLayers        = hiddenLayers
         self.activationFunctions = activationFunctions
+    
+    def __init__(self, data) -> None:
+        jsonObj = json.loads(data)
+        self.problemType         = jsonObj["ANNType"]
+        self.learningRate        = jsonObj["LearningRate"]
+        self.batchSize           = jsonObj["BatchSize"]
+        self.numberOfEpochs      = jsonObj["NumberOfEpochs"]
+        self.inputSize           = jsonObj["InputSize"]
+        self.outputSize          = jsonObj["OutputSize"]
+        self.hiddenLayers        = jsonObj["HiddenLayers"]
+        self.activationFunctions = jsonObj["ActivationFunctions"]
     
     
     

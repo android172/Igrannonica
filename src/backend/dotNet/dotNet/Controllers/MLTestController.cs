@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dotNet.Controllers {
 
+
     [Route("api/[controller]")]
     [ApiController]
     public class MLTestController : Controller {
 
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
+
+        private static MLExperiment? experiment = null;
 
         public MLTestController(IConfiguration configuration) {
             this.configuration = configuration;
@@ -17,7 +20,10 @@ namespace dotNet.Controllers {
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Test() {
+        public string Test() {
+            if (experiment == null)
+                experiment = new(configuration);
+
             int networkSize = 2;
 
             int[] hiddentLayers = new int[networkSize];
@@ -39,10 +45,11 @@ namespace dotNet.Controllers {
                 activationFunctions: activationFunctions
                 );
 
-            MLConnection connection = new();
-            connection.Send(settings.ToString());
-            connection.Receive();
-            return Ok("");
+            
+            experiment.ApplySettings(settings);
+            ClassificationMetrics metrics = experiment.Start();
+
+            return $"Train accuracy: {metrics.TrainAccuracy}\nTest accuracy: {metrics.TestAccuracy}";
         }
     }
 }
