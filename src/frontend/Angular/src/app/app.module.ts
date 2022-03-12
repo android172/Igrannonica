@@ -9,6 +9,9 @@ import { RegistracijaComponent } from './registracija/registracija.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
+import { NoviEksperimentComponent } from './novi-eksperiment/novi-eksperiment.component';
+import { KontaktComponent } from './kontakt/kontakt.component';
+import { ONamaComponent } from './o-nama/o-nama.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,9 @@ import { HeaderComponent } from './header/header.component';
     PrijavaComponent,
     RegistracijaComponent,
     HeaderComponent,
+    NoviEksperimentComponent,
+    KontaktComponent,
+    ONamaComponent,
   ],
   imports: [
     HttpClientModule,
