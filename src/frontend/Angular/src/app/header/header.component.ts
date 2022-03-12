@@ -26,11 +26,17 @@ export class HeaderComponent implements OnInit {
     {
       if(name == this.prikaziMeni_1[i].tab)
       {
-        this.prikaziMeni_1[i].style = "color:#F45E82"
+        if(i==this.prikaziMeni_1.length-1)
+          this.prikaziMeni_1[i].style = "color:#F45E82; border-right:none"
+        else
+          this.prikaziMeni_1[i].style = "color:#F45E82"
       }
       else
       {
-        this.prikaziMeni_1[i].style = "color:white"
+        if(i==this.prikaziMeni_1.length-1)
+          this.prikaziMeni_1[i].style = "color:white; border-right:none"
+        else
+          this.prikaziMeni_1[i].style = "color:white"
       }
     }
   }
