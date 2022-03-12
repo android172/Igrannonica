@@ -14,10 +14,24 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.prikaziMeni_1[0].style = "color:#F45E82"
   }
 
   proba(){
   }
-  
 
+  promeniBoju(name:any)
+  {
+    for(let i=0; i<this.prikaziMeni_1.length; i++)
+    {
+      if(name == this.prikaziMeni_1[i].tab)
+      {
+        this.prikaziMeni_1[i].style = "color:#F45E82"
+      }
+      else
+      {
+        this.prikaziMeni_1[i].style = "color:white"
+      }
+    }
+  }
 }
