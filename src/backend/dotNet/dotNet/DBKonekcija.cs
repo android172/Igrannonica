@@ -2,19 +2,14 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 
+
 namespace dotNet
 {
     public class DBKonekcija
     {
         MySqlConnection connect = null;
-        static string server = "localhost";
-        static string database = "baza";
-        static string username = "root";
-        static string password = "";
-        static string port = "3306";
-        static string connectionString = "datasource="+server+";user="+username+";database="+database+";port="+port+";password="+password;  
-
-        public DBKonekcija()
+      
+        public DBKonekcija(string connectionString)
         {
             connect = new MySqlConnection(connectionString); 
             connect.Open(); 
@@ -65,7 +60,7 @@ namespace dotNet
         public bool dodajKorisnika(Korisnik korisnik)
         {
             connect.Open();
-            string query = "select * from korisnik where `korisnicko ime`=@ime and email=@email";
+            string query = "select * from korisnik where `KorisnickoIme`=@ime and email=@email";
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@ime", korisnik.KorisnickoIme);
             cmd.Parameters.AddWithValue("@email", korisnik.Email);
@@ -77,12 +72,12 @@ namespace dotNet
             }
             connect.Close();
             connect.Open();
-            cmd = new MySqlCommand("Insert into korisnik (`korisnicko ime`,`ime`,`sifra`,`email`,`telefon`) values (@kime,@ime,@sifra,@email,@tel)",connect);
+            cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)",connect);
             cmd.Parameters.AddWithValue("@kime", korisnik.KorisnickoIme);
             cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
             cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
             cmd.Parameters.AddWithValue("@email", korisnik.Email);
-            cmd.Parameters.AddWithValue("@tel", korisnik.Telefon);
+            //cmd.Parameters.AddWithValue("@tel", korisnik.Telefon);
             if (cmd.ExecuteNonQuery() > 0) {
                 connect.Close();
                 return true;
