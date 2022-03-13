@@ -32,7 +32,7 @@ namespace dotNet
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("Korisnicko Ime"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"), reader.GetString("telefon"));
+                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
                 connect.Close();
                 return rezultat;
             }
@@ -43,14 +43,14 @@ namespace dotNet
         public Korisnik dajKorisnika(string KorisnickoIme,string sifra)
         {
             connect.Open();
-            string query = "select * from korisnik where `korisnicko ime`=@ime and sifra=@sifra";
+            string query = "select * from korisnik where `korisnickoime`=@ime and sifra=@sifra";
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
             cmd.Parameters.AddWithValue("@sifra", sifra);
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("Korisnicko Ime"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"), reader.GetString("telefon"));
+                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
                 connect.Close();
                 return rezultat;
             }
