@@ -48,7 +48,7 @@ input:focus, textarea:focus, select:focus{
 
 #podaci
 {
-    padding-top: 10px;
+    padding-top: 30px;
     color: #fff;
 }
 
@@ -80,8 +80,8 @@ input:focus, textarea:focus, select:focus{
 }
 
 #divdugmici{
-    height: 50px;
-    padding-bottom: 50px;
+    height: 40px;
+    padding-bottom: 40px;
 }
 
 #linijaT{
