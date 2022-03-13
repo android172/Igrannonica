@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+
 
 
 namespace dotNet.Controllers
@@ -19,12 +19,10 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db; 
+        DBKonekcija db = new DBKonekcija();
         public AuthController(IConfiguration config)
         {
             _config = config;
-            string sqlSource = _config.GetConnectionString("connectionString");
-            db = new DBKonekcija(sqlSource);
         }
         [AllowAnonymous]
         [HttpPost]
@@ -50,6 +48,7 @@ namespace dotNet.Controllers
  
                 new Claim(ClaimTypes.Name,user.KorisnickoIme),
                 new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.MobilePhone,user.Telefon),
                 new Claim(ClaimTypes.GivenName,user.Ime)
             };
 
@@ -68,7 +67,7 @@ namespace dotNet.Controllers
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
             Console.WriteLine(request.KorisnickoIme);
-            if(db.dodajKorisnika(new Korisnik(0,request.KorisnickoIme, request.Ime, request.Sifra, request.Email)))
+            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email,"")))
             {
                 return Ok("Registrovan korisnik");
             }
