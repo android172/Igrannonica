@@ -77,7 +77,6 @@ namespace dotNet
             cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
             cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
             cmd.Parameters.AddWithValue("@email", korisnik.Email);
-            //cmd.Parameters.AddWithValue("@tel", korisnik.Telefon);
             if (cmd.ExecuteNonQuery() > 0) {
                 connect.Close();
                 return true;

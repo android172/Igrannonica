@@ -10,11 +10,11 @@
               <hr id="l1"><hr id="l2">
             </div>
             <div id="koriloz"></div>
-            <input type="text" name="" placeholder="Korisnicko ime">
+            <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
             <div id="koriloz"></div>
-            <input type="password" name="" placeholder="Lozinka">
+            <input id="sifra" type="password" name="" placeholder="Lozinka">
             <div id="divdugme">
-                <button id="dgm" type="submit">Prijavi se</button>
+                <button id="dgm" type="submit" (click)="prijava()">Prijavi se</button>
             </div>
             <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
         </div>
