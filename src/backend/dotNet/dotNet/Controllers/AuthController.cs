@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using Microsoft.Extensions.Configuration;
 
 
 namespace dotNet.Controllers
@@ -19,10 +19,12 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db = new DBKonekcija();
+        DBKonekcija db; 
         public AuthController(IConfiguration config)
         {
             _config = config;
+            string sqlSource = _config.GetConnectionString("connectionString");
+            db = new DBKonekcija(sqlSource);
         }
         [AllowAnonymous]
         [HttpPost]
