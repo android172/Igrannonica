@@ -49,10 +49,15 @@ input:focus, textarea:focus, select:focus{
     margin: auto;
 }
 
-#podaci
+#podaci1, #podaci2, #podaci3, #podaci4, #podaci5
 {
-    padding-top: 30px;
+    height: 30px;
     color: #fff;
+}
+
+#p{
+
+    padding-top: 30px;
 }
 
 #dugmeP{
