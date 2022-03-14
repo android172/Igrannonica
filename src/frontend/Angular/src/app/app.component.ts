@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MeniService } from './meni.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
   header:boolean = true;
 
   public prikaziMeni_1:any
-  constructor(private prikaziMeni: MeniService) {
+  constructor(private prikaziMeni: MeniService, private router:Router) {
     this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
   }
 
@@ -20,10 +21,19 @@ export class AppComponent {
   }
 
   ngDoCheck(): void{
-    if(this.prikaziMeni.meni == false)
+    /*if(this.prikaziMeni.meni == false)
       this.header = false
     else
-      this.header = true
+      this.header = true*/
+
+    if(this.router.url=="/prijava" || this.router.url=="/registracija")
+    {
+      this.header = false;
+    }
+    else
+    {
+      this.header = true;
+    }
   }
 }
 

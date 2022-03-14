@@ -12,6 +12,7 @@ export class RegistracijaComponent implements OnInit {
   constructor(private http:HttpClient, private prikaziMeni: MeniService) { }
 
   ngOnInit(): void {
+    this.prikaziMeni.meni = false;
   }
 
   registracija(){

@@ -14,6 +14,7 @@ export class PrijavaComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.prikaziMeni.meni = false;
   }
 
   prijava(){
@@ -30,5 +31,4 @@ export class PrijavaComponent implements OnInit {
   {
     this.prikaziMeni.meni=true;
   }
-
 }
