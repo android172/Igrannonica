@@ -60,6 +60,15 @@
     font-size: 14px;
     line-height: 33px;
     color: #E5E5E5;
+
+    transition-duration: 0.3s;
+}
+
+#prijava:hover, #registracija:hover
+{
+    color: rgb(243, 48, 94);
+    border-color: rgb(243, 48, 94);
+    background: rgba(229, 229, 229);
 }
 
 #registracija, #pomocDugme2
@@ -78,4 +87,6 @@
     font-size: 14px;
     line-height: 33px;
     color: #FFFFFF;
+
+    transition-duration: 0.3s;
 }
