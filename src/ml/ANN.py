@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+import pandas as pd
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -12,9 +13,14 @@ class ANN:
     
     
     def __init__(self, annSettings = None) -> None:
+        
+        self.dataset      = None
+        self.dataset_test = None
+        
         if (annSettings != None):
             self.load_settings(annSettings)
             return
+        
         self.learning_rate = 0
         self.batch_size    = 0
         self.num_epochs    = 0
@@ -26,6 +32,7 @@ class ANN:
         self.optimizer     = None
         self.criterion     = None
         
+    # Load Settings
     def load_settings(self, annSettings):
         # Load settings
         self.learning_rate = annSettings.learningRate
@@ -67,12 +74,71 @@ class ANN:
         # Optimization algortham
         self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
         
-        
+    # Load data
     def initialize_random_data(self):
         train_dataset = [(x, random.randint(0, 1)) for x in torch.randn(512, self.input_size)]
         self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
         test_dataset = [(x, random.randint(0, 1)) for x in torch.randn(64, self.input_size)]
         self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+    
+    def load_data_from_csv(self, path):
+        self.dataset = pd.read_csv(path)
+        self.input_columns = None
+        self.output_columns = None
+        
+    def load_train_data_from_csv(self, path):
+        self.dataset_test = pd.read_csv(path)
+        self.input_columns = None
+        self.output_columns = None
+    
+    # Select columns
+    def select_input_columns(self, columns):
+        if self.dataset != None:
+            self.input_columns = pd.DataFrame(data = self.dataset, columns = columns)
+        if self.dataset_test != None:
+            self.input_columns_test = pd.DataFrame(data = self.dataset_test, columns = columns)
+    
+    def select_output_columns(self, columns):
+        if self.dataset != None:
+            self.output_columns = pd.DataFrame(data = self.dataset, columns = columns)
+        if self.dataset_test != None:
+            self.output_columns_test = pd.DataFrame(data = self.dataset_test, columns = columns)
+    
+    # Train test splits
+    def random_train_test_split(self, ratio):
+        if self.dataset == None or self.input_columns == None or self.output_columns == None:
+            return
+        
+        dataset_length = self.dataset.shape[0]
+        split_point = int(dataset_length * ratio)
+        
+        # Initialize index lists
+        index_list = range(dataset_length)
+        random.shuffle(index_list)
+        train_index_list = index_list[:split_point]
+        test_index_list = index_list[split_point:]
+        
+        # Filter train data
+        train_dataset = [(self.input_columns[i], self.output_columns[i]) for i in train_index_list]
+        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        
+        # Filter test data
+        test_dataset = [(self.input_columns[i], self.output_columns[i]) for i in test_index_list]
+        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+        
+    def train_test_split(self):
+        if self.dataset == None or self.dataset_test == None or self.input_columns == None or self.output_columns == None:
+            return
+        
+        # Filter train data
+        train_dataset = [(self.input_columns[i], self.output_columns[i]) for i in range(self.dataset.shape[0])]
+        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        
+        # Filter test data
+        test_dataset = [(self.input_columns_test[i], self.output_columns_test[i]) for i in range(self.dataset_test.shape[0])]
+        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+        
+    
     
     def get_accuracy(self, dataset):
         if   dataset == "train":

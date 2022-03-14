@@ -12,7 +12,6 @@ namespace dotNet.MLService {
         public void ApplySettings(ANNSettings annSettings) {
             connection.Send(Command.ChangeSettings);
             connection.Send(annSettings);
-            return;
         }
 
         public ClassificationMetrics Start() {
@@ -24,10 +23,24 @@ namespace dotNet.MLService {
                 testAccuracy: float.Parse(results[0])
             );
         }
+
+        public void LoadDataset(string path) {
+            connection.Send(Command.LoadData);
+            connection.Send(path);
+        }
+
+        public void LoadInputs(string[] inputs) {
+            connection.Send(Command.SelectInputs);
+            connection.Send(inputs);
+        }
     }
 
     public enum Command {
         ChangeSettings,
-        Start
+        Start,
+        LoadData,
+        SelectInputs,
+        SelectOutputs,
+        RandomTrainTestSplit
     }
 }

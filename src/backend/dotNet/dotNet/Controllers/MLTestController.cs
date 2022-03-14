@@ -24,6 +24,11 @@ namespace dotNet.Controllers {
             if (experiment == null)
                 experiment = new(configuration);
 
+            // Load data
+            string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
+            experiment.LoadDataset(datasetPath);
+
+            // Set ANN settings
             int networkSize = 2;
 
             int[] hiddentLayers = new int[networkSize];
@@ -45,10 +50,12 @@ namespace dotNet.Controllers {
                 activationFunctions: activationFunctions
                 );
 
-            
             experiment.ApplySettings(settings);
+
+            // Start training
             ClassificationMetrics metrics = experiment.Start();
 
+            // Return results
             return $"Train accuracy: {metrics.TrainAccuracy}\nTest accuracy: {metrics.TestAccuracy}";
         }
     }
