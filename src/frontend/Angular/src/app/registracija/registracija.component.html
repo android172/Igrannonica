@@ -2,32 +2,34 @@
     <div id="divDugmePocetna">
         <button onclick="history.back()" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
     </div>
-    <div class="box">
-        <div class="divbox">
-            <div id="divdugmici">
-                <button id="dugmeP" routerLink="/prijava">Prijava</button>
-                <button id="dugmeR">Registracija</button>
-                <hr id="linijaD"><hr id="linijaT">
-            </div>
+    <div id="centrirano">
+        <div class="box">
+            <div class="divbox">
+                <div id="divdugmici">
+                    <button id="dugmeP" routerLink="/prijava">Prijava</button>
+                    <button id="dugmeR">Registracija</button>
+                    <hr id="linijaD"><hr id="linijaT">
+                </div>
 
-            <div id="podaci"></div>
-            <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
-            
-            <div id="podaci"></div> 
-            <input id="email" type="text" name="" placeholder="E-mail">
-            
-            <div id="podaci"></div> 
-            <input id="ime" type="text" name="" placeholder="Ime i prezime">
-            
-            <div id="podaci"></div>
-            <input id="sifra" type="password" name="" placeholder="Lozinka">
-            
-            <div id="podaci"></div>
-            <input id="sifra2" type="password" name="" placeholder="Ponovite lozinku">
-            
-            <div id="submitDugme">
-                <button id="button" (click)="registracija()">Registruj se</button> 
-            </div>
-        </div>  
+                <div id="podaci"></div>
+                <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
+                
+                <div id="podaci"></div> 
+                <input id="email" type="text" name="" placeholder="E-mail">
+                
+                <div id="podaci"></div> 
+                <input id="ime" type="text" name="" placeholder="Ime i prezime">
+                
+                <div id="podaci"></div>
+                <input id="sifra" type="password" name="" placeholder="Lozinka">
+                
+                <div id="podaci"></div>
+                <input id="sifra2" type="password" name="" placeholder="Ponovite lozinku">
+                
+                <div id="submitDugme">
+                    <button id="button" (click)="registracija()">Registruj se</button> 
+                </div>
+            </div>  
+        </div>
     </div>
 </div>

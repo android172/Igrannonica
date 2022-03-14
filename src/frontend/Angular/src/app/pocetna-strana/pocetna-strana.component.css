@@ -4,6 +4,8 @@
     display: flex;
     justify-content: center;
     height: 600px;
+    margin-top: 60px;
+    margin-bottom: -20px;
 }
 
 #oblast1

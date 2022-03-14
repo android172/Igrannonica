@@ -1,22 +1,24 @@
 <div id="body">
     <div id="divDugmePocetna">
         <button onclick="history.back()" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
-    </div>>
-    <div class="box">
-        <div id="divbox">
-            <div id="divdugmad">
-              <button id="dugmepr">Prijava</button> 
-              <button id="dugmerg" routerLink="/registracija">Registracija</button> 
-              <hr id="l1"><hr id="l2">
+    </div>
+    <div id="centrirano">
+        <div class="box">
+            <div id="divbox">
+                <div id="divdugmad">
+                <button id="dugmepr">Prijava</button> 
+                <button id="dugmerg" routerLink="/registracija">Registracija</button> 
+                <hr id="l1"><hr id="l2">
+                </div>
+                <div id="koriloz"></div>
+                <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
+                <div id="koriloz"></div>
+                <input id="sifra" type="password" name="" placeholder="Lozinka">
+                <div id="divdugme">
+                    <button id="dgm" type="submit" (click)="prijava()">Prijavi se</button>
+                </div>
+                <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
             </div>
-            <div id="koriloz"></div>
-            <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
-            <div id="koriloz"></div>
-            <input id="sifra" type="password" name="" placeholder="Lozinka">
-            <div id="divdugme">
-                <button id="dgm" type="submit" (click)="prijava()">Prijavi se</button>
-            </div>
-            <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
         </div>
     </div>
 </div>
