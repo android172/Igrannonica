@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MeniService } from '../meni.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-prijava',
@@ -9,7 +10,7 @@ import { MeniService } from '../meni.service';
 })
 export class PrijavaComponent implements OnInit {
 
-  constructor(private http: HttpClient, private prikaziMeni: MeniService) { }
+  constructor(private http: HttpClient, private prikaziMeni: MeniService,private cookie: CookieService) { }
 
 
   ngOnInit(): void {
@@ -20,8 +21,9 @@ export class PrijavaComponent implements OnInit {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
 
     this.http.post('http://localhost:5008/api/Auth',{"korisnickoIme":korisnickoIme, "sifra":sifra},{responseType: 'text'}).subscribe(
-      res=>console.log(res)
-
+      token=>{
+        this.cookie.set("token",token);
+      }
     );
   }
   changeBoolean()

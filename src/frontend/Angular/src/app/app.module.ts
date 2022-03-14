@@ -13,6 +13,7 @@ import { HeaderComponent } from './header/header.component';
 import { NoviEksperimentComponent } from './novi-eksperiment/novi-eksperiment.component';
 import { KontaktComponent } from './kontakt/kontakt.component';
 import { ONamaComponent } from './o-nama/o-nama.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,9 @@ import { ONamaComponent } from './o-nama/o-nama.component';
     BrowserAnimationsModule,
     RouterModule
   ],
-  providers: [],
+  providers: [
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
