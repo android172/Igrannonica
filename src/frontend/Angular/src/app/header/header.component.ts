@@ -9,6 +9,7 @@ import { MeniService } from '../meni.service';
 export class HeaderComponent implements OnInit {
 
   public prikaziMeni_1:any
+
   constructor(private prikaziMeni: MeniService) {
     this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
   }
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
   }
 
   proba(){
+    this.prikaziMeni.meni = false;
   }
 
   promeniBoju(name:any)
