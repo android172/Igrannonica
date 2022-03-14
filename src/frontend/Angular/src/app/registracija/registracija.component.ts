@@ -21,7 +21,7 @@ export class RegistracijaComponent implements OnInit {
     var test1 = regexp1.test(korisnickoIme);
     if(!test1)
     {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "Pogresan unos";
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Pogresan unos";
     }
     else
     {
@@ -36,7 +36,7 @@ export class RegistracijaComponent implements OnInit {
     var test2 = regexp2.test(email);
     if(!test2)
     {
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "Pogresan unos";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Pogresan unos";
     }
     else
     {
@@ -51,7 +51,7 @@ export class RegistracijaComponent implements OnInit {
     var test3 = regexp3.test(ime);
     if(!test3)
     {
-        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "Pogresan unos";
+        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Pogresan unos";
     }
     else
     {
@@ -62,11 +62,11 @@ export class RegistracijaComponent implements OnInit {
   provera4()
   {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$");
+    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
     var test4 = regexp4.test(sifra);
     if(!test4)
     {
-        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "Pogresan unos";
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Pogresan unos";
     }
     else
     {
@@ -77,11 +77,11 @@ export class RegistracijaComponent implements OnInit {
   provera5()
   {
     var sifra2 = (<HTMLInputElement>document.getElementById("sifra2")).value;
-    var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$");
+    var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
     var test5 = regexp5.test(sifra2);
     if(!test5)
     {
-        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "Pogresan unos";
+        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Pogresan unos";
     }
     else
     {
@@ -100,10 +100,10 @@ export class RegistracijaComponent implements OnInit {
     var regexp3 = new RegExp("^[A-Z]{1}[a-z]+[ ]{1}[A-Z]{1}[a-z]+$");
     var test3 = regexp3.test(ime);
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$");
+    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
     var test4 = regexp4.test(sifra); 
     var sifra2= (<HTMLInputElement>document.getElementById("sifra2")).value;
-    var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$");
+    var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
     var test5 = regexp5.test(sifra2); 
 
     var pom = false;

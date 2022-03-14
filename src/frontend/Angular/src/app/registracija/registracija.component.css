@@ -52,7 +52,7 @@ input:focus, textarea:focus, select:focus{
 #podaci1, #podaci2, #podaci3, #podaci4, #podaci5
 {
     height: 30px;
-    color: #fff;
+    color: rgba(243, 48, 95, 0.85);
 }
 
 #p{
