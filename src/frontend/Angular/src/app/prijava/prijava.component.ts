@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MeniService } from '../meni.service';
+
 @Component({
   selector: 'app-prijava',
   templateUrl: './prijava.component.html',
@@ -7,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PrijavaComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private prikaziMeni: MeniService) { }
+
 
   ngOnInit(): void {
   }
@@ -21,4 +24,9 @@ export class PrijavaComponent implements OnInit {
 
     );
   }
+  changeBoolean()
+  {
+    this.prikaziMeni.meni=true;
+  }
+
 }

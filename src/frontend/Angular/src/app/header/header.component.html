@@ -1,17 +1,20 @@
 <div id="header">
-    <div id="content">
-    <div id="pomoc">
-        <button id="pomocDugme1">Prijavi se</button>
-        <button id="pomocDugme2">Registruj se</button>
-      </div>
-      <div id="naslov">
-        <img src="assets/aplikacijalogo.png" alt="">
-      </div>
-      <div id="prijava_i_registracija">
-        <button routerLink="/prijava" id="prijava" (click)="proba()">Prijavi se</button>
-        <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
-      </div>
+  <div id="content">
+  <div id="pomoc">
+      <button id="pomocDugme1">Prijavi se</button>
+      <button id="pomocDugme2">Registruj se</button>
     </div>
-    <div id="meni">
+    <div id="naslov">
+      <img src="assets/aplikacijalogo.png" alt="">
+    </div>
+    <div id="prijava_i_registracija">
+      <button routerLink="/prijava" id="prijava" (click)="proba()">Prijavi se</button>
+      <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
     </div>
   </div>
+  <ul id="meni">
+    <li *ngFor="let tabs of prikaziMeni_1">
+        <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="promeniBoju(tabs.tab)">{{tabs.tab}}</a>
+    </li>
+  </ul>
+</div>

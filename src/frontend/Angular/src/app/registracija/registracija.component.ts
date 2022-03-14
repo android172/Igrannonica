@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient} from '@angular/common/http'
+import { HttpClient} from '@angular/common/http';
+import { MeniService } from '../meni.service';
+
 @Component({
   selector: 'app-registracija',
   templateUrl: './registracija.component.html',
@@ -7,7 +9,7 @@ import { HttpClient} from '@angular/common/http'
 })
 export class RegistracijaComponent implements OnInit {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private prikaziMeni: MeniService) { }
 
   ngOnInit(): void {
   }
@@ -23,5 +25,10 @@ export class RegistracijaComponent implements OnInit {
         console.log(res);
       }
     );
+  }
+
+  changeBoolean()
+  {
+    this.prikaziMeni.meni=true;
   }
 }
