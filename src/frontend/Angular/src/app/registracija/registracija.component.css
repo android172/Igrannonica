@@ -129,3 +129,10 @@ input:focus, textarea:focus, select:focus{
     line-height: 33px;
     color: #FFFFFF;
 }
+
+#footer
+{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
