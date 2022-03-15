@@ -14,6 +14,7 @@ import { NoviEksperimentComponent } from './novi-eksperiment/novi-eksperiment.co
 import { KontaktComponent } from './kontakt/kontakt.component';
 import { ONamaComponent } from './o-nama/o-nama.component';
 import { CookieService } from 'ngx-cookie-service';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CookieService } from 'ngx-cookie-service';
     NoviEksperimentComponent,
     KontaktComponent,
     ONamaComponent,
+    FooterComponent,
   ],
   imports: [
     HttpClientModule,
