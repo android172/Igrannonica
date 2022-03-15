@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MeniService } from '../meni.service';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-prijava',
@@ -10,7 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class PrijavaComponent implements OnInit {
 
-  constructor(private http: HttpClient, private prikaziMeni: MeniService,private cookie: CookieService) { }
+  constructor(private http: HttpClient, private prikaziMeni: MeniService,private cookie: CookieService,public jwtHelper: JwtHelperService, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -62,7 +64,10 @@ export class PrijavaComponent implements OnInit {
 
       this.http.post('http://localhost:5008/api/Auth',{"KorisnickoIme":korisnickoIme,"Sifra":sifra},{responseType: 'text'}).subscribe(
         token=>{
-          this.cookie.set("token",token);   
+          localStorage.setItem("token",token); 
+          this.router.navigate(['/']);  
+        },error =>{
+          console.log(error.error);
         }
       );
     }
