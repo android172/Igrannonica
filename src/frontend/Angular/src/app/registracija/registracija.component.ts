@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { MeniService } from '../meni.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-registracija',
@@ -9,7 +10,7 @@ import { MeniService } from '../meni.service';
 })
 export class RegistracijaComponent implements OnInit {
 
-  constructor(private http:HttpClient, private prikaziMeni: MeniService) { }
+  constructor(private http:HttpClient, private prikaziMeni: MeniService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -115,6 +116,7 @@ export class RegistracijaComponent implements OnInit {
       this.http.post('http://localhost:5008/api/Auth/register',{"KorisnickoIme":korisnickoIme,"Ime":ime,"Sifra":sifra,"Email":email},{responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
+          this.router.navigate(['/prijava']);
         }
       );
     }

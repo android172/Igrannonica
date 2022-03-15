@@ -16,15 +16,56 @@ export class PrijavaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  provera1()
+  {
+    var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
+    var regexp1 = new RegExp("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$");
+    var test1 = regexp1.test(korisnickoIme);
+    if(!test1)
+    {
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Pogresan unos";
+    }
+    else
+    {
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "";
+    }
+  }
+
+  provera2()
+  {
+    var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
+    var regexp2 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
+    var test2 = regexp2.test(sifra);
+    if(!test2)
+    {
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Pogresan unos";
+    }
+    else
+    {
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "";
+    }
+  }
+
   prijava(){
     var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
+    var regexp1 = new RegExp("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$");
+    var test1 = regexp1.test(korisnickoIme);
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
+    var regexp2 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
+    var test2 = regexp2.test(sifra); 
 
-    this.http.post('http://localhost:5008/api/Auth',{"korisnickoIme":korisnickoIme, "sifra":sifra},{responseType: 'text'}).subscribe(
-      token=>{
-        this.cookie.set("token",token);
-      }
-    );
+    var pom = false;
+    if(test1 && test2)
+      pom = true;
+
+    if(pom){
+
+      this.http.post('http://localhost:5008/api/Auth',{"KorisnickoIme":korisnickoIme,"Sifra":sifra},{responseType: 'text'}).subscribe(
+        token=>{
+          this.cookie.set("token",token);   
+        }
+      );
+    }
   }
   changeBoolean()
   {

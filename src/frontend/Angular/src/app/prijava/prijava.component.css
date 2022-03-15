@@ -27,9 +27,10 @@
 
 }
 
-#koriloz{
-    color: white;
-    
+#podaci1, #podaci2
+{
+    height: 30px;
+    color: rgba(243, 48, 95, 0.85);
 }
 
 p{
@@ -69,11 +70,6 @@ input:focus,textarea:focus,select:focus{
     color: #fff;
 }
 
-#koriloz
-{
-    padding-top: 30px;
-    color: #fff;
-}
 
 #dugmepr{
     float: left;

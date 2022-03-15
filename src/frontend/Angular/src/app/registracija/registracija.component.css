@@ -82,7 +82,7 @@ input:focus, textarea:focus, select:focus{
 
 #submitDugme{
     float: left;
-    padding-top: 30px;
+    padding-top: 10px;
     opacity: 1;
     overflow: hidden;
 }
