@@ -20,7 +20,7 @@ namespace dotNet.MLService {
             string[] results = resultString.Split(":");
             return new ClassificationMetrics(
                 trainAccuracy: float.Parse(results[0]),
-                testAccuracy: float.Parse(results[0])
+                testAccuracy: float.Parse(results[1])
             );
         }
 
@@ -29,9 +29,34 @@ namespace dotNet.MLService {
             connection.Send(path);
         }
 
-        public void LoadInputs(string[] inputs) {
+        public void LoadDatasetTest(string path) {
+            connection.Send(Command.LoadTestData);
+            connection.Send(path);
+        }
+
+        public void LoadInputs(int[] inputs) {
             connection.Send(Command.SelectInputs);
-            connection.Send(inputs);
+            connection.Send(EncodeIntArray(inputs));
+        }
+
+        public void LoadOutputs(int[] outputs) {
+            connection.Send(Command.SelectOutputs);
+            connection.Send(EncodeIntArray(outputs));
+        }
+
+        public void TrainTestSplit(float ratio) {
+            connection.Send(Command.RandomTrainTestSplit);
+            connection.Send(ratio);
+        }
+
+
+        private static string EncodeIntArray(int[] arrray) {
+            if (arrray == null || arrray.Length == 0)
+                return "";
+            string o = $"{arrray[0]}";
+            for (int i = 1; i < arrray.Length; i++)
+                o += $":{arrray[i]}";
+            return o;
         }
     }
 
@@ -39,6 +64,7 @@ namespace dotNet.MLService {
         ChangeSettings,
         Start,
         LoadData,
+        LoadTestData,
         SelectInputs,
         SelectOutputs,
         RandomTrainTestSplit
