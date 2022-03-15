@@ -20,9 +20,13 @@ export class RegistracijaComponent implements OnInit {
     var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
     var regexp1 = new RegExp("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$");
     var test1 = regexp1.test(korisnickoIme);
-    if(!test1)
+    if(!test1 && korisnickoIme)
     {
         var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Pogresan unos";
+    }
+    else if(!korisnickoIme)
+    {
+       var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -35,9 +39,13 @@ export class RegistracijaComponent implements OnInit {
     var email = (<HTMLInputElement>document.getElementById("email")).value;
     var regexp2 = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
     var test2 = regexp2.test(email);
-    if(!test2)
+    if(!test2 && email)
     {
         var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Pogresan unos";
+    }
+    else if(!email)
+    {
+       var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -50,9 +58,13 @@ export class RegistracijaComponent implements OnInit {
     var ime = (<HTMLInputElement>document.getElementById("ime")).value;
     var regexp3 = new RegExp("^[A-Z]{1}[a-z]+[ ]{1}[A-Z]{1}[a-z]+$");
     var test3 = regexp3.test(ime);
-    if(!test3)
+    if(!test3 && ime)
     {
         var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Pogresan unos";
+    }
+    else if(!ime)
+    {
+       var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -65,9 +77,13 @@ export class RegistracijaComponent implements OnInit {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
     var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
     var test4 = regexp4.test(sifra);
-    if(!test4)
+    if(!test4 && sifra)
     {
-        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Pogresan unos";
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Lozinka mora da sadrzi najmanje 8 karaktera, jedno veliko slovo i jedan broj";
+    }
+    else if(!sifra)
+    {
+       var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -78,11 +94,14 @@ export class RegistracijaComponent implements OnInit {
   provera5()
   {
     var sifra2 = (<HTMLInputElement>document.getElementById("sifra2")).value;
-    var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
-    var test5 = regexp5.test(sifra2);
-    if(!test5)
+    var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
+    if(sifra2 != sifra)
     {
-        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Pogresan unos";
+        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Lozinke se ne poklapaju";
+    }
+    else if(!sifra2)
+    {
+       var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -120,6 +139,23 @@ export class RegistracijaComponent implements OnInit {
           this.router.navigate(['/prijava']);
         }
       );
+    }
+    else{
+      if(!korisnickoIme){
+          var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+      }
+      if(!email){
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+      }
+      if(!ime){
+        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Ovo polje je obavezno";
+      }
+      if(!sifra){
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Ovo polje je obavezno";
+      }
+      if(!sifra2){
+        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Ovo polje je obavezno";
+      }
     }
   }
 
