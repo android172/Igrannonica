@@ -66,7 +66,13 @@ namespace dotNet
 
             return user;
         }
-        
+        private string EmailTransform(string email)
+        {
+            string mail = email.Replace(" ", "");
+            mail = mail.ToLower();
+
+            return mail;
+        }
         public bool dodajKorisnika(Korisnik korisnik)
         {
             string username = KorisnickoImeTransform(korisnik.KorisnickoIme);
