@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MeniService } from '../meni.service';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +11,8 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
 
   public prikaziMeni_1:any
-
-  constructor(private prikaziMeni: MeniService, private router:Router) {
+  public nesto: boolean = true;
+  constructor(private prikaziMeni: MeniService, public jwtHelper: JwtHelperService, private router:Router) {
     this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
   }
 
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     //this.prikaziMeni_1[0].style = "color:#F45E82"
+    this.nesto=this.jwtHelper.isTokenExpired();
   }
 
   proba(){

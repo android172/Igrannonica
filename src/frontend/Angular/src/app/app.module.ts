@@ -15,6 +15,11 @@ import { KontaktComponent } from './kontakt/kontakt.component';
 import { ONamaComponent } from './o-nama/o-nama.component';
 import { CookieService } from 'ngx-cookie-service';
 import { FooterComponent } from './footer/footer.component';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
 
 @NgModule({
   declarations: [
@@ -33,7 +38,14 @@ import { FooterComponent } from './footer/footer.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    RouterModule
+    RouterModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:4200","localhost:5008"],
+        skipWhenExpired: true
+      }
+    })
   ],
   providers: [
     CookieService
