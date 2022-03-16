@@ -64,6 +64,12 @@ export class HeaderComponent implements OnInit {
     this.prikaziMeni.meni = false;
   }
 
+  odjava(){
+    this.nesto=false;
+    localStorage.clear();
+    location.reload();
+  }
+
   skloniCrticu(name:any)
   {
     // alert("Alert")

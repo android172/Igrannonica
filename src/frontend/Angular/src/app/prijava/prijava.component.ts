@@ -19,7 +19,7 @@ export class PrijavaComponent implements OnInit {
     this.prikaziMeni.meni = false;
     if(!this.jwtHelper.isTokenExpired())
     {
-        this.router.navigate(['/']); 
+        this.router.navigate(['/pocetna-strana']);
     }
   }
 

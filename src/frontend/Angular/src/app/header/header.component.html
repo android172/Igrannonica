@@ -12,7 +12,8 @@
       <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
     </div>
     <div id="prijava_i_registracija1" *ngIf="!nesto">
-      <button type="image"><img id="iconSlika" src="assets/icon.png"></button>
+      <button id="prijava" (click)="odjava()">Odjavi se</button>
+      <button id="dugmeikonica" type="image"><img id="iconSlika" src="assets/ikonica.png"></button>
     </div>
   </div>
   <ul id="meni">
