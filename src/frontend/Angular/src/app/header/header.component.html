@@ -16,8 +16,10 @@
     </div>
   </div>
   <ul id="meni">
-    <li *ngFor="let tabs of prikaziMeni_1">
-        <a *ngIf="tabs.id==false" routerLink="{{tabs.link}}" [style]="tabs.style" (click)="skloniCrticu(tabs.tab)">{{tabs.tab}}</a>
-    </li>
+    <div *ngFor="let tabs of prikaziMeni_1">
+      <li *ngIf="tabs.id==false">
+          <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="skloniCrticu(tabs.tab)">{{tabs.tab}}</a>
+      </li>
+    </div>
   </ul>
 </div>
