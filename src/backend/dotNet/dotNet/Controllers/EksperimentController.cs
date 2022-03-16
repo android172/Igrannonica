@@ -1,6 +1,9 @@
 ﻿using dotNet.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace dotNet.Controllers
 {
@@ -15,30 +18,35 @@ namespace dotNet.Controllers
             _config = config;
             db = new DBKonekcija(_config.GetConnectionString("connectionString"));
         }
-
+        [Authorize]
         [HttpGet("Eksperimenti")]
-        public IActionResult experimenti(int id)
+        public IActionResult Experimenti(int id)
         {
-            List<EksperimentDto> eksperimenti = db.eksperimenti(id);
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            List<EksperimentDto> eksperimenti = db.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
             if (eksperimenti.Count > 0)
                 return Ok(eksperimenti);
 
             return BadRequest();
         }
 
-
+        [Authorize]
         [HttpGet("Modeli")]
-        public IActionResult modeli(int id) {
+        public IActionResult Modeli(int id) {
             List<ModelDto> modeli=db.modeli(id);
             if (modeli.Count > 0)
                 return Ok(modeli);
         return BadRequest("Nema modela"); 
         }
 
+        [Authorize]
         [HttpGet("Podesavanja")]
-        public IActionResult podesavanja(int id) {
+        public IActionResult Podesavanja(int id) {
             ANNSettings podesavanje = db.podesavanja(id);
-            if(podesavanja != null)
+            if(podesavanje != null)
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }

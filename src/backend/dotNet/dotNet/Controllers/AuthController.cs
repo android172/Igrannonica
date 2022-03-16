@@ -42,7 +42,7 @@ namespace dotNet.Controllers
 
         private string Generate(Korisnik user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
@@ -53,7 +53,7 @@ namespace dotNet.Controllers
                 new Claim(ClaimTypes.GivenName,user.Ime)
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"], _config["Jwt:Audience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
+            var token = new JwtSecurityToken(_config["Jwt:ValidIssuer"], _config["Jwt:ValidAudience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
