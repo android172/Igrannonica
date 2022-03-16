@@ -58,6 +58,14 @@ namespace dotNet
             connect.Close();
             return null;
         }
+        private string KorisnickoImeTransform(string username)
+        {
+            string user = username.Replace(" ", "");
+
+            user = user.ToLower();
+
+            return user;
+        }
         
         public bool dodajKorisnika(Korisnik korisnik)
         {
