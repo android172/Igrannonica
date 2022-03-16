@@ -16,6 +16,10 @@ export class PrijavaComponent implements OnInit {
 
 
   ngOnInit(): void {
+    if(!this.jwtHelper.isTokenExpired())
+    {
+        this.router.navigate(['/']); 
+    }
   }
 
   provera1()

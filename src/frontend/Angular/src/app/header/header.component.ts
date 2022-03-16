@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MeniService } from '../meni.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-header',
@@ -9,13 +10,14 @@ import { MeniService } from '../meni.service';
 export class HeaderComponent implements OnInit {
 
   public prikaziMeni_1:any
-
-  constructor(private prikaziMeni: MeniService) {
+  public nesto: boolean = true;
+  constructor(private prikaziMeni: MeniService, public jwtHelper: JwtHelperService) {
     this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
   }
 
   ngOnInit(): void {
     this.prikaziMeni_1[0].style = "color:#F45E82"
+    this.nesto=this.jwtHelper.isTokenExpired();
   }
 
   proba(){
