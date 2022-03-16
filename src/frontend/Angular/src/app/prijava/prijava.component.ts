@@ -25,26 +25,22 @@ export class PrijavaComponent implements OnInit {
   provera1()
   {
     var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
-    var regexp1 = new RegExp("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$");
-    var test1 = regexp1.test(korisnickoIme);
-    if(!test1)
+    if(!korisnickoIme)
     {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Pogresan unos";
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "";
+      var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "";
     }
   }
 
   provera2()
   {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp2 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
-    var test2 = regexp2.test(sifra);
-    if(!test2)
+    if(!sifra)
     {
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Pogresan unos";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
     }
     else
     {
@@ -53,15 +49,12 @@ export class PrijavaComponent implements OnInit {
   }
 
   prijava(){
+    
     var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
-    var regexp1 = new RegExp("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$");
-    var test1 = regexp1.test(korisnickoIme);
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp2 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
-    var test2 = regexp2.test(sifra); 
 
     var pom = false;
-    if(test1 && test2)
+    if(korisnickoIme && sifra)
       pom = true;
 
     if(pom){
@@ -74,6 +67,20 @@ export class PrijavaComponent implements OnInit {
           console.log(error.error);
         }
       );
+    }
+    else
+      if(!korisnickoIme && sifra)
+      {
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+      }
+    else
+      if(!sifra && korisnickoIme)
+      {
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+      }
+    else{
+      var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+      var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
     }
   }
   changeBoolean()
