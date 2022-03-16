@@ -14,8 +14,10 @@ class ANN:
     
     def __init__(self, annSettings = None) -> None:
         
-        self.dataset      = None
-        self.dataset_test = None
+        self.dataset        = None
+        self.dataset_test   = None
+        self.input_columns  = None
+        self.output_columns = None
         
         if (annSettings != None):
             self.load_settings(annSettings)
@@ -31,48 +33,6 @@ class ANN:
         self.test_loader   = None
         self.optimizer     = None
         self.criterion     = None
-        
-    # Load Settings
-    def load_settings(self, annSettings):
-        # Load settings
-        self.learning_rate = annSettings.learningRate
-        self.batch_size    = annSettings.batchSize
-        self.num_epochs    = annSettings.numberOfEpochs
-        self.input_size    = annSettings.inputSize
-        self.output_size   = annSettings.outputSize
-        num_of_layers  = len(annSettings.hiddenLayers)
-         
-        # Create ANN according to the given settings
-        model = NN().to(device)
-        # Add all hidden layers
-        previous_layer = self.input_size
-        for i in range(num_of_layers):
-            model.add_module(f"layer_{i}", nn.Linear(previous_layer, annSettings.hiddenLayers[i]))
-            previous_layer = annSettings.hiddenLayers[i]
-            
-            activation_function = annSettings.activationFunctions[i]
-            if activation_function == 0:
-                model.add_module(f"ReLU[{i}]", nn.ReLU())
-            elif activation_function == 1:
-                model.add_module(f"LeakyReLU[{i}]", nn.LeakyReLU())
-            elif activation_function == 2:
-                model.add_module(f"Sigmoid[{i}]", nn.Sigmoid())
-            elif activation_function == 3:
-                model.add_module(f"Tanh[{i}]", nn.Tanh())
-        model.add_module(f"layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
-        
-        # Save model locally
-        self.model = model
-        
-        # Initialize data loaders
-        self.train_loader = None
-        self.test_loader  = None 
-        
-        # Loss function
-        self.criterion = nn.CrossEntropyLoss()
-        
-        # Optimization algortham
-        self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
         
     # Load data
     def initialize_random_data(self):
@@ -124,6 +84,91 @@ class ANN:
         test_dataset = [(self.dataset_test.iloc[i, self.input_columns], self.dataset_test.iloc[i, self.output_columns]) 
                         for i in range(self.dataset_test.shape[0])]
         self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+    
+    # ################# #
+    # Data manipulation #
+    # ################# #
+    
+    # Handeling NA values
+    def replace_value_with_na(self, columns, value):
+        if self.dataset is not None:
+            self.dataset.iloc[:, columns] = self.dataset.iloc[:, columns].replace(value, pd.NA)
+        if self.dataset_test is not None:
+            self.dataset_test.iloc[:, columns] = self.dataset_test.iloc[:, columns].replace(value, pd.NA)
+    
+    def drop_na_listwise(self):
+        if self.dataset is not None:
+            self.dataset.dropna(inplace=True)
+        if self.dataset_test is not None:
+            self.dataset_test.dropna(inplace=True)
+    
+    def drop_na_columns(self):
+        if self.dataset is not None:
+            self.dataset.dropna(axis=1, inplace=True)
+        if self.dataset_test is not None:
+            self.dataset_test.dropna(axis=1, inplace=True)
+
+    def drop_na_pairwise(self):
+        if self.input_columns is not None and self.output_columns is not None:
+            subset = self.dataset.columns[self.input_columns + self.output_columns]
+            if self.dataset is not None:
+                self.dataset.dropna(subset=subset, inplace=True)
+            if self.dataset_test is not None:
+                self.dataset_test.dropna(subset=subset, inplace=True)
+    
+    def drop_na_from_column(self, column):
+        subset = self.dataset.columns[[column]]
+        if self.dataset is not None:
+            self.dataset.dropna(subset=subset, inplace=True)
+        if self.dataset_test is not None:
+            self.dataset_test.dropna(subset=subset, inplace=True)
+        
+    
+    # #################### #
+    # Working with a model #
+    # #################### #
+    
+    # Load Settings
+    def load_settings(self, annSettings):
+        # Load settings
+        self.learning_rate = annSettings.learningRate
+        self.batch_size    = annSettings.batchSize
+        self.num_epochs    = annSettings.numberOfEpochs
+        self.input_size    = annSettings.inputSize
+        self.output_size   = annSettings.outputSize
+        num_of_layers  = len(annSettings.hiddenLayers)
+         
+        # Create ANN according to the given settings
+        model = NN().to(device)
+        # Add all hidden layers
+        previous_layer = self.input_size
+        for i in range(num_of_layers):
+            model.add_module(f"layer_{i}", nn.Linear(previous_layer, annSettings.hiddenLayers[i]))
+            previous_layer = annSettings.hiddenLayers[i]
+            
+            activation_function = annSettings.activationFunctions[i]
+            if activation_function == 0:
+                model.add_module(f"ReLU[{i}]", nn.ReLU())
+            elif activation_function == 1:
+                model.add_module(f"LeakyReLU[{i}]", nn.LeakyReLU())
+            elif activation_function == 2:
+                model.add_module(f"Sigmoid[{i}]", nn.Sigmoid())
+            elif activation_function == 3:
+                model.add_module(f"Tanh[{i}]", nn.Tanh())
+        model.add_module(f"layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
+        
+        # Save model locally
+        self.model = model
+        
+        # Initialize data loaders
+        self.train_loader = None
+        self.test_loader  = None 
+        
+        # Loss function
+        self.criterion = nn.CrossEntropyLoss()
+        
+        # Optimization algortham
+        self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
     
     # Metrics
     def get_accuracy(self, dataset):
