@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using dotNet.ModelValidation;
 
 
 namespace dotNet.Controllers
@@ -68,11 +68,25 @@ namespace dotNet.Controllers
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
             Console.WriteLine(request.KorisnickoIme);
-            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email)))
+            KorisnikValid korisnikValid = db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
+            
+            if(korisnikValid.korisnickoIme && korisnikValid.email)
             {
                 return Ok("Registrovan korisnik");
             }
-            return BadRequest("Vec postoji");
+            if(!korisnikValid.korisnickoIme)
+            {
+                if(!korisnikValid.email)
+                {
+                    return BadRequest("1");  // Korisnicko ime i email vec postoje
+                }
+                else
+                {
+                    return BadRequest("2"); // email ispravan // Korisnicko ime vec postoji
+                }
+            }
+        
+            return BadRequest("3"); // username ispravan //Email vec postoji
         }
         private void CreatePasswordHash(string password ,out byte[] passwordHash,out byte[] passwordSalt)
         {
