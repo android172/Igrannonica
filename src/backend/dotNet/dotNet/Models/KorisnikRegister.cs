@@ -15,7 +15,7 @@ namespace dotNet.Models
     {
         public KorisnikRegistrationValidator()
         {
-            RuleFor(x => x.KorisnickoIme).NotEmpty().NotNull().MinimumLength(1).MaximumLength(30)
+            RuleFor(x => x.KorisnickoIme).NotEmpty().NotNull().MinimumLength(1).MaximumLength(20)
                 .Must(y => ValidUsername(y)).WithMessage("Uneti su nedozvoljeni pocetni karakteri!");
           
             RuleFor(x => x.Ime).NotEmpty().NotNull().MinimumLength(1).MaximumLength(30);  
