@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     //this.prikaziMeni_1[0].style = "color:#F45E82"
     this.nesto=this.jwtHelper.isTokenExpired();
+    this.prikaziMeni_1[2].id=this.jwtHelper.isTokenExpired();
   }
 
   proba(){
