@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using FluentValidation;
+using dotNet.ModelValidation;
 
 
 namespace dotNet
@@ -73,38 +74,64 @@ namespace dotNet
 
             return mail;
         }
-        public bool dodajKorisnika(Korisnik korisnik)
+        public KorisnikValid dodajKorisnika(Korisnik korisnik)
         {
+            KorisnikValid korisnikValid = new KorisnikValid(false, false);
+
             string username = KorisnickoImeTransform(korisnik.KorisnickoIme);
             string mail = EmailTransform(korisnik.Email);
 
             connect.Open();
-            string query = "select * from korisnik where `KorisnickoIme`=@ime or `email`=@email";
+            string query = "select * from korisnik where `KorisnickoIme`=@ime";
             MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@ime", username);
-            cmd.Parameters.AddWithValue("@email", mail);
-            MySqlDataReader reader = cmd.ExecuteReader();
+            cmd.Parameters.AddWithValue("@ime", username);  
+            MySqlDataReader reader = cmd.ExecuteReader(); 
             if (reader.Read())
             {
-                connect.Close();
-                return false;
+                connect.Close();          
+                //return false;
             }
-      
+            else
+            {
+                korisnikValid.korisnickoIme = true;
+            }
             connect.Close();
 
             connect.Open();
-            cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)",connect);
-            cmd.Parameters.AddWithValue("@kime", username);
-            cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
-            cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
-            cmd.Parameters.AddWithValue("@email", mail);
 
-            if (cmd.ExecuteNonQuery() > 0) {
+            string query1 = "select * from korisnik where `email`=@email";
+            cmd = new MySqlCommand(query1, connect);
+            cmd.Parameters.AddWithValue("@email", mail);
+            MySqlDataReader reader1 = cmd.ExecuteReader(); 
+            if (reader1.Read())
+            {
                 connect.Close();
-                return true;
+                //return false;
             }
+            else
+            {
+                korisnikValid.email = true;
+            }
+
             connect.Close();
-            return false; 
+
+            if(korisnikValid.korisnickoIme && korisnikValid.email)
+            {
+                connect.Open();
+                cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)", connect);
+                cmd.Parameters.AddWithValue("@kime", username);
+                cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
+                cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+                cmd.Parameters.AddWithValue("@email", mail);
+
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    connect.Close();
+                    return korisnikValid;
+                }
+                
+            }
+            return korisnikValid;
         }
     }
 }
