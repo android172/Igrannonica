@@ -30,8 +30,9 @@ class MLServer:
             address = self.accept()
             print(f"Client connected at: {address}")
         
-        
-    
 if __name__ == "__main__":
-    server = MLServer()
-    server.start()
+    a = [1, 2, 3]
+    print(f"bla {a} bla")
+    
+    # server = MLServer()
+    # server.start()

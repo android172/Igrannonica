@@ -9,20 +9,9 @@ namespace dotNet.MLService {
             connection = new MLConnection(configuration);
         }
 
-        public void ApplySettings(ANNSettings annSettings) {
-            connection.Send(Command.ChangeSettings);
-            connection.Send(annSettings);
-        }
-
-        public ClassificationMetrics Start() {
-            connection.Send(Command.Start);
-            string resultString = connection.Receive();
-            string[] results = resultString.Split(":");
-            return new ClassificationMetrics(
-                trainAccuracy: float.Parse(results[0]),
-                testAccuracy: float.Parse(results[1])
-            );
-        }
+        // ///////////////// //
+        // Data introduction //
+        // ///////////////// //
 
         public void LoadDataset(string path) {
             connection.Send(Command.LoadData);
@@ -49,7 +38,53 @@ namespace dotNet.MLService {
             connection.Send(ratio);
         }
 
+        // ///////////////// //
+        // Data manipulation //
+        // ///////////////// //
 
+        // Replace with NA
+        public void ReplaceEmptyWithNA(int[] columns) {
+            connection.Send(Command.EmptyStringToNA);
+            connection.Send(columns);
+        }
+
+        public void ReplaceZeroWithNA(int[] columns) {
+            connection.Send(Command.ZeroToNA);
+            connection.Send(columns);
+        }
+
+        // Drop NA values
+        public void DropNAListwise() {
+            connection.Send(Command.DropNAListwise);
+        }
+
+        public void DropNAPairwise() {
+            connection.Send(Command.DropNAPairwise);
+        }
+
+        public void DropNAColumns() {
+            connection.Send(Command.DropNAColumns);
+        }
+
+        // /////// //
+        // Network //
+        // /////// //
+        public void ApplySettings(ANNSettings annSettings) {
+            connection.Send(Command.ChangeSettings);
+            connection.Send(annSettings);
+        }
+
+        public ClassificationMetrics Start() {
+            connection.Send(Command.Start);
+            string resultString = connection.Receive();
+            string[] results = resultString.Split(":");
+            return new ClassificationMetrics(
+                trainAccuracy: float.Parse(results[0]),
+                testAccuracy: float.Parse(results[1])
+            );
+        }
+
+        // Helper functions
         private static string EncodeIntArray(int[] arrray) {
             if (arrray == null || arrray.Length == 0)
                 return "";
@@ -61,12 +96,20 @@ namespace dotNet.MLService {
     }
 
     public enum Command {
-        ChangeSettings,
-        Start,
+        // Data introduction
         LoadData,
         LoadTestData,
         SelectInputs,
         SelectOutputs,
-        RandomTrainTestSplit
+        RandomTrainTestSplit,
+        // Data manipulation
+        EmptyStringToNA,
+        ZeroToNA,
+        DropNAListwise,
+        DropNAPairwise,
+        DropNAColumns,
+        // Network
+        ChangeSettings,
+        Start
     }
 }
