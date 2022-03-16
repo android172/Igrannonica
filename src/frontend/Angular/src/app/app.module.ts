@@ -29,7 +29,7 @@ export function tokenGetter() {
     HeaderComponent,
     NoviEksperimentComponent,
     KontaktComponent,
-    ONamaComponent,
+    ONamaComponent
   ],
   imports: [
     HttpClientModule,

@@ -33,6 +33,15 @@
     margin-bottom: auto;
     margin-right: 40px;
 }
+
+#prijava_i_registracija1
+{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 115px;
+    margin-left: 80px;
+}
+
 #pomoc
 {
     visibility: hidden;
@@ -136,3 +145,9 @@ ul
     color: #F45E82 !important; 
     transition: 0.15s !important;
   }
+
+  #iconSlika{
+      height: 50px;
+      width: 50px;
+  }
+

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { MeniService } from '../meni.service';
 import {Router} from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-registracija',
@@ -10,9 +11,13 @@ import {Router} from '@angular/router';
 })
 export class RegistracijaComponent implements OnInit {
 
-  constructor(private http:HttpClient, private prikaziMeni: MeniService, private router: Router) { }
+  constructor(private http:HttpClient, private prikaziMeni: MeniService, private router: Router,public jwtHelper: JwtHelperService) { }
 
   ngOnInit(): void {
+    if(!this.jwtHelper.isTokenExpired())
+    {
+        this.router.navigate(['/']); 
+    }
   }
 
   provera1()
