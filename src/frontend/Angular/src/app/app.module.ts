@@ -16,6 +16,7 @@ import { ONamaComponent } from './o-nama/o-nama.component';
 import { CookieService } from 'ngx-cookie-service';
 import { FooterComponent } from './footer/footer.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { MojiEksperimentiComponent } from './moji-eksperimenti/moji-eksperimenti.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -32,6 +33,7 @@ export function tokenGetter() {
     KontaktComponent,
     ONamaComponent,
     FooterComponent,
+    MojiEksperimentiComponent,
   ],
   imports: [
     HttpClientModule,
