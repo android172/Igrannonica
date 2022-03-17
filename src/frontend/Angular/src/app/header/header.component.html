@@ -19,7 +19,7 @@
   <ul id="meni">
     <div *ngFor="let tabs of prikaziMeni_1">
       <li *ngIf="tabs.id==false">
-          <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="skloniCrticu(tabs.tab)">{{tabs.tab}}</a>
+          <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="novieks(tabs.novieks)">{{tabs.tab}}</a>
       </li>
     </div>
   </ul>
