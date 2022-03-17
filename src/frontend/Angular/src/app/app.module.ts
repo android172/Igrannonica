@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,6 +10,17 @@ import { RegistracijaComponent } from './registracija/registracija.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
+import { NoviEksperimentComponent } from './novi-eksperiment/novi-eksperiment.component';
+import { KontaktComponent } from './kontakt/kontakt.component';
+import { ONamaComponent } from './o-nama/o-nama.component';
+import { CookieService } from 'ngx-cookie-service';
+import { FooterComponent } from './footer/footer.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { MojiEksperimentiComponent } from './moji-eksperimenti/moji-eksperimenti.component';
+
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
 
 @NgModule({
   declarations: [
@@ -17,14 +29,29 @@ import { HeaderComponent } from './header/header.component';
     PrijavaComponent,
     RegistracijaComponent,
     HeaderComponent,
+    NoviEksperimentComponent,
+    KontaktComponent,
+    ONamaComponent,
+    FooterComponent,
+    MojiEksperimentiComponent,
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    RouterModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ["localhost:4200","localhost:5008"],
+        skipWhenExpired: true
+      }
+    })
   ],
-  providers: [],
+  providers: [
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

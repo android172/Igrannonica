@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace dotNet.Controllers {
 
+
     [Route("api/[controller]")]
     [ApiController]
     public class MLTestController : Controller {
 
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
+
+        private static MLExperiment? experiment = null;
 
         public MLTestController(IConfiguration configuration) {
             this.configuration = configuration;
@@ -17,8 +20,28 @@ namespace dotNet.Controllers {
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Test() {
+        public string Test() {
+            if (experiment == null)
+                experiment = new(configuration);
+
+            // Load data
+            string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
+            experiment.LoadDataset(datasetPath);
+
+            // Drop NA values
+            experiment.ReplaceEmptyWithNA(new int[] { 8 });
+            experiment.DropNAListwise();
+
+            // Encode categorical values
+            experiment.OneHotEncoding(new int[] { 4, 5 });
+
+            // Set ANN settings
             int networkSize = 2;
+
+            // Select inputs, outputs and split data
+            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
+            experiment.LoadOutputs(new int[] { 13 });
+            experiment.TrainTestSplit(0.1f);
 
             int[] hiddentLayers = new int[networkSize];
             hiddentLayers[0] = 5;
@@ -32,17 +55,20 @@ namespace dotNet.Controllers {
                 aNNType: ProblemType.Classification,
                 learningRate: 0.001f,
                 batchSize:  64,
-                numberOfEpochs: 1,
+                numberOfEpochs: 10,
                 inputSize:  512,
                 outputSize: 2,
                 hiddenLayers: hiddentLayers,
                 activationFunctions: activationFunctions
                 );
 
-            MLConnection connection = new();
-            connection.Send(settings.ToString());
-            connection.Receive();
-            return Ok("");
+            experiment.ApplySettings(settings);
+
+            // Start training
+            ClassificationMetrics metrics = experiment.Start();
+
+            // Return results
+            return $"Train accuracy: {metrics.TrainAccuracy}\nTest accuracy: {metrics.TestAccuracy}";
         }
     }
 }

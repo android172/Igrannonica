@@ -1,4 +1,5 @@
 import socket
+from ANN import ANN
 from MLClientInstance import MLClientInstance
 
 from MLConnection import MLConnection
@@ -29,8 +30,6 @@ class MLServer:
             address = self.accept()
             print(f"Client connected at: {address}")
         
-        
-    
 if __name__ == "__main__":
     server = MLServer()
     server.start()

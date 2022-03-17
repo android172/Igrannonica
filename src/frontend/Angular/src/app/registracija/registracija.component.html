@@ -1,30 +1,37 @@
 <div id="body">
-    <div class="box">
-        <div class="divbox">
-            <div id="divdugmici">
-                <button id="dugmeP" routerLink="/prijava">Prijava</button>
-                <button id="dugmeR">Registracija</button>
-                <hr id="linijaD"><hr id="linijaT">
-            </div>
+    <div id="divDugmePocetna">
+        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
+    </div>
+    <div id="centrirano">
+        <div class="box">
+            <div class="divbox">
+                <div id="divdugmici">
+                    <button id="dugmeP" routerLink="/prijava">Prijava</button>
+                    <button id="dugmeR">Registracija</button>
+                    <hr id="linijaD"><hr id="linijaT">
+                </div>
 
-            <div id="podaci">Korisnicko ime:</div>
-            <input id="korisnickoIme" type="text" name="" >
-            
-            <div id="podaci">E-mail:</div> 
-            <input id="email" type="text" name="" >
-            
-            <div id="podaci">Ime i prezime:</div> 
-            <input id="ime" type="text" name="" >
-            
-            <div id="podaci">Lozinka:</div>
-            <input id="sifra" type="password" name="">
-            
-            <div id="podaci">Ponovite lozinku:</div>
-            <input id="sifra2" type="text" name="">
-            
-            <div id="submitDugme">
-                <button id="button" (click)="registracija()">Registruj se</button> 
-            </div>
-        </div>  
+                <div id="p"></div>
+                <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Korisnicko ime" (keyup)="provera1()">
+                <div id="podaci1"></div>
+
+                <input id="email" type="text" name="email"  placeholder="E-mail" (keyup)="provera2()" >
+                <div id="podaci2"></div>
+
+                <input id="ime" type="text" name="ime" placeholder="Ime i prezime" (keyup)="provera3()">
+                <div id="podaci3"></div>
+
+                <input id="sifra" type="password" name="sifra" placeholder="Lozinka" (keyup)="provera4()">
+                <div id="podaci4"></div>
+
+                <input id="sifra2" type="password" name="sifra2"  placeholder="Ponovite lozinku" (keyup)="provera5()">
+                <div id="podaci5"></div>
+                
+                <div id="submitDugme">
+                    <button id="button" (click)="registracija()">Registruj se</button> 
+                </div>
+            </div>  
+        </div>
     </div>
 </div>
+<app-footer id="footer"></app-footer>

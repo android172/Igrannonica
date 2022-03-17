@@ -1,19 +1,39 @@
 <div id="body">
-    <div class="box">
-        <div id="divbox">
-            <div id="divdugmad">
-              <button id="dugmepr">Prijava</button> 
-              <button id="dugmerg" routerLink="/registracija">Registracija</button> 
-              <hr id="l1"><hr id="l2">
+    <div id="divDugmePocetna">
+        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
+    </div>
+    <div id="centrirano">
+        <div class="box">
+            <div id="divbox">
+                <div id="divdugmad">
+                <button id="dugmepr">Prijava</button> 
+                <button id="dugmerg" routerLink="/registracija">Registracija</button> 
+                <hr id="l1"><hr id="l2">
+                </div>
+<!--
+                <div id="koriloz"></div>
+                <input id="korisnickoIme" type="text" name="" placeholder="Korisnicko ime">
+                <div id="koriloz"></div>
+                <input id="sifra" type="password" name="" placeholder="Lozinka">
+                <div id="divdugme">
+                    <button id="dgm" type="submit" (click)="prijava()">Prijavi se</button>
+                </div>
+            -->
+                <div id="p"></div>
+                <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Korisnicko ime" (keyup)="provera1()">
+                <div id="podaci1"></div>
+
+                <input id="sifra" type="password" name="sifra"  placeholder="Lozinka" (keyup)="provera2()" >
+                <div id="podaci2"></div>
+
+                
+                <div id="divdugme">
+                    <button id="dgm" (click)="prijava()">Prijavi se</button> 
+                </div>
+
+                <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
             </div>
-            <div id="koriloz">Korisnicko ime:</div>
-            <input type="text" name="">
-            <div id="koriloz">Lozinka:</div>
-            <input type="password" name="">
-            <div id="divdugme">
-                <button id="dgm" type="submit">Prijavi se</button>
-            </div>
-            <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
         </div>
     </div>
 </div>
+<app-footer id="footer"></app-footer>

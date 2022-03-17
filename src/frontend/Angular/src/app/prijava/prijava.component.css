@@ -1,18 +1,19 @@
-/*body{
-
-}*/
+#centrirano
+{
+    display: flex;
+    justify-content: center;
+    clear: both;
+}
 
 .box{
     width: 380px;
     height: 500px;
-    top: 50%;
-    left: 50%;
     background: rgba(32, 35, 66, 0.79);
-    transform: translate(-50%,-50%);
-    position: absolute;
+    position: relative;
     border-radius: 3px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     box-sizing: border-box;
+    margin-top: -1%;
 }
 
 #divbox{
@@ -26,9 +27,10 @@
 
 }
 
-#koriloz{
-    color: white;
-    
+#podaci1, #podaci2
+{
+    height: 30px;
+    color: rgba(243, 48, 95, 0.85);
 }
 
 p{
@@ -38,6 +40,7 @@ p{
     float: left;
     margin-top: 65px;
     margin-bottom: 10px;
+    margin-left: 17px;
 }
 
 a{
@@ -67,11 +70,6 @@ input:focus,textarea:focus,select:focus{
     color: #fff;
 }
 
-#koriloz
-{
-    padding-top: 15px;
-    color: #fff;
-}
 
 #dugmepr{
     float: left;
@@ -121,4 +119,34 @@ input:focus,textarea:focus,select:focus{
     margin: auto;
     border-radius: 1px;
     float: left;
+}
+
+
+#dugmePocetna{
+
+    float: right;
+    margin-right: 50px;
+    margin-top: 45px;
+
+    width: 110px;
+    height: 40px;
+
+    background: rgba(243, 48, 95, 0.46);
+    border: 3px solid rgba(243, 48, 95, 0.85);
+    box-sizing: border-box;
+    border-radius: 15px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 33px;
+    color: #FFFFFF;
+}
+
+#footer
+{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
 }

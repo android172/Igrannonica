@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using dotNet.ModelValidation;
 
 
 namespace dotNet.Controllers
@@ -19,10 +19,12 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db = new DBKonekcija();
+        DBKonekcija db;
         public AuthController(IConfiguration config)
         {
             _config = config;
+            string sqlSource = _config.GetConnectionString("connectionString");
+            db = new DBKonekcija(sqlSource);
         }
         [AllowAnonymous]
         [HttpPost]
@@ -40,7 +42,7 @@ namespace dotNet.Controllers
 
         private string Generate(Korisnik user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Secret"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
@@ -48,11 +50,10 @@ namespace dotNet.Controllers
  
                 new Claim(ClaimTypes.Name,user.KorisnickoIme),
                 new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.MobilePhone,user.Telefon),
                 new Claim(ClaimTypes.GivenName,user.Ime)
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"], _config["Jwt:Audience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
+            var token = new JwtSecurityToken(_config["Jwt:ValidIssuer"], _config["Jwt:ValidAudience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -67,11 +68,25 @@ namespace dotNet.Controllers
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
             Console.WriteLine(request.KorisnickoIme);
-            if(db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email,"")))
+            KorisnikValid korisnikValid = db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
+            
+            if(korisnikValid.korisnickoIme && korisnikValid.email)
             {
                 return Ok("Registrovan korisnik");
             }
-            return BadRequest("Vec postoji");
+            if(!korisnikValid.korisnickoIme)
+            {
+                if(!korisnikValid.email)
+                {
+                    return BadRequest("1");  // Korisnicko ime i email vec postoje
+                }
+                else
+                {
+                    return BadRequest("2"); // email ispravan // Korisnicko ime vec postoji
+                }
+            }
+        
+            return BadRequest("3"); // username ispravan //Email vec postoji
         }
         private void CreatePasswordHash(string password ,out byte[] passwordHash,out byte[] passwordSalt)
         {

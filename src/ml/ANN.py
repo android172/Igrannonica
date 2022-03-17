@@ -6,17 +6,61 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
+from MLData import MLData
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class ANN:
-    def __init__(self, annSettings) -> None:
+    
+    
+    def __init__(self, annSettings = None) -> None:
+        
+        self.data = MLData()
+        
+        if (annSettings != None):
+            self.load_settings(annSettings)
+            return
+        
+        self.learning_rate = 0
+        self.batch_size    = 0
+        self.num_epochs    = 0
+        self.input_size    = 0
+        self.output_size   = 0
+        self.model         = None
+        self.train_loader  = None
+        self.test_loader   = None
+        self.optimizer     = None
+        self.criterion     = None
+        
+    # Load data
+    def initialize_random_data(self):
+        train_dataset = [(x, random.randint(0, 1)) for x in torch.randn(512, self.input_size)]
+        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        test_dataset = [(x, random.randint(0, 1)) for x in torch.randn(64, self.input_size)]
+        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+        
+    def initialize_loaders(self):
+        # Filter train data
+        train_dataset = self.data.get_train_dataset()
+        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        
+        # Filter test data
+        test_dataset = self.data.get_test_dataset()
+        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+    
+    # #################### #
+    # Working with a model #
+    # #################### #
+    
+    # Load Settings
+    def load_settings(self, annSettings):
         # Load settings
         self.learning_rate = annSettings.learningRate
         self.batch_size    = annSettings.batchSize
         self.num_epochs    = annSettings.numberOfEpochs
         self.input_size    = annSettings.inputSize
         self.output_size   = annSettings.outputSize
-        num_of_layers = len(annSettings.hiddenLayers)
+        num_of_layers  = len(annSettings.hiddenLayers)
          
         # Create ANN according to the given settings
         model = NN().to(device)
@@ -49,15 +93,12 @@ class ANN:
         
         # Optimization algortham
         self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
-        
-        
-    def initialize_random_data(self):
-        train_dataset = [(x, random.randint(0, 1)) for x in torch.randn(512, self.input_size)]
-        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
-        test_dataset = [(x, random.randint(0, 1)) for x in torch.randn(64, self.input_size)]
-        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
     
+    # Metrics
     def get_accuracy(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
         if   dataset == "train":
             loader = self.train_loader
         elif dataset == "test":
@@ -81,17 +122,17 @@ class ANN:
                 
                 num_correct += (predictions == y).sum()
                 num_samples += predictions.size(0)
-                
             
         self.model.train()
         
         return num_correct / num_samples
     
+    # Training
     def train(self):
-        if self.train_loader == None:
-            return
+        if self.train_loader is None:
+            self.initialize_loaders()
         
-         # Train the network
+        # Train the network
         for epoch in range(self.num_epochs):
             for bach_index, (data, target) in enumerate(self.train_loader):
                 data = data.to(device)

@@ -1,17 +1,26 @@
 <div id="header">
-    <div id="content">
-    <div id="pomoc">
-        <button id="pomocDugme1">Prijavi se</button>
-        <button id="pomocDugme2">Registruj se</button>
-      </div>
-      <div id="naslov">
-        <img src="assets/aplikacijalogo.png" alt="">
-      </div>
-      <div id="prijava_i_registracija">
-        <button routerLink="/prijava" id="prijava" (click)="proba()">Prijavi se</button>
-        <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
-      </div>
+  <div id="content">
+  <div id="pomoc">
+      <button id="pomocDugme1">Prijavi se</button>
+      <button id="pomocDugme2">Registruj se</button>
     </div>
-    <div id="meni">
+    <div id="naslov">
+      <img src="assets/aplikacijalogo.png" alt="">
+    </div>
+    <div id="prijava_i_registracija" *ngIf="nesto">
+      <button routerLink="/prijava" id="prijava" (click)="proba()">Prijavi se</button>
+      <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
+    </div>
+    <div id="prijava_i_registracija1" *ngIf="!nesto">
+      <button id="prijava" (click)="odjava()">Odjavi se</button>
+      <button id="dugmeikonica" type="image"><img id="iconSlika" src="assets/ikonica.png"></button>
     </div>
   </div>
+  <ul id="meni">
+    <div *ngFor="let tabs of prikaziMeni_1">
+      <li *ngIf="tabs.id==false">
+          <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="skloniCrticu(tabs.tab)">{{tabs.tab}}</a>
+      </li>
+    </div>
+  </ul>
+</div>

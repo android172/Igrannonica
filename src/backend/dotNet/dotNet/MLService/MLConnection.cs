@@ -9,13 +9,16 @@ namespace dotNet.MLService {
         private readonly Socket socket;
         private readonly UTF8Encoding streamEncoding;
 
-        public MLConnection() {
+        public MLConnection(IConfiguration configuration) {
             socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect("127.0.0.1", 25001);
+            var serverSettings = configuration.GetSection("PythonServer");
+            socket.Connect(serverSettings.GetValue<string>("IpAddress"), serverSettings.GetValue<int>("Port"));
             streamEncoding = new();
         }
 
-        public void Send(string message) {
+        public void Send(object contents) {
+            string? message = contents.ToString();
+            if (message == null) message = "";
             byte[] buffer = streamEncoding.GetBytes(message);
             socket.Send(BitConverter.GetBytes(buffer.Length));
             socket.Send(buffer);
