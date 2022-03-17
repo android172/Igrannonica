@@ -17,8 +17,95 @@ class MLClientInstance(Thread):
         while True:
             # Receive command
             received = self.connection.receive()
+                
+            # Load data #
+            if received == 'LoadData':
+                # Receive path to dataset
+                path = self.connection.receive()
+                network.data.load_from_csv(path)
+                
+                print("Dataset loaded.")
+                
+            elif received == 'LoadTestData':
+                # Receive path to dataset
+                path = self.connection.receive()
+                network.data.load_test_from_csv(path)
+                
+                print("Test dataset loaded.")
+                
+            elif received == 'SelectInputs':
+                # Receive inputs
+                inputs_string = self.connection.receive()
+                inputs = [int(x) for x in inputs_string.split(":")]
+                network.data.select_input_columns(inputs)
+                
+                print("Inputs selected.")
+                
+            elif received == 'SelectOutputs':
+                # Receive outputs
+                outputs_string = self.connection.receive()
+                outputs = [int(x) for x in outputs_string.split(":")]
+                network.data.select_output_columns(outputs)
+                
+                print("Outputs selected")
+                
+            elif received == 'RandomTrainTestSplit':
+                # Receive ratio
+                ratio = float(self.connection.receive())
+                network.data.random_train_test_split(ratio)
+                
+                print("Random train-test split preformed.")
+                
+            # Data manipulation #
+            elif received == 'EmptyStringToNA':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_value_with_na(columns, '')
+                
+                print(f"Empty strings from columns {columns} replaced with NA.")
             
-            if received == 'ChangeSettings':
+            elif received == 'ZeroToNA':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_value_with_na(columns, 0)
+                
+                print(f"Zero values from columns {columns} replaced with NA.")
+            
+            elif received == 'DropNAListwise':
+                network.data.drop_na_listwise()
+                
+                print("All rows with any NA values dropped from dataset.")
+            
+            elif received == 'DropNAPairwise':
+                network.data.drop_na_pairwise()
+                
+                print("All selected rows with any NA values dropped from dataset.")
+            
+            elif received == 'DropNAColumns':
+                network.data.drop_na_columns()
+                
+                print("All columns with any NA values dropped from dataset.")
+                
+            elif received == 'LabelEncoding':
+                # Receive columns to encode
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.label_encode_columns(columns)
+                
+                print(f"Columns {columns} were label encoded.")
+            
+            elif received == 'OneHotEncoding':
+                # Receive columns to encode
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.one_hot_encode_columns(columns)
+                
+                print(f"Columns {columns} were one-hot encoded.")
+            
+            # Working with networks #
+            elif received == 'ChangeSettings':
                 # Receive settings to change to
                 settingsString = self.connection.receive()
                 annSettings = ANNSettings(settingsString)
@@ -40,40 +127,3 @@ class MLClientInstance(Thread):
                 self.connection.send(f"{train_acc}:{test_acc}")
                 
                 # print("")
-                
-            elif received == 'LoadData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.load_data_from_csv(path)
-                
-                print("Dataset loaded.")
-                
-            elif received == 'LoadTestData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.load_test_data_from_csv(path)
-                
-                print("Test dataset loaded.")
-                
-            elif received == 'SelectInputs':
-                # Receive inputs
-                inputs_string = self.connection.receive()
-                inputs = [int(x) for x in inputs_string.split(":")]
-                network.select_input_columns(inputs)
-                
-                print("Inputs selected.")
-                
-            elif received == 'SelectOutputs':
-                # Receive outputs
-                outputs_string = self.connection.receive()
-                outputs = [int(x) for x in outputs_string.split(":")]
-                network.select_output_columns(outputs)
-                
-                print("Outputs selected")
-                
-            elif received == 'RandomTrainTestSplit':
-                # Receive ratio
-                ratio = float(self.connection.receive())
-                network.random_train_test_split(ratio)
-                
-                print("Random train-test split preformed.")
