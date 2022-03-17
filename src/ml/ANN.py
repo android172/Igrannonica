@@ -5,7 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-import pandas as pd
+
+from MLData import MLData
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -14,10 +15,7 @@ class ANN:
     
     def __init__(self, annSettings = None) -> None:
         
-        self.dataset        = None
-        self.dataset_test   = None
-        self.input_columns  = None
-        self.output_columns = None
+        self.data = MLData()
         
         if (annSettings != None):
             self.load_settings(annSettings)
@@ -40,89 +38,15 @@ class ANN:
         self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
         test_dataset = [(x, random.randint(0, 1)) for x in torch.randn(64, self.input_size)]
         self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
-    
-    def load_data_from_csv(self, path):
-        self.train_loader = None
-        self.dataset = pd.read_csv(path)
-        
-    def load_test_data_from_csv(self, path):
-        self.train_loader = None
-        self.dataset_test = pd.read_csv(path)
-    
-    # Select columns
-    def select_input_columns(self, columns):
-        self.train_loader = None
-        self.input_columns = columns
-    
-    def select_output_columns(self, columns):
-        self.train_loader = None
-        self.output_columns = columns
-    
-    # Train test splits
-    def random_train_test_split(self, ratio):
-        self.train_loader = None
-        dataset_length = self.dataset.shape[0]
-        split_point = int(dataset_length * ratio)
-        
-        # Initialize index lists
-        index_list = [i for i in range(dataset_length)]
-        random.shuffle(index_list)
-        train_index_list = index_list[:split_point]
-        test_index_list = index_list[split_point:]
-        
-        # Filter train and test data data
-        self.dataset_test = self.dataset.iloc[test_index_list]
-        self.dataset      = self.dataset.iloc[train_index_list]
         
     def initialize_loaders(self):
         # Filter train data
-        train_dataset = [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
-                         for i in range(self.dataset.shape[0])]
+        train_dataset = self.data.get_train_dataset()
         self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
         
         # Filter test data
-        test_dataset = [(self.dataset_test.iloc[i, self.input_columns], self.dataset_test.iloc[i, self.output_columns]) 
-                        for i in range(self.dataset_test.shape[0])]
+        test_dataset = self.data.get_test_dataset()
         self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
-    
-    # ################# #
-    # Data manipulation #
-    # ################# #
-    
-    # Handeling NA values
-    def replace_value_with_na(self, columns, value):
-        if self.dataset is not None:
-            self.dataset.iloc[:, columns] = self.dataset.iloc[:, columns].replace(value, pd.NA)
-        if self.dataset_test is not None:
-            self.dataset_test.iloc[:, columns] = self.dataset_test.iloc[:, columns].replace(value, pd.NA)
-    
-    def drop_na_listwise(self):
-        if self.dataset is not None:
-            self.dataset.dropna(inplace=True)
-        if self.dataset_test is not None:
-            self.dataset_test.dropna(inplace=True)
-    
-    def drop_na_columns(self):
-        if self.dataset is not None:
-            self.dataset.dropna(axis=1, inplace=True)
-        if self.dataset_test is not None:
-            self.dataset_test.dropna(axis=1, inplace=True)
-
-    def drop_na_pairwise(self):
-        if self.input_columns is not None and self.output_columns is not None:
-            subset = self.dataset.columns[self.input_columns + self.output_columns]
-            if self.dataset is not None:
-                self.dataset.dropna(subset=subset, inplace=True)
-            if self.dataset_test is not None:
-                self.dataset_test.dropna(subset=subset, inplace=True)
-    
-    def drop_na_from_column(self, column):
-        subset = self.dataset.columns[[column]]
-        if self.dataset is not None:
-            self.dataset.dropna(subset=subset, inplace=True)
-        if self.dataset_test is not None:
-            self.dataset_test.dropna(subset=subset, inplace=True)
-        
     
     # #################### #
     # Working with a model #

@@ -45,12 +45,12 @@ namespace dotNet.MLService {
         // Replace with NA
         public void ReplaceEmptyWithNA(int[] columns) {
             connection.Send(Command.EmptyStringToNA);
-            connection.Send(columns);
+            connection.Send(EncodeIntArray(columns));
         }
 
         public void ReplaceZeroWithNA(int[] columns) {
             connection.Send(Command.ZeroToNA);
-            connection.Send(columns);
+            connection.Send(EncodeIntArray(columns));
         }
 
         // Drop NA values
@@ -64,6 +64,16 @@ namespace dotNet.MLService {
 
         public void DropNAColumns() {
             connection.Send(Command.DropNAColumns);
+        }
+
+        public void LabelEncoding(int[] columns) {
+            connection.Send(Command.LabelEncoding);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void OneHotEncoding(int[] columns) {
+            connection.Send(Command.OneHotEncoding);
+            connection.Send(EncodeIntArray(columns));
         }
 
         // /////// //
@@ -108,6 +118,8 @@ namespace dotNet.MLService {
         DropNAListwise,
         DropNAPairwise,
         DropNAColumns,
+        LabelEncoding,
+        OneHotEncoding,
         // Network
         ChangeSettings,
         Start

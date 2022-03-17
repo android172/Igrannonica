@@ -22,14 +22,14 @@ class MLClientInstance(Thread):
             if received == 'LoadData':
                 # Receive path to dataset
                 path = self.connection.receive()
-                network.load_data_from_csv(path)
+                network.data.load_from_csv(path)
                 
                 print("Dataset loaded.")
                 
             elif received == 'LoadTestData':
                 # Receive path to dataset
                 path = self.connection.receive()
-                network.load_test_data_from_csv(path)
+                network.data.load_test_from_csv(path)
                 
                 print("Test dataset loaded.")
                 
@@ -37,7 +37,7 @@ class MLClientInstance(Thread):
                 # Receive inputs
                 inputs_string = self.connection.receive()
                 inputs = [int(x) for x in inputs_string.split(":")]
-                network.select_input_columns(inputs)
+                network.data.select_input_columns(inputs)
                 
                 print("Inputs selected.")
                 
@@ -45,14 +45,14 @@ class MLClientInstance(Thread):
                 # Receive outputs
                 outputs_string = self.connection.receive()
                 outputs = [int(x) for x in outputs_string.split(":")]
-                network.select_output_columns(outputs)
+                network.data.select_output_columns(outputs)
                 
                 print("Outputs selected")
                 
             elif received == 'RandomTrainTestSplit':
                 # Receive ratio
                 ratio = float(self.connection.receive())
-                network.random_train_test_split(ratio)
+                network.data.random_train_test_split(ratio)
                 
                 print("Random train-test split preformed.")
                 
@@ -61,7 +61,7 @@ class MLClientInstance(Thread):
                 # Receive columns
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
-                network.replace_value_with_na(columns, '')
+                network.data.replace_value_with_na(columns, '')
                 
                 print(f"Empty strings from columns {columns} replaced with NA.")
             
@@ -69,29 +69,40 @@ class MLClientInstance(Thread):
                 # Receive columns
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
-                network.replace_value_with_na(columns, 0)
+                network.data.replace_value_with_na(columns, 0)
                 
                 print(f"Zero values from columns {columns} replaced with NA.")
             
             elif received == 'DropNAListwise':
-                network.drop_na_listwise()
+                network.data.drop_na_listwise()
                 
                 print("All rows with any NA values dropped from dataset.")
             
             elif received == 'DropNAPairwise':
-                network.drop_na_pairwise()
+                network.data.drop_na_pairwise()
                 
                 print("All selected rows with any NA values dropped from dataset.")
             
             elif received == 'DropNAColumns':
-                network.drop_na_columns()
+                network.data.drop_na_columns()
                 
                 print("All columns with any NA values dropped from dataset.")
                 
-            elif received == 'DropNAFromColumn':
-                # Receive column to drop
-                column= int(self.connection.receive())
-                network.drop_na_from_column(column)
+            elif received == 'LabelEncoding':
+                # Receive columns to encode
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.label_encode_columns(columns)
+                
+                print(f"Columns {columns} were label encoded.")
+            
+            elif received == 'OneHotEncoding':
+                # Receive columns to encode
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.one_hot_encode_columns(columns)
+                
+                print(f"Columns {columns} were one-hot encoded.")
             
             # Working with networks #
             elif received == 'ChangeSettings':

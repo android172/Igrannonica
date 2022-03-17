@@ -31,8 +31,5 @@ class MLServer:
             print(f"Client connected at: {address}")
         
 if __name__ == "__main__":
-    a = [1, 2, 3]
-    print(f"bla {a} bla")
-    
-    # server = MLServer()
-    # server.start()
+    server = MLServer()
+    server.start()

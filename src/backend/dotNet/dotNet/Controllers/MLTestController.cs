@@ -27,12 +27,21 @@ namespace dotNet.Controllers {
             // Load data
             string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
             experiment.LoadDataset(datasetPath);
-            experiment.LoadInputs(new int[]{3, 6, 7, 8, 9, 10, 11, 12});
-            experiment.LoadOutputs(new int[]{13});
-            experiment.TrainTestSplit(0.1f);
+
+            // Drop NA values
+            experiment.ReplaceEmptyWithNA(new int[] { 8 });
+            experiment.DropNAListwise();
+
+            // Encode categorical values
+            experiment.OneHotEncoding(new int[] { 4, 5 });
 
             // Set ANN settings
             int networkSize = 2;
+
+            // Select inputs, outputs and split data
+            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
+            experiment.LoadOutputs(new int[] { 13 });
+            experiment.TrainTestSplit(0.1f);
 
             int[] hiddentLayers = new int[networkSize];
             hiddentLayers[0] = 5;
