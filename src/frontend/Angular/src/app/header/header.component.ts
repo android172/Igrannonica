@@ -80,7 +80,7 @@ export class HeaderComponent implements OnInit {
     location.reload();
   }
 
-  novieks(novieks: boolean)
+  /*novieks(novieks: boolean)
   {
     if(novieks)
     {
@@ -93,5 +93,5 @@ export class HeaderComponent implements OnInit {
       document.body.style.backgroundAttachment = "fixed"
       document.body.style.backgroundSize = "cover"
     }
-  }
+  }*/
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxCsvParser } from 'ngx-csv-parser';
 import { ViewChild } from '@angular/core';
 import { NgxCSVParserError } from 'ngx-csv-parser';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-novi-eksperiment',
@@ -13,28 +14,23 @@ export class NoviEksperimentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  csvRecords: any[] = [];
-  header = false;
+  fileName = '';
 
-  constructor(private ngxCsvParser: NgxCsvParser) {
-  }
+  constructor(private http: HttpClient) {}
 
-  @ViewChild('fileImportInput', { static: false }) fileImportInput: any;
+  onFileSelected(event:any) 
+  {
+    const file:File = event.target.files[0];
 
-  // Your applications input change listener for the CSV File
-  fileChangeListener($event: any): void {
+    if (file) 
+    {
+      this.fileName = file.name;
 
-    // Select the files from the event
-    const files = $event.srcElement.files;
+      const formData = new FormData();
+      formData.append("thumbnail", file);
 
-    // Parse the file you want to select for the operation along with the configuration
-    this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',' })
-      .pipe().subscribe((result: any) => {
-
-        console.log('Result', result);
-        this.csvRecords = result;
-      }, (error: NgxCSVParserError) => {
-        console.log('Error', error);
-      });
+      const upload$ = this.http.post("/api/thumbnail-upload", formData);   //bice izmenjen url
+      upload$.subscribe();
+    }
   }
 }

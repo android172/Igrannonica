@@ -1,5 +1,5 @@
 <!-- <app-header></app-header> -->
-<h1>NgxCSVParser by <a href="https://DevelopersHive.com">Developers Hive</a></h1>
+<!--<h1>NgxCSVParser by <a href="https://DevelopersHive.com">Developers Hive</a></h1>
 <div class="csv-file-chooser-section">
 
   <input type="file" #fileImportInput name="File Upload" id="csvFileUpload" (change)="fileChangeListener($event)"
@@ -52,8 +52,21 @@
         </td>
 
       </tr>
-    </tbody>-->
+    </tbody>
   </table>
 
+</div>-->
+
+<input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+<div class="file-upload">
+
+    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+        Učitaj podatke
+    </button>
+
+    {{fileName || "Podaci nisu učitani."}}
+
 </div>
+
 <app-footer id="footer"></app-footer>
