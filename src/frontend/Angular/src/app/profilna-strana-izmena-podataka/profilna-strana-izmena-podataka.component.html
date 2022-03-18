@@ -2,7 +2,16 @@
     <div id="centrirano">
         <div class="box">
             <div class="divbox1">
-                <img id="profilnaSlika" src="assets/ikonica.png">
+                <div class="slika">
+                    <img class="profilnaSlika" [src]="url">
+                    <button class="hide" (click)="fileInput.click()">Dodaj sliku</button>
+                    <input 
+                        style="display: none"
+                        type="file"
+                        (change)="onselectFile($event)"
+                        #fileInput
+                    >
+                </div>
                 <div id="dugmici">
                     <button id="sacuvaj" routerLink="/profilna-strana">Sacuvaj izmene</button> 
                     <button id="odbaci" routerLink="/profilna-strana">Odbaci izmene</button> 

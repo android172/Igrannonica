@@ -11,5 +11,18 @@ export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  
+  url = "./assets/ikonica.png";
 
+  onselectFile(e:any){
+
+    if(e.target.files)
+    {
+        var reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = (event:any) => {
+          this.url = event.target.result;
+        }
+    }
+  }
 }

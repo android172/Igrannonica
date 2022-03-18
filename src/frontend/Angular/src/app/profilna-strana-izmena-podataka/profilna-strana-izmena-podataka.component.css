@@ -49,6 +49,42 @@ p
     position: relative;
 }
 
+.profilnaSlika{
+    display: block;
+    width: 200px;
+    height: 200px;
+    border-radius: 200px;
+}
+
+.hide{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-color: rgba(219, 87, 118);
+    background-color: #fff;
+    border-radius: 10px;
+    color: rgba(219, 87, 118);
+    font-family: 'Roboto';
+    font-style: normal;
+    overflow: hidden;
+    width: 100px;
+    height: 30px;
+    transform: scale(0);
+    margin-left: 50px;
+    margin-bottom: 85px;
+}
+
+.slika{
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.slika:hover .hide{
+    transform: scale(1);
+}
+
 #dugmici{
 
     float: left;
