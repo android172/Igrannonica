@@ -112,6 +112,11 @@ input:focus, textarea:focus, select:focus{
     margin: auto;
 }
 
+#dugmePocetna:hover{
+    color: rgb(243, 48, 94);
+    border-color: rgb(243, 48, 94);
+    background: rgba(229, 229, 229);
+}
 
 #dugmePocetna{
 
