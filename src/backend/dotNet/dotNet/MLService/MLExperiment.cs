@@ -71,6 +71,28 @@ namespace dotNet.MLService {
             connection.Send(EncodeIntArray(columns));
         }
 
+        // Fill NA values
+        public void FillNAWithMean(int[] columns) {
+            connection.Send(Command.FillNAWithMean);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void FillNAWithMedian(int[] columns) {
+            connection.Send(Command.FillNAWithMedian);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void FillNAWithMode(int[] columns) {
+            connection.Send(Command.FillNAWithMode);
+            connection.Send(EncodeIntArray(columns));
+        }
+        public void FillNAWithRegression(int naColumn, int[] inputColumns) {
+            connection.Send(Command.FillNAWithRegression);
+            connection.Send(naColumn);
+            connection.Send(EncodeIntArray(inputColumns));
+        }
+
+        // Encoding
         public void OneHotEncoding(int[] columns) {
             connection.Send(Command.OneHotEncoding);
             connection.Send(EncodeIntArray(columns));
@@ -118,6 +140,10 @@ namespace dotNet.MLService {
         DropNAListwise,
         DropNAPairwise,
         DropNAColumns,
+        FillNAWithMean,
+        FillNAWithMedian,
+        FillNAWithMode,
+        FillNAWithRegression,
         LabelEncoding,
         OneHotEncoding,
         // Network

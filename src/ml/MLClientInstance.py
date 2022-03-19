@@ -56,7 +56,7 @@ class MLClientInstance(Thread):
                 
                 print("Random train-test split preformed.")
                 
-            # Data manipulation #
+            # Data manipulation : NA values #
             elif received == 'EmptyStringToNA':
                 # Receive columns
                 columns_string = self.connection.receive()
@@ -88,6 +88,41 @@ class MLClientInstance(Thread):
                 
                 print("All columns with any NA values dropped from dataset.")
                 
+            elif received == 'FillNAWithMean':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_na_with_mean(columns)
+                
+                print(f"NA values in columns {columns} replaced using mean value.")
+            
+            elif received == 'FillNAWithMedian':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_na_with_median(columns)
+                
+                print(f"NA values in columns {columns} replaced using median value.")
+            
+            elif received == 'FillNAWithMode':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_na_with_mode(columns)
+                
+                print(f"NA values in columns {columns} replaced using mode value.")
+            
+            elif received == 'FillNAWithRegression':
+                # Receive column with NA values
+                column = int(self.connection.receive())
+                # Receive columns for regression
+                columns_string = self.connection.receive()
+                input_columns = [int(x) for x in columns_string.split(":")]
+                network.data.replace_na_with_regression(column, input_columns)
+                
+                print(f"NA values from column {column} replaced using a model fit on columns {input_columns}.")
+                
+            # Data manipulation : Encoding #
             elif received == 'LabelEncoding':
                 # Receive columns to encode
                 columns_string = self.connection.receive()
