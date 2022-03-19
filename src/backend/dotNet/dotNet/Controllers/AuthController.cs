@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using dotNet.ModelValidation;
-
+using Microsoft.Net.Http.Headers;
 
 namespace dotNet.Controllers
 {
@@ -95,6 +95,29 @@ namespace dotNet.Controllers
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+        }
+        [Authorize]
+        [HttpPost("update")]
+        public IActionResult Update(KorisnikRegister korisnik)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            Korisnik kor = db.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+            if (kor.KorisnickoIme != korisnik.KorisnickoIme && db.proveri_korisnickoime(korisnik.KorisnickoIme))
+            {
+                return BadRequest("Korisnicko ime vec postoji");
+            }
+            if (kor.Email != korisnik.Email && db.proveri_email(korisnik.Email))
+            {
+                return BadRequest("Email vec postoji");
+            }
+            kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
+            if (db.updateKorisnika(kor))
+                return Ok(Generate(kor));
+            return BadRequest();
         }
     }
 }

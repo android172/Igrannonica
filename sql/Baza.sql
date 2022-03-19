@@ -37,7 +37,7 @@ ENGINE = InnoDB;
 -- Table `Baza`.`Eksperiment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Eksperiment` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Naziv` VARCHAR(256) NULL,
   `vlasnik` INT UNSIGNED NOT NULL,
   `csv` VARCHAR(256) NULL,
