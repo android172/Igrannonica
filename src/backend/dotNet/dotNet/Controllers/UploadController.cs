@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-//using SoftCircuits.CsvParser; 
 using System.Text.Json;
 using dotNet.Models;
-using CsvHelper;
 using System.Globalization;
 using System.Text;
 using ChoETL;
+using Microsoft.VisualBasic.FileIO;
 
 namespace dotNet.Controllers
 {
@@ -23,31 +22,42 @@ namespace dotNet.Controllers
 
         [HttpPost("upload")]
         public string Upload(IFormFile file) //JsonResult
-        {   
+        {  
+            string[] lines;
             var result = new StringBuilder();
-            using (var reader = new StreamReader(file.OpenReadStream()))
+            var csv = new List<string[]>();
+
+            using (TextFieldParser csvParse = new TextFieldParser(file.OpenReadStream()))
             {
-                while (reader.Peek() >= 0)
-                    result.AppendLine(reader.ReadLine());
+                csvParse.CommentTokens = new string[] { "#" };
+                csvParse.SetDelimiters(new string[] { "," });
+                csvParse.HasFieldsEnclosedInQuotes = true;
+
+                while (!csvParse.EndOfData)
+                {
+                    string[] line = csvParse.ReadFields();
+                    
+                    for(var i=0;i<line.Length;i++)
+                    {
+                        if(line[i].Contains(','))
+                        {
+                            line[i] = "\"" + line[i] + "\"";
+                        }
+                    }
+                    string linija = string.Join(",", line);
+                    result.AppendLine(linija);
+                }
             }
-            //Console.WriteLine(result);
-
-
+            //Console.WriteLine(result.ToString());
             StringBuilder sb = new StringBuilder();
-            using (var p1 = ChoCSVReader.LoadText(result.ToString()) //result.ToString()
-                .WithFirstLineHeader()
-                )
+            using (var p1 = ChoCSVReader.LoadText(result.ToString()).WithFirstLineHeader())
             {
                 using (var w = new ChoJSONWriter(sb))
-                    w.Write(p1);
+                w.Write(p1);
             }
-
             Console.WriteLine(sb.ToString());
 
-            // return new JsonResult(sb.ToString());
             return sb.ToString();
-
-
         }
     }
 }
