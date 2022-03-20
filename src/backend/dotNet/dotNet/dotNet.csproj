@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ChoETL.JSON" Version="1.2.1.43" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.16.0" />
