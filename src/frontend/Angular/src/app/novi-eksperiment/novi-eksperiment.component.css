@@ -8,3 +8,9 @@
     position: fixed;
     bottom: 0;
 }
+
+#table
+{
+    margin-top: 20px;
+    background-color: white;
+}
