@@ -31,19 +31,9 @@
 
             <div class="tekst">Lista mojih eksperimenata:</div>
             <div id="skrol">
-              <!-- -eksperimenti -->
-              <div id="e"><p>Eksperiment 1</p></div>
-              <div id="e"><p>Eksperiment 2</p></div>
-              <div id="e"><p>Eksperiment 3</p></div>
-              <div id="e"><p>Eksperiment 4</p></div>
-              <div id="e"><p>Eksperiment 5</p></div>
-              <div id="e"><p>Eksperiment 6</p></div>
-              <div id="e"><p>Eksperiment 7</p></div>
-              <div id="e"><p>Eksperiment 8</p></div>
-              <div id="e"><p>Eksperiment 9</p></div>
-              <div id="e"><p>Eksperiment 10</p></div>
-              <div id="e"><p>Eksperiment 11</p></div>
-              <div id="e"><p>Eksperiment 12</p></div>
+                <div id="e" *ngFor="let e of eksperimenti"> 
+                    <p>  {{ e.name }}  </p>
+                </div>
             </div>
         </div>
     </div>
