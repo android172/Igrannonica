@@ -1,4 +1,5 @@
-﻿using dotNet.Models;
+﻿using dotNet.DBFunkcije;
+using dotNet.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -12,11 +13,11 @@ namespace dotNet.Controllers
     public class EksperimentController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db;
+        DB db;
         public EksperimentController(IConfiguration config)
         {
             _config = config;
-            db = new DBKonekcija(_config.GetConnectionString("connectionString"));
+            db = new DB(_config);
         }
         [Authorize]
         [HttpGet("Eksperimenti")]
@@ -26,7 +27,7 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            List<EksperimentDto> eksperimenti = db.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
+            List<EksperimentDto> eksperimenti = db.dbeksperiment.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
             if (eksperimenti.Count > 0)
                 return Ok(eksperimenti);
             return BadRequest();
@@ -39,12 +40,12 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if(db.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
+            if(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }
 
-            if(db.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
+            if(db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
                 return Ok("Dodat eksperiment");
             return BadRequest("Doslo do greske");
         }
@@ -56,12 +57,12 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if (db.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }
 
-            if (db.updateEksperient(id, ime))
+            if (db.dbeksperiment.updateEksperient(id, ime))
                 return Ok("Promenjeno ime");
             return BadRequest("Doslo do greske");
         }
@@ -71,7 +72,7 @@ namespace dotNet.Controllers
         [Authorize]
         [HttpGet("Modeli")]
         public IActionResult Modeli(int id) {
-            List<ModelDto> modeli=db.modeli(id);
+            List<ModelDto> modeli=db.dbmodel.modeli(id);
             if (modeli.Count > 0)
                 return Ok(modeli);
         return BadRequest("Nema modela"); 
@@ -80,11 +81,11 @@ namespace dotNet.Controllers
         [HttpPost("Modeli")]
         public IActionResult napraviModel(string ime,int id)
         {
-            if(db.proveriModel(ime, id))
+            if(db.dbmodel.proveriModel(ime, id))
             {
                 return BadRequest("Vec postoji model sa tim imenom");
             }
-            if (db.dodajModel(ime, id))
+            if (db.dbmodel.dodajModel(ime, id))
                 return Ok("Napravljen model");
             return BadRequest("Doslo do greske");
         }
@@ -92,11 +93,11 @@ namespace dotNet.Controllers
         [HttpPut("Modeli")]
         public IActionResult updateModel(string ime, int id,int ideksperimenta)
         {
-            if (db.proveriModel(ime, ideksperimenta))
+            if (db.dbmodel.proveriModel(ime, ideksperimenta))
             {
                 return BadRequest("Vec postoji model sa tim imenom");
             }
-            if (db.promeniImeModela(ime, id))
+            if (db.dbmodel.promeniImeModela(ime, id))
                 return Ok("Promenjeno ime modela");
             return BadRequest("Doslo do greske");
         }
@@ -104,7 +105,7 @@ namespace dotNet.Controllers
         [HttpDelete("Modeli")]
         public IActionResult izbrisiModel(int id)
         {
-            if (db.izbrisiModel(id))
+            if (db.dbmodel.izbrisiModel(id))
             {
                 return Ok("Model izbrisan");
             }
@@ -114,7 +115,7 @@ namespace dotNet.Controllers
         [Authorize]
         [HttpGet("Podesavanja")]
         public IActionResult Podesavanja(int id) {
-            ANNSettings podesavanje = db.podesavanja(id);
+            ANNSettings podesavanje = db.dbmodel.podesavanja(id);
             if(podesavanje != null)
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");

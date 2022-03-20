@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using dotNet.ModelValidation;
 using Microsoft.Net.Http.Headers;
+using dotNet.DBFunkcije;
 
 namespace dotNet.Controllers
 {
@@ -19,12 +20,11 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db;
+        private DB db;
         public AuthController(IConfiguration config)
         {
             _config = config;
-            string sqlSource = _config.GetConnectionString("connectionString");
-            db = new DBKonekcija(sqlSource);
+            db = new DB(_config); 
         }
         [AllowAnonymous]
         [HttpPost]
@@ -60,7 +60,7 @@ namespace dotNet.Controllers
 
         private Korisnik Authenticate(KorisnikDto korisnik)
         {
-            Korisnik kor = db.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
+            Korisnik kor = db.dbkorisnik.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
             return kor;
         }
         [HttpPost("register")]
@@ -68,7 +68,7 @@ namespace dotNet.Controllers
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
             Console.WriteLine(request.KorisnickoIme);
-            KorisnikValid korisnikValid = db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
+            KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
             
             if(korisnikValid.korisnickoIme && korisnikValid.email)
             {
@@ -105,17 +105,17 @@ namespace dotNet.Controllers
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
 
-            Korisnik kor = db.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
-            if (kor.KorisnickoIme != korisnik.KorisnickoIme && db.proveri_korisnickoime(korisnik.KorisnickoIme))
+            Korisnik kor = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+            if (kor.KorisnickoIme != korisnik.KorisnickoIme && db.dbkorisnik.proveri_korisnickoime(korisnik.KorisnickoIme))
             {
                 return BadRequest("Korisnicko ime vec postoji");
             }
-            if (kor.Email != korisnik.Email && db.proveri_email(korisnik.Email))
+            if (kor.Email != korisnik.Email && db.dbkorisnik.proveri_email(korisnik.Email))
             {
                 return BadRequest("Email vec postoji");
             }
             kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
-            if (db.updateKorisnika(kor))
+            if (db.dbkorisnik.updateKorisnika(kor))
                 return Ok(Generate(kor));
             return BadRequest();
         }
