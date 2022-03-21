@@ -1,0 +1,47 @@
+<div id="body">
+    <div id="centrirano">
+        <div class="box">
+            <div class="divbox1">
+                <div class="slika">
+                    <img class="profilnaSlika" [src]="url">
+                    <div class="hide">
+                        <button class="sakriveno1" (click)="fileInput.click()">Nova profilna slika</button>
+                        <button class="sakriveno2" (click)="ukloniSliku()">Ukloni profilnu sliku</button>
+                    </div>
+                    <input 
+                        style="display: none"
+                        type="file"
+                        (change)="onselectFile($event)"
+                        #fileInput
+                    >
+                </div>
+                <div id="dugmici">
+                    <button id="sacuvaj" routerLink="/profilna-strana">Sacuvaj izmene</button> 
+                    <button id="odbaci" routerLink="/profilna-strana">Odbaci izmene</button> 
+                </div>
+            </div>
+            <div class="divbox2">
+                <div id="podaci">Ime i prezime:</div>
+                <input id="Ime" type="text" name="ime">
+
+                <div id="podaci">Korisnicko ime:</div>
+                <input id="KorisnickoIme" type="text" name="korisnickoIme">
+
+                <div id="podaci">Email:</div>
+                <input id="Email" type="text" name="email">
+
+            </div>
+            <div class="divbox2">
+                <div id="podaci">Stara lozinka:</div>
+                <input id="staraLozinka" type="password" name="staraLozinka">
+
+                <div id="podaci">Nova lozinka:</div>
+                <input id="novaLozinka" type="password" name="novaLozinka">
+
+                <div id="podaci">Ponovite lozinku:</div>
+                <input id="ponovljenaLozinka" type="password" name="ponovljenaLozinka">
+            </div>  
+        </div>     
+    </div>
+</div>
+<app-footer id="footer"></app-footer>

@@ -1,0 +1,41 @@
+<div id="body">
+    <div id="centrirano">
+        <div class="box">
+            <div id="slikaDugme">
+            <img id="profilnaSlika" src="assets/ikonica.png">
+            <div id="submitDugme">
+                <button id="button" routerLink="/profilna-strana-izmena-podataka">Izmenite profil</button> 
+            </div>
+            </div>
+            <div class="divbox">
+
+                <div id="podaci">Ime i prezime:</div>
+                <div id="polje">
+                <div id="ime" type="text" name="ime"></div>
+                </div>
+
+                <div id="podaci">Korisnicko ime:</div>
+                <div id="polje">
+                <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
+                </div>
+
+                <div id="podaci">Email:</div>
+                <div id="polje">
+                <div id="email" type="text" name="email"></div>
+                </div>    
+
+            </div>  
+        </div>
+        
+        <div id="divEksperimenti">
+
+            <div class="tekst">Lista mojih eksperimenata:</div>
+            <div id="skrol">
+                <div id="e" *ngFor="let e of eksperimenti"> 
+                    <p>  {{ e.name }}  </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-footer id="footer"></app-footer>
