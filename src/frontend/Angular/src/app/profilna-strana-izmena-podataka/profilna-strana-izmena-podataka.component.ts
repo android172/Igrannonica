@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-profilna-strana-izmena-podataka',
@@ -7,12 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
 
-  constructor() { }
+  
+  constructor(public jwtHelper: JwtHelperService) { }
 
   ngOnInit(): void {
+    this.ucitajPodatke1();
+  }
+
+  ucitajPodatke1()
+  {
+    var dekodiraniToken = this.jwtHelper.decodeToken(this.jwtHelper.tokenGetter());
+    (<HTMLInputElement>document.getElementById("Ime")).defaultValue = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
+    (<HTMLInputElement>document.getElementById("KorisnickoIme")).defaultValue = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+    (<HTMLInputElement>document.getElementById("Email")).defaultValue = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+
   }
   
   url = "./assets/ikonica.png";
+
 
   onselectFile(e:any){
 
