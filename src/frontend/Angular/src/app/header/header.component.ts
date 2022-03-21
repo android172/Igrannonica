@@ -80,16 +80,18 @@ export class HeaderComponent implements OnInit {
     location.reload();
   }
 
-  skloniCrticu(name:any)
+  /*novieks(novieks: boolean)
   {
-    // alert("Alert")
-    // if(name == this.prikaziMeni_1[this.prikaziMeni_1.length-1].tab)
-    // {
-    //   this.prikaziMeni_1[this.prikaziMeni_1.length-1].style = "color:#F45E82; border-right:none"
-    // }
-    // else
-    // {
-    //   this.prikaziMeni_1[this.prikaziMeni_1.length-1].style = "color:white; border-right:none"
-    // }
-  }
+    if(novieks)
+    {
+      document.body.style.background = '#4B5B87'
+    }
+    else
+    {
+      document.body.style.backgroundImage = "url('/assets/pozadina.jpg')"
+      document.body.style.backgroundRepeat = "no-repeat"
+      document.body.style.backgroundAttachment = "fixed"
+      document.body.style.backgroundSize = "cover"
+    }
+  }*/
 }
