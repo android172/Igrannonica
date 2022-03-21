@@ -19,6 +19,8 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { MojiEksperimentiComponent } from './moji-eksperimenti/moji-eksperimenti.component';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { FormsModule } from '@angular/forms';
+import { ProfilnaStranaComponent } from './profilna-strana/profilna-strana.component';
+import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-podataka/profilna-strana-izmena-podataka.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -36,6 +38,8 @@ export function tokenGetter() {
     ONamaComponent,
     FooterComponent,
     MojiEksperimentiComponent,
+    ProfilnaStranaComponent,
+    ProfilnaStranaIzmenaPodatakaComponent,
   ],
   imports: [
     HttpClientModule,

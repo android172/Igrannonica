@@ -7,6 +7,8 @@ import { PocetnaStranaComponent } from './pocetna-strana/pocetna-strana.componen
 import { PrijavaComponent } from './prijava/prijava.component';
 import { RegistracijaComponent } from './registracija/registracija.component';
 import { MojiEksperimentiComponent } from './moji-eksperimenti/moji-eksperimenti.component';
+import { ProfilnaStranaComponent } from './profilna-strana/profilna-strana.component';
+import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-podataka/profilna-strana-izmena-podataka.component';
 
 const routes: Routes = [
   {path:"", redirectTo: "/pocetna-strana", pathMatch: "full"},
@@ -16,7 +18,9 @@ const routes: Routes = [
   {path:'novi-eksperiment', component:NoviEksperimentComponent},
   {path:'kontakt', component:KontaktComponent},
   {path:'o-nama', component:ONamaComponent},
-  {path:'moji-eksperimenti', component:MojiEksperimentiComponent}
+  {path:'moji-eksperimenti', component:MojiEksperimentiComponent},
+  {path:'profilna-strana', component:ProfilnaStranaComponent},
+  {path:'profilna-strana-izmena-podataka', component:ProfilnaStranaIzmenaPodatakaComponent}
 ];
 
 @NgModule({
