@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using ChoETL;
 using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json;
 
 namespace dotNet.Controllers
 {
@@ -30,7 +31,7 @@ namespace dotNet.Controllers
             using (TextFieldParser csvParse = new TextFieldParser(file.OpenReadStream()))
             {
                 csvParse.CommentTokens = new string[] { "#" };
-                csvParse.SetDelimiters(new string[] { "," });
+                csvParse.SetDelimiters(",");
                 csvParse.HasFieldsEnclosedInQuotes = true;
 
                 while (!csvParse.EndOfData)
@@ -55,9 +56,32 @@ namespace dotNet.Controllers
                 using (var w = new ChoJSONWriter(sb))
                 w.Write(p1);
             }
+            
             Console.WriteLine(sb.ToString());
 
             return sb.ToString();
+            /*
+            var csv = new List<string[]>();
+            var lines = File.ReadAllLines(path);
+
+            foreach (string line in lines)
+                csv.Add(line.Split(','));
+
+            var properties = lines[0].Split(',');
+
+            var listObjResult = new List<Dictionary<string, string>>();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var objResult = new Dictionary<string, string>();
+                for (int j = 0; j < properties.Length; j++)
+                    objResult.Add(properties[j], csv[i][j]);
+
+                listObjResult.Add(objResult);
+            }
+
+            return JsonConvert.SerializeObject(listObjResult);
+            */
         }
     }
 }
