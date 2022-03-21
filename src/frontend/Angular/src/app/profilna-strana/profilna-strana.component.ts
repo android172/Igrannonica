@@ -11,6 +11,9 @@ import { HttpClient } from '@angular/common/http';
 export class ProfilnaStranaComponent implements OnInit {
 
   eksperimenti : any[] = [];
+  ime: any;
+  korisnickoIme: any;
+  email: any;
   json: any;
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService, private router: Router) { }
@@ -21,17 +24,20 @@ export class ProfilnaStranaComponent implements OnInit {
 
   ucitajPodatke()
   {
-    /*
     var dekodiraniToken = this.jwtHelper.decodeToken(this.jwtHelper.tokenGetter());
-    var id = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-*/
+  
     this.http.get('http://localhost:5008/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
-          console.log(res);
           this.json = res;
           this.eksperimenti = Object.values(this.json);
+          this.ime = (<HTMLDivElement>document.getElementById("ime")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
+          this.korisnickoIme = (<HTMLDivElement>document.getElementById("korisnickoIme")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+          this.email = (<HTMLDivElement>document.getElementById("email")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+
         },error =>{
-          console.log(error.error);       
+          this.ime = (<HTMLDivElement>document.getElementById("ime")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
+          this.korisnickoIme = (<HTMLDivElement>document.getElementById("korisnickoIme")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+          this.email = (<HTMLDivElement>document.getElementById("email")).innerHTML = dekodiraniToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];     
         }
       );
   }
