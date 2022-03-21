@@ -25,4 +25,9 @@ export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
         }
     }
   }
+
+  ukloniSliku(){
+
+    this.url = "./assets/ikonica.png";
+  }
 }

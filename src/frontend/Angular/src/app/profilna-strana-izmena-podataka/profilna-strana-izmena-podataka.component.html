@@ -4,7 +4,10 @@
             <div class="divbox1">
                 <div class="slika">
                     <img class="profilnaSlika" [src]="url">
-                    <button class="hide" (click)="fileInput.click()">Dodaj sliku</button>
+                    <div class="hide">
+                        <button class="sakriveno1" (click)="fileInput.click()">Nova profilna slika</button>
+                        <button class="sakriveno2" (click)="ukloniSliku()">Ukloni profilnu sliku</button>
+                    </div>
                     <input 
                         style="display: none"
                         type="file"
@@ -30,13 +33,13 @@
             </div>
             <div class="divbox2">
                 <div id="podaci">Stara lozinka:</div>
-                <input id="ime" type="text" name="ime">
+                <input id="staraLozinka" type="password" name="staraLozinka">
 
                 <div id="podaci">Nova lozinka:</div>
-                <input id="korisnickoIme" type="text" name="korisnickoIme">
+                <input id="novaLozinka" type="password" name="novaLozinka">
 
                 <div id="podaci">Ponovite lozinku:</div>
-                <input id="email" type="text" name="email">
+                <input id="ponovljenaLozinka" type="password" name="ponovljenaLozinka">
             </div>  
         </div>     
     </div>

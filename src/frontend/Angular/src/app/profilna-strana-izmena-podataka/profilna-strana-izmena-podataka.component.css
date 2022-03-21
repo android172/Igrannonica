@@ -61,6 +61,16 @@ p
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: hidden;
+    width: 150px;
+    height: 70px;
+    transform: scale(0);
+    margin-left: 25px;
+    margin-bottom: 65px;
+}
+
+.sakriveno1{
+    
     border-color: rgba(219, 87, 118);
     background-color: #fff;
     border-radius: 10px;
@@ -68,11 +78,23 @@ p
     font-family: 'Roboto';
     font-style: normal;
     overflow: hidden;
-    width: 100px;
+    width: 150px;
     height: 30px;
-    transform: scale(0);
-    margin-left: 50px;
-    margin-bottom: 85px;
+    margin-bottom: 10px;
+}
+
+
+.sakriveno2{
+    
+    border-color: #7584AE;
+    background-color: #fff;
+    border-radius: 10px;
+    color: #7584AE;
+    font-family: 'Roboto';
+    font-style: normal;
+    overflow: hidden;
+    width: 150px;
+    height: 30px;
 }
 
 .slika{
