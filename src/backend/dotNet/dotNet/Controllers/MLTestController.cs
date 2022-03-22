@@ -28,19 +28,31 @@ namespace dotNet.Controllers {
             string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
             experiment.LoadDataset(datasetPath);
 
-            // Drop NA values
-            experiment.ReplaceEmptyWithNA(new int[] { 8 });
-            experiment.DropNAListwise();
+            // Add row and column
+            experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
+            "1", "1", "1", "12412.1", "0"});
+            var column = new string[10001];
+            for (int i = 0; i < column.Length; i++)
+                column[i] = "2";
+            experiment.AddColumn("IDK", column);
+
+            // Get rows
+            var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
+            Console.WriteLine(rows);
 
             // Encode categorical values
             experiment.OneHotEncoding(new int[] { 4, 5 });
+
+            // Replace NA values
+            experiment.ReplaceZeroWithNA(new int[] { 8 });
+            experiment.FillNAWithRegression(8, new int[] { 5, 7, 9, 10, 12, 13, 14, 15, 16});
 
             // Set ANN settings
             int networkSize = 2;
 
             // Select inputs, outputs and split data
-            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
-            experiment.LoadOutputs(new int[] { 13 });
+            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16 });
+            experiment.LoadOutputs(new int[] { 11 });
             experiment.TrainTestSplit(0.1f);
 
             int[] hiddentLayers = new int[networkSize];
