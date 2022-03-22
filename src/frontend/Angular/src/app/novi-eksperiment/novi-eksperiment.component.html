@@ -6,10 +6,21 @@
         Učitaj podatke
     </button>
 
-    <span style="color:white">{{fileName || "Podaci nisu učitani."}}</span>
-
+    <span style="color:white; margin-left: 10px;">{{fileName || "Podaci nisu učitani."}}</span>
 </div>
 <div id="porukaGreske"></div>
+
+<div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
+    <span>
+        <select id="brojRedovaTabele">
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </span>
+</div>
 
 <div id="table">
     <table>

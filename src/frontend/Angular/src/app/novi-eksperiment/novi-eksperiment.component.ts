@@ -33,16 +33,20 @@ export class NoviEksperimentComponent implements OnInit {
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData).subscribe(
         response => {
           this.loadDefaultItemsPerPage();
+          (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
+          (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
       },error =>{
         console.log(error.error);
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Greška prilikom učitavanja podataka!";
+        (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
+        (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
       });
     }
   }
 
   loadDefaultItemsPerPage()
   {      
-    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${15}").subscribe(
+    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${10}").subscribe(
       (response: any) => {
         console.log(response.data);
         this.json =  response.data;

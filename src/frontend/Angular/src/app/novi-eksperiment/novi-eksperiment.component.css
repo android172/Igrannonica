@@ -19,3 +19,8 @@
 {
     color: #D74971;
 }
+
+#brojRedovaTabele, #brojRedovaTabelePoruka
+{
+    visibility: hidden;
+}
