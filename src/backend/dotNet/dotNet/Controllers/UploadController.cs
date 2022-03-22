@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using dotNet.Models;
-using System.Globalization;
 using System.Text;
-using ChoETL;
 using Microsoft.VisualBasic.FileIO;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace dotNet.Controllers
@@ -23,10 +20,11 @@ namespace dotNet.Controllers
 
         [HttpPost("upload")]
         public string Upload(IFormFile file) //JsonResult
-        {  
-            string[] lines;
+        {
             var result = new StringBuilder();
             var csv = new List<string[]>();
+            string[] lines = { };
+            List<string> lines2 = new List<string>();
 
             using (TextFieldParser csvParse = new TextFieldParser(file.OpenReadStream()))
             {
@@ -37,35 +35,26 @@ namespace dotNet.Controllers
                 while (!csvParse.EndOfData)
                 {
                     string[] line = csvParse.ReadFields();
-                    
-                    for(var i=0;i<line.Length;i++)
+
+                    for (var i = 0; i < line.Length; i++)
                     {
-                        if(line[i].Contains(','))
+                        if (line[i].Contains(','))
                         {
                             line[i] = "\"" + line[i] + "\"";
                         }
                     }
                     string linija = string.Join(",", line);
-                    result.AppendLine(linija);
+
+                    lines2.Add(linija);
                 }
             }
-            //Console.WriteLine(result.ToString());
-            StringBuilder sb = new StringBuilder();
-            using (var p1 = ChoCSVReader.LoadText(result.ToString()).WithFirstLineHeader())
-            {
-                using (var w = new ChoJSONWriter(sb))
-                w.Write(p1);
-            }
-            
-            Console.WriteLine(sb.ToString());
-
-            return sb.ToString();
-            /*
-            var csv = new List<string[]>();
-            var lines = File.ReadAllLines(path);
+            lines = lines2.ToArray();
 
             foreach (string line in lines)
-                csv.Add(line.Split(','));
+            {
+                var pom = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+                csv.Add(pom);
+            }
 
             var properties = lines[0].Split(',');
 
@@ -81,7 +70,6 @@ namespace dotNet.Controllers
             }
 
             return JsonConvert.SerializeObject(listObjResult);
-            */
         }
     }
 }
