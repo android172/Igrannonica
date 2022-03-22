@@ -54,11 +54,54 @@ class MLData:
         random.shuffle(index_list)
         self.train_indices = index_list[:split_point]
         self.test_indices  = index_list[split_point:]
+        
+    # #################### #
+    # Access required rows #
+    # #################### #
+    
+    def get_rows(self, rows):
+        return self.dataset.iloc[rows]
     
     # ################# #
     # Data manipulation #
     # ################# #
     
+    # Edit dataset
+    def update_field(self, row, column, value):
+        self.dataset.iloc[row, column] = value
+
+    def add_row(self, new_row, test=False):
+        series = pd.Series(new_row, index=self.dataset.columns)
+        self.dataset.loc[self.dataset.shape[0]] = series
+        
+        if self.train_indices is not None:
+            if test == False:
+                self.train_indices.append(self.dataset.shape[0])
+            else:
+                self.test_indices.append(self.dataset.shape[0])
+    
+    def update_row(self, row, new_row):
+        self.dataset.iloc[row] = new_row
+    
+    def remove_row(self, row):
+        self.dataset.drop(row, inplace=True)
+        if self.train_indices is not None:
+            self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
+            self.test_indices  = [index - 1 if index > row else index for index in self.test_indices  if index != row]
+            
+    def add_column(self, new_column, label):
+        series = pd.Series(new_column, name=label)
+        self.dataset = self.dataset.join(series)
+    
+    def update_column(self, column, new_column=None, new_label=None):
+        if new_label is not None:
+            self.dataset.rename(columns={self.dataset.columns[column]:new_label}, inplace=True)
+        if new_column is not None:
+            self.dataset.iloc[:, column] = new_column
+        
+    def remove_column(self, column):
+        self.dataset.drop(self.dataset.columns[column], axis=1, inplace=True)
+            
     # Handeling NA values
     def replace_value_with_na(self, columns, value):
         self.dataset.iloc[:, columns] = self.dataset.iloc[:, columns].replace(value, pd.NA)

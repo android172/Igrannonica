@@ -28,6 +28,18 @@ namespace dotNet.Controllers {
             string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
             experiment.LoadDataset(datasetPath);
 
+            // Add row and column
+            experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
+            "1", "1", "1", "12412.1", "0"});
+            var column = new string[10001];
+            for (int i = 0; i < column.Length; i++)
+                column[i] = "2";
+            experiment.AddColumn("IDK", column);
+
+            // Get rows
+            var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
+            Console.WriteLine(rows);
+
             // Encode categorical values
             experiment.OneHotEncoding(new int[] { 4, 5 });
 

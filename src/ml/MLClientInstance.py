@@ -1,4 +1,5 @@
 
+import json
 from threading import Thread
 
 from ANN import ANN
@@ -55,6 +56,112 @@ class MLClientInstance(Thread):
                 network.data.random_train_test_split(ratio)
                 
                 print("Random train-test split preformed.")
+            
+            # Data access #
+            
+            elif received == 'GetRows':
+                # Receive row indices
+                row_string = self.connection.receive()
+                row_indices = [int(x) for x in row_string.split(":")]
+                data = network.data.get_rows(row_indices)
+                self.connection.send(data.to_json(orient='split'))
+                
+                print(f"Rows: {row_indices} requested.")
+            
+            # Data manipulation : CRUD operation #
+            
+            elif received == 'AddRow':
+                # Receive row values
+                row_string = self.connection.receive()
+                new_row = json.loads(row_string)["Data"]
+                network.data.add_row(new_row)
+                
+                print(f"Row: {new_row} added to the dataset.")
+            
+            elif received == 'AddRowToTest':
+                # Receive row values
+                row_string = self.connection.receive()
+                new_row = json.loads(row_string)["Data"]
+                network.data.add_row(new_row, True)
+                
+                print(f"Row: {new_row} added to the test dataset.")
+                
+            elif received == 'UpdateRow':
+                # Receive row index
+                row_index = int(self.connection.receive())
+                # Receive row values
+                row_string = self.connection.receive()
+                new_row = json.loads(row_string)["Data"]
+                network.data.update_row(row_index, new_row)
+                
+                print(f"Row {row_index} replaced with values: {new_row}.")
+                
+            elif received == 'DeleteRow':
+                # Receive row index
+                row = int(self.connection.receive())
+                network.data.remove_row(row)
+                
+                print(f"Row {row} removed from the dataset.")
+                
+            elif received == 'AddColumn':
+                # Receive column values
+                column_string = self.connection.receive()
+                new_column = json.loads(column_string)["Data"]
+                # Receive column name
+                column_name = self.connection.receive()
+                network.data.add_column(new_column, column_name)
+                
+                print(f"Column: {new_column} added to the dataset.")
+                
+            elif received == 'UpdateColumn':
+                # Receive column index
+                column_index = int(self.connection.receive())
+                # Receive column values
+                column_string = self.connection.receive()
+                new_column = json.loads(column_string)["Data"]
+                network.data.update_column(column_index, new_column, None)
+                
+                print(f"Column {column_index} replaced with values: {new_column}.")
+                
+            elif received == 'RenameColumn':
+                # Receive column index
+                column_index = int(self.connection.receive())
+                # Receive column name
+                column_name = self.connection.receive()
+                network.data.update_column(column_index, None, column_name)
+                
+                print(f"Column {column_index} renamed from {network.data.dataset.columns[column_index]} to {column_name}.")
+                
+            elif received == 'UpdateAndRenameColumn':
+                # Receive column index
+                column_index = int(self.connection.receive())
+                # Receive column values
+                column_string = self.connection.receive()
+                new_column = json.loads(column_string)["Data"]
+                # Receive column name
+                column_name = self.connection.receive()
+                network.data.update_column(column_index, new_column, column_name)
+                
+                print(f"Column {column_index} replaced with values: {new_column}.")
+                print(f"Column {column_index} renamed from {network.data.dataset.columns[column_index]} to {column_name}.")
+                
+            elif received == 'DeleteColumn':
+                # Receive column index
+                column = int(self.connection.receive())
+                network.data.remove_column(column)
+                
+                print(f"Column {column} removed from the dataset.")
+                
+            elif received == 'UpdateValue':
+                # Receive row
+                row = int(self.connection.receive())
+                # Receive column
+                column = int(self.connection.receive())
+                # Receive value
+                value = self.connection.receive()
+                network.data.update_field(row, column, value)
+                
+                print(f"Field ({row}, {column}) updated to {value}.")
                 
             # Data manipulation : NA values #
             elif received == 'EmptyStringToNA':
