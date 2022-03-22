@@ -64,7 +64,7 @@ class MLClientInstance(Thread):
                 row_string = self.connection.receive()
                 row_indices = [int(x) for x in row_string.split(":")]
                 data = network.data.get_rows(row_indices)
-                self.connection.send(data.to_json(orient='split'))
+                self.connection.send(data.to_json(orient='records'))
                 
                 print(f"Rows: {row_indices} requested.")
             
