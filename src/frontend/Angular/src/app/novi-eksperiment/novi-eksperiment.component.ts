@@ -33,6 +33,7 @@ export class NoviEksperimentComponent implements OnInit {
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData).subscribe(
         response => {
           this.loadDefaultItemsPerPage();
+          (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
       },error =>{
@@ -47,6 +48,17 @@ export class NoviEksperimentComponent implements OnInit {
   loadDefaultItemsPerPage()
   {      
     this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${10}").subscribe(
+      (response: any) => {
+        console.log(response.data);
+        this.json =  response.data;
+        this.totalItems = response.totalItems;
+    })
+  }
+
+  promeniBrojRedova(value: any)
+  {
+    this.itemsPerPage = parseInt(value);
+    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${this.itemsPerPage}").subscribe(
       (response: any) => {
         console.log(response.data);
         this.json =  response.data;

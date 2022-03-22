@@ -12,7 +12,7 @@
 
 <div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
     <span>
-        <select id="brojRedovaTabele">
+        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
             <option value="10">10</option>
             <option value="15">15</option>
             <option value="20">20</option>
