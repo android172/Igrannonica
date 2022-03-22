@@ -9,6 +9,7 @@
     <span style="color:white">{{fileName || "Podaci nisu učitani."}}</span>
 
 </div>
+<div id="porukaGreske"></div>
 
 <div id="table">
     <table>
@@ -17,12 +18,22 @@
                 {{header}}
             </th>
         </tr>
-        <tr *ngFor="let red of json; index as i;">
+        <tr *ngFor="let red of json; index as i; paginate
+        : {
+            itemsPerPage: itemsPerPage,
+            currentPage: page,
+            totalItems: totalItems
+          }">
             <td *ngFor="let fieldValue of dajRed(i)">
               {{fieldValue}}
             </td>
         </tr>
     </table>
 </div>
+
+<pagination-controls
+  class="pagi"
+  (pageChange)="page = $event"
+></pagination-controls>
 
 <app-footer id="footer"></app-footer>

@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgxCsvParser } from 'ngx-csv-parser';
-import { ViewChild } from '@angular/core';
-import { NgxCSVParserError } from 'ngx-csv-parser';
 import { HttpClient } from '@angular/common/http';
-
 
 @Component({
   selector: 'app-novi-eksperiment',
@@ -13,11 +9,13 @@ import { HttpClient } from '@angular/common/http';
 export class NoviEksperimentComponent implements OnInit {
 
   ngOnInit(): void {
-    /*this.getJson()*/
   }
 
   fileName = '';
   json: any;
+  page: number = 1;
+  itemsPerPage: any;
+  totalItems : any; 
 
   constructor(private http: HttpClient) {}
 
@@ -34,20 +32,23 @@ export class NoviEksperimentComponent implements OnInit {
 
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData).subscribe(
         response => {
-        console.log(response);
-        this.json = response;
+          this.loadDefaultItemsPerPage();
+      },error =>{
+        console.log(error.error);
+        var div = (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Greška prilikom učitavanja podataka!";
       });
     }
   }
 
-  /*getJson(){
-    this.http.get<any>('/assets/titanic.json').subscribe(    //proba
-      response => {
-        console.log(response);
-        this.json = response;
-      }
-    );
-  }*/
+  loadDefaultItemsPerPage()
+  {      
+    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${15}").subscribe(
+      (response: any) => {
+        console.log(response.data);
+        this.json =  response.data;
+        this.totalItems = response.totalItems;
+    })
+  }
 
   dajHeadere(): string[]
   {
