@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class NoviEksperimentComponent implements OnInit {
 
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
   }
 
@@ -16,8 +18,6 @@ export class NoviEksperimentComponent implements OnInit {
   page: number = 1;
   itemsPerPage: any;
   totalItems : any; 
-
-  constructor(private http: HttpClient) {}
 
   onFileSelected(event:any) 
   {
@@ -30,14 +30,15 @@ export class NoviEksperimentComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", file, this.fileName);
 
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData).subscribe(
-        response => {
+      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
+        response=>{
           this.loadDefaultItemsPerPage();
-          (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "";
+          console.log(response);	
+          (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Uspesno ucitano";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
       },error =>{
-        console.log(error.error);
+        console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Greška prilikom učitavanja podataka!";
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
@@ -48,10 +49,11 @@ export class NoviEksperimentComponent implements OnInit {
   loadDefaultItemsPerPage()
   {      
     this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${10}").subscribe(
-      (response: any) => {
+       (response: any) => {
         console.log(response.data);
         this.json =  response.data;
         this.totalItems = response.totalItems;
+
     })
   }
 
