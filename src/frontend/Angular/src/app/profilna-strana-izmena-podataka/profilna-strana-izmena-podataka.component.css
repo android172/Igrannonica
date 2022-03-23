@@ -154,13 +154,14 @@ input[type=text],input[type=password]{
     border-radius: 10px;
     font-family: 'Roboto';
     font-style: normal;
+    padding-left: 5px;
 }
 
 
 #podaci{
 
     color: #fff;
-    margin-top: 50px;
+    margin-top: 20px;
     margin-bottom: 10px;
     font-family: 'Roboto';
     font-style: normal;
@@ -172,10 +173,15 @@ input[type=text],input[type=password]{
     padding-left: 25px;
     padding-right: 25px;
     padding-bottom: 45px;
-    padding-top: 15px;;
+    padding-top: 45px;
     width: 300px;
     height: 440px;
     margin: 0px;
     float: left;
     position: relative;
+}
+
+#podatak1,#podatak2,#podatak3,#podatak4,#podatak5,#podatak6{
+    height: 30px;
+    color: rgba(243, 48, 95, 0.85);
 }

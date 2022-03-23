@@ -16,30 +16,35 @@
                     >
                 </div>
                 <div id="dugmici">
-                    <button id="sacuvaj" routerLink="/profilna-strana">Sacuvaj izmene</button> 
+                    <button id="sacuvaj" (click)="sacuvajIzmene()">Sacuvaj izmene</button> 
                     <button id="odbaci" routerLink="/profilna-strana">Odbaci izmene</button> 
                 </div>
             </div>
             <div class="divbox2">
                 <div id="podaci">Ime i prezime:</div>
-                <input id="Ime" type="text" name="ime">
+                <input id="Ime" type="text" name="ime" (keyup)="prov1()">
+                <div id="podatak1"></div>
 
                 <div id="podaci">Korisnicko ime:</div>
-                <input id="KorisnickoIme" type="text" name="korisnickoIme">
+                <input id="KorisnickoIme" type="text" name="korisnickoIme" (keyup)="prov2()">
+                <div id="podatak2"></div>
 
                 <div id="podaci">Email:</div>
-                <input id="Email" type="text" name="email">
-
+                <input id="Email" type="text" name="email" (keyup)="prov3()">
+                <div id="podatak3"></div>
             </div>
             <div class="divbox2">
                 <div id="podaci">Stara lozinka:</div>
                 <input id="staraLozinka" type="password" name="staraLozinka">
+                <div id="podatak4"></div>
 
                 <div id="podaci">Nova lozinka:</div>
-                <input id="novaLozinka" type="password" name="novaLozinka">
+                <input id="novaLozinka" type="password" name="novaLozinka" (keyup)="prov5()">
+                <div id="podatak5"></div>
 
                 <div id="podaci">Ponovite lozinku:</div>
-                <input id="ponovljenaLozinka" type="password" name="ponovljenaLozinka">
+                <input id="ponovljenaLozinka" type="password" name="ponovljenaLozinka" (keyup)="prov6()">
+                <div id="podatak6"></div>
             </div>  
         </div>     
     </div>
