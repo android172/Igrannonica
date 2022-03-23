@@ -1,7 +1,10 @@
-﻿namespace dotNet.Models
+﻿using dotNet.MLService;
+
+namespace dotNet.Models
 {
     public class Korisnik
     {
+        public static Dictionary<string, MLExperiment> eksperimenti = new Dictionary<string, MLExperiment>();
         public int Id { get; set; }
         public string KorisnickoIme { get; set; }
         public string Ime { get; set; }
