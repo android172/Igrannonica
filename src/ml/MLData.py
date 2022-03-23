@@ -15,6 +15,7 @@ class MLData:
         self.output_columns = None
         self.train_indices  = None
         self.test_indices   = None
+        self.column_types   = None
         
     def get_train_dataset(self):
         return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
@@ -55,6 +56,10 @@ class MLData:
         self.train_indices = index_list[:split_point]
         self.test_indices  = index_list[split_point:]
         
+    # Column types
+    def initialize_column_types(self):
+        self.column_types = self.dataset.dtypes
+
     # ########### #
     # Data access #
     # ########### #
@@ -74,7 +79,14 @@ class MLData:
         self.dataset.iloc[row, column] = value
 
     def add_row(self, new_row, test=False):
+        # Convert row values to proper types
         series = pd.Series(new_row, index=self.dataset.columns)
+        for i in range(len(new_row)):
+            if self.column_types[i] == 'int64':
+                series[i] = int(series[i])
+            elif self.column_types[i] == 'float64':
+                series[i] = float(series[i])
+        # import values
         self.dataset.loc[self.dataset.shape[0]] = series
         
         if self.train_indices is not None:
@@ -84,7 +96,15 @@ class MLData:
                 self.test_indices.append(self.dataset.shape[0])
     
     def update_row(self, row, new_row):
-        self.dataset.iloc[row] = new_row
+        # Convert row values to proper types
+        series = pd.Series(new_row, index=self.dataset.columns)
+        for i in range(len(new_row)):
+            if self.column_types[i] == 'int64':
+                series[i] = int(series[i])
+            elif self.column_types[i] == 'float64':
+                series[i] = float(series[i])
+        # Replace values
+        self.dataset.iloc[row] = series
     
     def remove_row(self, row):
         self.dataset.drop(row, inplace=True)

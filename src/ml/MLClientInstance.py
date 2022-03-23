@@ -24,6 +24,7 @@ class MLClientInstance(Thread):
                 # Receive path to dataset
                 path = self.connection.receive()
                 network.data.load_from_csv(path)
+                network.data.initialize_column_types()
                 
                 print("Dataset loaded.")
                 
@@ -252,7 +253,7 @@ class MLClientInstance(Thread):
                 
                 print(f"Columns {columns} were one-hot encoded.")
             
-            # Data manipulation : Encoding #
+            # Data manipulation : Normalization #
             elif received == 'ScaleAbsoluteMax':
                 # Receive columns to scale
                 columns_string = self.connection.receive()
