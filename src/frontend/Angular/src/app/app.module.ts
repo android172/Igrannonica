@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfilnaStranaComponent } from './profilna-strana/profilna-strana.component';
 import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-podataka/profilna-strana-izmena-podataka.component';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { EksperimentComponent } from './eksperiment/eksperiment.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -41,6 +42,7 @@ export function tokenGetter() {
     MojiEksperimentiComponent,
     ProfilnaStranaComponent,
     ProfilnaStranaIzmenaPodatakaComponent,
+    EksperimentComponent,
   ],
   imports: [
     HttpClientModule,
