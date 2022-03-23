@@ -29,12 +29,17 @@ namespace dotNet.Controllers {
             experiment.LoadDataset(datasetPath);
 
             // Add row and column
-            experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
-            "1", "1", "1", "12412.1", "0"});
-            var column = new string[10001];
+            //experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
+            //"1", "1", "1", "12412.1", "0"});
+            int rowCounts = experiment.GetRowCount();
+            Console.WriteLine(rowCounts);
+            var column = new string[rowCounts];
             for (int i = 0; i < column.Length; i++)
                 column[i] = "2";
             experiment.AddColumn("IDK", column);
+
+            // Normalize rows
+            experiment.ScaleZScore(new int[] { 3, 12 });
 
             // Get rows
             var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });

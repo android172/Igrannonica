@@ -55,12 +55,15 @@ class MLData:
         self.train_indices = index_list[:split_point]
         self.test_indices  = index_list[split_point:]
         
-    # #################### #
-    # Access required rows #
-    # #################### #
+    # ########### #
+    # Data access #
+    # ########### #
     
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
+    
+    def get_row_count(self):
+        return self.dataset.shape[0]
     
     # ################# #
     # Data manipulation #
@@ -157,3 +160,19 @@ class MLData:
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
+    
+    # Normalization
+    def maximum_absolute_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = column / column.abs().max()
+    
+    def min_max_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = (column - column.min()) / (column.max() - column.min())
+    
+    def z_score_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()

@@ -48,6 +48,11 @@ namespace dotNet.MLService {
             return connection.Receive();
         }
 
+        public int GetRowCount() {
+            connection.Send(Command.GetRowCount);
+            return int.Parse(connection.Receive());
+        }
+
         // ///////////////// //
         // Data manipulation //
         // ///////////////// //
@@ -135,11 +140,6 @@ namespace dotNet.MLService {
             connection.Send(Command.DropNAColumns);
         }
 
-        public void LabelEncoding(int[] columns) {
-            connection.Send(Command.LabelEncoding);
-            connection.Send(EncodeIntArray(columns));
-        }
-
         // Fill NA values
         public void FillNAWithMean(int[] columns) {
             connection.Send(Command.FillNAWithMean);
@@ -164,6 +164,28 @@ namespace dotNet.MLService {
         // Encoding
         public void OneHotEncoding(int[] columns) {
             connection.Send(Command.OneHotEncoding);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void LabelEncoding(int[] columns)
+        {
+            connection.Send(Command.LabelEncoding);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        // Normalization
+        public void ScaleAbsoluteMax(int[] columns) { 
+            connection.Send(Command.ScaleAbsoluteMax);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void ScaleMinMax(int[] columns) {
+            connection.Send(Command.ScaleMinMax);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void ScaleZScore(int[] columns) { 
+            connection.Send(Command.ScaleZScore);
             connection.Send(EncodeIntArray(columns));
         }
 
@@ -211,6 +233,7 @@ namespace dotNet.MLService {
         RandomTrainTestSplit,
         // Data access
         GetRows,
+        GetRowCount,
         // Data manipulation
         AddRow,
         AddRowToTest,
@@ -233,6 +256,9 @@ namespace dotNet.MLService {
         FillNAWithRegression,
         LabelEncoding,
         OneHotEncoding,
+        ScaleAbsoluteMax,
+        ScaleMinMax,
+        ScaleZScore,
         // Network
         ChangeSettings,
         Start
