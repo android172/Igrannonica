@@ -15,6 +15,7 @@ class MLData:
         self.output_columns = None
         self.train_indices  = None
         self.test_indices   = None
+        self.column_types   = None
         
     def get_train_dataset(self):
         return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
@@ -55,12 +56,19 @@ class MLData:
         self.train_indices = index_list[:split_point]
         self.test_indices  = index_list[split_point:]
         
-    # #################### #
-    # Access required rows #
-    # #################### #
+    # Column types
+    def initialize_column_types(self):
+        self.column_types = self.dataset.dtypes
+
+    # ########### #
+    # Data access #
+    # ########### #
     
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
+    
+    def get_row_count(self):
+        return self.dataset.shape[0]
     
     # ################# #
     # Data manipulation #
@@ -71,7 +79,14 @@ class MLData:
         self.dataset.iloc[row, column] = value
 
     def add_row(self, new_row, test=False):
+        # Convert row values to proper types
         series = pd.Series(new_row, index=self.dataset.columns)
+        for i in range(len(new_row)):
+            if self.column_types[i] == 'int64':
+                series[i] = int(series[i])
+            elif self.column_types[i] == 'float64':
+                series[i] = float(series[i])
+        # import values
         self.dataset.loc[self.dataset.shape[0]] = series
         
         if self.train_indices is not None:
@@ -81,7 +96,15 @@ class MLData:
                 self.test_indices.append(self.dataset.shape[0])
     
     def update_row(self, row, new_row):
-        self.dataset.iloc[row] = new_row
+        # Convert row values to proper types
+        series = pd.Series(new_row, index=self.dataset.columns)
+        for i in range(len(new_row)):
+            if self.column_types[i] == 'int64':
+                series[i] = int(series[i])
+            elif self.column_types[i] == 'float64':
+                series[i] = float(series[i])
+        # Replace values
+        self.dataset.iloc[row] = series
     
     def remove_row(self, row):
         self.dataset.drop(row, inplace=True)
@@ -157,3 +180,19 @@ class MLData:
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
+    
+    # Normalization
+    def maximum_absolute_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = column / column.abs().max()
+    
+    def min_max_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = (column - column.min()) / (column.max() - column.min())
+    
+    def z_score_scaling(self, columns):
+        for ci in columns:
+            column = self.dataset.iloc[:, ci]
+            self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()

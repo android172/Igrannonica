@@ -24,6 +24,7 @@ class MLClientInstance(Thread):
                 # Receive path to dataset
                 path = self.connection.receive()
                 network.data.load_from_csv(path)
+                network.data.initialize_column_types()
                 
                 print("Dataset loaded.")
                 
@@ -67,6 +68,12 @@ class MLClientInstance(Thread):
                 self.connection.send(data.to_json(orient='records'))
                 
                 print(f"Rows: {row_indices} requested.")
+                
+            elif received == 'GetRowCount':
+                count = network.data.get_row_count()
+                self.connection.send(count)
+                
+                print(f"Row count ({count}) requested.")
             
             # Data manipulation : CRUD operation #
             
@@ -245,6 +252,31 @@ class MLClientInstance(Thread):
                 network.data.one_hot_encode_columns(columns)
                 
                 print(f"Columns {columns} were one-hot encoded.")
+            
+            # Data manipulation : Normalization #
+            elif received == 'ScaleAbsoluteMax':
+                # Receive columns to scale
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.maximum_absolute_scaling(columns)
+                
+                print(f"Columns {columns} were maximum absolute scaled.")
+                
+            elif received == 'ScaleMinMax':
+                # Receive columns to scale
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.min_max_scaling(columns)
+                
+                print(f"Columns {columns} were min-max scaled.")
+                
+            elif received == 'ScaleZScore':
+                # Receive columns to scale
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.z_score_scaling(columns)
+                
+                print(f"Columns {columns} were z-score scaled.")
             
             # Working with networks #
             elif received == 'ChangeSettings':
