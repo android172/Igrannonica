@@ -7,9 +7,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./novi-eksperiment.component.css']
 })
 export class NoviEksperimentComponent implements OnInit {
-
-  constructor(private http: HttpClient) {}
-
+constructor(private http: HttpClient) {}
   ngOnInit(): void {
   }
 
@@ -17,7 +15,8 @@ export class NoviEksperimentComponent implements OnInit {
   json: any;
   page: number = 1;
   itemsPerPage: any;
-  totalItems : any; 
+  //totalItems : any;
+  totalItems: number = 0; 
 
   onFileSelected(event:any) 
   {
@@ -31,9 +30,8 @@ export class NoviEksperimentComponent implements OnInit {
       formData.append("file", file, this.fileName);
 
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
-        response=>{
+        res=>{
           this.loadDefaultItemsPerPage();
-          console.log(response);	
           (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Uspesno ucitano";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
@@ -48,34 +46,36 @@ export class NoviEksperimentComponent implements OnInit {
 
   loadDefaultItemsPerPage()
   {      
-    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${10}").subscribe(
+    this.http.get("http://localhost:5008/api/Upload/paging/1/10").subscribe(
        (response: any) => {
-        console.log(response.data);
-        this.json =  response.data;
+         //console.log(response);
+        console.log(JSON.parse(response.data));
+        this.json =  JSON.parse(response.data);
+         //this.json = response;
         this.totalItems = response.totalItems;
-
     })
   }
 
   promeniBrojRedova(value: any)
   {
     this.itemsPerPage = parseInt(value);
-    this.http.get("http://localhost:5008/api/Upload/upload?page=${1}&size=${this.itemsPerPage}").subscribe(
+    this.http.get("http://localhost:5008/api/Upload/paging/"+this.page+"/" + this.itemsPerPage).subscribe(
       (response: any) => {
-        console.log(response.data);
-        this.json =  response.data;
+        this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
     })
   }
 
   gty(page: any){
-    this.http.get("http://localhost:5008/api/Upload/upload?page=${page}&size=${this.itemsPerPage}").subscribe(
+   console.log("---GTY--");
+   this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
+   console.log(this.itemsPerPage);
+   this.http.get("http://localhost:5008/api/Upload/paging/" + this.page + "/" + this.itemsPerPage).subscribe(
       (response: any) => {
-      this.json =  response.data;
-      this.totalItems = response.totalItems;
+        this.json =  JSON.parse(response.data);
+        this.totalItems = response.totalItems;
     })
   }
-
 
   dajHeadere(): string[]
   {
