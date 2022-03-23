@@ -66,6 +66,15 @@ export class NoviEksperimentComponent implements OnInit {
     })
   }
 
+  gty(page: any){
+    this.http.get("http://localhost:5008/api/Upload/upload?page=${page}&size=${this.itemsPerPage}").subscribe(
+      (response: any) => {
+      this.json =  response.data;
+      this.totalItems = response.totalItems;
+    })
+  }
+
+
   dajHeadere(): string[]
   {
     var headers = Object.keys(this.json[0]);
