@@ -120,7 +120,10 @@ namespace dotNet.Controllers
             {
                 return BadRequest("Email vec postoji");
             }
-            kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
+            if (korisnik.Sifra != "")
+                kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, kor.Sifra, korisnik.Email);
+            else
+                kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
             if (db.dbkorisnik.updateKorisnika(kor))
                 return Ok(Generate(kor));
             return BadRequest();
