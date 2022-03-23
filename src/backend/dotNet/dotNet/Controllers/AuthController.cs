@@ -104,8 +104,10 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if (db.dbkorisnik.dajKorisnika(korisnik.KorisnickoIme, korisnik.StaraSifra) == null)
-                return BadRequest("Netacna stara sifra");
+            if(korisnik.Sifra!="")
+                if (db.dbkorisnik.dajKorisnika(tokenS.Claims.ToArray()[1].Value, korisnik.StaraSifra) == null)
+                    return BadRequest("Netacna stara sifra");
+
             Korisnik kor = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
             if (kor.KorisnickoIme != korisnik.KorisnickoIme && db.dbkorisnik.proveri_korisnickoime(korisnik.KorisnickoIme))
             {
