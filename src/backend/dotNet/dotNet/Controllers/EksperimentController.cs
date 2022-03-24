@@ -40,13 +40,13 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
+            if(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))!=-1)
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }
 
             if(db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
-                return Ok("Dodat eksperiment");
+                return Ok(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)));
             return BadRequest("Doslo do greske");
         }
         [Authorize]
@@ -57,7 +57,7 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))!=-1)
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }

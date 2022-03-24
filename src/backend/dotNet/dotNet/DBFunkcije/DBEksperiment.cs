@@ -32,7 +32,7 @@ namespace dotNet.DBFunkcije
             connect.Close();
             return result;
         }
-        public bool proveri_eksperiment(string naziv, int id)
+        public int proveri_eksperiment(string naziv, int id)
         {
             connect.Open();
             Console.WriteLine("ki");
@@ -43,11 +43,12 @@ namespace dotNet.DBFunkcije
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
+                int id1 = reader.GetInt32("id");
                 connect.Close();
-                return true;
+                return id1;
             }
             connect.Close();
-            return false;
+            return -1;
         }
         public bool dodajEksperiment(string ime, int id)
         {
