@@ -194,14 +194,14 @@ namespace dotNet.MLService {
         // ///////////// //
 
         // Get column statistics
-        public StatisticsNumerical? NumericalStatistics(int[] columns) {
+        public Dictionary<string, StatisticsNumerical>? NumericalStatistics(int[] columns) {
             connection.Send(Command.NumericalStatistics);
             connection.Send(EncodeIntArray(columns));
             var statistics = StatisticsNumerical.Load(connection.Receive());
             return statistics;
         }
 
-        public StatisticsCategorical? CategoricalStatistics(int[] columns) {
+        public Dictionary<string, StatisticsCategorical>? CategoricalStatistics(int[] columns) {
             connection.Send(Command.CategoricalStatistics);
             connection.Send(EncodeIntArray(columns));
             var statistics = StatisticsCategorical.Load(connection.Receive());

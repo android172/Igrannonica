@@ -12,8 +12,8 @@
             Frequencies = frequencies;
         }
 
-        public static StatisticsCategorical? Load(string data) {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<StatisticsCategorical>(data);
+        public static Dictionary<string, StatisticsCategorical>? Load(string data) {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, StatisticsCategorical>>(data);
         }
 
         public int ValidCount { get; set; }

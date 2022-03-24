@@ -18,8 +18,8 @@
             Maximum = maximum;
         }
 
-        public static StatisticsNumerical? Load(string data) {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<StatisticsNumerical>(data);
+        public static Dictionary<string, StatisticsNumerical>? Load(string data) {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, StatisticsNumerical>>(data);
         }
 
         public int ValidCount { get; set; }
