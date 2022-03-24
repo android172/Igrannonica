@@ -1,2 +1,10 @@
-<p>moji-eksperimenti works!</p>
+<div id="divEksperimenti">
+     <div class="tekst">Lista mojih eksperimenata:</div>
+        <div id="skrol">
+        <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti"> 
+            <p>  {{ e.name }}  </p>
+        </div>
+    </div>
+</div>
+
 <app-footer id="footer"></app-footer>

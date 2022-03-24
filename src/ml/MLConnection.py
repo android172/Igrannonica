@@ -14,7 +14,7 @@ class MLConnection:
         return self.socket.recv(buffer_length).decode()
     
     def send(self, message):
-        buffer = message.encode()
+        buffer = str(message).encode()
         buffer_length = len(buffer)
         self.socket.sendall(struct.pack("<I", buffer_length))
         self.socket.sendall(buffer)

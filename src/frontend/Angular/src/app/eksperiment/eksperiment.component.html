@@ -1,0 +1,50 @@
+<input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+<div class="file-upload">
+
+    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+        Učitaj podatke
+    </button>
+
+    <span style="color:white; margin-left: 10px;">{{fileName || "Podaci nisu učitani."}}</span>
+</div>
+<div id="porukaGreske"></div>
+
+<div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
+    <span>
+        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
+            <option value="5">5</option>
+            <option selected value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </span>
+</div>
+
+<div id="table">
+    <table>
+        <tr>
+            <th *ngFor="let header of dajHeadere();">
+                {{header}}
+            </th>
+        </tr>
+        <tr *ngFor="let red of json | paginate
+        : {
+            itemsPerPage: itemsPerPage,
+            currentPage: page,
+            totalItems: totalItems
+          };  index as i">
+            <td *ngFor="let fieldValue of dajRed(i)">
+              {{fieldValue}}
+            </td>
+        </tr>
+    </table>
+</div>
+
+<pagination-controls
+  class="pagi"
+  (pageChange)="gty(page = $event)"  
+></pagination-controls>
+
+<app-footer id="footer"></app-footer>

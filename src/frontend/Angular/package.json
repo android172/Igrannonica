@@ -22,7 +22,10 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@auth0/angular-jwt": "^5.0.2",
+    "angular-file-uploader": "^7.1.1",
     "ngx-cookie-service": "^13.1.2",
+    "ngx-csv-parser": "^0.0.7",
+    "ngx-pagination": "^5.1.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

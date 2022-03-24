@@ -92,9 +92,16 @@ input:focus,textarea:focus,select:focus{
 
 #divdugme{
     float: left;
-    padding-top: 75px;
+   /* padding-top: 75px;*/
+   margin-top: 45px;
     opacity: 1;
     overflow: hidden;
+}
+
+#poruka{
+
+    height: 30px;
+    color: #D74971;
 }
 
 #divdugmad{
@@ -121,6 +128,11 @@ input:focus,textarea:focus,select:focus{
     float: left;
 }
 
+#dugmePocetna:hover{
+    color: rgb(243, 48, 94);
+    border-color: rgb(243, 48, 94);
+    background: rgba(229, 229, 229);
+}
 
 #dugmePocetna{
 

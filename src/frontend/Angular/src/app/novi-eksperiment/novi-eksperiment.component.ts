@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-novi-eksperiment',
@@ -7,9 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NoviEksperimentComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: HttpClient, private router:Router) {}
 
   ngOnInit(): void {
   }
 
+  napraviEksperiment(){
+    var ime = (<HTMLInputElement>document.getElementById("ime")).value;
+    if(ime==""){
+      (<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Eksperiment/Eksperiment?ime="+ime,null,{responseType: 'text'}).subscribe(
+      res=>{
+        this.router.navigate(['/eksperiment'],{ queryParams: { id: res } });
+      },
+      error=>{
+        (<HTMLInputElement>document.getElementById("greska")).innerHTML=error.error;
+        
+        alert(error.error); 
+      }
+    );
+  }
 }
