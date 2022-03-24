@@ -31,7 +31,7 @@
 
             <div class="tekst">Lista mojih eksperimenata:</div>
             <div id="skrol">
-                <div id="e" *ngFor="let e of eksperimenti"> 
+                <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti">
                     <p>  {{ e.name }}  </p>
                 </div>
             </div>
