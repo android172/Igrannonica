@@ -132,12 +132,6 @@ export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
     var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$");
     var test5 = regexp5.test(sifra2); 
 
-    var pom=false;
-    if(test1 && test2 && test3 && test5)
-      pom = true;
-    
-    if(pom){
-
       this.http.post('http://localhost:5008/api/Auth/update',{"KorisnickoIme":korisnickoIme,"Ime":ime,"StaraSifra":sifra,"Sifra":sifra2,"Email":email},{responseType: 'text'}).subscribe(
         token=>{
           localStorage.clear();
@@ -156,7 +150,6 @@ export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
         }
       );
     }
-  }
 
 
   ucitajPodatke1()
