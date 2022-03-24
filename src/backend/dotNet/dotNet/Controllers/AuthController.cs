@@ -36,7 +36,7 @@ namespace dotNet.Controllers
             {
                 var token = Generate(user);
                 Korisnik.eksperimenti[token.ToString()] = new MLExperiment(_config);
-                Console.WriteLine(token.ToString());
+                //Console.WriteLine(token.ToString());
                 return Ok(token);
             }
             return NotFound("Ne postoji");
