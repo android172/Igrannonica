@@ -28,6 +28,10 @@ namespace dotNet.Controllers {
             string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
             experiment.LoadDataset(datasetPath);
 
+            // Get statistics
+            var statistics = experiment.NumericalStatistics(new int[] { 3, 6, 8 });
+            Console.WriteLine(statistics);
+
             // Add row and column
             experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
                                       "1", "1", "1", "12412.1", "0"});

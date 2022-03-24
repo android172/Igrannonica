@@ -278,11 +278,30 @@ class MLClientInstance(Thread):
                 
                 print(f"Columns {columns} were z-score scaled.")
             
+            # Data analysis #
+            elif received == 'NumericalStatistics':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                statistics = network.data.get_numerical_statistics(columns)
+                self.connection.send(json.dumps(statistics))
+                
+                print(f"Numerical statistics computed for columns {columns}.")
+                
+            elif received == 'CategoricalStatistics':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                statistics = network.data.get_categorical_statistics(columns)
+                self.connection.send(json.dumps(statistics))
+                
+                print(f"Categorical statistics computed for columns {columns}.")
+            
             # Working with networks #
             elif received == 'ChangeSettings':
                 # Receive settings to change to
                 settingsString = self.connection.receive()
-                annSettings = ANNSettings(settingsString)
+                annSettings = ANNSettings.load(settingsString)
                 network.load_settings(annSettings)
                 
                 print("ANN settings changed.")

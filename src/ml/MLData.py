@@ -6,6 +6,9 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import  KNeighborsClassifier
+from StatisticsCategorical import StatisticsCategorical
+
+from StatisticsNumerical import StatisticsNumerical
 
 class MLData:
     
@@ -196,3 +199,67 @@ class MLData:
         for ci in columns:
             column = self.dataset.iloc[:, ci]
             self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()
+            
+    # ######## #
+    # Analysis #
+    # ######## #
+    
+    def get_numerical_statistics(self, columns):
+        column_names = self.dataset.columns[columns]
+        
+        total_count = self.dataset.shape[0]
+        description = self.dataset[column_names].describe()
+        na_counts = self.dataset[column_names].isna().sum()
+        valid_counts = total_count - na_counts
+        unique_counts = self.dataset[column_names].nunique()
+        
+        statistics = {}
+        for column in column_names:
+            statistics[column] = StatisticsNumerical(
+                valid_count   = valid_counts[column],
+                na_count      = na_counts[column],
+                unique_count  = unique_counts[column],
+                mean          = description[column]['mean'],
+                std_deviation = description[column]['std'],
+                median        = description[column]['50%'],
+                quantiles_25  = description[column]['25%'],
+                quantiles_50  = description[column]['50%'],
+                quantiles_75  = description[column]['75%'],
+                min           = description[column]['min'],
+                max           = description[column]['max']
+                )
+            
+        return statistics
+    
+    def get_categorical_statistics(self, columns):
+        column_names = self.dataset.columns[columns]
+        
+        total_count = self.dataset.shape[0]
+        na_counts = self.dataset[column_names].isna().sum()
+        valid_counts = total_count - na_counts
+        unique_counts = self.dataset[column_names].nunique()
+        
+        statistics = {}
+        for column in column_names:
+            frequencies = [(k, v) for k, v in self.dataset[column].value_counts(normalize=True, sort=True).items()]
+            most_common = frequencies[0]
+            
+            five_most_frequent = []
+            if (len(frequencies) < 6):
+                five_most_frequent = [f for f in frequencies]
+            else:
+                total_left = 1.0
+                for i in range(4):
+                    five_most_frequent.append(frequencies[i])
+                    total_left -= frequencies[i][1]
+                five_most_frequent.append(('Other', total_left))
+            
+            statistics[column] = StatisticsCategorical(
+                valid_count  = valid_counts[column],
+                na_count     = na_counts[column],
+                unique_count = unique_counts[column],
+                most_common  = most_common,
+                frequencies  = five_most_frequent
+            )
+    
+        return statistics
