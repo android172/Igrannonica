@@ -120,7 +120,7 @@ namespace dotNet.Controllers
             {
                 return BadRequest("Email vec postoji");
             }
-            if (korisnik.Sifra != "")
+            if (korisnik.Sifra == "")
                 kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, kor.Sifra, korisnik.Email);
             else
                 kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
