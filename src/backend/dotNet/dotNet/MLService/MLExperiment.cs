@@ -189,6 +189,25 @@ namespace dotNet.MLService {
             connection.Send(EncodeIntArray(columns));
         }
 
+        // ///////////// //
+        // Data analysis //
+        // ///////////// //
+
+        // Get column statistics
+        public Dictionary<string, StatisticsNumerical>? NumericalStatistics(int[] columns) {
+            connection.Send(Command.NumericalStatistics);
+            connection.Send(EncodeIntArray(columns));
+            var statistics = StatisticsNumerical.Load(connection.Receive());
+            return statistics;
+        }
+
+        public Dictionary<string, StatisticsCategorical>? CategoricalStatistics(int[] columns) {
+            connection.Send(Command.CategoricalStatistics);
+            connection.Send(EncodeIntArray(columns));
+            var statistics = StatisticsCategorical.Load(connection.Receive());
+            return statistics;
+        }
+
         // /////// //
         // Network //
         // /////// //
@@ -259,6 +278,9 @@ namespace dotNet.MLService {
         ScaleAbsoluteMax,
         ScaleMinMax,
         ScaleZScore,
+        // Data analysis
+        NumericalStatistics,
+        CategoricalStatistics,
         // Network
         ChangeSettings,
         Start
