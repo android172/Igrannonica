@@ -1,3 +1,22 @@
+#oblast
+{
+    width: 90%;
+    min-height: 400px;
+    background-color: #272741;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25px;
+    align-content: center;
+    padding: 20px;
+}
+
+#taboviContainer
+{
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .file-input {
     display: none;
 }
