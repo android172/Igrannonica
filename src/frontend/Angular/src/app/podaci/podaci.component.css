@@ -1,6 +1,31 @@
-p
+.file-input {
+    display: none;
+}
+
+#footer
 {
-    color:white;
-    text-align: center;
-    font-size: larger;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+#table
+{
+    margin-top: 20px;
+    background-color: white;
+}
+
+#porukaGreske
+{
+    color: #D74971;
+}
+
+#brojRedovaTabele, #brojRedovaTabelePoruka
+{
+    visibility: hidden;
+}
+
+.pagi
+{
+    color: white;
 }
