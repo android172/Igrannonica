@@ -1,10 +1,13 @@
 <div id="eksperiment">
     <div id="taboviContainer">
-        <button>Podaci</button>
-        <button>Model</button>
-        <button>Modeli</button>
+        <button (click)="boolPodaciPromena()">Podaci</button>
+        <button (click)="boolModelPromena()">Model</button>
+        <button (click)="boolModeliPromena()">Modeli</button>
     </div>
     <div id="oblast">
+        <app-podaci *ngIf="podaci==true"></app-podaci>
+        <app-model *ngIf="model==true"></app-model>
+        <app-modeli *ngIf="modeli==true"></app-modeli>
     </div>
 </div>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eksperiment',
@@ -8,7 +9,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EksperimentComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  podaci: boolean = true;
+  model: boolean = false;
+  modeli: boolean = false;
+
+  constructor(private http: HttpClient, private router:Router) { }
 
   ngOnInit(): void {
   }
@@ -90,5 +95,26 @@ export class EksperimentComponent implements OnInit {
   {
     var redValues = Object.values(this.json[i]);
     return redValues;
+  }
+
+  boolPodaciPromena()
+  {
+    this.podaci = true;
+    this.model = false;
+    this.modeli = false;
+  }
+
+  boolModelPromena()
+  {
+    this.podaci = false;
+    this.model = true;
+    this.modeli = false;
+  }
+
+  boolModeliPromena()
+  {
+    this.podaci = false;
+    this.model = false;
+    this.modeli = true;
   }
 }
