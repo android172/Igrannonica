@@ -5,7 +5,6 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import  KNeighborsClassifier
 from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
@@ -19,14 +18,6 @@ class MLData:
         self.train_indices  = None
         self.test_indices   = None
         self.column_types   = None
-        
-    def get_train_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
-                for i in self.train_indices]
-    
-    def get_test_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns])
-                for i in self.test_indices]
     
     # Load dataset
     def load_from_csv(self, path):
@@ -67,11 +58,25 @@ class MLData:
     # Data access #
     # ########### #
     
+    def get_train_dataset(self):
+        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
+                for i in self.train_indices]
+    
+    def get_test_dataset(self):
+        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns])
+                for i in self.test_indices]
+    
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
     
     def get_row_count(self):
         return self.dataset.shape[0]
+    
+    def get_inputs_count(self):
+        return len(self.input_columns)
+    
+    def get_output_count(self):
+        return len(self.output_columns)
     
     # ################# #
     # Data manipulation #

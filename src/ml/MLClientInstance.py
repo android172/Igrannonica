@@ -298,6 +298,10 @@ class MLClientInstance(Thread):
                 print(f"Categorical statistics computed for columns {columns}.")
             
             # Working with networks #
+            elif received == 'ComputeMetrics':
+                if network.isRegression:
+                    network.compute_regression_statistics()
+            
             elif received == 'ChangeSettings':
                 # Receive settings to change to
                 settingsString = self.connection.receive()
@@ -312,11 +316,3 @@ class MLClientInstance(Thread):
                     network.initialize_random_data()
                 # Train
                 network.train()
-                # Return scores
-                train_acc = network.get_accuracy("train")
-                test_acc = network.get_accuracy("test")
-                print(f"Accuracy for 'train' dataset : {train_acc}")
-                print(f"Accuracy for 'test' dataset : {test_acc}")
-                self.connection.send(f"{train_acc}:{test_acc}")
-                
-                # print("")

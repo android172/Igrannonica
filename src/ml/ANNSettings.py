@@ -14,7 +14,10 @@ class ANNSettings:
         inputSize           = 0, 
         outputSize          = 0, 
         hiddenLayers        = None, 
-        activationFunctions = None
+        activationFunctions = None,
+        regularization      = 0,
+        lossFunction        = 0,
+        optimizer           = 0
         ) -> None:
         
         self.problemType         = problemType
@@ -25,6 +28,9 @@ class ANNSettings:
         self.outputSize          = outputSize
         self.hiddenLayers        = hiddenLayers
         self.activationFunctions = activationFunctions
+        self.regularization      = regularization
+        self.lossFunction        = lossFunction
+        self.optimizer           = optimizer
     
     def load(data) -> None:
         jsonObj = json.loads(data)
@@ -36,7 +42,10 @@ class ANNSettings:
             inputSize           = jsonObj["InputSize"],
             outputSize          = jsonObj["OutputSize"],
             hiddenLayers        = jsonObj["HiddenLayers"],
-            activationFunctions = jsonObj["ActivationFunctions"]
+            activationFunctions = jsonObj["ActivationFunctions"],
+            regularization      = jsonObj["Regularization"],
+            lossFunction        = jsonObj["LossFunction"],
+            optimizer           = jsonObj["Optimizer"]
         )
     
     

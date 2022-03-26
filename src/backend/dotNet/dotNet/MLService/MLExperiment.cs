@@ -211,19 +211,18 @@ namespace dotNet.MLService {
         // /////// //
         // Network //
         // /////// //
+
+        public void ComputeMetrics() {
+            connection.Send(Command.ComputeMetrics);
+        }
+
         public void ApplySettings(ANNSettings annSettings) {
             connection.Send(Command.ChangeSettings);
             connection.Send(annSettings);
         }
 
-        public ClassificationMetrics Start() {
+        public void Start() {
             connection.Send(Command.Start);
-            string resultString = connection.Receive();
-            string[] results = resultString.Split(":");
-            return new ClassificationMetrics(
-                trainAccuracy: float.Parse(results[0]),
-                testAccuracy: float.Parse(results[1])
-            );
         }
 
         // Helper functions
@@ -282,6 +281,7 @@ namespace dotNet.MLService {
         NumericalStatistics,
         CategoricalStatistics,
         // Network
+        ComputeMetrics,
         ChangeSettings,
         Start
     }

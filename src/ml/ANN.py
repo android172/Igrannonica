@@ -1,4 +1,5 @@
 
+from math import sqrt
 import random
 import torch
 import torch.nn as nn
@@ -6,7 +7,11 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
+from sklearn import metrics
+
 from MLData import MLData
+from StatisticsRegression import StatisticsRegression
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -61,6 +66,9 @@ class ANN:
         self.input_size    = annSettings.inputSize
         self.output_size   = annSettings.outputSize
         num_of_layers  = len(annSettings.hiddenLayers)
+        
+        # Load problem type
+        self.isRegression = annSettings.problemType == 0
          
         # Create ANN according to the given settings
         model = NN().to(device)
@@ -71,7 +79,7 @@ class ANN:
             previous_layer = annSettings.hiddenLayers[i]
             
             activation_function = annSettings.activationFunctions[i]
-            if activation_function == 0:
+            if   activation_function == 0:
                 model.add_module(f"ReLU[{i}]", nn.ReLU())
             elif activation_function == 1:
                 model.add_module(f"LeakyReLU[{i}]", nn.LeakyReLU())
@@ -89,10 +97,22 @@ class ANN:
         self.test_loader  = None 
         
         # Loss function
-        self.criterion = nn.CrossEntropyLoss()
+        if   annSettings.lossFunction == 0:
+            self.criterion = nn.L1Loss()
+        elif annSettings.lossFunction == 1:
+            self.criterion = nn.MSELoss()
+        else:
+            self.criterion = nn.CrossEntropyLoss()
         
         # Optimization algortham
-        self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
+        if   annSettings.optimizer == 0:
+            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate)
+        elif annSettings.optimizer == 1:
+            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate)
+        elif annSettings.optimizer == 2:
+            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate)
+        else:
+            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
     
     # Metrics
     def get_accuracy(self, dataset):
@@ -136,7 +156,7 @@ class ANN:
         for epoch in range(self.num_epochs):
             for bach_index, (data, target) in enumerate(self.train_loader):
                 data = data.to(device)
-                target = target.to(device)
+                target = target.to(device).float()
                 data = data.reshape(data.shape[0], -1)
                 
                 # Forward
@@ -147,6 +167,59 @@ class ANN:
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
+    
+    # Metrics
+    def compute_regression_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = []
+        predicted = []
+        
+        n = self.data.get_row_count()
+        p = self.data.get_inputs_count()
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device).float()
+                x = x.reshape(x.shape[0], -1)
+                
+                y_p = self.model(x)
+                
+                actual.append(y)
+                predicted.append(y_p)
+                
+                print(y, y_p)
+                
+        self.model.train()
+        
+        mae = metrics.mean_absolute_error(actual, predicted)
+        mse = metrics.mean_squared_error(actual, predicted)
+        rse = sqrt(mse * (n / (n - p - 1)))
+        f1 = metrics.f1_score(actual, predicted)
+        r2 = metrics.r2_score(actual, predicted)
+        adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+        roc_auc_score = metrics.roc_auc_score(actual, predicted)
+        
+        return StatisticsRegression(
+            mae,
+            mse,
+            rse,
+            f1,
+            r2,
+            adjustedR2,
+            roc_auc_score
+        )
     
     
 class NN(nn.Module):
