@@ -24,6 +24,9 @@ import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-
 import {NgxPaginationModule} from 'ngx-pagination';
 import { EksperimentComponent } from './eksperiment/eksperiment.component';
 import { Header2Component } from './header2/header2.component';
+import { PodaciComponent } from './podaci/podaci.component';
+import { ModelComponent } from './model/model.component';
+import { ModeliComponent } from './modeli/modeli.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -45,6 +48,9 @@ export function tokenGetter() {
     ProfilnaStranaIzmenaPodatakaComponent,
     EksperimentComponent,
     Header2Component,
+    PodaciComponent,
+    ModelComponent,
+    ModeliComponent,
   ],
   imports: [
     HttpClientModule,
