@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'angular';
 
   header:boolean = true;
+  header2:boolean = true;
 
   public prikaziMeni_1:any
   constructor(private prikaziMeni: MeniService, private router:Router) {
@@ -26,13 +27,22 @@ export class AppComponent {
     else
       this.header = true*/
 
-    if(this.router.url=="/prijava" || this.router.url=="/registracija")
+    if(this.router.url=="/prijava" || this.router.url=="/registracija" || this.router.url=="/eksperiment")
     {
       this.header = false;
+      if(this.router.url == "/eksperiment")
+      {
+        this.header2 = true;
+      }
+      else
+      {
+        this.header2 = false;
+      }
     }
     else
     {
       this.header = true;
+      this.header2 = false;
     }
   }
 }
