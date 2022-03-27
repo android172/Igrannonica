@@ -1,13 +1,24 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <div id="eksperiment">
-    <div id="taboviContainer">
-        <button (click)="boolPodaciPromena()">Podaci</button>
-        <button (click)="boolModelPromena()">Model</button>
-        <button (click)="boolModeliPromena()">Modeli</button>
-    </div>
-    <div id="oblast">
-        <app-podaci *ngIf="podaci==true"></app-podaci>
-        <app-model *ngIf="model==true"></app-model>
-        <app-modeli *ngIf="modeli==true"></app-modeli>
-    </div>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#podaci" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Podaci</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#modeli" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Modeli</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Model</button>
+  </div>
+
+    
+  <div id="oblast">
+      <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="podaci" role="tabpanel" aria-labelledby="nav-home-tab">
+              <app-podaci id="podaci"></app-podaci>
+          </div>
+          <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-profile-tab">
+              <app-modeli id="modeli"></app-modeli>
+          </div>
+          <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-contact-tab">
+              <app-model id="model"></app-model>
+          </div>
+        </div>
+  </div>
 </div>
 <app-footer></app-footer>

@@ -10,9 +10,48 @@
     padding: 20px;
 }
 
-#taboviContainer
+#nav-tab
 {
     width: 85%;
     margin-left: auto;
     margin-right: auto;
+    border-bottom: none;
 }
+
+.nav-link
+{
+    background-color: #1D2145;
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    margin: 5px -5px 0;
+    border-top-left-radius: 45px 100px;
+    border-top-right-radius: 45px 100px;
+    padding-top: 10px;
+    position: relative;
+    width: 150px;
+    max-width: 200px;
+    min-width: 20px;
+    border: 1px solid #aaa;
+    border-bottom: none;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.nav-link:last-child
+{
+    z-index: 1;
+}
+
+.nav-link.active
+{
+    background-color: #272741;
+    color: #F45E82;
+    border: none;
+    text-shadow: #222;
+    border: 1px solid #F45E82;
+    border-bottom: none;
+    z-index: 10;
+    
+}
+  

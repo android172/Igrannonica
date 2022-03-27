@@ -27,6 +27,7 @@ import { Header2Component } from './header2/header2.component';
 import { PodaciComponent } from './podaci/podaci.component';
 import { ModelComponent } from './model/model.component';
 import { ModeliComponent } from './modeli/modeli.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -67,7 +68,8 @@ export function tokenGetter() {
         allowedDomains: ["localhost:4200","localhost:5008"],
         skipWhenExpired: true
       }
-    })
+    }),
+    NgbModule
   ],
   providers: [
     CookieService
