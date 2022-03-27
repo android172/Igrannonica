@@ -70,7 +70,7 @@ namespace dotNet.Controllers
 
 
         [Authorize]
-        [HttpGet("Modeli")]
+        [HttpGet("Modeli/{id}")]
         public IActionResult Modeli(int id) {
             List<ModelDto> modeli=db.dbmodel.modeli(id);
             if (modeli.Count > 0)
