@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
+from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
@@ -59,24 +60,26 @@ class MLData:
     # ########### #
     
     def get_train_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
-                for i in self.train_indices]
+        train_data = []
+        for i in self.train_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            train_data.append((x, y))
+        return train_data
     
     def get_test_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns])
-                for i in self.test_indices]
+        test_data = []
+        for i in self.test_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            test_data.append((x, y))
+        return test_data
     
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
     
     def get_row_count(self):
         return self.dataset.shape[0]
-    
-    def get_inputs_count(self):
-        return len(self.input_columns)
-    
-    def get_output_count(self):
-        return len(self.output_columns)
     
     # ################# #
     # Data manipulation #

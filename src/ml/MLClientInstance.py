@@ -300,7 +300,9 @@ class MLClientInstance(Thread):
             # Working with networks #
             elif received == 'ComputeMetrics':
                 if network.isRegression:
-                    network.compute_regression_statistics()
+                    test = network.compute_regression_statistics("test")
+                    train = network.compute_regression_statistics("train")
+                    metrics = {"test": test, "train": train}
             
             elif received == 'ChangeSettings':
                 # Receive settings to change to
@@ -312,7 +314,7 @@ class MLClientInstance(Thread):
                 
             elif received == 'Start':
                 # Initialize random data if no dataset is selected
-                if True:
+                if network.data.dataset is None:
                     network.initialize_random_data()
                 # Train
                 network.train()

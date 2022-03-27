@@ -57,7 +57,7 @@ namespace dotNet.Controllers {
             //experiment.FillNAWithRegression(8, new int[] { 5, 7, 9, 10, 12, 13, 14, 15, 16});
 
             // Set ANN settings
-            int networkSize = 2;
+            int networkSize = 5;
 
             // Select inputs, outputs and split data
             experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16 });
@@ -67,23 +67,29 @@ namespace dotNet.Controllers {
             int[] hiddentLayers = new int[networkSize];
             hiddentLayers[0] = 5;
             hiddentLayers[1] = 7;
+            hiddentLayers[2] = 9;
+            hiddentLayers[3] = 9;
+            hiddentLayers[4] = 7;
 
             ActivationFunction[] activationFunctions = new ActivationFunction[networkSize];
             activationFunctions[0] = ActivationFunction.ReLU;
             activationFunctions[1] = ActivationFunction.ReLU;
+            activationFunctions[2] = ActivationFunction.ReLU;
+            activationFunctions[3] = ActivationFunction.ReLU;
+            activationFunctions[4] = ActivationFunction.ReLU;
 
             ANNSettings settings = new(
                 aNNType: ProblemType.Regression,
                 learningRate: 0.001f,
                 batchSize:  64,
                 numberOfEpochs: 10,
-                inputSize:  512,
+                inputSize:  13,
                 outputSize: 1,
                 hiddenLayers: hiddentLayers,
                 activationFunctions: activationFunctions,
                 regularization: RegularizationMethod.L1,
                 lossFunction: LossFunction.MSELoss,
-                optimizer: Optimizer.SGD
+                optimizer: Optimizer.Adam
                 );
 
             experiment.ApplySettings(settings);

@@ -1,6 +1,7 @@
 
 from math import sqrt
 import random
+import statistics
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -114,7 +115,87 @@ class ANN:
         else:
             self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
     
+    # Training
+    def train(self):
+        if self.train_loader is None:
+            self.initialize_loaders()
+        
+        # Train the network
+        for epoch in range(self.num_epochs):
+            for bach_index, (data, target) in enumerate(self.train_loader):
+                data = data.to(device)
+                target = target.to(device)
+                data = data.reshape(data.shape[0], -1)
+                
+                # Forward
+                scores = self.model.forward(data)
+                loss = self.criterion(scores, target)
+                
+                print(f"loss: {loss}")
+                
+                # Backwards
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
+    
     # Metrics
+    def compute_regression_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = [[] for i in range(self.output_size)]
+        predicted = [[] for i in range(self.output_size)]
+        
+        n = self.data.get_row_count()
+        p = self.input_size
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                y_p = self.model(x)
+                
+                for i in range(self.output_size):
+                    actual[i].extend([j[i] for j in y.tolist()])
+                    predicted[i].extend([j[i] for j in y_p.tolist()])
+                
+        self.model.train()
+        
+        statistics = {}
+        for i in range(self.output_size):
+            print(actual[i])
+            print(predicted[i])
+            mae = metrics.mean_absolute_error(actual[i], predicted[i])
+            mse = metrics.mean_squared_error(actual[i], predicted[i])
+            rse = sqrt(mse * (n / (n - p - 1)))
+            # f1 = metrics.f1_score(actual[i], predicted[i])
+            r2 = metrics.r2_score(actual[i], predicted[i])
+            adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+            # roc_auc_score = metrics.roc_auc_score(actual[i], predicted[i])
+            
+            statistics[i] = StatisticsRegression(
+                mae,
+                mse,
+                rse,
+                # f1,
+                r2,
+                adjustedR2
+                # roc_auc_score
+            ).__dict__
+        print(statistics)
+        return statistics
+        
     def get_accuracy(self, dataset):
         if self.train_loader is None:
             self.initialize_loaders()
@@ -146,80 +227,6 @@ class ANN:
         self.model.train()
         
         return num_correct / num_samples
-    
-    # Training
-    def train(self):
-        if self.train_loader is None:
-            self.initialize_loaders()
-        
-        # Train the network
-        for epoch in range(self.num_epochs):
-            for bach_index, (data, target) in enumerate(self.train_loader):
-                data = data.to(device)
-                target = target.to(device).float()
-                data = data.reshape(data.shape[0], -1)
-                
-                # Forward
-                scores = self.model.forward(data)
-                loss = self.criterion(scores, target)
-                
-                # Backwards
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
-    
-    # Metrics
-    def compute_regression_statistics(self, dataset):
-        if self.train_loader is None:
-            self.initialize_loaders()
-            
-        if   dataset == "train":
-            loader = self.train_loader
-        elif dataset == "test":
-            loader = self.test_loader
-        else:
-            return
-        
-        actual = []
-        predicted = []
-        
-        n = self.data.get_row_count()
-        p = self.data.get_inputs_count()
-        
-        self.model.eval()
-        
-        with torch.no_grad():
-            for x, y in loader:
-                x = x.to(device)
-                y = y.to(device).float()
-                x = x.reshape(x.shape[0], -1)
-                
-                y_p = self.model(x)
-                
-                actual.append(y)
-                predicted.append(y_p)
-                
-                print(y, y_p)
-                
-        self.model.train()
-        
-        mae = metrics.mean_absolute_error(actual, predicted)
-        mse = metrics.mean_squared_error(actual, predicted)
-        rse = sqrt(mse * (n / (n - p - 1)))
-        f1 = metrics.f1_score(actual, predicted)
-        r2 = metrics.r2_score(actual, predicted)
-        adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-        roc_auc_score = metrics.roc_auc_score(actual, predicted)
-        
-        return StatisticsRegression(
-            mae,
-            mse,
-            rse,
-            f1,
-            r2,
-            adjustedR2,
-            roc_auc_score
-        )
     
     
 class NN(nn.Module):
