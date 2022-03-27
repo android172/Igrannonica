@@ -1,12 +1,13 @@
 #oblast
 {
     min-height: 400px;
-    background-color: #272741;
     margin-left: 50px;
     margin-right: 50px;
     border-radius: 25px;
     align-content: center;
     padding: 20px;
+    background: rgba(39, 39, 65, 0.92);
+    box-shadow: 13px 20px 29px rgba(0, 0, 0, 0.25);
 }
 
 #nav-tab
@@ -19,7 +20,7 @@
 
 .nav-link
 {
-    background-color: #1D2145;
+    background: rgba(29, 33, 69, 0.92);
     color: white;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-style: normal;
@@ -48,13 +49,12 @@
 
 .nav-link.active
 {
-    background-color: #272741;
+    background: rgba(39, 39, 65, 0.92);
     color: #F45E82;
     border: none;
     text-shadow: #222;
     border: 1px solid #F45E82;
     border-bottom: none;
-    z-index: 10;
-    
+    z-index: 10;   
 }
   
