@@ -29,3 +29,224 @@
 {
     color: white;
 }
+
+/* -------------------------- PODACI ---------------------------------*/
+
+#body1{
+    width: 99%;
+   /* background-color: #D74971; */
+    margin: auto;
+    min-height: 60vh;
+}
+
+#naziveksperimenta{
+    /*float: right;*/
+    min-width: 200px;
+    margin-right: 15px;
+    border: 3px solid rgb(37, 164, 214) ;
+    color: #CED9FF;
+    background-color: #272741;
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+#sacuvajizmene{
+    /*float:right;*/
+}
+
+#desnielement{
+    width: 350px;
+    display: flex;
+    position: relative;
+    left: 950px;
+    margin: 1px 0;
+}
+#brojRedovaTabelePoruka{
+    width: 30px;
+}
+
+#box{
+    margin: 10px auto;
+    width: 100%;
+    text-align: center;
+    color: #CED9FF;
+    height: 300px;
+    align-items: center;
+}
+
+.p1{
+    width: 350px;
+}
+.placement{
+    float: left;
+    height: 300px;
+}
+
+#testniskup,#enkodiranje,#nedostajucevrednosti{
+    background-color: #272741;
+    border: 4px solid #5977DF;
+    padding: 5px;
+    box-sizing: border-box;
+
+box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+border-radius: 10px;
+}
+#testniskup{
+   /* margin-right: 32px;*/
+}
+#nedostajucevrednosti{
+    width: 550px;
+    margin: 0 32px 0 32px;    
+}
+#header1{
+    height: 50px;
+    /*float: left;*/
+    width: 100%;
+    display: flex;
+}
+
+    #sacuvajizmene{
+    width: 120px;
+    height: 40px;
+    color: white;
+
+    background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%);
+    border: 1px solid #0a1024;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+#ucitaj1{
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    background: rgb(214, 45, 84);
+    border: 3px solid rgba(243, 48, 95, 0.8);
+    color: white;
+    position: absolute;
+    z-index: 10;
+    width: 140px;
+}
+
+#okvir1{
+    border: 3px solid   #A2AFD2;
+    box-sizing: border-box;
+    text-align: right;
+    color: white;
+    border-radius: 10px;
+    position: absolute;
+    align-items: center;
+    z-index: 2;
+    height: 40px;
+    line-height: 35px;
+    min-width: 170px;
+    align-items: center;
+    left: 215px;
+}
+
+.okvir2{
+    margin: 1px 0;
+}
+
+/* TESTNI SKUP - KOMPONENTE */
+
+#ucitaj-testniskup{
+    height: 35px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    background: rgb(114, 89, 206);
+    border: 3px solid rgba(87, 162, 197, 0.8);
+    color: white;
+    position: absolute;
+    z-index: 10;
+    width: 140px;
+}
+
+#testniskup-menu{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 30px;
+    background: linear-gradient(to right, rgb(213, 197, 252) , rgb(193, 212, 240));
+}
+
+/*   NEDOSTAJUCE VREDNOSTI */ 
+
+#Zamena, #Brisanje{
+    height: 30px;
+    background: linear-gradient(to right, rgb(213, 197, 252) , rgb(193, 212, 240));
+    margin: 0 15px;
+}
+
+#select-elements{
+    margin: 20px auto auto 30px;
+    display: flex;
+}
+
+#prazni-string, #zamena-nula, #nova-kategorija{
+    display: flex;
+    margin-left: 35px;
+    padding: 10px;
+    line-height: 30px;
+}
+
+#prazni-string{
+    margin-top: 25px;
+}
+
+#b1,#b2{
+    margin-left: 10px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 100px;
+    line-height: 10px;
+    
+}
+#b3{
+    margin-left: 10px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 130px;
+    line-height: 10px;
+}
+
+/* ENKODIRANJE */ 
+
+#b4, #b5{
+    margin: 50px auto auto auto;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 40px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 180px;
+
+}

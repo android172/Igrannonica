@@ -1,48 +1,135 @@
-<input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+<div id="body1">
 
-<div class="file-upload">
 
-    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-        Učitaj podatke
-    </button>
+    <div id="header1">
 
-    <span style="color:white; margin-left: 10px;">{{fileName || "Podaci nisu učitani."}}</span>
+        <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+        <div class="file-upload okvir2">
+
+            <button mat-mini-fab color="primary" id="ucitaj1" class="upload-btn" (click)="fileUpload.click()">
+                Učitaj podatke
+            </button>
+            <div id="okvir1">
+            <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} &nbsp;</span>
+            </div>
+        </div>
+
+        <div id="porukaGreske"></div>
+
+        <div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
+            <span>
+                <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
+                    <option value="5">5</option>
+                    <option selected value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </span>
+        </div>
+
+        <div id="desnielement">
+            <div id="naziveksperimenta">Naziv Eksperimenta</div>
+            <button id="sacuvajizmene">Sačuvaj izmene</button> 
+        </div>
+        
+    </div>
+
+
+
+    <div id="box">
+        <div id="testniskup" class="p1 placement">
+            <div>Testni skup</div>
+
+            <select id="testniskup-menu">
+                <option value="Učitaj testni skup">Učitaj testni skup</option>
+                <option value="Proizvoljan unos vrednosti">Proizvoljan unos vrednosti</option>
+            </select>
+
+            <div id="testniskup-comp">
+
+                <div id="unos-fajla">
+                    <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+                <div class="file-upload okvir2">
+
+                    <button mat-mini-fab color="primary" id="ucitaj-testniskup" class="upload-btn" (click)="fileUpload.click()">
+                        Učitaj podatke
+                    </button>                 
+                    <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} &nbsp;</span>   
+                </div>
+                </div>
+
+                <div id="proizvoljan-unos">
+
+                </div>
+            </div>
+        </div>
+        <div id="nedostajucevrednosti" class="placement">
+            <div>Nedostajuće vrednosti</div>
+            <div id="select-elements">
+                <select id="Zamena">
+                    <option value="Zameni sa mean u koloni">Zameni sa mean u koloni</option>
+                    <option value="Zameni sa median u koloni">Zameni sa median u koloni</option>
+                    <option value="Zameni sa mode u koloni">Zameni sa mode u koloni</option>
+
+                </select>
+                <select id="Brisanje">
+                    <option value="Izbaci sve vrste">Izbaci sve vrste</option>
+                    <option value="Izbaci sve kolone">Izbaci sve kolone</option>
+                    <option value="Izbaci vrste za izabrane kolone">Izbaci vrste za izabrane kolone</option>
+
+                </select>
+            </div>
+           <div id="prazni-string">
+                <div>Zamena praznih stringova sa NA za zeljene kolone:</div>
+                <button id="b1">Primeni</button> 
+           </div>
+            
+           <div id="zamena-nula">
+                <div>Zamena 0 sa NA za zeljene kolone:</div>
+                <button id="b2">Primeni</button> 
+           </div>
+
+           <div id="nova-kategorija">
+                <div>Dodaj novu kategoriju:</div>
+                <button id="b3">Nova kategorija</button>  
+           </div>
+            
+        </div>
+        <div id="enkodiranje" class="p1 placement">
+            <div>Enkodiranje</div>
+            <button id="b4">LabelEncode</button> 
+            <button id="b5">One-hotEncode</button> 
+        </div>
+    </div>
+
+
+
+    <div id="table">
+        <table>
+            <tr>
+                <th *ngFor="let header of dajHeadere();">
+                    {{header}}
+                </th>
+            </tr>
+            <tr *ngFor="let red of json | paginate
+            : {
+                itemsPerPage: itemsPerPage,
+                currentPage: page,
+                totalItems: totalItems
+            };  index as i">
+                <td *ngFor="let fieldValue of dajRed(i)">
+                {{fieldValue}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <pagination-controls
+    class="pagi"
+    (pageChange)="gty(page = $event)"  
+    ></pagination-controls>
+
 </div>
-<div id="porukaGreske"></div>
-
-<div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
-    <span>
-        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
-            <option value="5">5</option>
-            <option selected value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </span>
-</div>
-
-<div id="table">
-    <table>
-        <tr>
-            <th *ngFor="let header of dajHeadere();">
-                {{header}}
-            </th>
-        </tr>
-        <tr *ngFor="let red of json | paginate
-        : {
-            itemsPerPage: itemsPerPage,
-            currentPage: page,
-            totalItems: totalItems
-          };  index as i">
-            <td *ngFor="let fieldValue of dajRed(i)">
-              {{fieldValue}}
-            </td>
-        </tr>
-    </table>
-</div>
-
-<pagination-controls
-  class="pagi"
-  (pageChange)="gty(page = $event)"  
-></pagination-controls>
