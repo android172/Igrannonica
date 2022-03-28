@@ -102,7 +102,7 @@ namespace dotNet.Controllers
             return BadRequest("Doslo do greske");
         }
         [Authorize]
-        [HttpDelete("Modeli")]
+        [HttpDelete("Modeli/{id}")]
         public IActionResult izbrisiModel(int id)
         {
             if (db.dbmodel.izbrisiModel(id))

@@ -34,7 +34,26 @@ export class ModeliComponent implements OnInit {
           console.log(res);
           this.json = res;
           this.modeli = Object.values(this.json);
+        },
+        error=>{
+          console.log(error.error);
         }
     );
   }
+
+  obrisiModel(i:any)
+  {
+     this.http.delete('http://localhost:5008/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
+       res=>{
+         console.log(res);
+            this.ucitajModel();
+            var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
+       },
+       error=>{
+         console.log(error.error);
+       }
+     )
+  }
+
+
 }

@@ -4,6 +4,16 @@ p
     font-size: larger;
     padding-top: 10px;
     text-align: center;
+    float: left;
+    width: 400px;
+    height: 40px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background: rgba(162, 175, 210, 0.6);
+    border-color: #A2AFD2;
+    border-radius: 10px;
+    border-width: 1px;
+    border-radius: 10px;
 }
 
 #divModeli{
@@ -31,15 +41,7 @@ p
 }
 
 #m{
-    width: 470px;
-    height: 40px;
-    margin-top: 15px;
-    margin-left: 15px;
-    background: rgba(162, 175, 210, 0.6);
-    border-color: #A2AFD2;
-    border-radius: 10px;
-    border-width: 1px;
-    border-radius: 10px;
+   height: 60px;
 }
 
 /* width */
