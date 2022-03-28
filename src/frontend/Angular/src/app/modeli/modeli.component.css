@@ -66,3 +66,19 @@ p
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(164, 157, 157, 1); 
   }
+
+  #delete{
+    height: 40px;
+    width: 70px;
+    border-radius: 10px;
+    background-color: rgba(243, 48, 95, 0.85);
+    border-color: rgb(243, 48, 94);
+    margin-top: 10px;
+    color: white;
+  }
+
+  #divB{
+      width: 50px;
+      float: left;
+      margin-left: 10px;
+  }
