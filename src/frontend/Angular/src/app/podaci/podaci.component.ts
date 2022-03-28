@@ -79,8 +79,11 @@ export class PodaciComponent implements OnInit {
     })
   }
 
-  dajHeadere(): string[]
+  dajHeadere()
   {
+    if(this.json == undefined)
+      return;
+    
     var headers = Object.keys(this.json[0]);
     //console.log(Object.values(this.json[0]));
     return headers;
