@@ -1,21 +1,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <div id="eksperiment">
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#podaci" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Podaci</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#modeli" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Modeli</button>
-        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Model</button>
+        <button class="nav-link active" id="nav-podaci-tab" data-bs-toggle="tab" data-bs-target="#podaci" type="button" role="tab" aria-controls="nav-podaci" aria-selected="true">Podaci</button>
+        <button class="nav-link" id="nav-modeli-tab" data-bs-toggle="tab" data-bs-target="#modeli" type="button" role="tab" aria-controls="nav-modeli" aria-selected="false">Modeli</button>
+        <button class="nav-link" id="nav-model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="nav-model" aria-selected="false">Model</button>
   </div>
 
     
   <div id="oblast">
       <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="podaci" role="tabpanel" aria-labelledby="nav-home-tab">
+          <div class="tab-pane fade show active" id="podaci" role="tabpanel" aria-labelledby="nav-podaci-tab">
               <app-podaci id="podaci"></app-podaci>
           </div>
-          <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-profile-tab">
+          <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-modeli-tab">
               <app-modeli id="modeli"></app-modeli>
           </div>
-          <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-contact-tab">
+          <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-model-tab">
               <app-model id="model"></app-model>
           </div>
         </div>
