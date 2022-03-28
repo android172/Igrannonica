@@ -11,13 +11,13 @@
                 Učitaj podatke
             </button>
             <div id="okvir1">
-            <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} &nbsp;</span>
+            <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span><span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span></span>
             </div>
         </div>
 
-        <div id="porukaGreske"></div>
 
-        <div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
+        <div id="brojRedovaTabelePoruka" style="color: white;">
+            <div id="odabir-redova">Broj redova za prikaz:</div>
             <span>
                 <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
                     <option value="5">5</option>
@@ -35,7 +35,6 @@
         </div>
         
     </div>
-
 
 
     <div id="box">
@@ -98,38 +97,44 @@
            </div>
             
         </div>
-        <div id="enkodiranje" class="p1 placement">
+        <div id="enkodiranje" class="p2 placement">
             <div>Enkodiranje</div>
             <button id="b4">LabelEncode</button> 
             <button id="b5">One-hotEncode</button> 
         </div>
     </div>
 
+    <div id="tabela-statistika">
+        <div page>
+            <div id="table">
+                <table>
+                    <tr class="head-table">
+                        <th *ngFor="let header of dajHeadere();">
+                            {{header}}
+                        </th>
+                    </tr>
+                    <tr class="trbody" *ngFor="let red of json | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                    };  index as i">
+                        <td *ngFor="let fieldValue of dajRed(i)">
+                        {{fieldValue}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
+            <pagination-controls
+            class="pagi"
+            (pageChange)="gty(page = $event)"  
+            ></pagination-controls>
+        </div>
 
-    <div id="table">
-        <table>
-            <tr>
-                <th *ngFor="let header of dajHeadere();">
-                    {{header}}
-                </th>
-            </tr>
-            <tr *ngFor="let red of json | paginate
-            : {
-                itemsPerPage: itemsPerPage,
-                currentPage: page,
-                totalItems: totalItems
-            };  index as i">
-                <td *ngFor="let fieldValue of dajRed(i)">
-                {{fieldValue}}
-                </td>
-            </tr>
-        </table>
+        <div id="statistika">
+            <div>Statisticki podaci</div>
+        </div>
     </div>
-
-    <pagination-controls
-    class="pagi"
-    (pageChange)="gty(page = $event)"  
-    ></pagination-controls>
 
 </div>

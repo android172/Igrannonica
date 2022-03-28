@@ -29,17 +29,21 @@ export class PodaciComponent implements OnInit {
       this.fileName = file.name;
 
       const formData = new FormData();
-      formData.append("file", file, this.fileName);
+      formData.append("file", file, this.fileName);  	
+      
 
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
-          (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Uspesno ucitano";
+          (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
+          (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
       },error =>{
         console.log(error.error);	
-        var div = (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Greška prilikom učitavanja podataka!";
+        var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
+        console.log("Greskaaaaaaaa");
+        (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
       });
