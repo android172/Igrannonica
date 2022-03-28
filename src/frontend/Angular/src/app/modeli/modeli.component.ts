@@ -24,6 +24,7 @@ export class ModeliComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ucitajImeE();
     this.ucitajModel();
   }
 
@@ -34,6 +35,17 @@ export class ModeliComponent implements OnInit {
           console.log(res);
           this.json = res;
           this.modeli = Object.values(this.json);
+        },
+        error=>{
+          console.log(error.error);
+        }
+    );
+  }
+
+  ucitajImeE(){
+    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/' + this.id,{responseType: 'text'}).subscribe(
+        res=>{
+          var div = (<HTMLDivElement>document.getElementById("imeE")).innerHTML = res;
         },
         error=>{
           console.log(error.error);

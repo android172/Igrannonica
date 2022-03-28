@@ -8,7 +8,8 @@ p
     width: 400px;
     height: 40px;
     margin-top: 10px;
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-right: 10px;
     background: rgba(162, 175, 210, 0.6);
     border-color: #A2AFD2;
     border-radius: 10px;
@@ -19,19 +20,18 @@ p
 #divModeli{
 
     position: relative;
-    width: 600px;
+    width: 550px;
     height: 400px;
     margin: auto;
 }
 
 #skrol{
 
-    width: 510px;
+    width: 550px;
     height: 330px;
     overflow: auto;
     border: 3px solid rgba(89, 119, 223, 1);
-    margin-top: 40px;
-    margin-left: 40px;
+    margin: auto;
     border-radius: 10px;
     color: #fff;
     font-family: 'Roboto';
@@ -188,4 +188,12 @@ p
     position: absolute;
     bottom: 12px;
     right: 20px;
+  }
+
+  #imeE{
+    border: 3px solid rgba(89, 119, 223, 1);
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 20px;
   }
