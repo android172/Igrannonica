@@ -47,19 +47,16 @@ img{
 }
 
 #brojRedovaTabelePoruka{
-    position: relative;
-    left: 385px;
-    
-    width: 500px;
-    /*background-color: #D74971;*/
+    position: static;
+    left: 300px;
+    width: 15%;
     color: #CED9FF;
 }
 #odabir-redova{
-    width: 300px;
+    width: 100%;
     color: #CED9FF;
 }
-#brojRedovaTabele{
-    position: absolute;
+#brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
 
@@ -165,10 +162,6 @@ th{
     margin: 1px 0;
     float: right;
 }
-#brojRedovaTabelePoruka{
-    width: 30px;
-}
-
 #box{
     margin: 10px auto;
     width: 100%;
