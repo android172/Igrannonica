@@ -42,7 +42,7 @@ export class PodaciComponent implements OnInit {
       },error =>{
         console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
-        console.log("Greskaaaaaaaa");
+        console.log("Greska");
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";

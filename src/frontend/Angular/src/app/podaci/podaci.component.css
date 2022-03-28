@@ -81,6 +81,7 @@ img{
     width: 932px;
     overflow: scroll;
     max-height: 540px;
+    min-height: 540px;
   
 }
 #table::-webkit-scrollbar{
@@ -276,6 +277,7 @@ th{
     position: absolute;
     z-index: 10;
     width: 140px;
+    position: relative;
 }
 #ucitaj-testniskup:hover{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
