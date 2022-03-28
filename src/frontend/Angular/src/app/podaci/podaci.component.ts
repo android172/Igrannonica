@@ -57,9 +57,23 @@ export class PodaciComponent implements OnInit {
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
+        this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;
     })
+  }
+
+  dajStatistiku()
+  {
+    let kolone = this.dajHeadere();
+    let brojKolona = kolone.length;
+    console.log("Fja statistika, broj kolona: " + kolone.length);
+    console.log(kolone);
+    this.http.get("http://localhost:5008/api/Upload/statistika/" + brojKolona).subscribe(
+      (response: any) => {
+        console.log(response);
+      }
+    )
   }
 
   promeniBrojRedova(value: any)
