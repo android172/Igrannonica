@@ -100,18 +100,12 @@ namespace dotNet.Controllers
                 sb.AppendLine(line);
             }
 
-            // cuvanje csv fajla 
-            if (!System.IO.File.Exists(path))
-            {
-                System.IO.File.WriteAllText(path, sb.ToString());
-                eksperiment.LoadDataset(path);
+            // cuvanje csv fajla  // Override postojeceg fajla 
+            //if (!System.IO.File.Exists(path))        
+            System.IO.File.WriteAllText(path, sb.ToString());
+            eksperiment.LoadDataset(path);
 
-                return Ok("Fajl je upisan.");
-            }
-            else
-            {
-                return BadRequest("Fajl vec postoji.");
-            }
+            return Ok("Fajl je upisan.");
         }
 
         [HttpGet("paging/{page}/{size}")]
