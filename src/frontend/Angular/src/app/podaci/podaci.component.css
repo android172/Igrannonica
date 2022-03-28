@@ -161,8 +161,9 @@ th{
     width: 350px;
     display: flex;
     position: relative;
-    left: 950px;
+    justify-content: space-between;
     margin: 1px 0;
+    float: right;
 }
 #brojRedovaTabelePoruka{
     width: 30px;
@@ -175,6 +176,8 @@ th{
     color: #CED9FF;
     height: 300px;
     align-items: center;
+    display: flex; 
+    justify-content: space-between;
 }
 
 .p1{
@@ -197,8 +200,8 @@ th{
     border-radius: 10px;
 }
 #nedostajucevrednosti{
-    width: 600px;
-    margin: 0 32px 0 32px;    
+    width: 45.5%;
+    
 }
 #header1{
     height: 50px;
@@ -206,6 +209,7 @@ th{
     width: 100%;
     display: flex;
     position: relative;
+    justify-content: space-between;
 }
 
 #sacuvajizmene{
