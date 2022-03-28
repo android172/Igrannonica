@@ -21,16 +21,12 @@ export class AppComponent {
   ngOnInit(): void {
   }
 
-  ngDoCheck(): void{
-    /*if(this.prikaziMeni.meni == false)
-      this.header = false
-    else
-      this.header = true*/
-
-    if(this.router.url=="/prijava" || this.router.url=="/registracija" || this.router.url=="/eksperiment")
+  ngDoCheck(): void
+  {
+    if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment"))
     {
       this.header = false;
-      if(this.router.url == "/eksperiment")
+      if((this.router.url).indexOf("eksperiment") != -1)
       {
         this.header2 = true;
       }
