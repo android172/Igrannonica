@@ -275,3 +275,10 @@ p
  
     float: left;
 }
+
+#poruka
+{
+    color: rgba(243, 48, 95, 0.85);
+    text-align: center;
+    font-size: 15px;
+}

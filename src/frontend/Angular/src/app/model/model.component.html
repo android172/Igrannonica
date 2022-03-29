@@ -10,7 +10,7 @@
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
                 <label class="container" *ngFor="let e of message">{{e}}
-                    <input type="checkbox"> 
+                    <input type="checkbox" name="ulz"  value="{{e}}"> 
                     <span class="checkmark"></span>
                 </label>
             </div>
@@ -19,7 +19,7 @@
             <p>Izbor kolone za izlaz</p>
             <div id="ulaziIzlaz">
                 <label class="container" *ngFor="let e of message">{{e}}
-                    <input type="checkbox"> 
+                    <input type="checkbox" name="izl" (change)="provera()" value="{{e}}">  
                     <span class="checkmark"></span>
                 </label>
                 <!--
@@ -31,6 +31,7 @@
                 <label id="tekst" for="kol3"> Kolona 3</label>  
                 -->     
             </div>
+            <div id="poruka"></div>
         </div>
         <button id="pokreniM">
             Pokreni model

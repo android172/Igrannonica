@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../shared/shared.service';
 
@@ -51,5 +52,25 @@ export class ModelComponent implements OnInit {
   }
 
 
+  provera(){
 
+    let element = <any>document.getElementsByName("izl"); 
+    var br = 0;
+    for(let i=0; i<element.length; i++)
+    {
+      if(element[i].checked)
+      {
+        //console.log(element[i]);
+        br++;
+        if(br>1)
+        {
+          element[i].checked = false;
+          //alert("Mozete izabrati samo jednu kolonu za izlaz");
+          var p = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Mozete izabrati samo jednu kolonu"; 
+         // return false;
+        }
+      }
+    }
+    //return true;
+  }
 }
