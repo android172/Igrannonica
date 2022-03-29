@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-eksperiment',
@@ -8,7 +9,15 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EksperimentComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) 
+  { 
+    this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.idEks = params['id'];
+        console.log(this.idEks);
+      }
+    )
+  }
 
   ngOnInit(): void {
   }
@@ -19,6 +28,7 @@ export class EksperimentComponent implements OnInit {
   itemsPerPage: any;
   //totalItems : any;
   totalItems: number = 0; 
+  idEks: any;
 
   onFileSelected(event:any) 
   {
@@ -30,8 +40,8 @@ export class EksperimentComponent implements OnInit {
 
       const formData = new FormData();
       formData.append("file", file, this.fileName);
-// u url dodati ?id= i u nastavku sa + dodati id eksperimenta
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
+
+      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload/" + this.idEks, formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("porukaGreske")).innerHTML = "Uspesno ucitano";
