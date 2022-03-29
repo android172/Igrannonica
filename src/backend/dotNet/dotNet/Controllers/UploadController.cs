@@ -54,11 +54,8 @@ namespace dotNet.Controllers
             if (file == null)
                 return BadRequest("Fajl nije unet.");
 
-            // baza 
-            string nazivEksperimenta = db.dbeksperiment.uzmi_naziv(idEksperimenta);
-
             // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.KorisnickoIme;
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
 
             if (!System.IO.Directory.Exists(folder))
             {
@@ -66,7 +63,7 @@ namespace dotNet.Controllers
             }
 
             // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + nazivEksperimenta;
+            string folderEksperiment = folder + "\\" + idEksperimenta;
 
             if (!System.IO.Directory.Exists(folderEksperiment))
             {

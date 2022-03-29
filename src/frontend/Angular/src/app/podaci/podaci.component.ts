@@ -68,13 +68,14 @@ export class PodaciComponent implements OnInit {
         this.json =  JSON.parse(response.data);
          //this.json = response;
         this.totalItems = response.totalItems;
+        this.gty(1);
     })
   }
 
   promeniBrojRedova(value: any)
   {
     this.itemsPerPage = parseInt(value);
-    this.http.get("http://localhost:5008/api/Upload/paging/"+this.page+"/" + this.itemsPerPage).subscribe(
+    this.http.get("http://localhost:5008/api/Upload/paging/1/" + this.itemsPerPage).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -85,7 +86,8 @@ export class PodaciComponent implements OnInit {
    console.log("---GTY--");
    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
    console.log(this.itemsPerPage);
-   this.http.get("http://localhost:5008/api/Upload/paging/" + this.page + "/" + this.itemsPerPage).subscribe(
+   console.log(this.page);
+   this.http.get("http://localhost:5008/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
