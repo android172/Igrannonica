@@ -18,7 +18,7 @@ namespace dotNet.Controllers
     public class UploadController : ControllerBase
     {
         private IConfiguration _config;
-        private DB db;
+        DB db;
         private int ukupanBrRedovaFajla;
         //private static MLExperiment? experiment = null;
 
@@ -29,8 +29,8 @@ namespace dotNet.Controllers
             ukupanBrRedovaFajla = 0;
         }
 
-        [HttpPost("upload")]
-        public IActionResult Upload(IFormFile file)
+        [HttpPost("upload/{idEksperimenta}")]
+        public IActionResult Upload(IFormFile file,int idEksperimenta)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -51,6 +51,12 @@ namespace dotNet.Controllers
             else
                 return BadRequest("Korisnik nije ulogovan.");
 
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            // baza 
+            string nazivEksperimenta = db.dbeksperiment.uzmi_naziv(idEksperimenta);
+
             // kreiranje foldera 
             string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.KorisnickoIme;
 
@@ -59,12 +65,17 @@ namespace dotNet.Controllers
                 Directory.CreateDirectory(folder);
             }
 
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + nazivEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
             // cuvanje fajla - putanja 
             string fileName = file.FileName;
-            string path = folder + "\\" + fileName;
-
-            if (file == null)
-                return BadRequest("Fajl nije unet.");
+            string path = folderEksperiment + "\\" + fileName;
 
             string[] lines = { };
             List<string> lines2 = new List<string>();
@@ -99,19 +110,20 @@ namespace dotNet.Controllers
             {
                 sb.AppendLine(line);
             }
+            
+            // upis u fajl 
+            System.IO.File.WriteAllText(path, sb.ToString());
+            eksperiment.LoadDataset(path);
 
-            // cuvanje csv fajla 
-            if (!System.IO.File.Exists(path))
-            {
-                System.IO.File.WriteAllText(path, sb.ToString());
-                eksperiment.LoadDataset(path);
+            // upis csv-a u bazu 
+            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
 
-                return Ok("Fajl je upisan.");
-            }
-            else
+            if(fajlNijeSmesten)
             {
-                return BadRequest("Fajl vec postoji.");
+                Console.WriteLine("Fajl nije upisan u bazu");
+                return BadRequest("Neuspesan upis csv-a u bazu");
             }
+            return Ok("Fajl je upisan.");      
         }
 
         [HttpGet("paging/{page}/{size}")]

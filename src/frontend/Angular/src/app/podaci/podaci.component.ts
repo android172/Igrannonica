@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-podaci',
@@ -7,8 +8,6 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./podaci.component.css']
 })
 export class PodaciComponent implements OnInit {
-
-  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
   }
@@ -18,7 +17,18 @@ export class PodaciComponent implements OnInit {
   page: number = 1;
   itemsPerPage: any;
   //totalItems : any;
-  totalItems: number = 0; 
+  totalItems: number = 0;
+  idEksperimenta: any;
+
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.idEksperimenta = params['id'];
+        console.log(this.idEksperimenta);
+      }
+    )
+  }
+
 
   onFileSelected(event:any) 
   {
@@ -30,9 +40,8 @@ export class PodaciComponent implements OnInit {
 
       const formData = new FormData();
       formData.append("file", file, this.fileName);  	
-      
 
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
