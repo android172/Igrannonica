@@ -32,9 +32,10 @@
     margin: -20px -5px 0;
     border-top-left-radius: 45px 100px;
     border-top-right-radius: 45px 100px;
-    padding-top: 10px;
+    padding-top: 13px;
+    padding-bottom: 13px;
     position: relative;
-    width: 150px;
+    width: 20%;
     max-width: 200px;
     min-width: 20px;
     border: 1px solid #aaa;
