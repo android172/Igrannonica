@@ -70,11 +70,15 @@ namespace dotNet.Controllers
         public IActionResult Register(KorisnikRegister request) {
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
-            Console.WriteLine(request.KorisnickoIme);
             KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
             
             if(korisnikValid.korisnickoIme && korisnikValid.email)
             {
+                Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
+
+                string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
+                if(!Directory.Exists(putanja))
+                    Directory.CreateDirectory(putanja);
                 return Ok("Registrovan korisnik");
             }
             if(!korisnikValid.korisnickoIme)

@@ -32,21 +32,22 @@ namespace dotNet.DBFunkcije
             connect.Close();
             return result;
         }
-        public bool proveriModel(string ime, int id)
+        public int proveriModel(string ime, int id)
         {
             connect.Open();
             string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@naziv", ime);
             cmd.Parameters.AddWithValue("@vlasnik", id);
-
-            if (cmd.ExecuteNonQuery() > 0)
+            MySqlDataReader r = cmd.ExecuteReader();
+            if (r.Read())
             {
+                int idm = r.GetInt32("id");
                 connect.Close();
-                return true;
+                return idm;
             }
             connect.Close();
-            return false;
+            return -1;
         }
         public bool dodajModel(string ime, int id)
         {

@@ -28,10 +28,11 @@ namespace dotNet.Controllers
             db = new DB(_config);
             ukupanBrRedovaFajla = 0;
         }
-
+        //kao ulazni parametar dodati int id koji pretstavlja id eksperimenta
         [HttpPost("upload")]
         public IActionResult Upload(IFormFile file)
         {
+            
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -50,7 +51,8 @@ namespace dotNet.Controllers
             }
             else
                 return BadRequest("Korisnik nije ulogovan.");
-
+            //folder eksperimenta treba da bude Folder/IDkorisnika/IDeksperimenta
+            //proveriti da li postoji, ako ne onda napravi
             // kreiranje foldera 
             string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.KorisnickoIme;
 

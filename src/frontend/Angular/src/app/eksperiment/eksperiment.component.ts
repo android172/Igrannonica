@@ -30,7 +30,7 @@ export class EksperimentComponent implements OnInit {
 
       const formData = new FormData();
       formData.append("file", file, this.fileName);
-
+// u url dodati ?id= i u nastavku sa + dodati id eksperimenta
       const upload$ = this.http.post("http://localhost:5008/api/Upload/upload", formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
