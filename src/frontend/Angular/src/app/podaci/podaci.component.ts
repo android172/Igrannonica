@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { SharedService } from '../shared/shared.service';
 
 @Component({
   selector: 'app-podaci',
@@ -8,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PodaciComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private shared: SharedService) { }
 
   ngOnInit(): void {
   }
@@ -19,6 +20,10 @@ export class PodaciComponent implements OnInit {
   itemsPerPage: any;
   //totalItems : any;
   totalItems: number = 0; 
+
+  public kolone: any[] = [];
+  message: any;
+
 
   onFileSelected(event:any) 
   {
@@ -85,6 +90,13 @@ export class PodaciComponent implements OnInit {
       return;
     
     var headers = Object.keys(this.json[0]);
+    for(let i=0; i<headers.length; i++)
+    {
+      this.kolone[i] = headers[i];
+    }
+    this.message = headers;
+    this.shared.setMessage(this.message);
+    //console.log(this.message);
     //console.log(Object.values(this.json[0]));
     return headers;
   }
