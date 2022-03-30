@@ -132,9 +132,21 @@
             ></pagination-controls>
         </div>
 
-        <div id="statistika">
+        <div id="statistika" style="overflow-y: auto">
             <div>Statisticki podaci</div>
+            <div *ngFor="let key of keys" >
+                {{key}}
+                <div *ngFor="let item of numerickaS[key] | keyvalue;">
+                    <ul>
+                        <li>
+                            <span>
+                                {{item.key}} &nbsp; {{item.value}}
+                            </span>
+                        </li>
+                    </ul> 
+                </div>
+                <hr>
+            </div>
         </div>
     </div>
-
 </div>

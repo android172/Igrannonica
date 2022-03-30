@@ -159,7 +159,7 @@ namespace dotNet.Controllers
         [HttpGet("statistika/{brojKolona}")]
         public Statistika getStat(int brojKolona)
         {
-            /*var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
@@ -175,7 +175,7 @@ namespace dotNet.Controllers
                     return new Statistika(null, null);
             }
             else
-                return new Statistika(null, null);*/
+                return new Statistika(null, null);
 
             int[] nizIndeksa = new int[brojKolona];
             for(int i = 0; i < brojKolona; i++)

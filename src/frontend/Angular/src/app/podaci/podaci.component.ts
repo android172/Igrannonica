@@ -11,7 +11,27 @@ export class PodaciComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.getStat();
   }
+
+  getStat()
+  {
+    this.http.get<any>('/assets/stats.json').subscribe(
+      response => {
+        console.log(response);
+        let str = JSON.stringify(response);
+        this.statistika = JSON.parse(str);
+        this.numerickaS = this.statistika.statsNum;
+        this.kategorijskaS = this.statistika.statsCat;
+        this.values = Object.values(this.numerickaS);
+        this.keys = Object.keys(this.numerickaS);
+        this.valuesKat = Object.values(this.kategorijskaS);
+        this.keysKat = Object.keys(this.kategorijskaS);
+      }
+    );
+  }
+
+  isArray(val:any): boolean { return val instanceof Array }
 
   fileName = '';
   json: any;
@@ -19,6 +39,14 @@ export class PodaciComponent implements OnInit {
   itemsPerPage: any;
   //totalItems : any;
   totalItems: number = 0; 
+  
+  statistika: any;
+  numerickaS: any;
+  kategorijskaS: any;
+  values: any;
+  keys: any;
+  valuesKat:any;
+  keysKat:any;
 
   onFileSelected(event:any) 
   {
