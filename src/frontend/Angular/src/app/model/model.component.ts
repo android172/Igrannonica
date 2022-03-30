@@ -19,6 +19,7 @@ export class ModelComponent implements OnInit {
   public kolone: any[] = [];
  message: any;
 
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -36,7 +37,6 @@ export class ModelComponent implements OnInit {
     this.message = this.shared.getMessage();
     console.log(this.message);
     this.kolone  = Object.assign([], this.message);
-    //this.kolone = this.message;
   }
 
 
@@ -55,26 +55,40 @@ export class ModelComponent implements OnInit {
   }
 
 
-  provera(){
+  provera(pom : any){
 
     let element = <any>document.getElementsByName("izl"); 
+    console.log(pom);
+    var ind = -1;
+    for(let i=0; i<element.length; i++)
+    {
+      if(element[i].checked)
+      {
+        if(pom === element[i].value){
+          ind = i;
+        }
+      }
+    }
     var br = 0;
     for(let i=0; i<element.length; i++)
     {
       if(element[i].checked)
       {
-        //console.log(element[i]);
+        console.log(element[i]);
         br++;
         if(br>1)
         {
-          element[i].checked = false;
-          //alert("Mozete izabrati samo jednu kolonu za izlaz");
-          var p = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Mozete izabrati samo jednu kolonu"; 
-         // return false;
+          if(ind == i)
+            element[i].checked = false;
+          else{
+            element[ind].checked = false;
+          }
+          //console.log(element[i]);
+          alert("Mozete izabrati samo jednu kolonu za izlaz");
+          //var p = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Mozete izabrati samo jednu kolonu"; 
         }
       }
     }
-    //return true;
   }
 
 
@@ -84,12 +98,6 @@ export class ModelComponent implements OnInit {
     {
       if(nizK[i].checked)
       {
-        /*
-        console.log(nizK[i].value);
-        console.log(this.message2[i]);
-        if(nizK[i].value === this.message2[i]){
-          console.log("DA");
-        }*/
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            // console.log(element);
@@ -100,12 +108,6 @@ export class ModelComponent implements OnInit {
       }
       if(!nizK[i].checked)
       {
-        /*
-        console.log(nizK[i].value);
-        console.log(this.message2[i]);
-        if(nizK[i].value === this.message2[i]){
-          console.log("DA");
-        }*/
         var ind = 0;
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -117,9 +119,7 @@ export class ModelComponent implements OnInit {
         {
           this.kolone.splice(i, 0, nizK[i].value);
         }
-        //console.log(this.kolone);
       }
     }
-    //return true;
   }
 }
