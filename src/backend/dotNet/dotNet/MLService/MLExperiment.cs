@@ -53,6 +53,11 @@ namespace dotNet.MLService {
             return int.Parse(connection.Receive());
         }
 
+        public string GetColumnTypes() {
+            connection.Send(Command.GetColumnTypes);
+            return connection.Receive();
+        }
+
         // ///////////////// //
         // Data manipulation //
         // ///////////////// //
@@ -194,26 +199,30 @@ namespace dotNet.MLService {
         // ///////////// //
 
         // Get column statistics
-        public Dictionary<string, StatisticsNumerical>? NumericalStatistics(int[] columns) {
+        public string NumericalStatistics(int[] columns) {
             connection.Send(Command.NumericalStatistics);
             connection.Send(EncodeIntArray(columns));
-            var statistics = StatisticsNumerical.Load(connection.Receive());
-            return statistics;
+            return connection.Receive();
         }
 
-        public Dictionary<string, StatisticsCategorical>? CategoricalStatistics(int[] columns) {
+        public string CategoricalStatistics(int[] columns) {
             connection.Send(Command.CategoricalStatistics);
             connection.Send(EncodeIntArray(columns));
-            var statistics = StatisticsCategorical.Load(connection.Receive());
-            return statistics;
+            return connection.Receive();
+        }
+
+        public string ColumnStatistics() {
+            connection.Send(Command.AllStatistics);
+            return connection.Receive();
         }
 
         // /////// //
         // Network //
         // /////// //
 
-        public void ComputeMetrics() {
+        public string ComputeMetrics() {
             connection.Send(Command.ComputeMetrics);
+            return connection.Receive();
         }
 
         public void ApplySettings(ANNSettings annSettings) {
@@ -252,6 +261,7 @@ namespace dotNet.MLService {
         // Data access
         GetRows,
         GetRowCount,
+        GetColumnTypes,
         // Data manipulation
         AddRow,
         AddRowToTest,
@@ -280,6 +290,7 @@ namespace dotNet.MLService {
         // Data analysis
         NumericalStatistics,
         CategoricalStatistics,
+        AllStatistics,
         // Network
         ComputeMetrics,
         ChangeSettings,

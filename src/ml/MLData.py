@@ -43,7 +43,7 @@ class MLData:
     # Train test splits
     def random_train_test_split(self, ratio):
         dataset_length = self.dataset.shape[0]
-        split_point = int(dataset_length * ratio)
+        split_point = int(dataset_length * (1.0 - ratio))
         
         # Initialize index lists
         index_list = [i for i in range(dataset_length)]
@@ -80,6 +80,9 @@ class MLData:
     
     def get_row_count(self):
         return self.dataset.shape[0]
+    
+    def get_column_types(self):
+        return [str(i) for i in self.dataset.dtypes]
     
     # ################# #
     # Data manipulation #
@@ -187,7 +190,7 @@ class MLData:
     def one_hot_encode_columns(self, columns):
         encoder = OneHotEncoder()
         result = encoder.fit_transform(self.dataset.iloc[:, columns]).toarray()
-        new_columns = [self.dataset.columns[columns[i]] + group 
+        new_columns = [self.dataset.columns[columns[i]] + str(group) 
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
@@ -235,7 +238,7 @@ class MLData:
                 quantiles_75  = description[column]['75%'],
                 min           = description[column]['min'],
                 max           = description[column]['max']
-                )
+                ).__dict__
             
         return statistics
     
@@ -268,6 +271,6 @@ class MLData:
                 unique_count = unique_counts[column],
                 most_common  = most_common,
                 frequencies  = five_most_frequent
-            )
+            ).__dict__
     
         return statistics

@@ -29,8 +29,11 @@ namespace dotNet.Controllers {
             experiment.LoadDataset(datasetPath);
 
             // Get statistics
-            var statistics = experiment.NumericalStatistics(new int[] { 3, 6, 8 });
+            var statistics = experiment.ColumnStatistics();
             Console.WriteLine(statistics);
+
+            // Get column types
+            Console.WriteLine(experiment.GetColumnTypes());
 
             // Add row and column
             experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
@@ -50,7 +53,7 @@ namespace dotNet.Controllers {
             Console.WriteLine(rows);
 
             // Encode categorical values
-            experiment.OneHotEncoding(new int[] { 4, 5 });
+            experiment.OneHotEncoding(new int[] { 4, 5, 13 });
 
             // Replace NA values
             //experiment.ReplaceZeroWithNA(new int[] { 8 });
@@ -60,8 +63,8 @@ namespace dotNet.Controllers {
             int networkSize = 5;
 
             // Select inputs, outputs and split data
-            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16 });
-            experiment.LoadOutputs(new int[] { 10 });
+            experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+            experiment.LoadOutputs(new int[] { 16, 17 });
             experiment.TrainTestSplit(0.1f);
 
             int[] hiddentLayers = new int[networkSize];
@@ -79,16 +82,16 @@ namespace dotNet.Controllers {
             activationFunctions[4] = ActivationFunction.ReLU;
 
             ANNSettings settings = new(
-                aNNType: ProblemType.Regression,
+                aNNType: ProblemType.Classification,
                 learningRate: 0.001f,
                 batchSize:  64,
                 numberOfEpochs: 10,
                 inputSize:  13,
-                outputSize: 1,
+                outputSize: 2,
                 hiddenLayers: hiddentLayers,
                 activationFunctions: activationFunctions,
                 regularization: RegularizationMethod.L1,
-                lossFunction: LossFunction.MSELoss,
+                lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam
                 );
 

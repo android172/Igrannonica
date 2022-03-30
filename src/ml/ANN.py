@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 from sklearn import metrics
 
 from MLData import MLData
+from StatisticsClassification import StatisticsClassification
 from StatisticsRegression import StatisticsRegression
 
 
@@ -131,8 +132,6 @@ class ANN:
                 scores = self.model.forward(data)
                 loss = self.criterion(scores, target)
                 
-                print(f"loss: {loss}")
-                
                 # Backwards
                 self.optimizer.zero_grad()
                 loss.backward()
@@ -150,8 +149,8 @@ class ANN:
         else:
             return
         
-        actual = [[] for i in range(self.output_size)]
-        predicted = [[] for i in range(self.output_size)]
+        actual = [[] for _ in range(self.output_size)]
+        predicted = [[] for _ in range(self.output_size)]
         
         n = self.data.get_row_count()
         p = self.input_size
@@ -174,8 +173,6 @@ class ANN:
         
         statistics = {}
         for i in range(self.output_size):
-            print(actual[i])
-            print(predicted[i])
             mae = metrics.mean_absolute_error(actual[i], predicted[i])
             mse = metrics.mean_squared_error(actual[i], predicted[i])
             rse = sqrt(mse * (n / (n - p - 1)))
@@ -193,8 +190,58 @@ class ANN:
                 adjustedR2
                 # roc_auc_score
             ).__dict__
-        print(statistics)
         return statistics
+    
+    def compute_classification_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = []
+        predicted = []
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                scores = self.model(x)
+                _, y_p = scores.max(1)
+                
+                actual.extend([i.index(max(i)) for i in y.tolist()])
+                predicted.extend(y_p.tolist())
+                
+        self.model.train()
+        
+        Accuracy         = metrics.accuracy_score(actual, predicted)
+        BalancedAccuracy = metrics.balanced_accuracy_score(actual, predicted)
+        Precision        = metrics.precision_score(actual, predicted)
+        Recall           = metrics.recall_score(actual, predicted)
+        F1Score          = metrics.f1_score(actual, predicted)
+        HammingLoss      = metrics.hamming_loss(actual, predicted)
+        CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        
+        return StatisticsClassification(
+            Accuracy         = Accuracy,
+            BalancedAccuracy = BalancedAccuracy,
+            Precision        = Precision,
+            Recall           = Recall,
+            F1Score          = F1Score,
+            HammingLoss      = HammingLoss,
+            CrossEntropyLoss = CrossEntropyLoss
+        ).__dict__
+        
+    def confusion_matrix(self, dataset):
+        pass
         
     def get_accuracy(self, dataset):
         if self.train_loader is None:
