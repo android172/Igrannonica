@@ -57,7 +57,7 @@ export class ModelComponent implements OnInit {
 
   ucitajNaziv()
   {
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
+    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
           this.naziv = res;
