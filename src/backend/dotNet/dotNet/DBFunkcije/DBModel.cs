@@ -145,5 +145,23 @@ namespace dotNet.DBFunkcije
             }
             return funkcije.ToArray();
         }
+
+        public string uzmi_nazivM(int id)
+        {
+            connect.Open();
+            string query = "select * from model where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                Console.WriteLine("OK");
+                String naziv = reader.GetString("naziv");
+                connect.Close();
+                return naziv;
+            }
+            connect.Close();
+            return "";
+        }
     }
 }

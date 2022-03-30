@@ -1,1 +1,32 @@
-<p>model works!</p>
+<div id="div1">
+    <button id="ucitaj" (click)="ucitajKolone()">Ucitaj kolone</button>
+    <button id="sacuvaj">Sacuvaj izmene</button>
+    <div id="nazivE"></div>
+    <div id="nazivM">Naziv modela</div>
+</div>
+<div id="centrirano">
+    <div id="div2">
+        <div id="divUI">
+            <p>Izbor kolona za ulaz</p>
+            <div id="ulaziIzlaz">
+                <label class="container" *ngFor="let e of message">{{e}}
+                    <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
+        <div id="divUI">
+            <p>Izbor kolone za izlaz</p>
+            <div id="ulaziIzlaz">
+                <label class="container" *ngFor="let m of kolone">{{m}}
+                    <input type="checkbox" name="izl" (change)="provera(this.m)" value="{{m}}" >
+                    <span class="checkmark"></span>
+                </label>    
+            </div>
+            <div id="poruka"></div>
+        </div>
+        <button id="pokreniM">
+            Pokreni model
+        </button>
+    </div>
+</div>
