@@ -155,5 +155,42 @@ namespace dotNet.Controllers
 
             return page1;
         }
+
+        [HttpGet("statistika/{brojKolona}")]
+        public Statistika getStat(int brojKolona)
+        {
+            /*var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return new Statistika(null, null);
+            }
+            else
+                return new Statistika(null, null);*/
+
+            int[] nizIndeksa = new int[brojKolona];
+            for(int i = 0; i < brojKolona; i++)
+            {
+                nizIndeksa[i] = i;
+            }
+
+            for (int i = 0; i < brojKolona; i++)
+                Console.WriteLine(nizIndeksa[i]);
+
+            //Dictionary<string, StatisticsNumerical> numerickaS = eksperiment.NumericalStatistics(nizIndeksa);
+            //Dictionary<string, StatisticsCategorical> kategorijskaS = eksperiment.CategoricalStatistics(nizIndeksa);
+
+            //return new Statistika(numerickaS, kategorijskaS);
+            return new Statistika(null, null);
+        }
     }
 }
