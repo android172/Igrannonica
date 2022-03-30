@@ -10,7 +10,27 @@ import { ActivatedRoute } from '@angular/router';
 export class PodaciComponent implements OnInit {
 
   ngOnInit(): void {
+    this.getStat();
   }
+
+  getStat()
+  {
+    this.http.get<any>('/assets/stats.json').subscribe(
+      response => {
+        console.log(response);
+        let str = JSON.stringify(response);
+        this.statistika = JSON.parse(str);
+        this.numerickaS = this.statistika.statsNum;
+        this.kategorijskaS = this.statistika.statsCat;
+        this.values = Object.values(this.numerickaS);
+        this.keys = Object.keys(this.numerickaS);
+        this.valuesKat = Object.values(this.kategorijskaS);
+        this.keysKat = Object.keys(this.kategorijskaS);
+      }
+    );
+  }
+
+  isArray(val:any): boolean { return val instanceof Array }
 
   fileName = '';
   json: any;
@@ -21,6 +41,13 @@ export class PodaciComponent implements OnInit {
   idEksperimenta: any;
   selectedColumns: number[] = [];
   track: string = "> ";
+  statistika: any;
+  numerickaS: any;
+  kategorijskaS: any;
+  values: any;
+  keys: any;
+  valuesKat:any;
+  keysKat:any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(
@@ -30,7 +57,6 @@ export class PodaciComponent implements OnInit {
       }
     )
   }
-
 
   onFileSelected(event:any) 
   {
@@ -68,10 +94,27 @@ export class PodaciComponent implements OnInit {
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
+        this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;
         this.gty(1);
     })
+  }
+
+  dajStatistiku()
+  {
+    let kolone = this.dajHeadere();
+    if(kolone != undefined)
+    {
+      let brojKolona = kolone.length;
+      console.log("Fja statistika, broj kolona: " + kolone.length);
+      console.log(kolone);
+      this.http.get("http://localhost:5008/api/Upload/statistika/" + brojKolona).subscribe(
+        (response: any) => {
+          console.log(response);
+        }
+      )
+    }
   }
 
   promeniBrojRedova(value: any)
@@ -96,8 +139,11 @@ export class PodaciComponent implements OnInit {
     })
   }
 
-  dajHeadere(): string[]
+  dajHeadere()
   {
+    if(this.json == undefined)
+      return;
+
     var headers = Object.keys(this.json[0]);
     //console.log(Object.values(this.json[0]));
     return headers;

@@ -262,6 +262,7 @@ th{
     box-sizing: border-box;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+    font-size: 16px;
 }
 #nedostajucevrednosti{
     width: 45.5%;
@@ -437,7 +438,6 @@ th{
     border: 2px solid rgba(44, 75, 90, 0.8);
     color: white;
     width: 180px;
-
 }
 
 #b4:hover{
@@ -452,6 +452,7 @@ th{
 
 
 #statistika{
+    position: relative;
     margin: 20px 0 auto 27px;
     background-color: #272741;
     border: 4px solid #5977DF;
@@ -463,4 +464,49 @@ th{
     width: 360px;
     max-height: 540px;
     /*min-height: 540px;*/
+}
+
+#statNaslov
+{
+    display: flex;
+    justify-content: center;
+    color: #CED9FF;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#imeKolone
+{
+    color: #F45E82;
+    margin-bottom: 15px;
+    font-size: 15px;
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-left: 5px;
+}
+
+#statistikaKolone
+{
+    line-height: 3px;
+}
+
+#ulStat
+{
+    list-style-type: none;
+}
+
+#statistika::-webkit-scrollbar{
+    width: 15px;
+}
+#statistika::-webkit-scrollbar-track{
+    background-color: #272741;
+    
+}
+#statistika::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+#statistika::-webkit-scrollbar-thumb{
+    background-color: #38395f;
 }

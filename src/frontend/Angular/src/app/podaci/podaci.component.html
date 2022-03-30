@@ -126,14 +126,26 @@
                 </table>
             </div>
 
-            <pagination-controls
+            <pagination-controls *ngIf="this.json != undefined"
             class="pagi"
-            (pageChange)="gty(page = $event)"  
+            (pageChange)="gty(page = $event)"
             ></pagination-controls>
         </div>
 
-        <div id="statistika">
-            <div>Statisticki podaci</div>
+        <div id="statistika" style="overflow-y: auto">
+            <div id="statNaslov">Statisticki pokazatelji</div>
+            <div *ngFor="let key of keys" >
+                <div id="imeKolone">{{key}}</div>
+                <div id="statistikaKolone" *ngFor="let item of numerickaS[key] | keyvalue;">
+                    <ul id="ulStat">
+                        <li>
+                            <span>
+                                {{item.key}}: &nbsp; {{item.value}}
+                            </span>
+                        </li>
+                    </ul> 
+                </div>
+            </div>
         </div>
     </div>
 
