@@ -10,7 +10,7 @@
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
                 <label class="container" *ngFor="let e of message">{{e}}
-                    <input type="checkbox" name="ulz"  value="{{e}}"> 
+                    <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                     <span class="checkmark"></span>
                 </label>
             </div>
@@ -18,8 +18,8 @@
         <div id="divUI">
             <p>Izbor kolone za izlaz</p>
             <div id="ulaziIzlaz">
-                <label class="container" *ngFor="let e of message">{{e}}
-                    <input type="checkbox" name="izl" (change)="provera()" value="{{e}}">  
+                <label class="container" *ngFor="let m of kolone">{{m}}
+                    <input type="checkbox" name="izl" (change)="provera()" value="{{m}}">  
                     <span class="checkmark"></span>
                 </label>
                 <!--

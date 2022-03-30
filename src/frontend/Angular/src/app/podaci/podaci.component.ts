@@ -24,7 +24,6 @@ export class PodaciComponent implements OnInit {
   public kolone: any[] = [];
   message: any;
 
-
   onFileSelected(event:any) 
   {
     const file:File = event.target.files[0];
@@ -90,6 +89,7 @@ export class PodaciComponent implements OnInit {
       return;
     
     var headers = Object.keys(this.json[0]);
+    //console.log(Object.values(this.json[0]));
     for(let i=0; i<headers.length; i++)
     {
       this.kolone[i] = headers[i];
@@ -97,7 +97,6 @@ export class PodaciComponent implements OnInit {
     this.message = headers;
     this.shared.setMessage(this.message);
     //console.log(this.message);
-    //console.log(Object.values(this.json[0]));
     return headers;
   }
 
@@ -107,3 +106,4 @@ export class PodaciComponent implements OnInit {
     return redValues;
   }
 }
+

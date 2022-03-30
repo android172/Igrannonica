@@ -16,7 +16,7 @@ export class ModelComponent implements OnInit {
   naziv: any;
   json: any;
 
-  //public kolone: any[] = [];
+  public kolone: any[] = [];
  message: any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService) { 
@@ -35,7 +35,10 @@ export class ModelComponent implements OnInit {
   ucitajKolone(){
     this.message = this.shared.getMessage();
     console.log(this.message);
+    this.kolone  = Object.assign([], this.message);
+    //this.kolone = this.message;
   }
+
 
   ucitajNaziv()
   {
@@ -69,6 +72,52 @@ export class ModelComponent implements OnInit {
           var p = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Mozete izabrati samo jednu kolonu"; 
          // return false;
         }
+      }
+    }
+    //return true;
+  }
+
+
+  funkcija(){
+    let nizK = <any>document.getElementsByName("ulz"); 
+    for(let i=0; i<nizK.length; i++)
+    {
+      if(nizK[i].checked)
+      {
+        /*
+        console.log(nizK[i].value);
+        console.log(this.message2[i]);
+        if(nizK[i].value === this.message2[i]){
+          console.log("DA");
+        }*/
+        this.kolone.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           // console.log(element);
+            this.kolone.splice(index,1);
+          }
+        });
+        //console.log(this.kolone);
+      }
+      if(!nizK[i].checked)
+      {
+        /*
+        console.log(nizK[i].value);
+        console.log(this.message2[i]);
+        if(nizK[i].value === this.message2[i]){
+          console.log("DA");
+        }*/
+        var ind = 0;
+        this.kolone.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           // console.log(element);
+            ind = 1;
+          }
+        });
+        if(ind == 0)
+        {
+          this.kolone.splice(i, 0, nizK[i].value);
+        }
+        //console.log(this.kolone);
       }
     }
     //return true;
