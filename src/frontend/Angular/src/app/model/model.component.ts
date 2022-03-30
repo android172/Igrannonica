@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 
 
@@ -11,7 +12,9 @@ import { SharedService } from '../shared/shared.service';
   styleUrls: ['./model.component.css']
 })
 export class ModelComponent implements OnInit {
+  private eventsSubscription!: Subscription;
 
+  @Input() mod!: Observable<number>;
   idEksperimenta: any;
   naziv: any;
   json: any;
@@ -31,8 +34,20 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajNaziv();
+    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
   }
-
+  posaljiZahtev(data:number){
+    console.log(data);
+    this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
+      res=>{
+        console.log(res);
+        //Ovde treba da popunis json
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+  }
   ucitajKolone(){
     this.message = this.shared.getMessage();
     console.log(this.message);
