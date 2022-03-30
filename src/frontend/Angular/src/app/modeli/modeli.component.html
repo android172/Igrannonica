@@ -1,9 +1,13 @@
+<div id="gornji">
+  <input id="imeM" placeholder="Unesite naziv modela">
+  <button id="dodaj" (click)="napraviModel()">Dodaj novi model</button>
+  <div id="imeE"></div>
+</div>
 <div id="divModeli">
-<div id="imeE"></div>
     <div id="skrol">
        <div type="button" id="m" *ngFor="let m of modeli"> 
            <p>  {{ m.name }}  </p><div id="divB">
-           <button (click)="obrisiModel(m.id)" id="delete">
+           <button id="delete" type="button" (click)="obrisiModel(m.id)">
             <div class="icon-trash" style="float: left;">
                 <div class="trash-lid" style="background-color: #E5E9EA"></div>
                 <div class="trash-container" style="background-color: #E5E9EA"></div>

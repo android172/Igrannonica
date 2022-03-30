@@ -13,6 +13,7 @@ export class ModeliComponent implements OnInit {
   json: any;
   modeli : any[] = [];
   id: any;
+  ActivateAddEdit: boolean = false;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(
@@ -28,8 +29,29 @@ export class ModeliComponent implements OnInit {
     this.ucitajModel();
   }
 
+  napraviModel(){
+    console.log(this.id);
+    var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
+    if(ime==""){
+      //(<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
+      alert("Ovo polje mora biti ppopunjeno!");
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
+      res=>{
+        console.log(res);
+        this.ucitajModel();
+      },
+      error=>{
+        console.log(error.error);
+        alert("Vec postoji model sa tim imenom!");
+      }
+    );
+  }
+
   ucitajModel()
   {
+    this.ActivateAddEdit=true;
     this.http.get('http://localhost:5008/api/Eksperiment/Modeli/' + this.id).subscribe(
         res=>{
           console.log(res);
@@ -43,7 +65,7 @@ export class ModeliComponent implements OnInit {
   }
 
   ucitajImeE(){
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/' + this.id,{responseType: 'text'}).subscribe(
+    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.id,{responseType: 'text'}).subscribe(
         res=>{
           var div = (<HTMLDivElement>document.getElementById("imeE")).innerHTML = res;
         },
@@ -55,7 +77,9 @@ export class ModeliComponent implements OnInit {
 
   obrisiModel(i:any)
   {
-     this.http.delete('http://localhost:5008/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
+    if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
+    {
+      this.http.delete('http://localhost:5008/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
        res=>{
          console.log(res);
             this.ucitajModel();
@@ -65,7 +89,7 @@ export class ModeliComponent implements OnInit {
          console.log(error.error);
        }
      )
+    }
   }
-
 
 }
