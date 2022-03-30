@@ -30,7 +30,7 @@ p
     width: 550px;
     height: 330px;
     overflow: auto;
-    border: 3px solid rgba(89, 119, 223, 1);
+    border: 3px solid rgb(37, 164, 214) ;
     margin: auto;
     border-radius: 10px;
     color: #fff;
@@ -189,11 +189,76 @@ p
     bottom: 12px;
     right: 20px;
   }
+  myModal.in{
+    z-index: 999999;
+}
 
-  #imeE{
-    border: 3px solid rgba(89, 119, 223, 1);
-    width: 200px;
+.close{
+  border: none;
+  background-color: white;
+}
+
+#imeM{
+  min-width: 200px;
+  height: 40px;
+  border: 3px solid rgb(37, 164, 214) ;
+  border-radius: 10px;
+  background: none;
+  color: white;
+  float: left;
+  margin-left: 30px;
+  margin-right: 10px;
+}
+
+#greska{
+  width: 200px;
+  height: 20px;
+  color: rgba(243, 48, 95, 0.85);
+}
+
+#imeE
+{
+    min-width: 200px;
+    border: 3px solid rgb(37, 164, 214) ;
+    color: #CED9FF;
+    background-color: #272741;
+    padding: 5px;
+    align-items: center;
     height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    margin-bottom: 20px;
-  }
+
+    float: right;
+}
+
+
+#gornji{
+  margin-top: 10px;
+  height: 80px;
+}
+
+#dodaj{
+
+  width: 200px;
+  margin-right: 15px;
+  border-radius: 10px;
+  border: 3px solid rgba(121, 240, 126, 1);
+  color: #CED9FF;
+  background-color: #272741;
+  padding: 5px;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  float: left;
+}
+
+#dodaj:hover{
+
+ background:linear-gradient(162.06deg, #59D75E -16.65%, #8DFF92 97.46%);
+ border: 3px solid #272741;
+ color: #272741;
+}
