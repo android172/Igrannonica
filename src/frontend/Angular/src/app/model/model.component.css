@@ -38,9 +38,7 @@ p
 
 #sacuvaj:hover
 {
-    color: rgb(243, 48, 94);
-    border-color: rgb(243, 48, 94);
-    background: rgba(229, 229, 229);
+  background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
 }
 
 #nazivM, #nazivE
@@ -138,7 +136,7 @@ p
     width: 150px;
     height: 40px;
 
-    background: rgba(89, 119, 223, 1);
+    background: linear-gradient(180deg, #FD847B 0%, #FF7187 100%);
     border-radius: 15px;
 
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -274,6 +272,13 @@ p
     border-radius: 10px;
  
     float: left;
+}
+
+#ucitaj:hover{
+
+   background:linear-gradient(162.06deg, #59D75E -16.65%, #8DFF92 97.46%);
+   border: 3px solid #272741;
+   color: #272741;
 }
 
 #poruka

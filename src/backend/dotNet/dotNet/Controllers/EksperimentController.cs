@@ -136,5 +136,20 @@ namespace dotNet.Controllers
             }
         }
 
+        //[Authorize]
+        [HttpGet("Model/{id}")]
+        public IActionResult ModelNaziv(int id)
+        {
+            string naziv = db.dbmodel.uzmi_nazivM(id);
+            if (naziv != "")
+            {
+                return Ok(naziv);
+            }
+            else
+            {
+                return BadRequest("Greska");
+            }
+        }
+
     }
 }
