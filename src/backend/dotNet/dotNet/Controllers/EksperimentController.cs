@@ -20,7 +20,7 @@ namespace dotNet.Controllers
             db = new DB(_config);
         }
         [Authorize]
-        [HttpGet("Eksperimenti/{id}")]
+        [HttpGet("Eksperimenti")]
         public IActionResult Experimenti(int id)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
