@@ -122,7 +122,7 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpGet("Eksperiment/{id}")]
+        [HttpGet("Eksperiment/Naziv/{id}")]
         public IActionResult ExperimentNaziv(int id)
         {
             string naziv = db.dbeksperiment.uzmi_naziv(id);
@@ -137,7 +137,7 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpGet("Model/{id}")]
+        [HttpGet("Model/Naziv/{id}")]
         public IActionResult ModelNaziv(int id)
         {
             string naziv = db.dbmodel.uzmi_nazivM(id);
