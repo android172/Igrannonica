@@ -105,9 +105,19 @@ namespace dotNet.DBFunkcije
                 ProblemType fun;
                 if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
                 else fun = ProblemType.Classification;
-                ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
-                    reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
-                    HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
+                ANNSettings settings = new ANNSettings(
+                    fun, 
+                    reader.GetFloat("LearningRate"), 
+                    reader.GetInt32("BatchSize"),
+                    reader.GetInt32("numberOfEpochs"), 
+                    reader.GetInt32("inputSize"), 
+                    reader.GetInt32("OutputSize"),
+                    HiddenLayers(reader.GetString("HiddenLayers")), 
+                    aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
+                    RegularizationMethod.L1,
+                    LossFunction.L1Loss,
+                    Optimizer.Adam
+                    );
                 connect.Close();
                 return settings;
             }

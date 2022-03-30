@@ -7,9 +7,18 @@ namespace dotNet.Models {
         public ProblemType ANNType;
 
         public ANNSettings(
-            ProblemType aNNType, float learningRate, int batchSize, int numberOfEpochs, 
-            int inputSize, int outputSize, int[]? hiddenLayers, ActivationFunction[]? activationFunctions
-            ) {
+            ProblemType aNNType, 
+            float learningRate, 
+            int batchSize, int 
+            numberOfEpochs, 
+            int inputSize, 
+            int outputSize, 
+            int[]? hiddenLayers, 
+            ActivationFunction[]? activationFunctions,
+            RegularizationMethod regularization, 
+            LossFunction lossFunction, 
+            Optimizer optimizer) {
+
             ANNType = aNNType;
             LearningRate = learningRate;
             BatchSize = batchSize;
@@ -18,6 +27,9 @@ namespace dotNet.Models {
             OutputSize = outputSize;
             HiddenLayers = hiddenLayers;
             ActivationFunctions = activationFunctions;
+            Regularization = regularization;
+            LossFunction = lossFunction;
+            Optimizer = optimizer;
         }
 
         public float LearningRate { get; set;}
@@ -29,6 +41,10 @@ namespace dotNet.Models {
         // Layers
         public int[]? HiddenLayers { get; set; }
         public ActivationFunction[]? ActivationFunctions { get; set; }
+        // Other
+        public RegularizationMethod Regularization { get; set; }
+        public LossFunction LossFunction { get; set; }
+        public Optimizer Optimizer { get; set; }
 
         // To JSON string
         public override string ToString() {
@@ -45,6 +61,25 @@ namespace dotNet.Models {
         ReLU,
         LeakyReLU,
         Sigmoid,
-        Tanh
+        Tanh,
+        Linear
+    }
+
+    public enum RegularizationMethod {
+        L1,
+        L2
+    }
+
+    public enum LossFunction {
+        L1Loss,
+        MSELoss,
+        CrossEntropyLoss
+    }
+
+    public enum Optimizer {
+        SGD,
+        Adagrad,
+        Adadelta,
+        Adam
     }
 }

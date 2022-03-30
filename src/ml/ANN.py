@@ -1,12 +1,19 @@
 
+from math import sqrt
 import random
+import statistics
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
+from sklearn import metrics
+
 from MLData import MLData
+from StatisticsClassification import StatisticsClassification
+from StatisticsRegression import StatisticsRegression
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -61,6 +68,9 @@ class ANN:
         self.input_size    = annSettings.inputSize
         self.output_size   = annSettings.outputSize
         num_of_layers  = len(annSettings.hiddenLayers)
+        
+        # Load problem type
+        self.isRegression = annSettings.problemType == 0
          
         # Create ANN according to the given settings
         model = NN().to(device)
@@ -71,7 +81,7 @@ class ANN:
             previous_layer = annSettings.hiddenLayers[i]
             
             activation_function = annSettings.activationFunctions[i]
-            if activation_function == 0:
+            if   activation_function == 0:
                 model.add_module(f"ReLU[{i}]", nn.ReLU())
             elif activation_function == 1:
                 model.add_module(f"LeakyReLU[{i}]", nn.LeakyReLU())
@@ -89,12 +99,150 @@ class ANN:
         self.test_loader  = None 
         
         # Loss function
-        self.criterion = nn.CrossEntropyLoss()
+        if   annSettings.lossFunction == 0:
+            self.criterion = nn.L1Loss()
+        elif annSettings.lossFunction == 1:
+            self.criterion = nn.MSELoss()
+        else:
+            self.criterion = nn.CrossEntropyLoss()
         
         # Optimization algortham
-        self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
+        if   annSettings.optimizer == 0:
+            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate)
+        elif annSettings.optimizer == 1:
+            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate)
+        elif annSettings.optimizer == 2:
+            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate)
+        else:
+            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
+    
+    # Training
+    def train(self):
+        if self.train_loader is None:
+            self.initialize_loaders()
+        
+        # Train the network
+        for epoch in range(self.num_epochs):
+            for bach_index, (data, target) in enumerate(self.train_loader):
+                data = data.to(device)
+                target = target.to(device)
+                data = data.reshape(data.shape[0], -1)
+                
+                # Forward
+                scores = self.model.forward(data)
+                loss = self.criterion(scores, target)
+                
+                # Backwards
+                self.optimizer.zero_grad()
+                loss.backward()
+                self.optimizer.step()
     
     # Metrics
+    def compute_regression_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = [[] for _ in range(self.output_size)]
+        predicted = [[] for _ in range(self.output_size)]
+        
+        n = self.data.get_row_count()
+        p = self.input_size
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                y_p = self.model(x)
+                
+                for i in range(self.output_size):
+                    actual[i].extend([j[i] for j in y.tolist()])
+                    predicted[i].extend([j[i] for j in y_p.tolist()])
+                
+        self.model.train()
+        
+        statistics = {}
+        for i in range(self.output_size):
+            mae = metrics.mean_absolute_error(actual[i], predicted[i])
+            mse = metrics.mean_squared_error(actual[i], predicted[i])
+            rse = sqrt(mse * (n / (n - p - 1)))
+            # f1 = metrics.f1_score(actual[i], predicted[i])
+            r2 = metrics.r2_score(actual[i], predicted[i])
+            adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+            # roc_auc_score = metrics.roc_auc_score(actual[i], predicted[i])
+            
+            statistics[i] = StatisticsRegression(
+                mae,
+                mse,
+                rse,
+                # f1,
+                r2,
+                adjustedR2
+                # roc_auc_score
+            ).__dict__
+        return statistics
+    
+    def compute_classification_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = []
+        predicted = []
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                scores = self.model(x)
+                _, y_p = scores.max(1)
+                
+                actual.extend([i.index(max(i)) for i in y.tolist()])
+                predicted.extend(y_p.tolist())
+                
+        self.model.train()
+        
+        Accuracy         = metrics.accuracy_score(actual, predicted)
+        BalancedAccuracy = metrics.balanced_accuracy_score(actual, predicted)
+        Precision        = metrics.precision_score(actual, predicted)
+        Recall           = metrics.recall_score(actual, predicted)
+        F1Score          = metrics.f1_score(actual, predicted)
+        HammingLoss      = metrics.hamming_loss(actual, predicted)
+        CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        
+        return StatisticsClassification(
+            Accuracy         = Accuracy,
+            BalancedAccuracy = BalancedAccuracy,
+            Precision        = Precision,
+            Recall           = Recall,
+            F1Score          = F1Score,
+            HammingLoss      = HammingLoss,
+            CrossEntropyLoss = CrossEntropyLoss
+        ).__dict__
+        
+    def confusion_matrix(self, dataset):
+        pass
+        
     def get_accuracy(self, dataset):
         if self.train_loader is None:
             self.initialize_loaders()
@@ -126,27 +274,6 @@ class ANN:
         self.model.train()
         
         return num_correct / num_samples
-    
-    # Training
-    def train(self):
-        if self.train_loader is None:
-            self.initialize_loaders()
-        
-        # Train the network
-        for epoch in range(self.num_epochs):
-            for bach_index, (data, target) in enumerate(self.train_loader):
-                data = data.to(device)
-                target = target.to(device)
-                data = data.reshape(data.shape[0], -1)
-                
-                # Forward
-                scores = self.model.forward(data)
-                loss = self.criterion(scores, target)
-                
-                # Backwards
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
     
     
 class NN(nn.Module):

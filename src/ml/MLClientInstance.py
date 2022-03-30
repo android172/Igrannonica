@@ -74,6 +74,13 @@ class MLClientInstance(Thread):
                 self.connection.send(count)
                 
                 print(f"Row count ({count}) requested.")
+                
+            elif received == 'GetColumnTypes':
+                column_types = network.data.get_column_types()
+                print(column_types)
+                self.connection.send(json.dumps(column_types))
+                
+                print(f"Column types requested.")
             
             # Data manipulation : CRUD operation #
             
@@ -284,7 +291,7 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_numerical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Numerical statistics computed for columns {columns}.")
                 
@@ -293,11 +300,38 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_categorical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Categorical statistics computed for columns {columns}.")
             
+            elif received == 'AllStatistics':
+                numerical_columns = []
+                categorical_columns = []
+                for i, column_type in enumerate(network.data.get_column_types()):
+                    if column_type == 'object':
+                        categorical_columns.append(i)
+                    else:
+                        numerical_columns.append(i)
+                
+                statistics = {k:v for k, v in network.data.get_numerical_statistics(numerical_columns).items()}
+                for k, v in network.data.get_categorical_statistics(categorical_columns).items():
+                    statistics[k] = v
+                
+                self.connection.send(json.dumps(statistics))
+                
+                print(f"Categorical and Numerical statistics computed for all columns.")
+            
             # Working with networks #
+            elif received == 'ComputeMetrics':
+                if network.isRegression:
+                    train = network.compute_regression_statistics("train")
+                    test = network.compute_regression_statistics("test")
+                else:
+                    train = network.compute_classification_statistics("train")
+                    test = network.compute_classification_statistics("test")
+                self.connection.send(json.dumps({"test": test, "train": train}))
+                    
+            
             elif received == 'ChangeSettings':
                 # Receive settings to change to
                 settingsString = self.connection.receive()
@@ -308,15 +342,7 @@ class MLClientInstance(Thread):
                 
             elif received == 'Start':
                 # Initialize random data if no dataset is selected
-                if True:
+                if network.data.dataset is None:
                     network.initialize_random_data()
                 # Train
                 network.train()
-                # Return scores
-                train_acc = network.get_accuracy("train")
-                test_acc = network.get_accuracy("test")
-                print(f"Accuracy for 'train' dataset : {train_acc}")
-                print(f"Accuracy for 'test' dataset : {test_acc}")
-                self.connection.send(f"{train_acc}:{test_acc}")
-                
-                # print("")

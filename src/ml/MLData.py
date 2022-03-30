@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import  KNeighborsClassifier
+from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
@@ -19,14 +19,6 @@ class MLData:
         self.train_indices  = None
         self.test_indices   = None
         self.column_types   = None
-        
-    def get_train_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
-                for i in self.train_indices]
-    
-    def get_test_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns])
-                for i in self.test_indices]
     
     # Load dataset
     def load_from_csv(self, path):
@@ -51,7 +43,7 @@ class MLData:
     # Train test splits
     def random_train_test_split(self, ratio):
         dataset_length = self.dataset.shape[0]
-        split_point = int(dataset_length * ratio)
+        split_point = int(dataset_length * (1.0 - ratio))
         
         # Initialize index lists
         index_list = [i for i in range(dataset_length)]
@@ -67,11 +59,30 @@ class MLData:
     # Data access #
     # ########### #
     
+    def get_train_dataset(self):
+        train_data = []
+        for i in self.train_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            train_data.append((x, y))
+        return train_data
+    
+    def get_test_dataset(self):
+        test_data = []
+        for i in self.test_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            test_data.append((x, y))
+        return test_data
+    
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
     
     def get_row_count(self):
         return self.dataset.shape[0]
+    
+    def get_column_types(self):
+        return [str(i) for i in self.dataset.dtypes]
     
     # ################# #
     # Data manipulation #
@@ -179,7 +190,7 @@ class MLData:
     def one_hot_encode_columns(self, columns):
         encoder = OneHotEncoder()
         result = encoder.fit_transform(self.dataset.iloc[:, columns]).toarray()
-        new_columns = [self.dataset.columns[columns[i]] + group 
+        new_columns = [self.dataset.columns[columns[i]] + str(group) 
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
@@ -227,7 +238,7 @@ class MLData:
                 quantiles_75  = description[column]['75%'],
                 min           = description[column]['min'],
                 max           = description[column]['max']
-                )
+                ).__dict__
             
         return statistics
     
@@ -260,6 +271,6 @@ class MLData:
                 unique_count = unique_counts[column],
                 most_common  = most_common,
                 frequencies  = five_most_frequent
-            )
+            ).__dict__
     
         return statistics
