@@ -31,12 +31,14 @@ export class ModeliComponent implements OnInit {
 
   send(id:number){
     this.PosaljiModel.emit(id);
+  }
+
   napraviModel(){
     console.log(this.id);
     var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
     if(ime==""){
       //(<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
-      alert("Ovo polje mora biti ppopunjeno!");
+      alert("Ovo polje mora biti popunjeno!");
       return;
     }
     this.http.post("http://localhost:5008/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(

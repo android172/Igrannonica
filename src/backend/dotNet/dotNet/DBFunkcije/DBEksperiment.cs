@@ -82,7 +82,7 @@ namespace dotNet.DBFunkcije
             return false;
         }
 
-        public string uzmi_naziv(int id)
+        /*public string uzmi_naziv(int id)
         {
             connect.Open();
             string query = "select * from eksperiment where id=@id";
@@ -98,7 +98,7 @@ namespace dotNet.DBFunkcije
             }
             connect.Close();
             return "";
-        }
+        }*/
 
     }
 }
