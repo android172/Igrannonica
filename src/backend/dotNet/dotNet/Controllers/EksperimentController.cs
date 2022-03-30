@@ -114,9 +114,10 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Podesavanja")]
-        public IActionResult Podesavanja(int id) {
+        public IActionResult Podesavanja(int id)
+        {
             ANNSettings podesavanje = db.dbmodel.podesavanja(id);
-            if(podesavanje != null)
+            if (podesavanje != null)
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }

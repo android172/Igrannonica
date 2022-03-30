@@ -172,26 +172,26 @@ namespace dotNet
             }
             return result;
         }
-        public ANNSettings podesavanja(int id)
-        {
-            connect.Open();
-            string query = "select * from podesavanja where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                ProblemType fun;
-                if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
-                else fun = ProblemType.Classification;
-                ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
-                    reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
-                    HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
+        //public ANNSettings podesavanja(int id)
+        //{
+        //    connect.Open();
+        //    string query = "select * from podesavanja where id=@id";
+        //    MySqlCommand cmd = new MySqlCommand(query, connect);
+        //    cmd.Parameters.AddWithValue("@id", id);
+        //    MySqlDataReader reader = cmd.ExecuteReader();
+        //    if (reader.Read())
+        //    {
+        //        ProblemType fun;
+        //        if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
+        //        else fun = ProblemType.Classification;
+        //        ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
+        //            reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
+        //            HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
 
-                return settings;
-            }
-            return null;
-        }
+        //        return settings;
+        //    }
+        //    return null;
+        //}
         private int[] HiddenLayers(string niz)
         {
             List<int> hiddenLayers = new List<int>();

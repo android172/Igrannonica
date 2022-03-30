@@ -291,7 +291,7 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_numerical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Numerical statistics computed for columns {columns}.")
                 
@@ -300,7 +300,7 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_categorical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Categorical statistics computed for columns {columns}.")
             
