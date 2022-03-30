@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-eksperiment',
@@ -11,6 +12,7 @@ export class EksperimentComponent implements OnInit {
   podaci: boolean = true;
   model: boolean = false;
   modeli: boolean = false;
+  eventsSubject: Subject<number> = new Subject<number>();
 
   constructor(private http: HttpClient) { }
 
@@ -22,22 +24,11 @@ export class EksperimentComponent implements OnInit {
   }
 
   primi(id:number){
-    console.log(id);
-this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+id).subscribe(
-  res=>{
-    console.log(res);
+    this.eventsSubject.next(id);
     (<HTMLAnchorElement>document.getElementById("nav-modeli-tab")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("nav-model-tab")).classList.add("active","show");
     (<HTMLAnchorElement>document.getElementById("modeli")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("model")).classList.add("active","show");
-  },
-  error=>{
-    console.log(error);
-  }
-  
-);
-
-
   }
 
   boolPodaciPromena()

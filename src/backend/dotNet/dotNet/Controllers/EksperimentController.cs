@@ -121,35 +121,6 @@ namespace dotNet.Controllers
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }
 
-        [Authorize]
-        [HttpGet("Eksperiment/{id}")]
-        public IActionResult ExperimentNaziv(int id)
-        {
-            string naziv = db.dbeksperiment.uzmi_naziv(id);
-            if (naziv != "")
-            {
-                return Ok(naziv);
-            }
-            else
-            {
-                return BadRequest("Greska");
-            }
-        }
-
-        //[Authorize]
-        [HttpGet("Model/{id}")]
-        public IActionResult ModelNaziv(int id)
-        {
-            string naziv = db.dbmodel.uzmi_nazivM(id);
-            if (naziv != "")
-            {
-                return Ok(naziv);
-            }
-            else
-            {
-                return BadRequest("Greska");
-            }
-        }
 
     }
 }

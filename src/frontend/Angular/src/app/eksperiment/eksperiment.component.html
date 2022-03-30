@@ -16,8 +16,9 @@
               <app-modeli (PosaljiModel)="primi($event)" id="modeli"></app-modeli>
           </div>
           <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-model-tab">
-              <app-model id="model"></app-model>
+              <app-model [mod]="eventsSubject.asObservable()" id="model"></app-model>
           </div>
         </div>
   </div>
+  <div><button (click)="primi(1)"></button></div>
 </div>
