@@ -126,9 +126,9 @@
                 </table>
             </div>
 
-            <pagination-controls
+            <pagination-controls *ngIf="this.json != undefined"
             class="pagi"
-            (pageChange)="gty(page = $event)"  
+            (pageChange)="gty(page = $event)"
             ></pagination-controls>
         </div>
 

@@ -66,14 +66,17 @@ export class PodaciComponent implements OnInit {
   dajStatistiku()
   {
     let kolone = this.dajHeadere();
-    let brojKolona = kolone.length;
-    console.log("Fja statistika, broj kolona: " + kolone.length);
-    console.log(kolone);
-    this.http.get("http://localhost:5008/api/Upload/statistika/" + brojKolona).subscribe(
-      (response: any) => {
-        console.log(response);
-      }
-    )
+    if(kolone != undefined)
+    {
+      let brojKolona = kolone.length;
+      console.log("Fja statistika, broj kolona: " + kolone.length);
+      console.log(kolone);
+      this.http.get("http://localhost:5008/api/Upload/statistika/" + brojKolona).subscribe(
+        (response: any) => {
+          console.log(response);
+        }
+      )
+    }
   }
 
   promeniBrojRedova(value: any)
@@ -97,8 +100,11 @@ export class PodaciComponent implements OnInit {
     })
   }
 
-  dajHeadere(): string[]
+  dajHeadere()
   {
+    if(this.json == undefined)
+      return;
+
     var headers = Object.keys(this.json[0]);
     //console.log(Object.values(this.json[0]));
     return headers;
