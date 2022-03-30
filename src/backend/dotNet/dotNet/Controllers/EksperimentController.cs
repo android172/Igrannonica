@@ -20,7 +20,7 @@ namespace dotNet.Controllers
             db = new DB(_config);
         }
         [Authorize]
-        [HttpGet("Eksperimenti")]
+        [HttpGet("Eksperimenti/{id}")]
         public IActionResult Experimenti(int id)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
@@ -113,7 +113,7 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpGet("Podesavanja")]
+        [HttpGet("Podesavanja/{id}")]
         public IActionResult Podesavanja(int id) {
             ANNSettings podesavanje = db.dbmodel.podesavanja(id);
             if(podesavanje != null)

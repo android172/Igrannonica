@@ -21,6 +21,25 @@ export class EksperimentComponent implements OnInit {
   {
   }
 
+  primi(id:number){
+    console.log(id);
+this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+id).subscribe(
+  res=>{
+    console.log(res);
+    (<HTMLAnchorElement>document.getElementById("nav-modeli-tab")).classList.remove("active","show");
+    (<HTMLAnchorElement>document.getElementById("nav-model-tab")).classList.add("active","show");
+    (<HTMLAnchorElement>document.getElementById("modeli")).classList.remove("active","show");
+    (<HTMLAnchorElement>document.getElementById("model")).classList.add("active","show");
+  },
+  error=>{
+    console.log(error);
+  }
+  
+);
+
+
+  }
+
   boolPodaciPromena()
   {
     this.podaci = true;

@@ -13,7 +13,7 @@
               <app-podaci id="podaci"></app-podaci>
           </div>
           <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-modeli-tab">
-              <app-modeli id="modeli"></app-modeli>
+              <app-modeli (PosaljiModel)="primi($event)" id="modeli"></app-modeli>
           </div>
           <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-model-tab">
               <app-model id="model"></app-model>
