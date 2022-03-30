@@ -33,6 +33,10 @@ export class ModeliComponent implements OnInit {
     this.PosaljiModel.emit(id);
   }
 
+  ocisti(){
+    (<HTMLInputElement>document.getElementById("imeM")).value='';
+  }
+
   napraviModel(){
     console.log(this.id);
     var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
