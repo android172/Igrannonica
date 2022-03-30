@@ -164,5 +164,62 @@ namespace dotNet.Controllers
 
             return page1;
         }
+        [HttpPost("oneHotEncoding")]
+        public IActionResult OneHotEncoding(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return Ok("");
+            }
+            else
+                return Ok("");
+
+            if (niz == null)
+               return BadRequest("Nisu unete kolone");
+
+            eksperiment.OneHotEncoding(niz);
+
+            return Ok("OneHotEncoding izvrseno");
+        }
+
+        [HttpPost("labelEncoding")]
+        public IActionResult LabelEncoding(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return Ok("");
+            }
+            else
+                return Ok("");
+
+            if (niz == null)
+                return BadRequest("Nisu unete kolone");
+
+            eksperiment.LabelEncoding(niz);
+
+            return Ok("LabelEncoding izvrseno");
+        }
     }
 }

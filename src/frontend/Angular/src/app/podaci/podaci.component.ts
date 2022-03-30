@@ -19,6 +19,8 @@ export class PodaciComponent implements OnInit {
   //totalItems : any;
   totalItems: number = 0;
   idEksperimenta: any;
+  selectedColumns: number[] = [];
+  track: string = "> ";
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(
@@ -105,5 +107,79 @@ export class PodaciComponent implements OnInit {
   {
     var redValues = Object.values(this.json[i]);
     return redValues;
+  }
+
+  oneHotEncoding()
+  { 
+    this.dodajKomandu("OneHotEncoding");
+
+    if(this.selectedColumns.length < 1)
+    {
+      this.dodajKomandu("OneHotEncoding nije izvršeno");
+      return;
+    }
+
+    this.http.post("http://localhost:5008/api/Upload/oneHotEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.selectedColumns = [];
+        this.loadDefaultItemsPerPage();
+        this.dodajKomandu("OneHotEncoding izvršeno");
+        //this.loadDefaultItemsPerPage();
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("OneHotEncoding nije izvršeno");
+    })
+  }
+
+  labelEncoding()
+  { 
+    this.dodajKomandu("LabelEncoding");
+    
+    if(this.selectedColumns.length < 1)
+    {
+      this.dodajKomandu("LabelEncoding nije izvršeno");
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Upload/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.selectedColumns = [];
+        this.loadDefaultItemsPerPage();
+        this.dodajKomandu("LabelEncoding izvršeno");
+        //this.loadDefaultItemsPerPage();
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("LabelEncoding nije izvršeno");
+    })
+  }
+  
+  getData(i: number)
+  {
+    this.dodajKomandu("Dodata kolona: "+ i);
+    this.selectedColumns.push(i);
+  }
+
+  dodajKomandu(str: string)
+  {
+      this.track = this.track + str + " > ";
+  }
+  izbrisiSelektovaneKolone()
+  {
+    this.selectedColumns = [];
+
+    this.dodajKomandu("Nema selektovanih kolona");
+  }
+  obrisiIstoriju()
+  {
+    this.track = "> ";
+  }
+  ispisiSelektovaneKolone()
+  {
+    if(this.selectedColumns.length == 0)
+      this.dodajKomandu("Nema selektovanih kolona");
+
+    for(let i=0;i<this.selectedColumns.length;i++)
+      this.dodajKomandu("Kolona " + this.selectedColumns[i]);
   }
 }

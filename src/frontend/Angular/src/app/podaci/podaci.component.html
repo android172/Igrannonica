@@ -99,8 +99,8 @@
         </div>
         <div id="enkodiranje" class="p2 placement">
             <div>Enkodiranje</div>
-            <button id="b4">LabelEncode</button> 
-            <button id="b5">One-hotEncode</button> 
+            <button id="b4" (click)="labelEncoding()">LabelEncode</button> 
+            <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
         </div>
     </div>
 
@@ -109,8 +109,8 @@
             <div id="table">
                 <table>
                     <tr class="head-table">
-                        <th *ngFor="let header of dajHeadere();">
-                            {{header}}
+                        <th *ngFor="let header of dajHeadere();  let j = index">
+                            <button class="tr-button" (click)="getData(j)">  {{header}} </button>
                         </th>
                     </tr>
                     <tr class="trbody" *ngFor="let red of json | paginate
@@ -135,6 +135,13 @@
         <div id="statistika">
             <div>Statisticki podaci</div>
         </div>
+    </div>
+
+    <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
+    <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
+    <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
+    <div id="tracker">
+        <p *ngIf="this.track != undefined"> {{this.track}}</p>
     </div>
 
 </div>
