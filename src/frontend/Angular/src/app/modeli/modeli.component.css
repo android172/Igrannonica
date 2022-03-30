@@ -1,6 +1,199 @@
 p
 {
     color:white;
-    text-align: center;
     font-size: larger;
+    padding-top: 10px;
+    text-align: center;
+    float: left;
+    width: 400px;
+    height: 40px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 10px;
+    background: rgba(162, 175, 210, 0.6);
+    border-color: #A2AFD2;
+    border-radius: 10px;
+    border-width: 1px;
+    border-radius: 10px;
 }
+
+#divModeli{
+
+    position: relative;
+    width: 550px;
+    height: 400px;
+    margin: auto;
+}
+
+#skrol{
+
+    width: 550px;
+    height: 330px;
+    overflow: auto;
+    border: 3px solid rgba(89, 119, 223, 1);
+    margin: auto;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Roboto';
+    font-style: normal;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+}
+
+#m{
+   height: 60px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 15px;
+    margin-right: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #C4C4C4; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(164, 157, 157, 1); 
+  }
+
+  #delete{
+    height: 40px;
+    width: 70px;
+    border-radius: 10px;
+    background-color: rgba(243, 48, 95, 0.85);
+    border-color: rgb(243, 48, 94);
+    margin-top: 10px;
+    color: white;
+  }
+
+  #divB{
+      width: 50px;
+      float: left;
+      margin-left: 10px;
+  }
+
+  i{
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-trash {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    overflow: hidden;
+    margin: auto;
+    margin-left: 12px;
+  }
+  
+  .icon-trash .trash-lid {
+    width: 62%;
+    height: 10%;
+    position: absolute;
+    left: 50%;
+    margin-left: -31%;
+    top: 10.5%;
+    background-color: #000;
+    border-top-left-radius: 80%;
+    border-top-right-radius: 80%;
+    -webkit-transform: rotate(-5deg);
+    -moz-transform: rotate(-5deg);
+    -ms-transform: rotate(-5deg);
+    transform: rotate(-5deg); 
+  }
+  
+  .icon-trash .trash-lid:after {
+    content: "";
+    width: 26%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    margin-left: -13%;
+    margin-top: -10%;
+    background-color: inherit;
+    border-top-left-radius: 30%;
+    border-top-right-radius: 30%;
+    -webkit-transform: rotate(-1deg);
+    -moz-transform: rotate(-1deg);
+    -ms-transform: rotate(-1deg);
+    transform: rotate(-1deg); 
+  }
+  
+  .icon-trash .trash-container {
+    width: 56%;
+    height: 65%;
+    position: absolute;
+    left: 50%;
+    margin-left: -28%;
+    bottom: 10%;
+    background-color: #000;
+    border-bottom-left-radius: 15%;
+    border-bottom-right-radius: 15%;
+  }
+  
+  .icon-trash .trash-container:after {
+    content: "";
+    width: 110%;
+    height: 12%;
+    position: absolute;
+    left: 50%;
+    margin-left: -55%;
+    top: 0;
+    background-color: inherit;
+    border-bottom-left-radius: 45%;
+    border-bottom-right-radius: 45%;
+  }
+  
+  .icon-trash .trash-line-1 {
+    width: 4%;
+    height: 50%;
+    position: absolute;
+    left: 38%;
+    margin-left: -2%;
+    bottom: 17%;
+    background-color: rgba(243, 48, 95, 0.85);
+  }
+  
+  .icon-trash .trash-line-2 {
+    width: 4%;
+    height: 50%;
+    position: absolute;
+    left: 50%;
+    margin-left: -2%;
+    bottom: 17%;
+    background-color: rgba(243, 48, 95, 0.85);
+  }
+  
+  .icon-trash .trash-line-3 {
+    width: 4%;
+    height: 50%;
+    position: absolute;
+    left: 62%;
+    margin-left: -2%;
+    bottom: 17%;
+    background-color: rgba(243, 48, 95, 0.85);
+  }
+  
+  a {
+    position: absolute;
+    bottom: 12px;
+    right: 20px;
+  }
+
+  #imeE{
+    border: 3px solid rgba(89, 119, 223, 1);
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }

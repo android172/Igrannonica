@@ -1,1 +1,17 @@
-<p>modeli works!</p>
+<div id="divModeli">
+<div id="imeE"></div>
+    <div id="skrol">
+       <div type="button" id="m" *ngFor="let m of modeli"> 
+           <p>  {{ m.name }}  </p><div id="divB">
+           <button (click)="obrisiModel(m.id)" id="delete">
+            <div class="icon-trash" style="float: left;">
+                <div class="trash-lid" style="background-color: #E5E9EA"></div>
+                <div class="trash-container" style="background-color: #E5E9EA"></div>
+                <div class="trash-line-1"></div>
+                <div class="trash-line-2"></div>
+                <div class="trash-line-3"></div>
+              </div>
+           </button></div>
+       </div>
+   </div>
+</div>

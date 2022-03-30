@@ -32,7 +32,6 @@ export class MojiEksperimentiComponent implements OnInit {
 
   otvoriEksperiment(i: any)
   {
-    console.log(i);
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
 }
