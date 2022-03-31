@@ -288,7 +288,7 @@ p
     font-size: 15px;
 }
 
-#lr,#is,#os,#noe,#bs
+#lr,#is,#os,#noe,#bs,#rr,#rm,#lf,#o
 {
     float: left;
     margin-left: 20px;
@@ -309,6 +309,6 @@ p
 
 input
 {
-  width: 90px;
+  width: 60px;
 }
 

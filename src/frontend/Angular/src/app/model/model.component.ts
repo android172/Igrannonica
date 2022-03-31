@@ -56,6 +56,10 @@ export class ModelComponent implements OnInit {
         (<HTMLInputElement>document.getElementById("is")).defaultValue = this.json1['inputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("os")).defaultValue = this.json1['outputSize'];
+        (<HTMLInputElement>document.getElementById("lf")).defaultValue = this.json1['lossFunction'];
+        (<HTMLInputElement>document.getElementById("o")).defaultValue = this.json1['optimizer'];
+        (<HTMLInputElement>document.getElementById("rm")).defaultValue = this.json1['regularization'];
+        (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
       },
       error=>{
         console.log(error);
