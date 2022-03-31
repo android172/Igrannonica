@@ -213,6 +213,28 @@ namespace dotNet.MLService {
             connection.Send(treshold);
         }
 
+        public void RemoveOutliersIQR(int[] columns) {
+            connection.Send(Command.RemoveOutliersIQR);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersIsolationForest(int[] columns) {
+            connection.Send(Command.RemoveOutliersIsolationForest);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersOneClassSVM(int[] columns)
+        {
+            connection.Send(Command.RemoveOutliersOneClassSVM);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersByLocalFactor(int[] columns)
+        {
+            connection.Send(Command.RemoveOutliersByLocalFactor);
+            connection.Send(EncodeIntArray(columns));
+        }
+
         // ///////////// //
         // Data analysis //
         // ///////////// //
@@ -309,6 +331,10 @@ namespace dotNet.MLService {
         RemoveOutliersStandardDeviation,
         RemoveOutliersQuantiles,
         RemoveOutliersZScore,
+        RemoveOutliersIQR,
+        RemoveOutliersIsolationForest,
+        RemoveOutliersOneClassSVM,
+        RemoveOutliersByLocalFactor,
         // Data analysis
         NumericalStatistics,
         CategoricalStatistics,
