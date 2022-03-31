@@ -101,6 +101,9 @@ namespace dotNet.DBFunkcije
         }
         public ANNSettings podesavanja(int id)
         {
+            try
+            {
+
             connect.Open();
             string query = "select * from podesavanja where id=@id";
             MySqlCommand cmd = new MySqlCommand(query, connect);
@@ -132,6 +135,11 @@ namespace dotNet.DBFunkcije
             reader.Dispose();
             connect.Close();
             return null;
+            }
+            catch (Exception ex)
+            {
+                return podesavanja(id);
+            }
         }
         private int[] HiddenLayers(string niz)
         {
