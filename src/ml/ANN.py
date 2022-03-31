@@ -239,6 +239,7 @@ class ANN:
         F1Score          = metrics.f1_score(actual, predicted)
         HammingLoss      = metrics.hamming_loss(actual, predicted)
         CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        ConfusionMatrix  = metrics.confusion_matrix(actual, predicted)
         
         return StatisticsClassification(
             Accuracy         = Accuracy,
@@ -247,11 +248,9 @@ class ANN:
             Recall           = Recall,
             F1Score          = F1Score,
             HammingLoss      = HammingLoss,
-            CrossEntropyLoss = CrossEntropyLoss
+            CrossEntropyLoss = CrossEntropyLoss,
+            ConfusionMatrix  = ConfusionMatrix
         ).__dict__
-        
-    def confusion_matrix(self, dataset):
-        pass
     
 class NN(nn.Module):
     def __init__(self) -> None:
