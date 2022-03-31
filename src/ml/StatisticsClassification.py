@@ -11,12 +11,12 @@ class StatisticsClassification:
         CrossEntropyLoss = 0
         ) -> None:
         
-        self.Accuracy         = Accuracy
-        self.BalancedAccuracy = BalancedAccuracy
-        self.Precision        = Precision
-        self.Recall           = Recall
-        self.F1Score          = F1Score
-        self.HammingLoss      = HammingLoss
-        self.CrossEntropyLoss = CrossEntropyLoss
+        self.Accuracy         = float(Accuracy)
+        self.BalancedAccuracy = float(BalancedAccuracy)
+        self.Precision        = float(Precision)
+        self.Recall           = float(Recall)
+        self.F1Score          = float(F1Score)
+        self.HammingLoss      = float(HammingLoss)
+        self.CrossEntropyLoss = float(CrossEntropyLoss)
     
     

@@ -116,6 +116,7 @@ namespace dotNet.DBFunkcije
                     HiddenLayers(reader.GetString("HiddenLayers")), 
                     aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
                     RegularizationMethod.L1,
+                    0.0f,
                     LossFunction.L1Loss,
                     Optimizer.Adam
                     );
