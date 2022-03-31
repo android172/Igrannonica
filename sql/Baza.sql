@@ -83,6 +83,10 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `OutputSize` INT NULL,
   `HiddenLayers` VARCHAR(256) NULL,
   `AktivacioneFunkcije` VARCHAR(256) NULL,
+  `RegularizationMethod` VARCHAR(256),
+  `RegularizationRate` float null,
+  `LossFunction` VARCHAR(256),
+  `Optimizer` VARCHAR(256),
   `Kolone` INT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `model`

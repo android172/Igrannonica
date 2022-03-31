@@ -18,6 +18,12 @@ namespace dotNet.SingalR
             Clients.Clients(Context.ConnectionId).SendAsync("treniranje", "Poceto treniranje");
             MLExperiment eks = Korisnik.eksperimenti[token];
             ANNSettings settings = db.dbmodel.podesavanja(idmodela);
+            string datasetPath = Directory.GetCurrentDirectory() + "\\Files\\1\\1\\test_data.csv";
+            eks.LoadDataset(datasetPath);
+            eks.OneHotEncoding(new int[] { 4, 5, 13 });
+            eks.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+            eks.LoadOutputs(new int[] { 16, 17 });
+            eks.TrainTestSplit(0.1f);
             eks.ApplySettings(settings);
             eks.Start();
             return Clients.Clients(Context.ConnectionId).SendAsync("treniranje", "Treniranje zavrseno");
