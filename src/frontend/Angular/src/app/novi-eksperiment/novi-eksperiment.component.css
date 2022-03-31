@@ -1,13 +1,66 @@
-p
-{
-    color:white;
-    text-align: center;
-    font-size: larger;
-}
-
 #footer
 {
     width: 100%;
     position: fixed;
     bottom: 0;
+}
+
+#centrirano
+{
+    margin-top: 40px;
+    position: relative;
+    display: flex;
+    
+    justify-content: center;
+    clear: both;
+    
+}
+
+.box{
+    position: relative;
+    width: 400px;
+    height: 200px;
+    background: rgba(32, 35, 66, 0.79);
+    float: left;
+    border-radius: 3px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    margin-top: -30px;
+    justify-content: center;
+}
+
+#podaci{
+
+    color: #fff;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-family: 'Roboto';
+    font-style: normal;
+    margin-left: 75px;
+}
+
+input[type=text]{
+    width: 250px;
+    height: 45px;
+    background: #7584AE;
+    border: 3px #A2AFD2;
+    color: white;
+    border-radius: 10px;
+    font-family: 'Roboto';
+    font-style: normal;
+    padding-left: 5px;
+    margin-left: 75px;
+
+}
+
+#dodaj{
+    width: 100px;
+    height: 35px;
+    background: #D74971;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Roboto';
+    font-style: normal;
+    margin-left: 150px;
+    margin-top: 30px;
 }

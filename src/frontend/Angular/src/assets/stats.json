@@ -1,0 +1,90 @@
+{
+  "statsNum": {
+    "additionalProp1": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mean": 0,
+      "stdDeviation": 0,
+      "median": 0,
+      "quantile25": 0,
+      "quantile50": 0,
+      "quantile75": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "additionalProp2": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mean": 0,
+      "stdDeviation": 0,
+      "median": 0,
+      "quantile25": 0,
+      "quantile50": 0,
+      "quantile75": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "additionalProp3": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mean": 0,
+      "stdDeviation": 0,
+      "median": 0,
+      "quantile25": 0,
+      "quantile50": 0,
+      "quantile75": 0,
+      "minimum": 0,
+      "maximum": 0
+    }
+  },
+  "statsCat": {
+    "additionalProp1": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mostCommon": {
+        "key": "string",
+        "value": 0
+      },
+      "frequencies": [
+        {
+          "key": "string",
+          "value": 0
+        }
+      ]
+    },
+    "additionalProp2": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mostCommon": {
+        "key": "string",
+        "value": 0
+      },
+      "frequencies": [
+        {
+          "key": "string",
+          "value": 0
+        }
+      ]
+    },
+    "additionalProp3": {
+      "validCount": 0,
+      "naCount": 0,
+      "uniqueCount": 0,
+      "mostCommon": {
+        "key": "string",
+        "value": 0
+      },
+      "frequencies": [
+        {
+          "key": "string",
+          "value": 0
+        }
+      ]
+    }
+  }
+}

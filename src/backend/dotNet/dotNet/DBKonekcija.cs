@@ -172,26 +172,26 @@ namespace dotNet
             }
             return result;
         }
-        public ANNSettings podesavanja(int id)
-        {
-            connect.Open();
-            string query = "select * from podesavanja where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                ProblemType fun;
-                if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
-                else fun = ProblemType.Classification;
-                ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
-                    reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
-                    HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
+        //public ANNSettings podesavanja(int id)
+        //{
+        //    connect.Open();
+        //    string query = "select * from podesavanja where id=@id";
+        //    MySqlCommand cmd = new MySqlCommand(query, connect);
+        //    cmd.Parameters.AddWithValue("@id", id);
+        //    MySqlDataReader reader = cmd.ExecuteReader();
+        //    if (reader.Read())
+        //    {
+        //        ProblemType fun;
+        //        if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
+        //        else fun = ProblemType.Classification;
+        //        ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
+        //            reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
+        //            HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
 
-                return settings;
-            }
-            return null;
-        }
+        //        return settings;
+        //    }
+        //    return null;
+        //}
         private int[] HiddenLayers(string niz)
         {
             List<int> hiddenLayers = new List<int>();
@@ -223,7 +223,181 @@ namespace dotNet
                 }
             }
             return funkcije.ToArray();
+        }
+        public Korisnik Korisnik(int id)
+        {
+            connect.Open();
+            string query = "select * from korisnik where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            Korisnik rezultat = null;
+            if (reader.Read())
+            {
+                rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+            }
+            connect.Close();
+            return rezultat;
+        }
+        public bool proveri_email(string email)
+        {
+            connect.Open();
+            Console.WriteLine("em");
+            string query = "select * from korisnik where email=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@id", email);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool proveri_korisnickoime(string korisnickoime)
+        {
+            connect.Open();
+            Console.WriteLine("ki");
+            string query = "select * from korisnik where korisnickoime=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@id", korisnickoime);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool proveri_eksperiment(string naziv,int id)
+        {
+            connect.Open();
+            Console.WriteLine("ki");
+            string query = "select * from eksperiment where naziv=@naziv and vlasnik=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", naziv);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
 
+        public bool updateKorisnika(Korisnik korisnik)
+        {
+            connect.Open();
+            string query = "update korisnik set `korisnickoime` =@korisnickoime , `ime`=@ime , `sifra`=@sifra , `email`=@email where `id`=@id";
+            MySqlCommand cmd = new MySqlCommand(query,connect);
+            cmd.Parameters.AddWithValue("@id", korisnik.Id);
+            cmd.Parameters.AddWithValue("@korisnickoime", korisnik.KorisnickoIme);
+            cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
+            cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+            cmd.Parameters.AddWithValue("@email", korisnik.Email);
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool dodajEksperiment(string ime,int id)
+        {
+            connect.Open();
+            string query = "insert into eksperiment (`naziv`,`vlasnik`) values (@naziv,@vlasnik)";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", ime);
+            cmd.Parameters.AddWithValue("@vlasnik", id);
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool updateEksperient(int id,string ime)
+        {
+            connect.Open();
+            string query = "update eksperiment set naziv=@naziv where id=@vlasnik";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", ime);
+            cmd.Parameters.AddWithValue("@vlasnik", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool proveriModel(string ime,int id)
+        {
+            connect.Open();
+            string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", ime);
+            cmd.Parameters.AddWithValue("@vlasnik", id);
+
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+
+        public bool dodajModel(string ime,int id)
+        {
+            connect.Open();
+            string query = "insert into model (`naziv`,`ideksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@ime", ime);
+            cmd.Parameters.AddWithValue("@id", id);
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool promeniImeModela(string ime,int id)
+        {
+            connect.Open();
+            string query = "update model set `naziv`=@ime ,`obnovljen`=now() where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@ime", ime);
+            cmd.Parameters.AddWithValue("@id", id);
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
+        public bool izbrisiModel(int id)
+        {
+            connect.Open();
+            string query = "delete from model where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@id", id);
+            if (cmd.ExecuteNonQuery() > 0)
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
         }
     }
 }

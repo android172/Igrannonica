@@ -3,6 +3,7 @@ import { HttpClient} from '@angular/common/http';
 import { MeniService } from '../meni.service';
 import {Router} from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-registracija',
@@ -62,7 +63,7 @@ export class RegistracijaComponent implements OnInit {
   provera3()
   {
     var ime = (<HTMLInputElement>document.getElementById("ime")).value;
-    var regexp3 = new RegExp("^[A-Z]{1}[a-z]+[ ]{1}[A-Z]{1}[a-z]+$");
+    var regexp3 = new RegExp("^[A-Za-z][A-Za-z ]+$"); //^[A-Z]{1}[a-z]+[ ]{1}[A-Z]{1}[a-z]+$
     var test3 = regexp3.test(ime);
     if(!test3 && ime)
     {
@@ -81,9 +82,13 @@ export class RegistracijaComponent implements OnInit {
   provera4()
   {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
+    var regexp4 = new RegExp("^(?!.* )(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$");
     var test4 = regexp4.test(sifra);
-    if(!test4 && sifra)
+    if(!test4 && sifra.indexOf(' ') >= 0)
+    {
+      var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Pogresan unos";
+    }
+    else if(!test4 && sifra)
     {
         var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Lozinka mora da sadrzi najmanje 8 karaktera, jedno veliko slovo i jedan broj";
     }
@@ -123,10 +128,10 @@ export class RegistracijaComponent implements OnInit {
     var regexp2 = new RegExp("^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
     var test2 = regexp2.test(email);
     var ime = (<HTMLInputElement>document.getElementById("ime")).value;
-    var regexp3 = new RegExp("^[A-Z]{1}[a-z]+[ ]{1}[A-Z]{1}[a-z]+$");
+    var regexp3 = new RegExp("^[A-Za-z][A-Za-z ]+$");
     var test3 = regexp3.test(ime);
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
-    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$");
+    var regexp4 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$"); 
     var test4 = regexp4.test(sifra); 
     var sifra2= (<HTMLInputElement>document.getElementById("sifra2")).value;
     var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$");

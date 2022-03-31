@@ -12,12 +12,16 @@
       <button routerLink="/registracija" id="registracija" (click)="proba()">Registruj se</button>
     </div>
     <div id="prijava_i_registracija1" *ngIf="!nesto">
-      <button type="image"><img id="iconSlika" src="assets/icon.png"></button>
+      <button id="prijava" (click)="odjava()">Odjavi se</button>
+      <button id="dugmeikonica" type="image" routerLink="/profilna-strana"><img id="iconSlika" src="assets/ikonica.png"></button>
     </div>
   </div>
   <ul id="meni">
-    <li *ngFor="let tabs of prikaziMeni_1">
-        <a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="skloniCrticu(tabs.tab)">{{tabs.tab}}</a>
-    </li>
+    <div *ngFor="let tabs of prikaziMeni_1">
+      <li *ngIf="tabs.id==false">
+          <a routerLink="{{tabs.link}}" [style]="tabs.style">{{tabs.tab}}</a>
+          <!--<a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="novieks(tabs.novieks)">{{tabs.tab}}</a>-->
+      </li>
+    </div>
   </ul>
 </div>

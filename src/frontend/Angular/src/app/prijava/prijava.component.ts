@@ -19,7 +19,7 @@ export class PrijavaComponent implements OnInit {
     this.prikaziMeni.meni = false;
     if(!this.jwtHelper.isTokenExpired())
     {
-        this.router.navigate(['/']); 
+        this.router.navigate(['/pocetna-strana']);
     }
   }
 
@@ -66,6 +66,7 @@ export class PrijavaComponent implements OnInit {
           this.router.navigate(['/']);  
         },error =>{
           console.log(error.error);
+          var div = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Pogresno korisnicko ime ili lozinka";
         }
       );
     }

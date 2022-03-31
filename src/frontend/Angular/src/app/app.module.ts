@@ -16,6 +16,18 @@ import { ONamaComponent } from './o-nama/o-nama.component';
 import { CookieService } from 'ngx-cookie-service';
 import { FooterComponent } from './footer/footer.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { MojiEksperimentiComponent } from './moji-eksperimenti/moji-eksperimenti.component';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { FormsModule } from '@angular/forms';
+import { ProfilnaStranaComponent } from './profilna-strana/profilna-strana.component';
+import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-podataka/profilna-strana-izmena-podataka.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { EksperimentComponent } from './eksperiment/eksperiment.component';
+import { Header2Component } from './header2/header2.component';
+import { PodaciComponent } from './podaci/podaci.component';
+import { ModelComponent } from './model/model.component';
+import { ModeliComponent } from './modeli/modeli.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -32,6 +44,14 @@ export function tokenGetter() {
     KontaktComponent,
     ONamaComponent,
     FooterComponent,
+    MojiEksperimentiComponent,
+    ProfilnaStranaComponent,
+    ProfilnaStranaIzmenaPodatakaComponent,
+    EksperimentComponent,
+    Header2Component,
+    PodaciComponent,
+    ModelComponent,
+    ModeliComponent,
   ],
   imports: [
     HttpClientModule,
@@ -39,13 +59,17 @@ export function tokenGetter() {
     AppRoutingModule,
     BrowserAnimationsModule,
     RouterModule,
+    NgxCsvParserModule,
+    NgxPaginationModule,
+    FormsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
         allowedDomains: ["localhost:4200","localhost:5008"],
         skipWhenExpired: true
       }
-    })
+    }),
+    NgbModule
   ],
   providers: [
     CookieService

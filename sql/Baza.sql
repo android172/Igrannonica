@@ -37,7 +37,7 @@ ENGINE = InnoDB;
 -- Table `Baza`.`Eksperiment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Eksperiment` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Naziv` VARCHAR(256) NULL,
   `vlasnik` INT UNSIGNED NOT NULL,
   `csv` VARCHAR(256) NULL,
@@ -78,9 +78,9 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `ProblemType` VARCHAR(256) NULL,
   `LearningRate` FLOAT NULL,
   `BatchSize` INT NULL,
+  `numberOfEpochs` INT NULL,
   `InputSize` INT NULL,
   `OutputSize` INT NULL,
-  `ActivationFunction` VARCHAR(256) NULL,
   `HiddenLayers` VARCHAR(256) NULL,
   `AktivacioneFunkcije` VARCHAR(256) NULL,
   `Kolone` INT NULL,

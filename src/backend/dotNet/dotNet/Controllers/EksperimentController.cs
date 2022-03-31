@@ -1,4 +1,5 @@
-﻿using dotNet.Models;
+﻿using dotNet.DBFunkcije;
+using dotNet.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -12,11 +13,11 @@ namespace dotNet.Controllers
     public class EksperimentController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db;
+        DB db;
         public EksperimentController(IConfiguration config)
         {
             _config = config;
-            db = new DBKonekcija(_config.GetConnectionString("connectionString"));
+            db = new DB(_config);
         }
         [Authorize]
         [HttpGet("Eksperimenti")]
@@ -26,30 +27,142 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            List<EksperimentDto> eksperimenti = db.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
+            List<EksperimentDto> eksperimenti = db.dbeksperiment.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
             if (eksperimenti.Count > 0)
                 return Ok(eksperimenti);
-
             return BadRequest();
         }
+        [Authorize]
+        [HttpPost("Eksperiment")]
+        public IActionResult Eksperiment(string ime)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
+            {
+                return BadRequest("Postoji eksperiment sa tim imenom");
+            }
+
+            if (db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))) {
+                int id = db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value));
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString());
+                if(!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+                return Ok(id);
+            }
+            return BadRequest("Doslo do greske");
+        }
+        [Authorize]
+        [HttpPut("Eksperiment")]
+        public IActionResult updateEksperiment(int id, string ime)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
+            {
+                return BadRequest("Postoji eksperiment sa tim imenom");
+            }
+
+            if (db.dbeksperiment.updateEksperient(id, ime))
+                return Ok("Promenjeno ime");
+            return BadRequest("Doslo do greske");
+        }
+
+
 
         [Authorize]
-        [HttpGet("Modeli")]
+        [HttpGet("Modeli/{id}")]
         public IActionResult Modeli(int id) {
-            List<ModelDto> modeli=db.modeli(id);
+            List<ModelDto> modeli = db.dbmodel.modeli(id);
             if (modeli.Count > 0)
                 return Ok(modeli);
-        return BadRequest("Nema modela"); 
+            return BadRequest("Nema modela");
+        }
+        [Authorize]
+        [HttpPost("Modeli")]
+        public IActionResult napraviModel(string ime, int id)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            if (db.dbmodel.proveriModel(ime, id)!=-1)
+            {
+                return BadRequest("Vec postoji model sa tim imenom");
+            }
+            if (db.dbmodel.dodajModel(ime, id))
+            {
+                
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString(), db.dbmodel.proveriModel(ime, id).ToString());
+                if(!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                return Ok("Napravljen model");
+            }
+            return BadRequest("Doslo do greske");
+        }
+        [Authorize]
+        [HttpPut("Modeli")]
+        public IActionResult updateModel(string ime, int id, int ideksperimenta)
+        {
+            if (db.dbmodel.proveriModel(ime, ideksperimenta)!=-1)
+            {
+                return BadRequest("Vec postoji model sa tim imenom");
+            }
+            if (db.dbmodel.promeniImeModela(ime, id))
+                return Ok("Promenjeno ime modela");
+            return BadRequest("Doslo do greske");
+        }
+        [Authorize]
+        [HttpDelete("Modeli/{id}")]
+        public IActionResult izbrisiModel(int id)
+        {
+            if (db.dbmodel.izbrisiModel(id))
+            {
+                return Ok("Model izbrisan");
+            }
+            return BadRequest("Model nije izbrisan");
         }
 
         [Authorize]
-        [HttpGet("Podesavanja")]
+        [HttpGet("Podesavanja/{id}")]
         public IActionResult Podesavanja(int id) {
-            ANNSettings podesavanje = db.podesavanja(id);
-            if(podesavanje != null)
+            ANNSettings podesavanje = db.dbmodel.podesavanja(id);
+            if (podesavanje != null)
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }
+        
+        [Authorize]
+        [HttpGet("Eksperiment/Naziv/{id}")]
+        public IActionResult ExperimentNaziv(int id)
+        {
+            string naziv = db.dbeksperiment.uzmi_naziv(id);
+            if (naziv != "")
+            {
+                return Ok(naziv);
+            }
+            else
+            {
+                return BadRequest("Greska");
+            }
+        }
 
+        [Authorize]
+        [HttpGet("Model/Naziv/{id}")]
+        public IActionResult ModelNaziv(int id)
+        {
+            string naziv = db.dbmodel.uzmi_nazivM(id);
+            if (naziv != "")
+            {
+                return Ok(naziv);
+            }
+            else
+            {
+                return BadRequest("Greska");
+            }
+        }
     }
 }

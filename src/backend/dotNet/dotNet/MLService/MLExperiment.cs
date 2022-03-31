@@ -53,6 +53,11 @@ namespace dotNet.MLService {
             return int.Parse(connection.Receive());
         }
 
+        public string GetColumnTypes() {
+            connection.Send(Command.GetColumnTypes);
+            return connection.Receive();
+        }
+
         // ///////////////// //
         // Data manipulation //
         // ///////////////// //
@@ -189,22 +194,44 @@ namespace dotNet.MLService {
             connection.Send(EncodeIntArray(columns));
         }
 
+        // ///////////// //
+        // Data analysis //
+        // ///////////// //
+
+        // Get column statistics
+        public string NumericalStatistics(int[] columns) {
+            connection.Send(Command.NumericalStatistics);
+            connection.Send(EncodeIntArray(columns));
+            return connection.Receive();
+        }
+
+        public string CategoricalStatistics(int[] columns) {
+            connection.Send(Command.CategoricalStatistics);
+            connection.Send(EncodeIntArray(columns));
+            return connection.Receive();
+        }
+
+        public string ColumnStatistics() {
+            connection.Send(Command.AllStatistics);
+            return connection.Receive();
+        }
+
         // /////// //
         // Network //
         // /////// //
+
+        public string ComputeMetrics() {
+            connection.Send(Command.ComputeMetrics);
+            return connection.Receive();
+        }
+
         public void ApplySettings(ANNSettings annSettings) {
             connection.Send(Command.ChangeSettings);
             connection.Send(annSettings);
         }
 
-        public ClassificationMetrics Start() {
+        public void Start() {
             connection.Send(Command.Start);
-            string resultString = connection.Receive();
-            string[] results = resultString.Split(":");
-            return new ClassificationMetrics(
-                trainAccuracy: float.Parse(results[0]),
-                testAccuracy: float.Parse(results[1])
-            );
         }
 
         // Helper functions
@@ -234,6 +261,7 @@ namespace dotNet.MLService {
         // Data access
         GetRows,
         GetRowCount,
+        GetColumnTypes,
         // Data manipulation
         AddRow,
         AddRowToTest,
@@ -259,7 +287,12 @@ namespace dotNet.MLService {
         ScaleAbsoluteMax,
         ScaleMinMax,
         ScaleZScore,
+        // Data analysis
+        NumericalStatistics,
+        CategoricalStatistics,
+        AllStatistics,
         // Network
+        ComputeMetrics,
         ChangeSettings,
         Start
     }

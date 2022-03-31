@@ -1,0 +1,65 @@
+#oblast
+{
+    min-height: 400px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 70px;
+    border-radius: 25px;
+    align-content: center;
+    padding: 20px;
+    background: rgba(39, 39, 65, 0.92);
+    box-shadow: 13px 20px 29px rgba(0, 0, 0, 0.25);
+}
+
+#nav-tab
+{
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: none;
+}
+
+.nav-link
+{
+    background: rgba(29, 33, 69, 0.92);
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    margin: -20px -5px 0;
+    border-top-left-radius: 45px 100px;
+    border-top-right-radius: 45px 100px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    position: relative;
+    width: 20%;
+    max-width: 200px;
+    min-width: 20px;
+    border: 1px solid #aaa;
+    border-bottom: none;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.nav-link:last-child
+{
+    z-index: 1;
+}
+
+.nav-link.active
+{
+    background: rgba(39, 39, 65, 0.92);
+    color: #F45E82;
+    border: none;
+    text-shadow: #222;
+    border: 1px solid #F45E82;
+    border-bottom: none;
+    z-index: 10;   
+}
+  
+#podaci{
+    min-height: 500px;
+}

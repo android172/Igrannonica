@@ -10,7 +10,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using dotNet.ModelValidation;
-
+using Microsoft.Net.Http.Headers;
+using dotNet.DBFunkcije;
+using dotNet.MLService;
 
 namespace dotNet.Controllers
 {
@@ -19,12 +21,11 @@ namespace dotNet.Controllers
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
-        DBKonekcija db;
+        private DB db;
         public AuthController(IConfiguration config)
         {
             _config = config;
-            string sqlSource = _config.GetConnectionString("connectionString");
-            db = new DBKonekcija(sqlSource);
+            db = new DB(_config); 
         }
         [AllowAnonymous]
         [HttpPost]
@@ -34,6 +35,8 @@ namespace dotNet.Controllers
             if (user != null)
             {
                 var token = Generate(user);
+                Korisnik.eksperimenti[token.ToString()] = new MLExperiment(_config);
+                //Console.WriteLine(token.ToString());
                 return Ok(token);
             }
             return NotFound("Ne postoji");
@@ -60,18 +63,22 @@ namespace dotNet.Controllers
 
         private Korisnik Authenticate(KorisnikDto korisnik)
         {
-            Korisnik kor = db.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
+            Korisnik kor = db.dbkorisnik.dajKorisnika(korisnik.KorisnickoIme, korisnik.Sifra);
             return kor;
         }
         [HttpPost("register")]
         public IActionResult Register(KorisnikRegister request) {
             //Pretraziti bazu da li korisnik postoji
             //Upisati ga u bazu ako ga nema
-            Console.WriteLine(request.KorisnickoIme);
-            KorisnikValid korisnikValid = db.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
+            KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
             
             if(korisnikValid.korisnickoIme && korisnikValid.email)
             {
+                Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
+
+                string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
+                if(!Directory.Exists(putanja))
+                    Directory.CreateDirectory(putanja);
                 return Ok("Registrovan korisnik");
             }
             if(!korisnikValid.korisnickoIme)
@@ -95,6 +102,35 @@ namespace dotNet.Controllers
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+        }
+        [Authorize]
+        [HttpPost("update")]
+        public IActionResult Update(KorisnikUpdate korisnik)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            if(korisnik.Sifra!="")
+                if (db.dbkorisnik.dajKorisnika(tokenS.Claims.ToArray()[1].Value, korisnik.StaraSifra) == null)
+                    return BadRequest("Netacna stara sifra");
+
+            Korisnik kor = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+            if (kor.KorisnickoIme != korisnik.KorisnickoIme && db.dbkorisnik.proveri_korisnickoime(korisnik.KorisnickoIme))
+            {
+                return BadRequest("Korisnicko ime vec postoji");
+            }
+            if (kor.Email != korisnik.Email && db.dbkorisnik.proveri_email(korisnik.Email))
+            {
+                return BadRequest("Email vec postoji");
+            }
+            if (korisnik.Sifra == "")
+                kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, kor.Sifra, korisnik.Email);
+            else
+                kor = new Korisnik(kor.Id, korisnik.KorisnickoIme, korisnik.Ime, korisnik.Sifra, korisnik.Email);
+            if (db.dbkorisnik.updateKorisnika(kor))
+                return Ok(Generate(kor));
+            return BadRequest();
         }
     }
 }

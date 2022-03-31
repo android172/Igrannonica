@@ -1,6 +1,10 @@
 <div id="container">
   <app-header *ngIf="header==true"></app-header>
+  <app-header2 *ngIf="header2==true"></app-header2>
   <div id="sadrzaj">
     <router-outlet></router-outlet>
   </div>
+  <footer id="footer">
+    <app-footer></app-footer>
+  </footer>
 </div>

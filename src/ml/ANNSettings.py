@@ -3,18 +3,24 @@ import json
 
 
 class ANNSettings:
-    def __init__(self) -> None:
-        self.problemType         = 0
-        self.learningRate        = 0.0
-        self.batchSize           = 0
-        self.numberOfEpochs      = 0
-        self.inputSize           = 0
-        self.outputSize          = 0
-        self.hiddenLayers        = None
-        self.activationFunctions = None
     
-    def __init__(self, problemType, learningRate, batchSize, numberOfEpochs, 
-                 inputSize, outputSize, hiddenLayers, activationFunctions) -> None:
+    
+    def __init__(
+        self,
+        problemType         = 0, 
+        learningRate        = 0.0, 
+        batchSize           = 0, 
+        numberOfEpochs      = 0, 
+        inputSize           = 0, 
+        outputSize          = 0, 
+        hiddenLayers        = None, 
+        activationFunctions = None,
+        regularization      = 0,
+        regularizationRate  = 0.0,
+        lossFunction        = 0,
+        optimizer           = 0
+        ) -> None:
+        
         self.problemType         = problemType
         self.learningRate        = learningRate
         self.batchSize           = batchSize
@@ -23,17 +29,27 @@ class ANNSettings:
         self.outputSize          = outputSize
         self.hiddenLayers        = hiddenLayers
         self.activationFunctions = activationFunctions
+        self.regularization      = regularization
+        self.regularizationRate  = regularizationRate
+        self.lossFunction        = lossFunction
+        self.optimizer           = optimizer
     
-    def __init__(self, data) -> None:
+    def load(data) -> None:
         jsonObj = json.loads(data)
-        self.problemType         = jsonObj["ANNType"]
-        self.learningRate        = jsonObj["LearningRate"]
-        self.batchSize           = jsonObj["BatchSize"]
-        self.numberOfEpochs      = jsonObj["NumberOfEpochs"]
-        self.inputSize           = jsonObj["InputSize"]
-        self.outputSize          = jsonObj["OutputSize"]
-        self.hiddenLayers        = jsonObj["HiddenLayers"]
-        self.activationFunctions = jsonObj["ActivationFunctions"]
+        return ANNSettings(
+            problemType         = jsonObj["ANNType"],
+            learningRate        = jsonObj["LearningRate"],
+            batchSize           = jsonObj["BatchSize"],
+            numberOfEpochs      = jsonObj["NumberOfEpochs"],
+            inputSize           = jsonObj["InputSize"],
+            outputSize          = jsonObj["OutputSize"],
+            hiddenLayers        = jsonObj["HiddenLayers"],
+            activationFunctions = jsonObj["ActivationFunctions"],
+            regularization      = jsonObj["Regularization"],
+            regularizationRate  = jsonObj["RegularizationRate"],
+            lossFunction        = jsonObj["LossFunction"],
+            optimizer           = jsonObj["Optimizer"]
+        )
     
     
     
