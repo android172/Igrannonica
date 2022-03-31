@@ -2,11 +2,14 @@ import random
 import pandas as pd
 
 import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
 from scipy import stats
+from sklearn.svm import OneClassSVM
 
 from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
@@ -226,12 +229,30 @@ class MLData:
     def z_score_outlier_removal(self, columns, treshold):
         sub_df = self.dataset.iloc[:, columns]
         self.dataset = self.dataset[(np.abs(stats.zscore(sub_df)) < treshold).all(axis=1)]
+        
+    def iqr_outlier_removal(self, columns):
+        sub_df = self.dataset.iloc[:, columns]
+        
+        q1 = sub_df.quantile(0.25)
+        q3 = sub_df.quantile(0.75)
+        iqr = 1.5 * (q3 - q1)
+        self.dataset = self.dataset[((sub_df > q1 - iqr) & (sub_df < q3 + iqr)).all(axis=1)]
     
+    def isolation_forest_outlier_removal(self, columns):
+        rows = IsolationForest().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+        
+    def one_class_svm_outlier_removal(self, columns):
+        rows = OneClassSVM().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+    
+    def local_outlier_factor_outlier_removal(self, columns):
+        rows = LocalOutlierFactor().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
             
     # ######## #
     # Analysis #
     # ######## #
-    
     def get_numerical_statistics(self, columns):
         column_names = self.dataset.columns[columns]
         

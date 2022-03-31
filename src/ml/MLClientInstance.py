@@ -316,6 +316,38 @@ class MLClientInstance(Thread):
                 
                 print(f'Outliers removed from columns {columns} using z-score method.')
             
+            elif received == 'RemoveOutliersIQR':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.iqr_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using inter-quantile range method.')
+            
+            elif received == 'RemoveOutliersIsolationForest':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.isolation_forest_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using isolation forest method.')
+            
+            elif received == 'RemoveOutliersOneClassSVM':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.one_class_svm_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using one class svm method.')
+                
+            elif received == 'RemoveOutliersByLocalFactor':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.local_outlier_factor_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using local outlier factor method.')
+            
             # Data analysis #
             elif received == 'NumericalStatistics':
                 # Receive columns
