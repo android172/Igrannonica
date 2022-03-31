@@ -35,6 +35,9 @@ namespace dotNet.DBFunkcije
         }
         public int proveriModel(string ime, int id)
         {
+            try
+            {
+
             connect.Open();
             string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
             MySqlCommand cmd = new MySqlCommand(query, connect);
@@ -51,6 +54,11 @@ namespace dotNet.DBFunkcije
             r.Dispose();
             connect.Close();
             return -1;
+            }
+            catch(Exception ex)
+            {
+                return proveriModel(ime, id);
+            }
         }
         public bool dodajModel(string ime, int id)
         {
