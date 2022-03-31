@@ -1,19 +1,25 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using dotNet.DBFunkcije;
+using dotNet.MLService;
+using dotNet.Models;
+using Microsoft.AspNetCore.SignalR;
 namespace dotNet.SingalR
 {
     public class EksperimentHub : Hub
     {
         public static Dictionary<string,string> users = new Dictionary<string, string>();
-        
+        private static DB db = new DB(); 
         //token je jwt token korisnika
-        public Task Treniraj(string token,string idmodela)
+        public Task Treniraj(string token,int idmodela)
         {
-            users[Context.ConnectionId] = token;
+            users[Context.ConnectionId] = idmodela.ToString();
+            Console.WriteLine(idmodela);
             //users se sastoji iz connectionId i jwt koji ce da posluzi da se uzme MLConnection
             //Ovde treba pozvati model za treniranje
             Clients.Clients(Context.ConnectionId).SendAsync("treniranje", "Poceto treniranje");
-            for(int i = 0; i < 10; i++)
-                Clients.Clients(Context.ConnectionId).SendAsync("loss", i);
+            MLExperiment eks = Korisnik.eksperimenti[token];
+            ANNSettings settings = db.dbmodel.podesavanja(idmodela);
+            eks.ApplySettings(settings);
+            eks.Start();
             return Clients.Clients(Context.ConnectionId).SendAsync("treniranje", "Treniranje zavrseno");
         }
         public void ZaustaviTreniranje()
@@ -29,6 +35,7 @@ namespace dotNet.SingalR
 
         public override Task OnConnectedAsync()
         {
+            Console.WriteLine("connected");
             users.Add(Context.ConnectionId,null);
             return base.OnConnectedAsync();
         }

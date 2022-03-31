@@ -23,9 +23,9 @@ namespace dotNet.Controllers {
         public string Test() {
             if (experiment == null)
                 experiment = new(configuration);
-
+            Console.WriteLine("uslo");
             // Load data
-            string datasetPath = "C:\\Fax\\Softverski Inzinjering\\neuralnetic\\data\\test_data.csv";
+            string datasetPath = Directory.GetCurrentDirectory() + "\\Files\\1\\1\\test_data.csv";
             experiment.LoadDataset(datasetPath);
 
             // Get statistics

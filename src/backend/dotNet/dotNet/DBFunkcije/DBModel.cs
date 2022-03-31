@@ -29,6 +29,7 @@ namespace dotNet.DBFunkcije
                 ex.UpdatedDate = reader.GetDateTime("obnovljen");
                 result.Add(ex);
             }
+            reader.Dispose();
             connect.Close();
             return result;
         }
@@ -43,9 +44,11 @@ namespace dotNet.DBFunkcije
             if (r.Read())
             {
                 int idm = r.GetInt32("id");
+                r.Dispose();
                 connect.Close();
                 return idm;
             }
+            r.Dispose();
             connect.Close();
             return -1;
         }
@@ -74,9 +77,11 @@ namespace dotNet.DBFunkcije
             MySqlDataReader read = cmd.ExecuteReader();
             if (read.Read())
             {
+                read.Dispose();
                 connect.Close();
                 return true;
             }
+            read.Dispose();
             connect.Close();
             return false;
         }
@@ -115,14 +120,16 @@ namespace dotNet.DBFunkcije
                     reader.GetInt32("OutputSize"),
                     HiddenLayers(reader.GetString("HiddenLayers")), 
                     aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
-                    RegularizationMethod.L1,
-                    0.0f,
-                    LossFunction.L1Loss,
-                    Optimizer.Adam
+                    Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
+                    reader.GetFloat("RegularizationRate"),
+                    Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
+                    Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
                     );
+                reader.Dispose();
                 connect.Close();
                 return settings;
             }
+            reader.Dispose();
             connect.Close();
             return null;
         }
@@ -172,9 +179,11 @@ namespace dotNet.DBFunkcije
                 {
                     Console.WriteLine("OK");
                     String naziv = reader.GetString("naziv");
+                    reader.Dispose();
                     connect.Close();
                     return naziv;
                 }
+                reader.Dispose();
                 connect.Close();
                 return "";
             }

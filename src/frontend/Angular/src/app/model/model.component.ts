@@ -4,7 +4,9 @@ import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
-
+import { SignalRService } from '../services/signal-r.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { tokenGetter } from '../app.module';
 
 @Component({
   selector: 'app-model',
@@ -23,7 +25,7 @@ export class ModelComponent implements OnInit {
  message: any;
 
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -35,11 +37,13 @@ export class ModelComponent implements OnInit {
   ngOnInit(): void {
     this.ucitajNaziv();
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
+    this.signalR.startConnection();
   }
   posaljiZahtev(data:number){
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
+        this.ucitajKolone();
         //Ovde treba da popunis json
       },
       error=>{
@@ -151,5 +155,10 @@ export class ModelComponent implements OnInit {
         }
       }
     }
+  }
+
+  treniraj(){
+    
+    this.signalR.ZapocniTreniranje(tokenGetter(),1);
   }
 }

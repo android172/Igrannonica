@@ -29,6 +29,7 @@ namespace dotNet.DBFunkcije
                 result.Add(ex);
 
             }
+            reader.Dispose();
             connect.Close();
             return result;
         }
@@ -44,9 +45,11 @@ namespace dotNet.DBFunkcije
             if (reader.Read())
             {
                 int id1 = reader.GetInt32("id");
+                reader.Dispose();
                 connect.Close();
                 return id1;
             }
+            reader.Dispose();
             connect.Close();
             return -1;
         }
@@ -75,9 +78,11 @@ namespace dotNet.DBFunkcije
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
+                reader.Dispose();
                 connect.Close();
                 return true;
             }
+            reader.Dispose();
             connect.Close();
             return false;
         }
@@ -95,9 +100,11 @@ namespace dotNet.DBFunkcije
                 {
                     Console.WriteLine("OK");
                     String naziv = reader.GetString("Naziv");
+                    reader.Dispose();
                     connect.Close();
                     return naziv;
                 }
+                reader.Dispose();
                 connect.Close();
                 return "";
             }
@@ -114,8 +121,8 @@ namespace dotNet.DBFunkcije
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@naziv", naziv);
             cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            //MySqlDataReader reader = cmd.ExecuteNonQuery();
+            if (cmd.ExecuteNonQuery()>0)
             {
                 connect.Close();
                 return true;

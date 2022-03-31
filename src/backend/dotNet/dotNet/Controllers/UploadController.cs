@@ -116,7 +116,7 @@ namespace dotNet.Controllers
             // upis csv-a u bazu 
             bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
 
-            if(fajlNijeSmesten)
+            if(!fajlNijeSmesten)
             {
                 Console.WriteLine("Fajl nije upisan u bazu");
                 return BadRequest("Neuspesan upis csv-a u bazu");
@@ -136,7 +136,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
@@ -178,7 +178,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
@@ -207,7 +207,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
@@ -236,7 +236,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else

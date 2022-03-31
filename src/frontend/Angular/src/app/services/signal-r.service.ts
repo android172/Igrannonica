@@ -21,8 +21,8 @@ export class SignalRService {
         }
     ); 
   }
-  public ZapocniTestiranje(id:any){
-      this.hubConnection.invoke('treniraj',this.connectionId,"Test")
+  public ZapocniTreniranje(token:any,id:any){
+      this.hubConnection.invoke('treniraj',token,id)
       .catch(err => console.error(err));
     }
   public ZaustaviTreniranje(){
