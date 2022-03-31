@@ -284,6 +284,37 @@ class MLClientInstance(Thread):
                 network.data.z_score_scaling(columns)
                 
                 print(f"Columns {columns} were z-score scaled.")
+                
+            # Data manipulation : Outliers #
+            elif received == 'RemoveOutliersStandardDeviation':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.standard_deviation_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using standard deviation method.')
+            
+            elif received == 'RemoveOutliersQuantiles':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.quantile_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using quantiles method.')
+            
+            elif received == 'RemoveOutliersZScore':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.z_score_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using z-score method.')
             
             # Data analysis #
             elif received == 'NumericalStatistics':
@@ -330,7 +361,8 @@ class MLClientInstance(Thread):
                     train = network.compute_classification_statistics("train")
                     test = network.compute_classification_statistics("test")
                 self.connection.send(json.dumps({"test": test, "train": train}))
-                    
+                
+                print("Network statistics requested.")
             
             elif received == 'ChangeSettings':
                 # Receive settings to change to
@@ -345,4 +377,8 @@ class MLClientInstance(Thread):
                 if network.data.dataset is None:
                     network.initialize_random_data()
                 # Train
+                print("Traning commences.")
                 network.train()
+                
+                print("Traning complete.")
+                
