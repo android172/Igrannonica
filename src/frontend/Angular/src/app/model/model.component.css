@@ -1,0 +1,289 @@
+p
+{
+    color:white;
+    text-align: center;
+    font-size: larger;
+}
+
+#sacuvaj
+{/*
+    width: 150px;
+    height: 40px;
+
+    background: rgba(243, 48, 95, 0.7);
+    border: 3px solid rgba(243, 48, 95, 0.85);
+    box-sizing: border-box;
+    border-radius: 15px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    color: #FFFFFF;
+
+    transition-duration: 0.3s;
+*/
+    width: 120px;
+    height: 40px;
+    color: white;
+
+    background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%);
+    border: 1px solid #0a1024;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+
+    float: right;
+}
+
+#sacuvaj:hover
+{
+  background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#nazivM, #nazivE
+{/*
+    width: auto;
+    height: 40px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 7px;
+
+    margin-right: 10px;
+
+    background: rgba(39,42,79,1);
+    border: 3px solid rgba(123, 122, 170, 1);
+    box-sizing: border-box;
+    border-radius: 15px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-align: center;
+
+    transition-duration: 0.3s;
+*/
+    min-width: 200px;
+    margin-right: 15px;
+    border: 3px solid rgb(37, 164, 214) ;
+    color: #CED9FF;
+    background-color: #272741;
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+
+    float: right;
+}
+
+#div1{
+    float: right;
+    width: 100%;
+}
+
+#div2{
+    position: relative;
+    width: 700px;
+    height: 500px;
+    float: left;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+#centrirano
+{
+    position: relative;
+    display: flex;
+    
+    justify-content: center;
+    clear: both;
+    
+}
+
+#ulaziIzlaz{
+
+    width: 300px;
+    height: 300px;
+    border: 3px solid rgba(89, 119, 223, 1);
+    border-radius: 10px;
+    float: left;
+    padding-top: 25px;
+    padding-left: 30px;
+    overflow: auto;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+
+}
+
+#divUI{
+
+    width: 300px;
+    height: 350px;
+    float: left;
+    margin-top: 50px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+#pokreniM{
+
+    width: 150px;
+    height: 40px;
+
+    background: linear-gradient(180deg, #FD847B 0%, #FF7187 100%);
+    border-radius: 15px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    color: #FFFFFF;
+
+    transition-duration: 0.3s;
+
+    margin-left: 275px;
+    margin-right: 275px;
+    margin-top: 10px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 15px;
+    margin-right: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #C4C4C4; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(164, 157, 157, 1); 
+  }
+
+
+  #cb{
+      height: 40px;
+      color: #FFFFFF;
+  }
+
+  #tekst{
+      padding-left: 3px;
+    height: 40px;
+    color: #FFFFFF;
+}
+
+/* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: white;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background: linear-gradient(162.06deg, #59D75E -16.65%, #8DFF92 97.46%);
+  
+  }
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+#ucitaj{
+    
+    min-width: 200px;
+    margin-right: 15px;
+    border: 3px solid rgba(121, 240, 126, 1);
+    color: #CED9FF;
+    background-color: #272741;
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+ 
+    float: left;
+}
+
+#ucitaj:hover{
+
+   background:linear-gradient(162.06deg, #59D75E -16.65%, #8DFF92 97.46%);
+   border: 3px solid #272741;
+   color: #272741;
+}
+
+#poruka
+{
+    color: rgba(243, 48, 95, 0.85);
+    text-align: center;
+    font-size: 15px;
+}

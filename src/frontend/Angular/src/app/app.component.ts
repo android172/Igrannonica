@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'angular';
 
   header:boolean = true;
+  header2:boolean = true;
 
   public prikaziMeni_1:any
   constructor(private prikaziMeni: MeniService, private router:Router) {
@@ -20,19 +21,24 @@ export class AppComponent {
   ngOnInit(): void {
   }
 
-  ngDoCheck(): void{
-    /*if(this.prikaziMeni.meni == false)
-      this.header = false
-    else
-      this.header = true*/
-
-    if(this.router.url=="/prijava" || this.router.url=="/registracija")
+  ngDoCheck(): void
+  {
+    if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment"))
     {
       this.header = false;
+      if((this.router.url).indexOf("eksperiment") != -1)
+      {
+        this.header2 = true;
+      }
+      else
+      {
+        this.header2 = false;
+      }
     }
     else
     {
       this.header = true;
+      this.header2 = false;
     }
   }
 }

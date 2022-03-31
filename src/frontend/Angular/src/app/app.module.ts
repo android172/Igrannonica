@@ -23,6 +23,11 @@ import { ProfilnaStranaComponent } from './profilna-strana/profilna-strana.compo
 import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-podataka/profilna-strana-izmena-podataka.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { EksperimentComponent } from './eksperiment/eksperiment.component';
+import { Header2Component } from './header2/header2.component';
+import { PodaciComponent } from './podaci/podaci.component';
+import { ModelComponent } from './model/model.component';
+import { ModeliComponent } from './modeli/modeli.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -43,6 +48,10 @@ export function tokenGetter() {
     ProfilnaStranaComponent,
     ProfilnaStranaIzmenaPodatakaComponent,
     EksperimentComponent,
+    Header2Component,
+    PodaciComponent,
+    ModelComponent,
+    ModeliComponent,
   ],
   imports: [
     HttpClientModule,
@@ -59,7 +68,8 @@ export function tokenGetter() {
         allowedDomains: ["localhost:4200","localhost:5008"],
         skipWhenExpired: true
       }
-    })
+    }),
+    NgbModule
   ],
   providers: [
     CookieService
