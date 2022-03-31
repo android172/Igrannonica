@@ -26,7 +26,6 @@ export class ModeliComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajImeE();
-    this.ucitajModel();
   }
 
   send(id:number){
@@ -76,6 +75,7 @@ export class ModeliComponent implements OnInit {
     this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.id,{responseType: 'text'}).subscribe(
         res=>{
           var div = (<HTMLDivElement>document.getElementById("imeE")).innerHTML = res;
+          this.ucitajModel();
         },
         error=>{
           console.log(error.error);

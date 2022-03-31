@@ -39,7 +39,7 @@ namespace dotNet.DBFunkcije
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@naziv", ime);
             cmd.Parameters.AddWithValue("@vlasnik", id);
-
+            
             if (cmd.ExecuteNonQuery() > 0)
             {
                 connect.Close();
@@ -147,7 +147,7 @@ namespace dotNet.DBFunkcije
             return funkcije.ToArray();
         }
 
-        /*public string uzmi_nazivM(int id)
+        public string uzmi_nazivM(int id)
         {
             connect.Open();
             string query = "select * from model where id=@id";
@@ -163,6 +163,6 @@ namespace dotNet.DBFunkcije
             }
             connect.Close();
             return "";
-        }*/
+        }
     }
 }

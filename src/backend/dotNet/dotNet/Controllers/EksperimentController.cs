@@ -120,7 +120,7 @@ namespace dotNet.Controllers
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }
-        /*
+        
         [Authorize]
         [HttpGet("Eksperiment/Naziv/{id}")]
         public IActionResult ExperimentNaziv(int id)
@@ -134,9 +134,9 @@ namespace dotNet.Controllers
             {
                 return BadRequest("Greska");
             }
-        }*/
+        }
 
-        /*[Authorize]
+        [Authorize]
         [HttpGet("Model/Naziv/{id}")]
         public IActionResult ModelNaziv(int id)
         {
@@ -149,6 +149,6 @@ namespace dotNet.Controllers
             {
                 return BadRequest("Greska");
             }
-        }*/
+        }
     }
 }
