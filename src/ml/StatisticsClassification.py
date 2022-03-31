@@ -8,7 +8,8 @@ class StatisticsClassification:
         Recall           = 0,
         F1Score          = 0,
         HammingLoss      = 0,
-        CrossEntropyLoss = 0
+        CrossEntropyLoss = 0,
+        ConfusionMatrix  = []
         ) -> None:
         
         self.Accuracy         = float(Accuracy)
@@ -18,5 +19,6 @@ class StatisticsClassification:
         self.F1Score          = float(F1Score)
         self.HammingLoss      = float(HammingLoss)
         self.CrossEntropyLoss = float(CrossEntropyLoss)
+        self.ConfusionMatrix  = [[int(i) for i in row] for row in ConfusionMatrix]
     
     
