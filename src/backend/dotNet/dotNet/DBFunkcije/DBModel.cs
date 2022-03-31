@@ -62,6 +62,7 @@ namespace dotNet.DBFunkcije
             if (cmd.ExecuteNonQuery() > 0)
             {
                 connect.Close();
+                dodajPodesavanja(proveriModel(ime,id));
                 return true;
             }
             connect.Close();
@@ -141,6 +142,23 @@ namespace dotNet.DBFunkcije
                 return podesavanja(id);
             }
         }
+        public void dodajPodesavanja(int id)
+        {
+            try
+            {
+
+                connect.Open();
+                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam',5);";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+
         private int[] HiddenLayers(string niz)
         {
             List<int> hiddenLayers = new List<int>();
