@@ -37,11 +37,26 @@ export class ModelComponent implements OnInit {
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
   }
   posaljiZahtev(data:number){
-    console.log(data);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
         //Ovde treba da popunis json
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+    this.ucitajNazivModela(data);
+  }
+
+
+  ucitajNazivModela(id : any){
+
+  this.http.get("http://localhost:5008/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
+      res=>{
+        console.log(res);
+        this.naziv = res;
+        var div = (<HTMLDivElement>document.getElementById("nazivM")).innerHTML = this.naziv;
       },
       error=>{
         console.log(error);
