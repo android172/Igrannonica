@@ -105,16 +105,23 @@ class ANN:
             self.criterion = nn.MSELoss()
         else:
             self.criterion = nn.CrossEntropyLoss()
+            
+        # Regularization
+        self.regularization_method = annSettings.regularization
+        self.regularization_rate = annSettings.regularizationRate
+        weight_decay = 0
+        if self.regularization_method == 1:
+            weight_decay = self.regularization_rate
         
         # Optimization algortham
         if   annSettings.optimizer == 0:
-            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate)
+            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif annSettings.optimizer == 1:
-            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate)
+            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif annSettings.optimizer == 2:
-            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate)
+            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         else:
-            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
+            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
     
     # Training
     def train(self):
@@ -131,6 +138,13 @@ class ANN:
                 # Forward
                 scores = self.model.forward(data)
                 loss = self.criterion(scores, target)
+                
+                if self.regularization_method == 0:
+                    L1_reg = torch.tensor(0., requires_grad=True)
+                    for name, param in self.model.named_parameters():
+                        if 'weight' in name:
+                            L1_reg = L1_reg + torch.norm(param, 1)
+                    loss += self.regularization_rate * L1_reg
                 
                 # Backwards
                 self.optimizer.zero_grad()
@@ -176,19 +190,15 @@ class ANN:
             mae = metrics.mean_absolute_error(actual[i], predicted[i])
             mse = metrics.mean_squared_error(actual[i], predicted[i])
             rse = sqrt(mse * (n / (n - p - 1)))
-            # f1 = metrics.f1_score(actual[i], predicted[i])
             r2 = metrics.r2_score(actual[i], predicted[i])
             adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-            # roc_auc_score = metrics.roc_auc_score(actual[i], predicted[i])
             
             statistics[i] = StatisticsRegression(
                 mae,
                 mse,
                 rse,
-                # f1,
                 r2,
                 adjustedR2
-                # roc_auc_score
             ).__dict__
         return statistics
     
@@ -242,39 +252,6 @@ class ANN:
         
     def confusion_matrix(self, dataset):
         pass
-        
-    def get_accuracy(self, dataset):
-        if self.train_loader is None:
-            self.initialize_loaders()
-            
-        if   dataset == "train":
-            loader = self.train_loader
-        elif dataset == "test":
-            loader = self.test_loader
-        else:
-            return
-        
-        num_correct = 0
-        num_samples = 0
-        
-        self.model.eval()
-        
-        with torch.no_grad():
-            for x, y in loader:
-                x = x.to(device)
-                y = y.to(device)
-                x = x.reshape(x.shape[0], -1)
-                
-                scores = self.model(x)
-                _, predictions = scores.max(1)
-                
-                num_correct += (predictions == y).sum()
-                num_samples += predictions.size(0)
-            
-        self.model.train()
-        
-        return num_correct / num_samples
-    
     
 class NN(nn.Module):
     def __init__(self) -> None:

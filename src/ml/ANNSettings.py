@@ -16,6 +16,7 @@ class ANNSettings:
         hiddenLayers        = None, 
         activationFunctions = None,
         regularization      = 0,
+        regularizationRate  = 0.0,
         lossFunction        = 0,
         optimizer           = 0
         ) -> None:
@@ -29,6 +30,7 @@ class ANNSettings:
         self.hiddenLayers        = hiddenLayers
         self.activationFunctions = activationFunctions
         self.regularization      = regularization
+        self.regularizationRate  = regularizationRate
         self.lossFunction        = lossFunction
         self.optimizer           = optimizer
     
@@ -44,6 +46,7 @@ class ANNSettings:
             hiddenLayers        = jsonObj["HiddenLayers"],
             activationFunctions = jsonObj["ActivationFunctions"],
             regularization      = jsonObj["Regularization"],
+            regularizationRate  = jsonObj["RegularizationRate"],
             lossFunction        = jsonObj["LossFunction"],
             optimizer           = jsonObj["Optimizer"]
         )
