@@ -20,6 +20,10 @@ export class ModelComponent implements OnInit {
   idEksperimenta: any;
   naziv: any;
   json: any;
+  json1: any;
+
+  public aktFunk: any[] = [];
+  public hiddLay: any[] = [];
 
   public kolone: any[] = [];
  message: any;
@@ -40,17 +44,23 @@ export class ModelComponent implements OnInit {
     this.signalR.startConnection();
   }
   posaljiZahtev(data:number){
+    console.log(data);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
-        this.ucitajKolone();
-        //Ovde treba da popunis json
+        this.json1=res;
+        this.aktFunk =  this.json1['activationFunctions'];
+        (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
+        (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
+        this.hiddLay = this.json1['hiddenLayers'];
+        (<HTMLInputElement>document.getElementById("is")).defaultValue = this.json1['inputSize'];
+        (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
+        (<HTMLInputElement>document.getElementById("os")).defaultValue = this.json1['outputSize'];
       },
       error=>{
         console.log(error);
       }
     )
-    this.ucitajNazivModela(data);
   }
 
 
