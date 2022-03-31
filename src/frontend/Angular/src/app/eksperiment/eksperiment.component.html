@@ -1,50 +1,24 @@
-<input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<div id="eksperiment">
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-podaci-tab" data-bs-toggle="tab" data-bs-target="#podaci" type="button" role="tab" aria-controls="nav-podaci" aria-selected="true">Unos podataka</button>
+        <button class="nav-link" id="nav-modeli-tab" data-bs-toggle="tab" data-bs-target="#modeli" type="button" role="tab" aria-controls="nav-modeli" aria-selected="false">Modeli eksperimenta</button>
+        <button class="nav-link" id="nav-model-tab" data-bs-toggle="tab" data-bs-target="#model" type="button" role="tab" aria-controls="nav-model" aria-selected="false">Treniranje modela</button>
+  </div>
 
-<div class="file-upload">
-
-    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-        Učitaj podatke
-    </button>
-
-    <span style="color:white; margin-left: 10px;">{{fileName || "Podaci nisu učitani."}}</span>
+    
+  <div id="oblast">
+      <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="podaci" role="tabpanel" aria-labelledby="nav-podaci-tab">
+              <app-podaci id="podaci"></app-podaci>
+          </div>
+          <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-modeli-tab">
+              <app-modeli (PosaljiModel)="primi($event)" id="modeli"></app-modeli>
+          </div>
+          <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-model-tab">
+              <app-model [mod]="eventsSubject.asObservable()" id="model"></app-model>
+          </div>
+        </div>
+  </div>
+  <div><button (click)="primi(1)"></button></div>
 </div>
-<div id="porukaGreske"></div>
-
-<div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
-    <span>
-        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
-            <option value="5">5</option>
-            <option selected value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </span>
-</div>
-
-<div id="table">
-    <table>
-        <tr>
-            <th *ngFor="let header of dajHeadere();">
-                {{header}}
-            </th>
-        </tr>
-        <tr *ngFor="let red of json | paginate
-        : {
-            itemsPerPage: itemsPerPage,
-            currentPage: page,
-            totalItems: totalItems
-          };  index as i">
-            <td *ngFor="let fieldValue of dajRed(i)">
-              {{fieldValue}}
-            </td>
-        </tr>
-    </table>
-</div>
-
-<pagination-controls
-  class="pagi"
-  (pageChange)="gty(page = $event)"  
-></pagination-controls>
-
-<app-footer id="footer"></app-footer>

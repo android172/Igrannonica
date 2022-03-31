@@ -15,7 +15,8 @@ namespace dotNet.Models {
             int outputSize, 
             int[]? hiddenLayers, 
             ActivationFunction[]? activationFunctions,
-            RegularizationMethod regularization, 
+            RegularizationMethod regularization,
+            float regularizationRate,
             LossFunction lossFunction, 
             Optimizer optimizer) {
 
@@ -28,6 +29,7 @@ namespace dotNet.Models {
             HiddenLayers = hiddenLayers;
             ActivationFunctions = activationFunctions;
             Regularization = regularization;
+            RegularizationRate = regularizationRate;
             LossFunction = lossFunction;
             Optimizer = optimizer;
         }
@@ -43,6 +45,7 @@ namespace dotNet.Models {
         public ActivationFunction[]? ActivationFunctions { get; set; }
         // Other
         public RegularizationMethod Regularization { get; set; }
+        public float RegularizationRate { get; set; }
         public LossFunction LossFunction { get; set; }
         public Optimizer Optimizer { get; set; }
 

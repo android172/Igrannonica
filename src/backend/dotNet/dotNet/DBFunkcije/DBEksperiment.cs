@@ -81,5 +81,47 @@ namespace dotNet.DBFunkcije
             connect.Close();
             return false;
         }
+
+        public string uzmi_naziv(int id)
+        {
+            try
+            {
+                connect.Open();
+                string query = "select * from eksperiment where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Console.WriteLine("OK");
+                    String naziv = reader.GetString("Naziv");
+                    connect.Close();
+                    return naziv;
+                }
+                connect.Close();
+                return "";
+            }
+            catch(Exception ex)
+            {
+                return uzmi_naziv(id);
+            }
+        }
+
+        public bool dodajCsv(int id, string naziv)
+        {
+            connect.Open();
+            string query = "update eksperiment set csv=@naziv where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", naziv);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
     }
 }

@@ -91,6 +91,7 @@ namespace dotNet.Controllers {
                 hiddenLayers: hiddentLayers,
                 activationFunctions: activationFunctions,
                 regularization: RegularizationMethod.L1,
+                regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam
                 );

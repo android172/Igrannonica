@@ -40,24 +40,28 @@ namespace dotNet.Controllers
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))!=-1)
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }
 
-            if(db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
-                return Ok(db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)));
+            if (db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))) {
+                int id = db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value));
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString());
+                if(!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+                return Ok(id);
+            }
             return BadRequest("Doslo do greske");
         }
         [Authorize]
         [HttpPut("Eksperiment")]
-        public IActionResult updateEksperiment(int id,string ime)
+        public IActionResult updateEksperiment(int id, string ime)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
-            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value))!=-1)
+            if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
             {
                 return BadRequest("Postoji eksperiment sa tim imenom");
             }
@@ -70,30 +74,40 @@ namespace dotNet.Controllers
 
 
         [Authorize]
-        [HttpGet("Modeli")]
+        [HttpGet("Modeli/{id}")]
         public IActionResult Modeli(int id) {
-            List<ModelDto> modeli=db.dbmodel.modeli(id);
+            List<ModelDto> modeli = db.dbmodel.modeli(id);
             if (modeli.Count > 0)
                 return Ok(modeli);
-        return BadRequest("Nema modela"); 
+            return BadRequest("Nema modela");
         }
         [Authorize]
         [HttpPost("Modeli")]
-        public IActionResult napraviModel(string ime,int id)
+        public IActionResult napraviModel(string ime, int id)
         {
-            if(db.dbmodel.proveriModel(ime, id))
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            if (db.dbmodel.proveriModel(ime, id)!=-1)
             {
                 return BadRequest("Vec postoji model sa tim imenom");
             }
             if (db.dbmodel.dodajModel(ime, id))
+            {
+                
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString(), db.dbmodel.proveriModel(ime, id).ToString());
+                if(!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
                 return Ok("Napravljen model");
+            }
             return BadRequest("Doslo do greske");
         }
         [Authorize]
         [HttpPut("Modeli")]
-        public IActionResult updateModel(string ime, int id,int ideksperimenta)
+        public IActionResult updateModel(string ime, int id, int ideksperimenta)
         {
-            if (db.dbmodel.proveriModel(ime, ideksperimenta))
+            if (db.dbmodel.proveriModel(ime, ideksperimenta)!=-1)
             {
                 return BadRequest("Vec postoji model sa tim imenom");
             }
@@ -102,7 +116,7 @@ namespace dotNet.Controllers
             return BadRequest("Doslo do greske");
         }
         [Authorize]
-        [HttpDelete("Modeli")]
+        [HttpDelete("Modeli/{id}")]
         public IActionResult izbrisiModel(int id)
         {
             if (db.dbmodel.izbrisiModel(id))
@@ -113,13 +127,42 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpGet("Podesavanja")]
-        public IActionResult Podesavanja(int id)
-        {
+        [HttpGet("Podesavanja/{id}")]
+        public IActionResult Podesavanja(int id) {
             ANNSettings podesavanje = db.dbmodel.podesavanja(id);
             if (podesavanje != null)
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
+        }
+        
+        [Authorize]
+        [HttpGet("Eksperiment/Naziv/{id}")]
+        public IActionResult ExperimentNaziv(int id)
+        {
+            string naziv = db.dbeksperiment.uzmi_naziv(id);
+            if (naziv != "")
+            {
+                return Ok(naziv);
+            }
+            else
+            {
+                return BadRequest("Greska");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Model/Naziv/{id}")]
+        public IActionResult ModelNaziv(int id)
+        {
+            string naziv = db.dbmodel.uzmi_nazivM(id);
+            if (naziv != "")
+            {
+                return Ok(naziv);
+            }
+            else
+            {
+                return BadRequest("Greska");
+            }
         }
     }
 }

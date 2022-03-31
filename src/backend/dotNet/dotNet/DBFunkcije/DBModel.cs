@@ -32,21 +32,22 @@ namespace dotNet.DBFunkcije
             connect.Close();
             return result;
         }
-        public bool proveriModel(string ime, int id)
+        public int proveriModel(string ime, int id)
         {
             connect.Open();
             string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@naziv", ime);
             cmd.Parameters.AddWithValue("@vlasnik", id);
-
-            if (cmd.ExecuteNonQuery() > 0)
+            MySqlDataReader r = cmd.ExecuteReader();
+            if (r.Read())
             {
+                int idm = r.GetInt32("id");
                 connect.Close();
-                return true;
+                return idm;
             }
             connect.Close();
-            return false;
+            return -1;
         }
         public bool dodajModel(string ime, int id)
         {
@@ -70,7 +71,8 @@ namespace dotNet.DBFunkcije
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@ime", ime);
             cmd.Parameters.AddWithValue("@id", id);
-            if (cmd.ExecuteNonQuery() > 0)
+            MySqlDataReader read = cmd.ExecuteReader();
+            if (read.Read())
             {
                 connect.Close();
                 return true;
@@ -114,6 +116,7 @@ namespace dotNet.DBFunkcije
                     HiddenLayers(reader.GetString("HiddenLayers")), 
                     aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
                     RegularizationMethod.L1,
+                    0.0f,
                     LossFunction.L1Loss,
                     Optimizer.Adam
                     );
@@ -154,6 +157,31 @@ namespace dotNet.DBFunkcije
                 }
             }
             return funkcije.ToArray();
+        }
+
+        public string uzmi_nazivM(int id)
+        {
+            try
+            {
+                connect.Open();
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Console.WriteLine("OK");
+                    String naziv = reader.GetString("naziv");
+                    connect.Close();
+                    return naziv;
+                }
+                connect.Close();
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return uzmi_nazivM(id);
+            }
         }
     }
 }
