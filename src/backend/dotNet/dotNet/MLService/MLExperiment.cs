@@ -194,6 +194,25 @@ namespace dotNet.MLService {
             connection.Send(EncodeIntArray(columns));
         }
 
+        // Outliers
+        public void RemoveOutliersStandardDeviation(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersStandardDeviation);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
+        public void RemoveOutliersQuantiles(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersQuantiles);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
+        public void RemoveOutliersZScore(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersZScore);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
         // ///////////// //
         // Data analysis //
         // ///////////// //
@@ -287,6 +306,9 @@ namespace dotNet.MLService {
         ScaleAbsoluteMax,
         ScaleMinMax,
         ScaleZScore,
+        RemoveOutliersStandardDeviation,
+        RemoveOutliersQuantiles,
+        RemoveOutliersZScore,
         // Data analysis
         NumericalStatistics,
         CategoricalStatistics,

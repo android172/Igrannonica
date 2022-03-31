@@ -1,10 +1,13 @@
-from base64 import encode
 import random
 import pandas as pd
+
+import numpy as np
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
+from scipy import stats
+
 from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
 
@@ -210,6 +213,20 @@ class MLData:
         for ci in columns:
             column = self.dataset.iloc[:, ci]
             self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()
+        
+    # Outlier detection    
+    def standard_deviation_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[(np.abs(sub_df - sub_df.mean()) < treshold * sub_df.std()).all(axis=1)]
+    
+    def quantile_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[((sub_df > sub_df.quantile(treshold)) & (sub_df < sub_df.quantile(1 - treshold))).all(axis=1)]
+    
+    def z_score_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[(np.abs(stats.zscore(sub_df)) < treshold).all(axis=1)]
+    
             
     # ######## #
     # Analysis #
