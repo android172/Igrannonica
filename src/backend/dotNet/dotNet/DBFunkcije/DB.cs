@@ -16,5 +16,15 @@ namespace dotNet.DBFunkcije
             dbkorisnik = new DBKorisnik(connection.Connection);
             dbmodel = new DBModel(connection.Connection);
         }
+        public DB()
+        {
+            if (DatabaseConnection.config != null)
+            {
+                DatabaseConnection connection = DatabaseConnection.Instance;
+                dbeksperiment = new DBEksperiment(connection.Connection);
+                dbkorisnik = new DBKorisnik(connection.Connection);
+                dbmodel = new DBModel(connection.Connection);
+            }
+        }
     }
 }

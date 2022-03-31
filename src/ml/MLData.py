@@ -1,11 +1,17 @@
-from base64 import encode
 import random
 import pandas as pd
+
+import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import  KNeighborsClassifier
+from scipy import stats
+from sklearn.svm import OneClassSVM
+
+from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
@@ -19,14 +25,6 @@ class MLData:
         self.train_indices  = None
         self.test_indices   = None
         self.column_types   = None
-        
-    def get_train_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns]) 
-                for i in self.train_indices]
-    
-    def get_test_dataset(self):
-        return [(self.dataset.iloc[i, self.input_columns], self.dataset.iloc[i, self.output_columns])
-                for i in self.test_indices]
     
     # Load dataset
     def load_from_csv(self, path):
@@ -51,7 +49,7 @@ class MLData:
     # Train test splits
     def random_train_test_split(self, ratio):
         dataset_length = self.dataset.shape[0]
-        split_point = int(dataset_length * ratio)
+        split_point = int(dataset_length * (1.0 - ratio))
         
         # Initialize index lists
         index_list = [i for i in range(dataset_length)]
@@ -67,11 +65,30 @@ class MLData:
     # Data access #
     # ########### #
     
+    def get_train_dataset(self):
+        train_data = []
+        for i in self.train_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            train_data.append((x, y))
+        return train_data
+    
+    def get_test_dataset(self):
+        test_data = []
+        for i in self.test_indices:
+            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
+            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+            test_data.append((x, y))
+        return test_data
+    
     def get_rows(self, rows):
         return self.dataset.iloc[rows]
     
     def get_row_count(self):
         return self.dataset.shape[0]
+    
+    def get_column_types(self):
+        return [str(i) for i in self.dataset.dtypes]
     
     # ################# #
     # Data manipulation #
@@ -179,7 +196,7 @@ class MLData:
     def one_hot_encode_columns(self, columns):
         encoder = OneHotEncoder()
         result = encoder.fit_transform(self.dataset.iloc[:, columns]).toarray()
-        new_columns = [self.dataset.columns[columns[i]] + group 
+        new_columns = [self.dataset.columns[columns[i]] + str(group) 
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
@@ -199,11 +216,43 @@ class MLData:
         for ci in columns:
             column = self.dataset.iloc[:, ci]
             self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()
+        
+    # Outlier detection    
+    def standard_deviation_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[(np.abs(sub_df - sub_df.mean()) < treshold * sub_df.std()).all(axis=1)]
+    
+    def quantile_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[((sub_df > sub_df.quantile(treshold)) & (sub_df < sub_df.quantile(1 - treshold))).all(axis=1)]
+    
+    def z_score_outlier_removal(self, columns, treshold):
+        sub_df = self.dataset.iloc[:, columns]
+        self.dataset = self.dataset[(np.abs(stats.zscore(sub_df)) < treshold).all(axis=1)]
+        
+    def iqr_outlier_removal(self, columns):
+        sub_df = self.dataset.iloc[:, columns]
+        
+        q1 = sub_df.quantile(0.25)
+        q3 = sub_df.quantile(0.75)
+        iqr = 1.5 * (q3 - q1)
+        self.dataset = self.dataset[((sub_df > q1 - iqr) & (sub_df < q3 + iqr)).all(axis=1)]
+    
+    def isolation_forest_outlier_removal(self, columns):
+        rows = IsolationForest().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+        
+    def one_class_svm_outlier_removal(self, columns):
+        rows = OneClassSVM().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+    
+    def local_outlier_factor_outlier_removal(self, columns):
+        rows = LocalOutlierFactor().fit_predict(self.dataset.iloc[:, columns])
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
             
     # ######## #
     # Analysis #
     # ######## #
-    
     def get_numerical_statistics(self, columns):
         column_names = self.dataset.columns[columns]
         
@@ -227,7 +276,7 @@ class MLData:
                 quantiles_75  = description[column]['75%'],
                 min           = description[column]['min'],
                 max           = description[column]['max']
-                )
+                ).__dict__
             
         return statistics
     
@@ -260,6 +309,6 @@ class MLData:
                 unique_count = unique_counts[column],
                 most_common  = most_common,
                 frequencies  = five_most_frequent
-            )
+            ).__dict__
     
         return statistics

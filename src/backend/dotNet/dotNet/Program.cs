@@ -1,3 +1,4 @@
+using dotNet.SingalR;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
+builder.Services.AddSignalR();
 
 
 builder.Services.AddControllers().AddFluentValidation(fv =>
@@ -22,7 +24,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
     {
-        builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -61,6 +63,8 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
+
 app.MapControllers();
+app.MapHub<EksperimentHub>("/hub");
 
 app.Run();

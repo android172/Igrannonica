@@ -74,6 +74,13 @@ class MLClientInstance(Thread):
                 self.connection.send(count)
                 
                 print(f"Row count ({count}) requested.")
+                
+            elif received == 'GetColumnTypes':
+                column_types = network.data.get_column_types()
+                print(column_types)
+                self.connection.send(json.dumps(column_types))
+                
+                print(f"Column types requested.")
             
             # Data manipulation : CRUD operation #
             
@@ -277,6 +284,69 @@ class MLClientInstance(Thread):
                 network.data.z_score_scaling(columns)
                 
                 print(f"Columns {columns} were z-score scaled.")
+                
+            # Data manipulation : Outliers #
+            elif received == 'RemoveOutliersStandardDeviation':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.standard_deviation_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using standard deviation method.')
+            
+            elif received == 'RemoveOutliersQuantiles':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.quantile_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using quantiles method.')
+            
+            elif received == 'RemoveOutliersZScore':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                # Receive treshold
+                treshold = float(self.connection.receive())
+                network.data.z_score_outlier_removal(columns, treshold)
+                
+                print(f'Outliers removed from columns {columns} using z-score method.')
+            
+            elif received == 'RemoveOutliersIQR':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.iqr_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using inter-quantile range method.')
+            
+            elif received == 'RemoveOutliersIsolationForest':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.isolation_forest_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using isolation forest method.')
+            
+            elif received == 'RemoveOutliersOneClassSVM':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.one_class_svm_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using one class svm method.')
+                
+            elif received == 'RemoveOutliersByLocalFactor':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                network.data.local_outlier_factor_outlier_removal(columns)
+                
+                print(f'Outliers removed from columns {columns} using local outlier factor method.')
             
             # Data analysis #
             elif received == 'NumericalStatistics':
@@ -284,7 +354,7 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_numerical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Numerical statistics computed for columns {columns}.")
                 
@@ -293,11 +363,39 @@ class MLClientInstance(Thread):
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
                 statistics = network.data.get_categorical_statistics(columns)
-                self.connection.send(json.dumps({k:v.__dict__ for k, v in statistics.items()}))
+                self.connection.send(json.dumps(statistics))
                 
                 print(f"Categorical statistics computed for columns {columns}.")
             
+            elif received == 'AllStatistics':
+                numerical_columns = []
+                categorical_columns = []
+                for i, column_type in enumerate(network.data.get_column_types()):
+                    if column_type == 'object':
+                        categorical_columns.append(i)
+                    else:
+                        numerical_columns.append(i)
+                
+                statistics = {k:v for k, v in network.data.get_numerical_statistics(numerical_columns).items()}
+                for k, v in network.data.get_categorical_statistics(categorical_columns).items():
+                    statistics[k] = v
+                
+                self.connection.send(json.dumps(statistics))
+                
+                print(f"Categorical and Numerical statistics computed for all columns.")
+            
             # Working with networks #
+            elif received == 'ComputeMetrics':
+                if network.isRegression:
+                    train = network.compute_regression_statistics("train")
+                    test = network.compute_regression_statistics("test")
+                else:
+                    train = network.compute_classification_statistics("train")
+                    test = network.compute_classification_statistics("test")
+                self.connection.send(json.dumps({"test": test, "train": train}))
+                
+                print("Network statistics requested.")
+            
             elif received == 'ChangeSettings':
                 # Receive settings to change to
                 settingsString = self.connection.receive()
@@ -308,15 +406,11 @@ class MLClientInstance(Thread):
                 
             elif received == 'Start':
                 # Initialize random data if no dataset is selected
-                if True:
+                if network.data.dataset is None:
                     network.initialize_random_data()
                 # Train
+                print("Traning commences.")
                 network.train()
-                # Return scores
-                train_acc = network.get_accuracy("train")
-                test_acc = network.get_accuracy("test")
-                print(f"Accuracy for 'train' dataset : {train_acc}")
-                print(f"Accuracy for 'test' dataset : {test_acc}")
-                self.connection.send(f"{train_acc}:{test_acc}")
                 
-                # print("")
+                print("Traning complete.")
+                

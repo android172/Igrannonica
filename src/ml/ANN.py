@@ -1,12 +1,19 @@
 
+from math import sqrt
 import random
+import statistics
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
+from sklearn import metrics
+
 from MLData import MLData
+from StatisticsClassification import StatisticsClassification
+from StatisticsRegression import StatisticsRegression
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -61,6 +68,9 @@ class ANN:
         self.input_size    = annSettings.inputSize
         self.output_size   = annSettings.outputSize
         num_of_layers  = len(annSettings.hiddenLayers)
+        
+        # Load problem type
+        self.isRegression = annSettings.problemType == 0
          
         # Create ANN according to the given settings
         model = NN().to(device)
@@ -71,7 +81,7 @@ class ANN:
             previous_layer = annSettings.hiddenLayers[i]
             
             activation_function = annSettings.activationFunctions[i]
-            if activation_function == 0:
+            if   activation_function == 0:
                 model.add_module(f"ReLU[{i}]", nn.ReLU())
             elif activation_function == 1:
                 model.add_module(f"LeakyReLU[{i}]", nn.LeakyReLU())
@@ -89,43 +99,29 @@ class ANN:
         self.test_loader  = None 
         
         # Loss function
-        self.criterion = nn.CrossEntropyLoss()
+        if   annSettings.lossFunction == 0:
+            self.criterion = nn.L1Loss()
+        elif annSettings.lossFunction == 1:
+            self.criterion = nn.MSELoss()
+        else:
+            self.criterion = nn.CrossEntropyLoss()
+            
+        # Regularization
+        self.regularization_method = annSettings.regularization
+        self.regularization_rate = annSettings.regularizationRate
+        weight_decay = 0
+        if self.regularization_method == 1:
+            weight_decay = self.regularization_rate
         
         # Optimization algortham
-        self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
-    
-    # Metrics
-    def get_accuracy(self, dataset):
-        if self.train_loader is None:
-            self.initialize_loaders()
-            
-        if   dataset == "train":
-            loader = self.train_loader
-        elif dataset == "test":
-            loader = self.test_loader
+        if   annSettings.optimizer == 0:
+            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif annSettings.optimizer == 1:
+            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif annSettings.optimizer == 2:
+            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         else:
-            return
-        
-        num_correct = 0
-        num_samples = 0
-        
-        self.model.eval()
-        
-        with torch.no_grad():
-            for x, y in loader:
-                x = x.to(device)
-                y = y.to(device)
-                x = x.reshape(x.shape[0], -1)
-                
-                scores = self.model(x)
-                _, predictions = scores.max(1)
-                
-                num_correct += (predictions == y).sum()
-                num_samples += predictions.size(0)
-            
-        self.model.train()
-        
-        return num_correct / num_samples
+            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
     
     # Training
     def train(self):
@@ -143,11 +139,118 @@ class ANN:
                 scores = self.model.forward(data)
                 loss = self.criterion(scores, target)
                 
+                if self.regularization_method == 0:
+                    L1_reg = torch.tensor(0., requires_grad=True)
+                    for name, param in self.model.named_parameters():
+                        if 'weight' in name:
+                            L1_reg = L1_reg + torch.norm(param, 1)
+                    loss += self.regularization_rate * L1_reg
+                
                 # Backwards
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
     
+    # Metrics
+    def compute_regression_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = [[] for _ in range(self.output_size)]
+        predicted = [[] for _ in range(self.output_size)]
+        
+        n = self.data.get_row_count()
+        p = self.input_size
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                y_p = self.model(x)
+                
+                for i in range(self.output_size):
+                    actual[i].extend([j[i] for j in y.tolist()])
+                    predicted[i].extend([j[i] for j in y_p.tolist()])
+                
+        self.model.train()
+        
+        statistics = {}
+        for i in range(self.output_size):
+            mae = metrics.mean_absolute_error(actual[i], predicted[i])
+            mse = metrics.mean_squared_error(actual[i], predicted[i])
+            rse = sqrt(mse * (n / (n - p - 1)))
+            r2 = metrics.r2_score(actual[i], predicted[i])
+            adjustedR2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+            
+            statistics[i] = StatisticsRegression(
+                mae,
+                mse,
+                rse,
+                r2,
+                adjustedR2
+            ).__dict__
+        return statistics
+    
+    def compute_classification_statistics(self, dataset):
+        if self.train_loader is None:
+            self.initialize_loaders()
+            
+        if   dataset == "train":
+            loader = self.train_loader
+        elif dataset == "test":
+            loader = self.test_loader
+        else:
+            return
+        
+        actual = []
+        predicted = []
+        
+        self.model.eval()
+        
+        with torch.no_grad():
+            for x, y in loader:
+                x = x.to(device)
+                y = y.to(device)
+                x = x.reshape(x.shape[0], -1)
+                
+                scores = self.model(x)
+                _, y_p = scores.max(1)
+                
+                actual.extend([i.index(max(i)) for i in y.tolist()])
+                predicted.extend(y_p.tolist())
+                
+        self.model.train()
+        
+        Accuracy         = metrics.accuracy_score(actual, predicted)
+        BalancedAccuracy = metrics.balanced_accuracy_score(actual, predicted)
+        Precision        = metrics.precision_score(actual, predicted)
+        Recall           = metrics.recall_score(actual, predicted)
+        F1Score          = metrics.f1_score(actual, predicted)
+        HammingLoss      = metrics.hamming_loss(actual, predicted)
+        CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        ConfusionMatrix  = metrics.confusion_matrix(actual, predicted)
+        
+        return StatisticsClassification(
+            Accuracy         = Accuracy,
+            BalancedAccuracy = BalancedAccuracy,
+            Precision        = Precision,
+            Recall           = Recall,
+            F1Score          = F1Score,
+            HammingLoss      = HammingLoss,
+            CrossEntropyLoss = CrossEntropyLoss,
+            ConfusionMatrix  = ConfusionMatrix
+        ).__dict__
     
 class NN(nn.Module):
     def __init__(self) -> None:

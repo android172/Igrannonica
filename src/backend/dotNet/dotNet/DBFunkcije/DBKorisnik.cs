@@ -23,11 +23,12 @@ namespace dotNet.DBFunkcije
             if (reader.Read())
             {
                 Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                reader.Dispose();
                 connect.Close();
                 return rezultat;
             }
+            reader.Dispose();
             connect.Close();
-
             return null;
         }
         public Korisnik dajKorisnika(string KorisnickoIme, string sifra)
@@ -41,9 +42,11 @@ namespace dotNet.DBFunkcije
             if (reader.Read())
             {
                 Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                reader.Dispose();
                 connect.Close();
                 return rezultat;
             }
+            reader.Dispose();
             connect.Close();
             return null;
         }
@@ -83,6 +86,7 @@ namespace dotNet.DBFunkcije
             {
                 korisnikValid.korisnickoIme = true;
             }
+            reader.Dispose();
             connect.Close();
 
             connect.Open();
@@ -100,7 +104,7 @@ namespace dotNet.DBFunkcije
             {
                 korisnikValid.email = true;
             }
-
+            reader.Dispose();
             connect.Close();
 
             if (korisnikValid.korisnickoIme && korisnikValid.email)
@@ -134,6 +138,7 @@ namespace dotNet.DBFunkcije
             {
                 rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
             }
+            reader.Dispose();
             connect.Close();
             return rezultat;
         }
@@ -147,9 +152,11 @@ namespace dotNet.DBFunkcije
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
+                reader.Dispose();
                 connect.Close();
                 return true;
             }
+            reader.Dispose();
             connect.Close();
             return false;
         }
@@ -163,9 +170,11 @@ namespace dotNet.DBFunkcije
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
+                reader.Dispose();
                 connect.Close();
                 return true;
             }
+            reader.Dispose();
             connect.Close();
             return false;
         }

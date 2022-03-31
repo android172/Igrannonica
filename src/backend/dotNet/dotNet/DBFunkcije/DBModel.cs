@@ -29,24 +29,36 @@ namespace dotNet.DBFunkcije
                 ex.UpdatedDate = reader.GetDateTime("obnovljen");
                 result.Add(ex);
             }
+            reader.Dispose();
             connect.Close();
             return result;
         }
-        public bool proveriModel(string ime, int id)
+        public int proveriModel(string ime, int id)
         {
+            try
+            {
+
             connect.Open();
             string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@naziv", ime);
             cmd.Parameters.AddWithValue("@vlasnik", id);
-
-            if (cmd.ExecuteNonQuery() > 0)
+            MySqlDataReader r = cmd.ExecuteReader();
+            if (r.Read())
             {
+                int idm = r.GetInt32("id");
+                r.Dispose();
                 connect.Close();
-                return true;
+                return idm;
             }
+            r.Dispose();
             connect.Close();
-            return false;
+            return -1;
+            }
+            catch(Exception ex)
+            {
+                return proveriModel(ime, id);
+            }
         }
         public bool dodajModel(string ime, int id)
         {
@@ -58,6 +70,7 @@ namespace dotNet.DBFunkcije
             if (cmd.ExecuteNonQuery() > 0)
             {
                 connect.Close();
+                dodajPodesavanja(proveriModel(ime,id));
                 return true;
             }
             connect.Close();
@@ -70,11 +83,14 @@ namespace dotNet.DBFunkcije
             MySqlCommand cmd = new MySqlCommand(query, connect);
             cmd.Parameters.AddWithValue("@ime", ime);
             cmd.Parameters.AddWithValue("@id", id);
-            if (cmd.ExecuteNonQuery() > 0)
+            MySqlDataReader read = cmd.ExecuteReader();
+            if (read.Read())
             {
+                read.Dispose();
                 connect.Close();
                 return true;
             }
+            read.Dispose();
             connect.Close();
             return false;
         }
@@ -94,6 +110,9 @@ namespace dotNet.DBFunkcije
         }
         public ANNSettings podesavanja(int id)
         {
+            try
+            {
+
             connect.Open();
             string query = "select * from podesavanja where id=@id";
             MySqlCommand cmd = new MySqlCommand(query, connect);
@@ -104,15 +123,50 @@ namespace dotNet.DBFunkcije
                 ProblemType fun;
                 if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
                 else fun = ProblemType.Classification;
-                ANNSettings settings = new ANNSettings(fun, reader.GetFloat("LearningRate"), reader.GetInt32("BatchSize"),
-                    reader.GetInt32("numberOfEpochs"), reader.GetInt32("inputSize"), reader.GetInt32("OutputSize"),
-                    HiddenLayers(reader.GetString("HiddenLayers")), aktivacionefunkcije(reader.GetString("aktivacionefunkcije")));
+                ANNSettings settings = new ANNSettings(
+                    fun, 
+                    reader.GetFloat("LearningRate"), 
+                    reader.GetInt32("BatchSize"),
+                    reader.GetInt32("numberOfEpochs"), 
+                    reader.GetInt32("inputSize"), 
+                    reader.GetInt32("OutputSize"),
+                    HiddenLayers(reader.GetString("HiddenLayers")), 
+                    aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
+                    Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
+                    reader.GetFloat("RegularizationRate"),
+                    Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
+                    Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
+                    );
+                reader.Dispose();
                 connect.Close();
                 return settings;
             }
+            reader.Dispose();
             connect.Close();
             return null;
+            }
+            catch (Exception ex)
+            {
+                return podesavanja(id);
+            }
         }
+        public void dodajPodesavanja(int id)
+        {
+            try
+            {
+
+                connect.Open();
+                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam',5);";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+
         private int[] HiddenLayers(string niz)
         {
             List<int> hiddenLayers = new List<int>();
@@ -144,6 +198,33 @@ namespace dotNet.DBFunkcije
                 }
             }
             return funkcije.ToArray();
+        }
+
+        public string uzmi_nazivM(int id)
+        {
+            try
+            {
+                connect.Open();
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Console.WriteLine("OK");
+                    String naziv = reader.GetString("naziv");
+                    reader.Dispose();
+                    connect.Close();
+                    return naziv;
+                }
+                reader.Dispose();
+                connect.Close();
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return uzmi_nazivM(id);
+            }
         }
     }
 }

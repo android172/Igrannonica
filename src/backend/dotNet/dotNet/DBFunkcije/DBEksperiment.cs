@@ -29,6 +29,7 @@ namespace dotNet.DBFunkcije
                 result.Add(ex);
 
             }
+            reader.Dispose();
             connect.Close();
             return result;
         }
@@ -44,9 +45,11 @@ namespace dotNet.DBFunkcije
             if (reader.Read())
             {
                 int id1 = reader.GetInt32("id");
+                reader.Dispose();
                 connect.Close();
                 return id1;
             }
+            reader.Dispose();
             connect.Close();
             return -1;
         }
@@ -74,6 +77,52 @@ namespace dotNet.DBFunkcije
             cmd.Parameters.AddWithValue("@vlasnik", id);
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
+            {
+                reader.Dispose();
+                connect.Close();
+                return true;
+            }
+            reader.Dispose();
+            connect.Close();
+            return false;
+        }
+
+        public string uzmi_naziv(int id)
+        {
+            try
+            {
+                connect.Open();
+                string query = "select * from eksperiment where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connect);
+                cmd.Parameters.AddWithValue("@id", id);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    Console.WriteLine("OK");
+                    String naziv = reader.GetString("Naziv");
+                    reader.Dispose();
+                    connect.Close();
+                    return naziv;
+                }
+                reader.Dispose();
+                connect.Close();
+                return "";
+            }
+            catch(Exception ex)
+            {
+                return uzmi_naziv(id);
+            }
+        }
+
+        public bool dodajCsv(int id, string naziv)
+        {
+            connect.Open();
+            string query = "update eksperiment set csv=@naziv where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", naziv);
+            cmd.Parameters.AddWithValue("@id", id);
+            //MySqlDataReader reader = cmd.ExecuteNonQuery();
+            if (cmd.ExecuteNonQuery()>0)
             {
                 connect.Close();
                 return true;

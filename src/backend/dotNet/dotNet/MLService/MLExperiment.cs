@@ -53,6 +53,11 @@ namespace dotNet.MLService {
             return int.Parse(connection.Receive());
         }
 
+        public string GetColumnTypes() {
+            connection.Send(Command.GetColumnTypes);
+            return connection.Receive();
+        }
+
         // ///////////////// //
         // Data manipulation //
         // ///////////////// //
@@ -189,41 +194,85 @@ namespace dotNet.MLService {
             connection.Send(EncodeIntArray(columns));
         }
 
+        // Outliers
+        public void RemoveOutliersStandardDeviation(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersStandardDeviation);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
+        public void RemoveOutliersQuantiles(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersQuantiles);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
+        public void RemoveOutliersZScore(int[] columns, float treshold) {
+            connection.Send(Command.RemoveOutliersZScore);
+            connection.Send(EncodeIntArray(columns));
+            connection.Send(treshold);
+        }
+
+        public void RemoveOutliersIQR(int[] columns) {
+            connection.Send(Command.RemoveOutliersIQR);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersIsolationForest(int[] columns) {
+            connection.Send(Command.RemoveOutliersIsolationForest);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersOneClassSVM(int[] columns)
+        {
+            connection.Send(Command.RemoveOutliersOneClassSVM);
+            connection.Send(EncodeIntArray(columns));
+        }
+
+        public void RemoveOutliersByLocalFactor(int[] columns)
+        {
+            connection.Send(Command.RemoveOutliersByLocalFactor);
+            connection.Send(EncodeIntArray(columns));
+        }
+
         // ///////////// //
         // Data analysis //
         // ///////////// //
 
         // Get column statistics
-        public Dictionary<string, StatisticsNumerical>? NumericalStatistics(int[] columns) {
+        public string NumericalStatistics(int[] columns) {
             connection.Send(Command.NumericalStatistics);
             connection.Send(EncodeIntArray(columns));
-            var statistics = StatisticsNumerical.Load(connection.Receive());
-            return statistics;
+            return connection.Receive();
         }
 
-        public Dictionary<string, StatisticsCategorical>? CategoricalStatistics(int[] columns) {
+        public string CategoricalStatistics(int[] columns) {
             connection.Send(Command.CategoricalStatistics);
             connection.Send(EncodeIntArray(columns));
-            var statistics = StatisticsCategorical.Load(connection.Receive());
-            return statistics;
+            return connection.Receive();
+        }
+
+        public string ColumnStatistics() {
+            connection.Send(Command.AllStatistics);
+            return connection.Receive();
         }
 
         // /////// //
         // Network //
         // /////// //
+
+        public string ComputeMetrics() {
+            connection.Send(Command.ComputeMetrics);
+            return connection.Receive();
+        }
+
         public void ApplySettings(ANNSettings annSettings) {
             connection.Send(Command.ChangeSettings);
             connection.Send(annSettings);
         }
 
-        public ClassificationMetrics Start() {
+        public void Start() {
             connection.Send(Command.Start);
-            string resultString = connection.Receive();
-            string[] results = resultString.Split(":");
-            return new ClassificationMetrics(
-                trainAccuracy: float.Parse(results[0]),
-                testAccuracy: float.Parse(results[1])
-            );
         }
 
         // Helper functions
@@ -253,6 +302,7 @@ namespace dotNet.MLService {
         // Data access
         GetRows,
         GetRowCount,
+        GetColumnTypes,
         // Data manipulation
         AddRow,
         AddRowToTest,
@@ -278,10 +328,19 @@ namespace dotNet.MLService {
         ScaleAbsoluteMax,
         ScaleMinMax,
         ScaleZScore,
+        RemoveOutliersStandardDeviation,
+        RemoveOutliersQuantiles,
+        RemoveOutliersZScore,
+        RemoveOutliersIQR,
+        RemoveOutliersIsolationForest,
+        RemoveOutliersOneClassSVM,
+        RemoveOutliersByLocalFactor,
         // Data analysis
         NumericalStatistics,
         CategoricalStatistics,
+        AllStatistics,
         // Network
+        ComputeMetrics,
         ChangeSettings,
         Start
     }
