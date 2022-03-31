@@ -1,48 +1,159 @@
-<input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+<div id="body1">
 
-<div class="file-upload">
 
-    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-        Učitaj podatke
-    </button>
+    <div id="header1">
 
-    <span style="color:white; margin-left: 10px;">{{fileName || "Podaci nisu učitani."}}</span>
+        <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+        <div class="file-upload okvir2">
+
+            <button mat-mini-fab color="primary" id="ucitaj1" class="upload-btn" (click)="fileUpload.click()">
+                Učitaj podatke
+            </button>
+            <div id="okvir1">
+            <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span><span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span></span>
+            </div>
+        </div>
+
+
+        <div id="brojRedovaTabelePoruka" style="color: white;">
+            <div id="odabir-redova">Broj redova za prikaz:</div>
+            <span>
+                <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
+                    <option value="5">5</option>
+                    <option selected value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </span>
+        </div>
+
+        <div id="desnielement">
+            <div id="naziveksperimenta">Naziv Eksperimenta</div>
+            <button id="sacuvajizmene">Sačuvaj izmene</button> 
+        </div>
+        
+    </div>
+
+
+    <div id="box">
+        <div id="testniskup" class="p1 placement">
+            <div>Testni skup</div>
+
+            <select id="testniskup-menu">
+                <option value="Učitaj testni skup">Učitaj testni skup</option>
+                <option value="Proizvoljan unos vrednosti">Proizvoljan unos vrednosti</option>
+            </select>
+
+            <div id="testniskup-comp">
+
+                <div id="unos-fajla">
+                    <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+
+                    <div class="file-upload okvir2">
+
+                        <button mat-mini-fab color="primary" id="ucitaj-testniskup" class="upload-btn" (click)="fileUpload.click()">
+                            Učitaj podatke
+                        </button>                 
+                    <span style="color:white; margin-left: 10px; text-align: center; position:absolute; left:200px; top:530px;">{{fileName || "Podaci nisu učitani."}} &nbsp;</span>   
+                </div>
+                </div>
+
+                <div id="proizvoljan-unos">
+
+                </div>
+            </div>
+        </div>
+        <div id="nedostajucevrednosti" class="placement">
+            <div>Nedostajuće vrednosti</div>
+            <div id="select-elements">
+                <select id="Zamena">
+                    <option value="Zameni sa mean u koloni">Zameni sa mean u koloni</option>
+                    <option value="Zameni sa median u koloni">Zameni sa median u koloni</option>
+                    <option value="Zameni sa mode u koloni">Zameni sa mode u koloni</option>
+
+                </select>
+                <select id="Brisanje">
+                    <option value="Izbaci sve vrste">Izbaci sve vrste</option>
+                    <option value="Izbaci sve kolone">Izbaci sve kolone</option>
+                    <option value="Izbaci vrste za izabrane kolone">Izbaci vrste za izabrane kolone</option>
+
+                </select>
+            </div>
+           <div id="prazni-string">
+                <div>Zamena praznih stringova sa NA za zeljene kolone:</div>
+                <button id="b1">Primeni</button> 
+           </div>
+            
+           <div id="zamena-nula">
+                <div>Zamena 0 sa NA za zeljene kolone:</div>
+                <button id="b2">Primeni</button> 
+           </div>
+
+           <div id="nova-kategorija">
+                <div>Dodaj novu kategoriju:</div>
+                <button id="b3">Nova kategorija</button>  
+           </div>
+            
+        </div>
+        <div id="enkodiranje" class="p2 placement">
+            <div>Enkodiranje</div>
+            <button id="b4" (click)="labelEncoding()">LabelEncode</button> 
+            <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
+        </div>
+    </div>
+
+    <div id="tabela-statistika">
+        <div page>
+            <div id="table">
+                <table>
+                    <tr class="head-table">
+                        <th *ngFor="let header of dajHeadere();  let j = index">
+                            <button class="tr-button" (click)="getData(j)">  {{header}} </button>
+                        </th>
+                    </tr>
+                    <tr class="trbody" *ngFor="let red of json | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                    };  index as i">
+                        <td *ngFor="let fieldValue of dajRed(i)">
+                        {{fieldValue}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <pagination-controls *ngIf="this.json != undefined"
+            class="pagi"
+            (pageChange)="gty(page = $event)"
+            ></pagination-controls>
+        </div>
+
+        <div id="statistika" style="overflow-y: auto">
+            <div id="statNaslov">Statisticki pokazatelji</div>
+            <div *ngFor="let key of keys" >
+                <div id="imeKolone">{{key}}</div>
+                <div id="statistikaKolone" *ngFor="let item of numerickaS[key] | keyvalue;">
+                    <ul id="ulStat">
+                        <li>
+                            <span>
+                                {{item.key}}: &nbsp; {{item.value}}
+                            </span>
+                        </li>
+                    </ul> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
+    <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
+    <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
+    <div id="tracker">
+        <p *ngIf="this.track != undefined"> {{this.track}}</p>
+    </div>
+
 </div>
-<div id="porukaGreske"></div>
-
-<div id="brojRedovaTabelePoruka" style="color: white;">Odaberite broj redova za prikaz:
-    <span>
-        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
-            <option value="5">5</option>
-            <option selected value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </span>
-</div>
-
-<div id="table">
-    <table>
-        <tr>
-            <th *ngFor="let header of dajHeadere();">
-                {{header}}
-            </th>
-        </tr>
-        <tr *ngFor="let red of json | paginate
-        : {
-            itemsPerPage: itemsPerPage,
-            currentPage: page,
-            totalItems: totalItems
-          };  index as i">
-            <td *ngFor="let fieldValue of dajRed(i)">
-              {{fieldValue}}
-            </td>
-        </tr>
-    </table>
-</div>
-
-<pagination-controls *ngIf="this.json != undefined"
-  class="pagi"
-  (pageChange)="gty(page = $event)"  
-></pagination-controls>

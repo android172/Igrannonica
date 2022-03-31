@@ -107,5 +107,21 @@ namespace dotNet.DBFunkcije
             }
         }
 
+        public bool dodajCsv(int id, string naziv)
+        {
+            connect.Open();
+            string query = "update eksperiment set csv=@naziv where id=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connect);
+            cmd.Parameters.AddWithValue("@naziv", naziv);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                connect.Close();
+                return true;
+            }
+            connect.Close();
+            return false;
+        }
     }
 }

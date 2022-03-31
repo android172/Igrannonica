@@ -9,23 +9,504 @@
     bottom: 0;
 }
 
-#table
-{
-    margin-top: 20px;
-    background-color: white;
-}
-
 #porukaGreske
-{
+{/*
     color: #D74971;
+    position: absolute;
+    left: 300px;*/
+    width: 15px;
+    height: 15px;
 }
+img{
+    width: 12px;
+}
+.nonvisible-y{
+    visibility: hidden;
+}
+.nonvisible-n{
+    visibility: hidden;
+}
+.visible-y{
 
+    visibility: visible;
+}
+.visible-n{
+    visibility: visible;
+}
 #brojRedovaTabele, #brojRedovaTabelePoruka
 {
-    visibility: hidden;
+    visibility: hidden; /* hidden*/
 }
 
 .pagi
 {
+    color: rgb(184, 195, 255);
+    position: relative;
+    left: 240px;
+    font-size: larger;
+}
+
+#brojRedovaTabelePoruka{
+    position: static;
+    left: 300px;
+    width: 15%;
+    color: #CED9FF;
+}
+#odabir-redova{
+    width: 100%;
+    color: #CED9FF;
+}
+#brojRedovaTabele{ 
+    background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
+}
+
+/*********** TRACKER ***************/ 
+
+#tracker{
+    margin-top: 20px;
+    background-color: #15151f;
+    border: 4px solid #5977DF;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: rgb(180, 180, 180);
+    width: 932px;
+    height: 70px;
+    overflow-y: scroll;
+}
+#tracker::-webkit-scrollbar-track{
+    background-color: #15151f;
+    
+}
+#tracker::-webkit-scrollbar-thumb{
+    background-color: #38395f;
+    
+}
+#tracker::-webkit-scrollbar-corner{
+    background-color: #15151f;
+}    
+
+#tracker::-webkit-scrollbar{
+    width: 10px;
+    
+}
+
+#restore-columns{
     color: white;
+    background-color: rgb(50, 50, 114);
+    border: 1px solid rgb(33, 33, 78);
+    border-radius: 5px;
+}
+
+#clear-tracker{
+    color: white;
+    background-color: rgb(114, 76, 50);
+    border: 1px solid rgb(78, 55, 33);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+#selektovane-kolone{
+    color: white;
+    background-color: rgb(114, 50, 111);
+    border: 1px solid rgb(78, 33, 74);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+/* ---------------------   TABELA  ----------------------  */ 
+#tabela-statistika{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+#table
+{
+    margin-top: 20px;
+    background-color: #272741;
+    border: 4px solid #5977DF;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: white;
+    width: 932px;
+    overflow: scroll;
+    max-height: 542px;
+    min-height: 542px;
+  
+}
+#table::-webkit-scrollbar{
+    width: 10px;
+    
+}
+#table::-webkit-scrollbar-track{
+    background-color: #272741;
+    
+}
+#table::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+#table::-webkit-scrollbar-thumb{
+    background-color: #38395f;
+    
+}
+
+#table th{
+    color: #a7baff;
+    text-align: left;
+}
+td {
+    padding: 12px 10px;
+}
+th{
+    padding: 12px 10px;
+    position: sticky;
+    top: 0;
+    background-color: #272741;
+}
+.tr-button{
+    transition: box-shadow .2s;
+    background: transparent;
+    border: none !important;
+    color: #a7baff;
+}
+.tr-button:hover{
+    border: 1px solid rgb(255, 69, 100);
+    border-radius: 10px; 
+    box-shadow: 0px 0px 10px 5px rgba(255, 18, 89, 0.349); 
+}
+.tr-button:active{
+    background-color: rgba(255, 18, 89, 0.349);
+    color: rgb(196, 196, 196);
+}
+
+.trbody{
+    border-bottom: 1px solid rgb(122, 122, 122);
+}
+/*
+.head-table{
+    background-color: aqua;
+}
+*/
+
+#table tr:nth-of-type(even){
+    background-color: #424263;
+    color: #c1cdff;
+
+}
+
+/* -------------------------- PODACI ---------------------------------*/
+
+#body1{
+    width: 99%;
+   /* background-color: #D74971; */
+    margin: auto;
+    min-height: 60vh;
+}
+
+#naziveksperimenta{
+    /*float: right;*/
+    transition: box-shadow .2s;
+    min-width: 200px;
+    margin-right: 15px;
+    border: 3px solid rgb(37, 164, 214) ;
+    color: #CED9FF;
+    background-color: #272741;
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+#naziveksperimenta:hover{
+    box-shadow: 0px 0px 10px 5px rgba(33, 18, 255, 0.2); 
+}
+#desnielement{
+    width: 350px;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    margin: 1px 0;
+    float: right;
+}
+#box{
+    margin: 10px auto;
+    width: 100%;
+    text-align: center;
+    color: #CED9FF;
+    height: 300px;
+    align-items: center;
+    display: flex; 
+    justify-content: space-between;
+}
+
+.p1{
+    width: 350px;
+}
+.p2{
+    width: 300px;
+}
+.placement{
+    float: left;
+    height: 300px;
+}
+
+#testniskup,#enkodiranje,#nedostajucevrednosti{
+    background-color: #272741;
+    border: 4px solid #5977DF;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    font-size: 16px;
+}
+#nedostajucevrednosti{
+    width: 45.5%;
+    
+}
+#header1{
+    height: 50px;
+    /*float: left;*/
+    width: 100%;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+}
+
+#sacuvajizmene{
+    width: 120px;
+    height: 40px;
+    color: white;
+
+    background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%);
+    border: 1px solid #0a1024;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+#sacuvajizmene:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#ucitaj1{
+    padding: 5px;
+    align-items: center;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    background: rgb(202, 42, 80);
+    border: 3px solid rgba(243, 48, 95, 0.8);
+    color: white;
+    position: absolute;
+    z-index: 10;
+    width: 140px;
+}
+#ucitaj1:hover{
+    background: linear-gradient(to left, rgb(255, 59, 105), rgb(233, 58, 99), rgb(190, 47, 80) );
+}
+
+#okvir1{
+    border: 3px solid   #A2AFD2;
+    box-sizing: border-box;
+    text-align: right;
+    color: white;
+    border-radius: 10px;
+    position: absolute;
+    align-items: center;
+    z-index: 2;
+    height: 40px;
+    line-height: 35px;
+    min-width: 170px;
+    align-items: center;
+    left: 127px;
+    position: absolute;
+}
+
+.okvir2{
+    margin: 1px 0;
+}
+
+/* TESTNI SKUP - KOMPONENTE */
+
+#ucitaj-testniskup{
+    height: 35px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    background: rgb(114, 89, 206);
+    border: 3px solid rgba(45, 82, 99, 0.8);
+    color: white;
+    position: absolute;
+    z-index: 10;
+    width: 140px;
+    position: relative;
+}
+#ucitaj-testniskup:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#testniskup-menu{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 30px;
+    background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
+}
+
+/*   NEDOSTAJUCE VREDNOSTI */ 
+
+#Zamena, #Brisanje{
+    height: 30px;
+    background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
+    margin: 0 15px;
+}
+
+#select-elements{
+    margin: 20px auto auto 30px;
+    display: flex;
+}
+
+#prazni-string, #zamena-nula, #nova-kategorija{
+    display: flex;
+    margin-left: 35px;
+    padding: 10px;
+    line-height: 30px;
+}
+
+#prazni-string{
+    margin-top: 25px;
+}
+
+#b1,#b2{
+    margin-left: 10px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 100px;
+    line-height: 10px;
+    
+}
+#b3{
+    margin-left: 10px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 130px;
+    line-height: 10px;
+}
+#b1:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+#b2:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#b3:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+
+/* ENKODIRANJE */ 
+
+#b4, #b5{
+    margin: 50px auto auto auto;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 40px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 180px;
+}
+
+#b4:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#b5:hover{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+/*  ------------------------------  STATISTIKA ---------------------------------- */ 
+
+
+#statistika{
+    position: relative;
+    margin: 20px 0 auto 27px;
+    background-color: #272741;
+    border: 4px solid #5977DF;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: white;
+    width: 360px;
+    max-height: 540px;
+    /*min-height: 540px;*/
+}
+
+#statNaslov
+{
+    display: flex;
+    justify-content: center;
+    color: #CED9FF;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#imeKolone
+{
+    color: #F45E82;
+    margin-bottom: 15px;
+    font-size: 15px;
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-left: 5px;
+}
+
+#statistikaKolone
+{
+    line-height: 3px;
+}
+
+#ulStat
+{
+    list-style-type: none;
+}
+
+#statistika::-webkit-scrollbar{
+    width: 15px;
+}
+#statistika::-webkit-scrollbar-track{
+    background-color: #272741;
+    
+}
+#statistika::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+#statistika::-webkit-scrollbar-thumb{
+    background-color: #38395f;
 }

@@ -60,3 +60,6 @@
     z-index: 10;   
 }
   
+#podaci{
+    min-height: 500px;
+}
