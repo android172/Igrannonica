@@ -112,6 +112,26 @@ namespace dotNet.DBFunkcije
                 }
             }
         }
+        public string uzmi_naziv_csv(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from eksperiment where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Console.WriteLine("OK");
+                        string naziv = reader.GetString("csv");
+                        return naziv;
+                    }
+                    return "";
+                }
+            }
+        }
 
         public bool dodajCsv(int id, string naziv)
         {
