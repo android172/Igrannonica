@@ -12,18 +12,18 @@ namespace dotNet.DBFunkcije
             if(DatabaseConnection.config==null)
                 DatabaseConnection.config = config;
             DatabaseConnection connection = DatabaseConnection.Instance;
-            dbeksperiment = new DBEksperiment(connection.Connection);
-            dbkorisnik = new DBKorisnik(connection.Connection);
-            dbmodel = new DBModel(connection.Connection);
+            dbeksperiment = new DBEksperiment(config.GetConnectionString("connectionString"));
+            dbkorisnik = new DBKorisnik(config.GetConnectionString("connectionString"));
+            dbmodel = new DBModel(config.GetConnectionString("connectionString"));
         }
         public DB()
         {
             if (DatabaseConnection.config != null)
             {
                 DatabaseConnection connection = DatabaseConnection.Instance;
-                dbeksperiment = new DBEksperiment(connection.Connection);
-                dbkorisnik = new DBKorisnik(connection.Connection);
-                dbmodel = new DBModel(connection.Connection);
+                dbeksperiment = new DBEksperiment(DatabaseConnection.config.GetConnectionString("connectionString"));
+                dbkorisnik = new DBKorisnik(DatabaseConnection.config.GetConnectionString("connectionString"));
+                dbmodel = new DBModel(DatabaseConnection.config.GetConnectionString("connectionString"));
             }
         }
     }

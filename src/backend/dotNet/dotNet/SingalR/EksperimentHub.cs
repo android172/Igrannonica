@@ -11,6 +11,7 @@ namespace dotNet.SingalR
         //token je jwt token korisnika
         public Task Treniraj(string token,int idmodela)
         {
+            float x = 0.1f;
             users[Context.ConnectionId] = idmodela.ToString();
             Console.WriteLine(idmodela);
             //users se sastoji iz connectionId i jwt koji ce da posluzi da se uzme MLConnection
@@ -23,7 +24,7 @@ namespace dotNet.SingalR
             eks.OneHotEncoding(new int[] { 4, 5, 13 });
             eks.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
             eks.LoadOutputs(new int[] { 16, 17 });
-            eks.TrainTestSplit(0.1f);
+            eks.TrainTestSplit(x);
             eks.ApplySettings(settings);
             eks.Start();
             return Clients.Clients(Context.ConnectionId).SendAsync("treniranje", "Treniranje zavrseno");

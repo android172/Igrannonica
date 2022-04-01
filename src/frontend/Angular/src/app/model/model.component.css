@@ -287,3 +287,28 @@ p
     text-align: center;
     font-size: 15px;
 }
+
+#lr,#is,#os,#noe,#bs,#rr,#rm,#lf,#o
+{
+    float: left;
+    margin-left: 20px;
+}
+
+#podesavanja
+{
+    width: 800px;
+    height: 110px;
+    margin: auto;
+}
+
+#grupa
+{
+  float: left;
+  margin-left: 20px;
+}
+
+input
+{
+  width: 60px;
+}
+
