@@ -1,5 +1,5 @@
-
 import json
+import requests
 from threading import Thread
 
 from ANN import ANN
@@ -9,6 +9,7 @@ class MLClientInstance(Thread):
     
     def setupConnection(self, connection) -> None:
         self.connection = connection
+        self.token = ""
     
     def run(self) -> None:
         super().run()
@@ -21,10 +22,39 @@ class MLClientInstance(Thread):
                 
             # Load data #
             if received == 'LoadData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_from_csv(path)
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                # Receive dataset name
+                file_name = self.connection.receive()
+                
+                if self.token == "":
+                    response = requests.get(f"http://localhost:5008/api/file/downloadTest/{experiment_id}")
+                else:
+                    response = requests.post(
+                    f"http://localhost:5008/api/file/download/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}
+                    )
+                
+                if response.status_code != 200:
+                    print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
+                    return
+                
+                with open(f"./data/{file_name}", "wb") as file:
+                    file.write(response.content)
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_from_csv(path)
+                # elif extension == 'xlsx':
+                #     network.data.load_from_csv(path)
+                # elif extension == 'json':
+                #     network.data.load_from_csv(path)
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
+                    
                 network.data.initialize_column_types()
+                network.data.dataset_name = file_name
                 
                 print("Dataset loaded.")
                 

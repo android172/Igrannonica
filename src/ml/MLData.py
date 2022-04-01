@@ -19,6 +19,7 @@ from StatisticsNumerical import StatisticsNumerical
 class MLData:
     
     def __init__(self) -> None:
+        self.dataset_name   = "data"
         self.dataset        = None
         self.input_columns  = None
         self.output_columns = None

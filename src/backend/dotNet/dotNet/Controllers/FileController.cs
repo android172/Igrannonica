@@ -32,6 +32,7 @@ namespace dotNet.Controllers
         [HttpPost("download/{idEksperimenta}")]
         public FileContentResult Download(int idEksperimenta)
         {
+            Console.WriteLine(idEksperimenta);
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -51,7 +52,7 @@ namespace dotNet.Controllers
             else
                 return null;
 
-            string fileName = "test_data.csv";
+            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
 
             string path = System.IO.Path.Combine(
                 Directory.GetCurrentDirectory(), "Files", 
@@ -64,8 +65,8 @@ namespace dotNet.Controllers
         [HttpGet("downloadTest/{idEksperimenta}")]
         public FileContentResult DownloadTest(int idEksperimenta)
         {
-            string fileName = "test_data.csv";
-
+            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+            
             string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName);
 
             return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);

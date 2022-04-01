@@ -30,7 +30,5 @@ class MLServer:
             print(f"Client connected at: {address}")
         
 if __name__ == "__main__":
-    import wget
-    wget.download("http://localhost:5008/api/file/download/1", "./data/data.csv")
-    # server = MLServer()
-    # server.start()
+    server = MLServer()
+    server.start()
