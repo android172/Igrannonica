@@ -6,49 +6,51 @@ namespace dotNet.DBFunkcije
 {
     public class DBKorisnik
     {
-        private MySqlConnection connect;
+        private string connectionString;
 
 
-        public DBKorisnik(MySqlConnection connection)
+        public DBKorisnik(string connectionString)
         {
-            this.connect = connection;
+            this.connectionString = connectionString;
         }
 
         public Korisnik dajKorisnika()
         {
-            connect.Open();
-            string query = "select * from korisnik";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
-                reader.Dispose();
-                connect.Close();
-                return rezultat;
+                string query = "select * from korisnik";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                        return rezultat;
+                    }
+                    return null;
+                }
             }
-            reader.Dispose();
-            connect.Close();
-            return null;
         }
         public Korisnik dajKorisnika(string KorisnickoIme, string sifra)
         {
-            connect.Open();
-            string query = "select * from korisnik where `korisnickoime`=@ime and sifra=@sifra";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
-            cmd.Parameters.AddWithValue("@sifra", sifra);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
-                reader.Dispose();
-                connect.Close();
-                return rezultat;
+                string query = "select * from korisnik where `korisnickoime`=@ime and sifra=@sifra";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
+                cmd.Parameters.AddWithValue("@sifra", sifra);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                        return rezultat;
+                    }
+                    return null;
+                }
             }
-            reader.Dispose();
-            connect.Close();
-            return null;
         }
         private string KorisnickoImeTransform(string username)
         {
@@ -71,130 +73,113 @@ namespace dotNet.DBFunkcije
 
             string username = KorisnickoImeTransform(korisnik.KorisnickoIme);
             string mail = EmailTransform(korisnik.Email);
-
-            connect.Open();
-            string query = "select * from korisnik where `KorisnickoIme`=@ime";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@ime", username);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                //connect.Close();
-                //return false;
-            }
-            else
-            {
-                korisnikValid.korisnickoIme = true;
-            }
-            reader.Dispose();
-            connect.Close();
-
-            connect.Open();
-
-            string query1 = "select * from korisnik where `email`=@email";
-            cmd = new MySqlCommand(query1, connect);
-            cmd.Parameters.AddWithValue("@email", mail);
-            MySqlDataReader reader1 = cmd.ExecuteReader();
-            if (reader1.Read())
-            {
-                //connect.Close();
-                //return false;
-            }
-            else
-            {
-                korisnikValid.email = true;
-            }
-            reader.Dispose();
-            connect.Close();
-
-            if (korisnikValid.korisnickoIme && korisnikValid.email)
-            {
-                connect.Open();
-                cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)", connect);
-                cmd.Parameters.AddWithValue("@kime", username);
-                cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
-                cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
-                cmd.Parameters.AddWithValue("@email", mail);
-
-                if (cmd.ExecuteNonQuery() > 0)
+                string query = "select * from korisnik where `KorisnickoIme`=@ime";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", username);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    connect.Close();
-                    return korisnikValid;
+                    if (!reader.Read())
+                        korisnikValid.korisnickoIme = true;
                 }
 
-                connect.Close();
+                string query1 = "select * from korisnik where `email`=@email";
+                cmd = new MySqlCommand(query1, connection);
+                cmd.Parameters.AddWithValue("@email", mail);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        korisnikValid.email = true;
+                }
+
+                if (korisnikValid.korisnickoIme && korisnikValid.email)
+                {
+                    cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)", connection);
+                    cmd.Parameters.AddWithValue("@kime", username);
+                    cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
+                    cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+                    cmd.Parameters.AddWithValue("@email", mail);
+
+                    if (cmd.ExecuteNonQuery() > 0)
+                    {
+                        return korisnikValid;
+                    }
+
+                }
+                return korisnikValid;
             }
-            return korisnikValid;
         }
         public Korisnik Korisnik(int id)
         {
-            connect.Open();
-            string query = "select * from korisnik where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            Korisnik rezultat = null;
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                string query = "select * from korisnik where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Korisnik rezultat = null;
+                    if (reader.Read())
+                    {
+                        rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                    }
+                    return rezultat;
+                }
             }
-            reader.Dispose();
-            connect.Close();
-            return rezultat;
         }
         public bool proveri_email(string email)
         {
-            connect.Open();
-            Console.WriteLine("em");
-            string query = "select * from korisnik where email=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", email);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                reader.Dispose();
-                connect.Close();
-                return true;
+                string query = "select * from korisnik where email=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", email);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
             }
-            reader.Dispose();
-            connect.Close();
-            return false;
         }
         public bool proveri_korisnickoime(string korisnickoime)
         {
-            connect.Open();
-            Console.WriteLine("ki");
-            string query = "select * from korisnik where korisnickoime=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", korisnickoime);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                reader.Dispose();
-                connect.Close();
-                return true;
+                string query = "select * from korisnik where korisnickoime=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", korisnickoime);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return true;
+                    return false;
+                }
             }
-            reader.Dispose();
-            connect.Close();
-            return false;
         }
         public bool updateKorisnika(Korisnik korisnik)
         {
-            connect.Open();
-            string query = "update korisnik set `korisnickoime` =@korisnickoime , `ime`=@ime , `sifra`=@sifra , `email`=@email where `id`=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", korisnik.Id);
-            cmd.Parameters.AddWithValue("@korisnickoime", korisnik.KorisnickoIme);
-            cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
-            cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
-            cmd.Parameters.AddWithValue("@email", korisnik.Email);
-            if (cmd.ExecuteNonQuery() > 0)
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connect.Close();
-                return true;
+                string query = "update korisnik set `korisnickoime` =@korisnickoime , `ime`=@ime , `sifra`=@sifra , `email`=@email where `id`=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", korisnik.Id);
+                cmd.Parameters.AddWithValue("@korisnickoime", korisnik.KorisnickoIme);
+                cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
+                cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+                cmd.Parameters.AddWithValue("@email", korisnik.Email);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
             }
-            connect.Close();
-            return false;
         }
     }
 }

@@ -5,167 +5,163 @@ namespace dotNet.DBFunkcije
 {
     public class DBModel
     {
-        private MySqlConnection connect;
+        private string connectionString;
 
-        public DBModel(MySqlConnection connection)
+        public DBModel(string connectionString)
         {
-            this.connect = connection;
+            this.connectionString = connectionString;
         }
 
         public List<ModelDto> modeli(int id)
         {
-            connect.Open();
-            string query = "select * from model where ideksperimenta=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
             List<ModelDto> result = new List<ModelDto>();
-            while (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                ModelDto ex = new ModelDto();
-                ex.Id = reader.GetInt32("id");
-                ex.Name = reader.GetString("Naziv");
-                ex.CreatedDate = reader.GetDateTime("napravljen");
-                ex.UpdatedDate = reader.GetDateTime("obnovljen");
-                result.Add(ex);
+            string query = "select * from model where ideksperimenta=@id";
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        ModelDto ex = new ModelDto();
+                        ex.Id = reader.GetInt32("id");
+                        ex.Name = reader.GetString("Naziv");
+                        ex.CreatedDate = reader.GetDateTime("napravljen");
+                        ex.UpdatedDate = reader.GetDateTime("obnovljen");
+                        result.Add(ex);
+                    }
+                }
             }
-            reader.Dispose();
-            connect.Close();
             return result;
         }
         public int proveriModel(string ime, int id)
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
+                string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@naziv", ime);
+                cmd.Parameters.AddWithValue("@vlasnik", id);
+                connection.Open();
+                using (MySqlDataReader r = cmd.ExecuteReader())
+                {
 
-            connect.Open();
-            string query = "select * from model where naziv=@naziv and idEksperimenta=@vlasnik";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@naziv", ime);
-            cmd.Parameters.AddWithValue("@vlasnik", id);
-            MySqlDataReader r = cmd.ExecuteReader();
-            if (r.Read())
-            {
-                int idm = r.GetInt32("id");
-                r.Dispose();
-                connect.Close();
-                return idm;
-            }
-            r.Dispose();
-            connect.Close();
-            return -1;
-            }
-            catch(Exception ex)
-            {
-                return proveriModel(ime, id);
+                    if (r.Read())
+                    {
+                        int idm = r.GetInt32("id");
+                        return idm;
+                    }
+                }
+                return -1;
             }
         }
         public bool dodajModel(string ime, int id)
         {
-            connect.Open();
-            string query = "insert into model (`naziv`,`ideksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@ime", ime);
-            cmd.Parameters.AddWithValue("@id", id);
-            if (cmd.ExecuteNonQuery() > 0)
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connect.Close();
-                dodajPodesavanja(proveriModel(ime,id));
-                return true;
+                string query = "insert into model (`naziv`,`ideksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", ime);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    dodajPodesavanja(proveriModel(ime, id));
+                    return true;
+                }
+                return false;
             }
-            connect.Close();
-            return false;
         }
         public bool promeniImeModela(string ime, int id)
         {
-            connect.Open();
-            string query = "update model set `naziv`=@ime ,`obnovljen`=now() where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@ime", ime);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader read = cmd.ExecuteReader();
-            if (read.Read())
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                read.Dispose();
-                connect.Close();
-                return true;
+                string query = "update model set `naziv`=@ime ,`obnovljen`=now() where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", ime);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader read = cmd.ExecuteReader())
+                {
+                    if (read.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
             }
-            read.Dispose();
-            connect.Close();
-            return false;
         }
         public bool izbrisiModel(int id)
         {
-            connect.Open();
-            string query = "delete from model where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            if (cmd.ExecuteNonQuery() > 0)
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connect.Close();
-                return true;
+                string query = "delete from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
             }
-            connect.Close();
-            return false;
         }
         public ANNSettings podesavanja(int id)
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
+                string query = "select * from podesavanja where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        ProblemType fun;
+                        if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
+                        else fun = ProblemType.Classification;
+                        ANNSettings settings = new ANNSettings(
+                            fun,
+                            reader.GetFloat("LearningRate"),
+                            reader.GetInt32("BatchSize"),
+                            reader.GetInt32("numberOfEpochs"),
+                            reader.GetInt32("inputSize"),
+                            reader.GetInt32("OutputSize"),
+                            HiddenLayers(reader.GetString("HiddenLayers")),
+                            aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
+                            Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
+                            reader.GetFloat("RegularizationRate"),
+                            Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
+                            Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
+                            );
 
-            connect.Open();
-            string query = "select * from podesavanja where id=@id";
-            MySqlCommand cmd = new MySqlCommand(query, connect);
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                ProblemType fun;
-                if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
-                else fun = ProblemType.Classification;
-                ANNSettings settings = new ANNSettings(
-                    fun, 
-                    reader.GetFloat("LearningRate"), 
-                    reader.GetInt32("BatchSize"),
-                    reader.GetInt32("numberOfEpochs"), 
-                    reader.GetInt32("inputSize"), 
-                    reader.GetInt32("OutputSize"),
-                    HiddenLayers(reader.GetString("HiddenLayers")), 
-                    aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
-                    Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
-                    reader.GetFloat("RegularizationRate"),
-                    Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
-                    Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
-                    );
-                reader.Dispose();
-                connect.Close();
-                return settings;
-            }
-            reader.Dispose();
-            connect.Close();
-            return null;
-            }
-            catch (Exception ex)
-            {
-                return podesavanja(id);
+                        return settings;
+                    }
+                    return null;
+                }
             }
         }
+
+
         public void dodajPodesavanja(int id)
         {
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-
-                connect.Open();
                 string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam',5);";
-                MySqlCommand cmd = new MySqlCommand(query, connect);
+                MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
                 cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                
+
+
             }
         }
+            
+        
 
         private int[] HiddenLayers(string niz)
         {
@@ -202,28 +198,22 @@ namespace dotNet.DBFunkcije
 
         public string uzmi_nazivM(int id)
         {
-            try
+            using(MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connect.Open();
                 string query = "select * from model where id=@id";
-                MySqlCommand cmd = new MySqlCommand(query, connect);
+                MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Console.WriteLine("OK");
-                    String naziv = reader.GetString("naziv");
-                    reader.Dispose();
-                    connect.Close();
-                    return naziv;
+                    if (reader.Read())
+                    {
+                        Console.WriteLine("OK");
+                        String naziv = reader.GetString("naziv");
+                        return naziv;
+                    }
+                    return "";
                 }
-                reader.Dispose();
-                connect.Close();
-                return "";
-            }
-            catch (Exception ex)
-            {
-                return uzmi_nazivM(id);
             }
         }
     }
