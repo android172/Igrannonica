@@ -160,8 +160,22 @@ namespace dotNet.DBFunkcije
 
             }
         }
-            
-        
+
+        public bool izbrisiPodesavanja(int idp)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from podesavanja where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", idp);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         private int[] HiddenLayers(string niz)
         {

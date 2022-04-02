@@ -119,8 +119,9 @@ namespace dotNet.Controllers
         [HttpDelete("Modeli/{id}")]
         public IActionResult izbrisiModel(int id)
         {
-            if (db.dbmodel.izbrisiModel(id))
+            if (db.dbmodel.izbrisiPodesavanja(id))
             {
+                db.dbmodel.izbrisiModel(id);
                 return Ok("Model izbrisan");
             }
             return BadRequest("Model nije izbrisan");
