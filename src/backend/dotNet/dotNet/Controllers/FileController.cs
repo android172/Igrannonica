@@ -154,7 +154,7 @@ namespace dotNet.Controllers
 
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
-            eksperiment.LoadDataset(path);
+            eksperiment.LoadDataset(idEksperimenta, fileName);
 
             // upis csv-a u bazu 
             bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);

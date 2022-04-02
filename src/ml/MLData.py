@@ -19,7 +19,7 @@ from StatisticsNumerical import StatisticsNumerical
 class MLData:
     
     def __init__(self) -> None:
-        self.dataset_name   = "data"
+        self.dataset_path   = "data"
         self.dataset        = None
         self.input_columns  = None
         self.output_columns = None
@@ -28,8 +28,8 @@ class MLData:
         self.column_types   = None
     
     # Load dataset
-    def load_from_csv(self, path):
-        self.dataset = pd.read_csv(path)
+    def load_from_csv(self, pathOrBuffer):
+        self.dataset = pd.read_csv(pathOrBuffer)
         
     def load_test_from_csv(self, path):
         train_length = self.dataset.shape[0]

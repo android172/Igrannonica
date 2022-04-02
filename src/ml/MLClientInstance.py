@@ -1,6 +1,7 @@
 import json
 import requests
 from threading import Thread
+from io import StringIO
 
 from ANN import ANN
 from ANNSettings import ANNSettings
@@ -20,31 +21,41 @@ class MLClientInstance(Thread):
             # Receive command
             received = self.connection.receive()
                 
+            # Load token
+            if received == 'SetToken':
+                # Receive token
+                self.token = self.connection.receive()
+                
+                print("Token set.")
+                
             # Load data #
-            if received == 'LoadData':
+            elif received == 'LoadData':
                 # Receive experiment id
                 experiment_id = self.connection.receive()
                 # Receive dataset name
                 file_name = self.connection.receive()
+                file_path = f"./data/{file_name}"
                 
                 if self.token == "":
-                    response = requests.get(f"http://localhost:5008/api/file/downloadTest/{experiment_id}")
+                    response = requests.get(
+                        f"http://localhost:5008/api/file/downloadTest/{experiment_id}"
+                    )
                 else:
                     response = requests.post(
-                    f"http://localhost:5008/api/file/download/{experiment_id}", 
-                    headers={"Authorization" : f"Bearer {self.token}"}
+                        f"http://localhost:5008/api/file/download/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"}
                     )
                 
                 if response.status_code != 200:
                     print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
                     return
                 
-                with open(f"./data/{file_name}", "wb") as file:
-                    file.write(response.content)
+                with open(file_path, "wb") as file:
+                    Thread(target = lambda : file.write(response.content)).start()
                     
                 extension = file_name.split(".")[-1]
                 if   extension == 'csv':
-                    network.data.load_from_csv(path)
+                    network.data.load_from_csv(StringIO(response.text))
                 # elif extension == 'xlsx':
                 #     network.data.load_from_csv(path)
                 # elif extension == 'json':
@@ -53,8 +64,8 @@ class MLClientInstance(Thread):
                     print(f"File type with extension .{extension} is not supported.")
                     return
                     
+                network.data.dataset_path = file_path
                 network.data.initialize_column_types()
-                network.data.dataset_name = file_name
                 
                 print("Dataset loaded.")
                 

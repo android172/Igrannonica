@@ -5,17 +5,20 @@ namespace dotNet.MLService {
     public class MLExperiment {
         private readonly MLConnection connection;
 
-        public MLExperiment(IConfiguration configuration) {
+        public MLExperiment(IConfiguration configuration, string token) {
             connection = new MLConnection(configuration);
+            connection.Send(Command.SetToken);
+            connection.Send(token);
         }
 
         // ///////////////// //
         // Data introduction //
         // ///////////////// //
 
-        public void LoadDataset(string path) {
+        public void LoadDataset(int experimentId, string fileName) {
             connection.Send(Command.LoadData);
-            connection.Send(path);
+            connection.Send(experimentId);
+            connection.Send(fileName);
         }
 
         public void LoadDatasetTest(string path) {
@@ -293,6 +296,7 @@ namespace dotNet.MLService {
     }
 
     public enum Command {
+        SetToken,
         // Data introduction
         LoadData,
         LoadTestData,
