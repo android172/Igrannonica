@@ -32,25 +32,59 @@
             Pokreni model
         </button>
     </div>
-</div>
-<div id="podesavanja">
-    <div id="grupa">
-        <div *ngFor="let a of aktFunk">
-            <input type="text" id="af" value="{{a}}">
+    <div id="div2">
+        <div id="box">
+            <div id="podesavanja">
+                <div id="grupa">
+                   <h3> Activation </h3>
+                    <select id="af">
+                        <option *ngFor="let a of aktFunk" value="{{a}}">{{a}}</option>
+                    </select>               
+                </div>
+                <div id="grupa">
+                    <h3> Batch size </h3>
+                    <input type="text" id="bs" name="bs">
+                </div>
+                <div id="grupa">
+                    <h3> Learning rate </h3>
+                    <input type="text" id="lr" name="lr">
+                </div>
+                <div id="grupa">
+                    <h3> Hidden layers </h3>
+                    <select id="af">
+                        <option *ngFor="let h of hiddLay" value="{{h}}">{{h}}</option>
+                    </select>   
+                </div>
+                <div id="grupa">
+                    <h3> Input size </h3>
+                    <input type="text" id="is" name="is">
+                </div>
+                <div id="grupa">
+                    <h3> Number of epochs </h3>
+                    <input type="text" id="noe" name="noe">
+                </div>
+                <div id="grupa">
+                    <h3> Output size </h3>
+                    <input type="text" id="os" name="os">
+                </div>
+                <div id="grupa">
+                    <h3> Loss function </h3>
+                    <input type="text" id="lf" name="lf">
+                </div>
+                <div id="grupa">
+                    <h3> Optimizer </h3>
+                    <input type="text" id="o" name="o">
+                </div>
+                <div id="grupa">
+                    <h3> Regularization method </h3>
+                    <input type="text" id="rm" name="rm">
+                </div>
+                <div id="grupa">
+                    <h3> Regularization rate </h3>
+                    <input type="text" id="rr" name="rr">
+                </div>
+            </div>
         </div>
     </div>
-    <input type="text" id="bs" name="bs">
-    <input type="text" id="lr" name="lr">
-    <div id="grupa">
-        <div *ngFor="let h of hiddLay">
-            <input type="text" value="{{h}}">
-        </div>
-    </div>
-    <input type="text" id="is" name="is">
-    <input type="text" id="noe" name="noe">
-    <input type="text" id="os" name="os">
-    <input type="text" id="lf" name="lf">
-    <input type="text" id="o" name="o">
-    <input type="text" id="rm" name="rm">
-    <input type="text" id="rr" name="rr">
 </div>
+
