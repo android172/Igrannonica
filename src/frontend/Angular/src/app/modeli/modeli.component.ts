@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
+import { SharedService } from '../shared/shared.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-modeli',
   templateUrl: './modeli.component.html',
@@ -14,8 +17,10 @@ export class ModeliComponent implements OnInit {
   modeli : any[] = [];
   id: any;
   ActivateAddEdit: boolean = false;
+  messageReceived: any;
+  subscriptionName: Subscription = new Subscription;
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.id = params['id'];
@@ -25,6 +30,20 @@ export class ModeliComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ucitajImeE();
+    this.subscriptionName = this.shared.getUpdate().subscribe
+    (
+      message => {
+        this.ActivateAddEdit = false;
+        this.messageReceived = message;
+        console.log(this.messageReceived);
+       // this.ocisti();
+        this.ucitaj();
+      }
+    )
+  }
+
+  ucitaj(){
     this.ucitajImeE();
   }
 

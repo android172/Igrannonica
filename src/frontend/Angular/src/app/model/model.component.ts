@@ -40,6 +40,10 @@ export class ModelComponent implements OnInit {
     )
   }
 
+  sendMessage():void{
+    this.shared.sendUpdate("Update");
+  }
+
   ngOnInit(): void {
     this.ucitajNaziv();
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
@@ -144,6 +148,7 @@ export class ModelComponent implements OnInit {
     if(!(nazivMod === this.nazivModela))
     {
        this.proveriM();
+       this.sendMessage();
     }
   }
 
@@ -178,7 +183,7 @@ export class ModelComponent implements OnInit {
       res=>{
 
       }, error=>{
-        console.log(error.error);
+        //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
