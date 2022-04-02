@@ -312,3 +312,25 @@ input
   width: 60px;
 }
 
+#poruka1{
+
+  min-width: 200px;
+  float: right;
+  height: 20px;
+  color: #FF7187;
+  margin-right: 80px;
+}
+
+#poruka2{
+
+  min-width: 200px;
+  float: right;
+  height: 20px;
+  color: #FF7187;
+  margin-right: 20px;
+}
+
+#poruke{
+  float: right;
+  width: 100%;
+}

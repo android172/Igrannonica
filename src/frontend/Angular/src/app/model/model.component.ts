@@ -18,7 +18,8 @@ export class ModelComponent implements OnInit {
 
   @Input() mod!: Observable<number>;
   idEksperimenta: any;
-  naziv: any;
+  nazivEksperimenta: any;
+  nazivModela : any;
   json: any;
   json1: any;
 
@@ -26,7 +27,8 @@ export class ModelComponent implements OnInit {
   public hiddLay: any[] = [];
 
   public kolone: any[] = [];
- message: any;
+  message: any;
+  public idModela : any;
 
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
@@ -44,7 +46,11 @@ export class ModelComponent implements OnInit {
     this.signalR.startConnection();
   }
   posaljiZahtev(data:number){
-    console.log(data);
+    //console.log(data);
+    this.message = this.shared.getMessage();
+    this.kolone = Object.assign([],this.message);
+    this.idModela = data;
+    this.ucitajNazivModela(this.idModela);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
@@ -73,72 +79,28 @@ export class ModelComponent implements OnInit {
   this.http.get("http://localhost:5008/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
-        this.naziv = res;
-        var div = (<HTMLDivElement>document.getElementById("nazivM")).innerHTML = this.naziv;
+        this.nazivModela = res;
+        var div = (<HTMLInputElement>document.getElementById("nazivM")).value = this.nazivModela;
       },
       error=>{
         console.log(error);
       }
     )
   }
-  ucitajKolone(){
-    this.message = this.shared.getMessage();
-    console.log(this.message);
-    this.kolone  = Object.assign([], this.message);
-  }
-
 
   ucitajNaziv()
   {
     this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
-          this.naziv = res;
-          var div = (<HTMLDivElement>document.getElementById("nazivE")).innerHTML = this.naziv;
-          console.log(this.naziv);
+          this.nazivEksperimenta = res;
+          var div = (<HTMLInputElement>document.getElementById("nazivE")).value = this.nazivEksperimenta;
+          console.log(this.nazivEksperimenta);
         },error=>{
           console.log(error.error);
         }
     );
   }
-
-
-  provera(pom : any){
-
-    let element = <any>document.getElementsByName("izl"); 
-    console.log(pom);
-    var ind = -1;
-    for(let i=0; i<element.length; i++)
-    {
-      if(element[i].checked)
-      {
-        if(pom === element[i].value){
-          ind = i;
-        }
-      }
-    }
-    var br = 0;
-    for(let i=0; i<element.length; i++)
-    {
-      if(element[i].checked)
-      {
-        console.log(element[i]);
-        br++;
-        if(br>1)
-        {
-          if(ind == i)
-            element[i].checked = false;
-          else{
-            element[ind].checked = false;
-          }
-          //console.log(element[i]);
-          alert("Mozete izabrati samo jednu kolonu za izlaz");
-          //var p = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Mozete izabrati samo jednu kolonu"; 
-        }
-      }
-    }
-  }
-
 
   funkcija(){
     let nizK = <any>document.getElementsByName("ulz"); 
@@ -169,6 +131,60 @@ export class ModelComponent implements OnInit {
         }
       }
     }
+  }
+
+  submit(){
+
+    var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
+    if(!(nazivEks === this.nazivEksperimenta))
+    {
+       this.proveriE();
+    }
+    var nazivMod = (<HTMLInputElement>document.getElementById("nazivM")).value;
+    if(!(nazivMod === this.nazivModela))
+    {
+       this.proveriM();
+    }
+  }
+
+  proveriE(){
+
+      var nazivE = (<HTMLInputElement>document.getElementById("nazivE")).value;
+      var div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML;
+      if(div === "*Eksperiment sa tim nazivom vec postoji"){
+        div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "";
+      }
+      this.http.put("http://localhost:5008/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+        res=>{
+
+        }, error=>{
+          if(error.error === "Postoji eksperiment sa tim imenom")
+          {
+             var div1 = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
+          }
+        }
+      )
+  }
+
+  
+  proveriM(){
+
+    var nazivE = (<HTMLInputElement>document.getElementById("nazivM")).value;
+    var div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML;
+    if(div === "*Model sa tim nazivom vec postoji"){
+      div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
+    }
+    this.http.put("http://localhost:5008/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+      res=>{
+
+      }, error=>{
+        console.log(error.error);
+        if(error.error === "Vec postoji model sa tim imenom")
+        {
+           var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
+        }
+      }
+    )
   }
 
   treniraj(){
