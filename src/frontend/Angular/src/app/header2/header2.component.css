@@ -49,21 +49,36 @@
     margin-left: 50px;
 }
 
-#pomocDugme
-{
-    visibility: hidden;
-}
-
 #prijava, #registracija, #nazad
 {
     margin-right: 10px;
 }
 
-#prijava, #nazad
+#prijava
 {
     width: 90px;
     height: 40px;
 
+    background: rgba(229, 229, 229, 0.25);
+    border: 3px solid #E5E5E5;
+    box-sizing: border-box;
+    border-radius: 15px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 33px;
+    color: #E5E5E5;
+
+    transition-duration: 0.3s;
+}
+
+#nazad
+{
+    width: 200px;
+    height: 40px;
+    
     background: rgba(229, 229, 229, 0.25);
     border: 3px solid #E5E5E5;
     box-sizing: border-box;
