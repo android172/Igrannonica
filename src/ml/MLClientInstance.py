@@ -1,7 +1,7 @@
 import json
 import requests
 from threading import Thread
-from io import StringIO
+from io import BytesIO
 
 from ANN import ANN
 from ANNSettings import ANNSettings
@@ -55,11 +55,11 @@ class MLClientInstance(Thread):
                     
                 extension = file_name.split(".")[-1]
                 if   extension == 'csv':
-                    network.data.load_from_csv(StringIO(response.text))
+                    network.data.load_from_csv(BytesIO(response.content))
                 elif extension == 'json':
-                    network.data.load_from_json(file_path)
+                    network.data.load_from_json(BytesIO(response.content))
                 elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
-                    network.data.load_from_excel(file_path)
+                    network.data.load_from_excel(BytesIO(response.content))
                 else:
                     print(f"File type with extension .{extension} is not supported.")
                     return
@@ -70,11 +70,28 @@ class MLClientInstance(Thread):
                 print("Dataset loaded.")
                 
             elif received == 'LoadTestData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_test_from_csv(path)
+                # Receive data
+                data = self.connection.receive_bytes()
+                # Receive file name
+                file_name = self.connection.receive()
                 
-                print("Test dataset loaded.")
+                print(data)
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_test_from_csv(BytesIO(data))
+                elif extension == 'json':
+                    network.data.load_test_from_json(BytesIO(data))
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_test_from_excel(BytesIO(data))
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
+                    
+                network.data.dataset_path = file_path
+                network.data.initialize_column_types()
+                
+                print("Test Dataset loaded.")
                 
             elif received == 'SelectInputs':
                 # Receive inputs

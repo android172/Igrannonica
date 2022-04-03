@@ -21,9 +21,10 @@ namespace dotNet.MLService {
             connection.Send(fileName);
         }
 
-        public void LoadDatasetTest(string path) {
+        public void LoadDatasetTest(byte[] data, string fileName) {
             connection.Send(Command.LoadTestData);
-            connection.Send(path);
+            connection.Send(data);
+            connection.Send(fileName);
         }
 
         public void LoadInputs(int[] inputs) {

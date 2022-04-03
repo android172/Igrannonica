@@ -23,9 +23,21 @@ namespace dotNet.Controllers {
         public string Test() {
             if (experiment == null)
                 experiment = new(configuration, "");
-            Console.WriteLine("uslo");
             // Load data
-            experiment.LoadDataset(1, "test_data.xlsx");
+            experiment.LoadDataset(1, "test_data.csv");
+
+            string fileName = "test_data.csv";
+            string path = Path.Combine(
+                Directory.GetCurrentDirectory(), "Files",
+                "1", "1", fileName
+            );
+
+            byte[] file = System.IO.File.ReadAllBytes(path);
+
+            experiment.LoadDatasetTest(file, fileName);
+
+
+            return "done";
 
             // Get statistics
             var statistics = experiment.ColumnStatistics();
