@@ -1,6 +1,7 @@
-
 import json
+import requests
 from threading import Thread
+from io import BytesIO
 
 from ANN import ANN
 from ANNSettings import ANNSettings
@@ -9,6 +10,7 @@ class MLClientInstance(Thread):
     
     def setupConnection(self, connection) -> None:
         self.connection = connection
+        self.token = ""
     
     def run(self) -> None:
         super().run()
@@ -19,21 +21,77 @@ class MLClientInstance(Thread):
             # Receive command
             received = self.connection.receive()
                 
+            # Load token
+            if received == 'SetToken':
+                # Receive token
+                self.token = self.connection.receive()
+                
+                print("Token set.")
+                
             # Load data #
-            if received == 'LoadData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_from_csv(path)
+            elif received == 'LoadData':
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                # Receive dataset name
+                file_name = self.connection.receive()
+                file_path = f"./data/{file_name}"
+                
+                if self.token == "":
+                    response = requests.get(
+                        f"http://localhost:5008/api/file/downloadTest/{experiment_id}"
+                    )
+                else:
+                    response = requests.post(
+                        f"http://localhost:5008/api/file/download/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"}
+                    )
+                
+                if response.status_code != 200:
+                    print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
+                    return
+                
+                with open(file_path, "wb") as file:
+                    Thread(target = lambda : file.write(response.content)).start()
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_from_csv(BytesIO(response.content))
+                elif extension == 'json':
+                    network.data.load_from_json(BytesIO(response.content))
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_from_excel(BytesIO(response.content))
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
+                    
+                network.data.dataset_path = file_path
                 network.data.initialize_column_types()
                 
                 print("Dataset loaded.")
                 
             elif received == 'LoadTestData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_test_from_csv(path)
+                # Receive data
+                data = self.connection.receive_bytes()
+                # Receive file name
+                file_name = self.connection.receive()
                 
-                print("Test dataset loaded.")
+                print(data)
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_test_from_csv(BytesIO(data))
+                elif extension == 'json':
+                    network.data.load_test_from_json(BytesIO(data))
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_test_from_excel(BytesIO(data))
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
+                    
+                network.data.dataset_path = file_path
+                network.data.initialize_column_types()
+                
+                print("Test Dataset loaded.")
                 
             elif received == 'SelectInputs':
                 # Receive inputs

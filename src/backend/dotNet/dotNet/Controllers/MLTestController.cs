@@ -22,11 +22,22 @@ namespace dotNet.Controllers {
         [HttpGet]
         public string Test() {
             if (experiment == null)
-                experiment = new(configuration);
-            Console.WriteLine("uslo");
+                experiment = new(configuration, "");
             // Load data
-            string datasetPath = Directory.GetCurrentDirectory() + "\\Files\\1\\1\\test_data.csv";
-            experiment.LoadDataset(datasetPath);
+            experiment.LoadDataset(1, "test_data.csv");
+
+            string fileName = "test_data.csv";
+            string path = Path.Combine(
+                Directory.GetCurrentDirectory(), "Files",
+                "1", "1", fileName
+            );
+
+            byte[] file = System.IO.File.ReadAllBytes(path);
+
+            experiment.LoadDatasetTest(file, fileName);
+
+
+            return "done";
 
             // Get statistics
             var statistics = experiment.ColumnStatistics();
@@ -85,7 +96,7 @@ namespace dotNet.Controllers {
                 aNNType: ProblemType.Classification,
                 learningRate: 0.001f,
                 batchSize:  64,
-                numberOfEpochs: 10,
+                numberOfEpochs: 1,
                 inputSize:  13,
                 outputSize: 2,
                 hiddenLayers: hiddentLayers,
