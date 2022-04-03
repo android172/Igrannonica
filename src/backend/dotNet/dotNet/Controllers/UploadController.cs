@@ -225,7 +225,6 @@ namespace dotNet.Controllers
         }
 
         [HttpGet("statistika")]
-        [HttpGet("statistika")]
         public string getStat()
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");

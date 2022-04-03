@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class PodaciComponent implements OnInit {
 
   ngOnInit(): void {
-    this.getStat();
+    //this.getStat();
   }
 
   constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService) { 
@@ -102,6 +102,7 @@ export class PodaciComponent implements OnInit {
          //this.json = response;
         this.totalItems = response.totalItems;
         this.gty(1);
+        this.page = 1;
     })
   }
 
@@ -122,6 +123,7 @@ export class PodaciComponent implements OnInit {
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
+        this.page = 1;
     })
   }
 

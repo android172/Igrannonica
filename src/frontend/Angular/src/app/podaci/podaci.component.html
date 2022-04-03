@@ -129,6 +129,8 @@
             <pagination-controls *ngIf="this.json != undefined"
             class="pagi"
             (pageChange)="gty(page = $event)"
+            ngDefaultControl
+            [(ngModel)]="this.page"
             ></pagination-controls>
         </div>
 
