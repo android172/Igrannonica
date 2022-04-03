@@ -25,8 +25,7 @@ namespace dotNet.Controllers {
                 experiment = new(configuration, "");
             Console.WriteLine("uslo");
             // Load data
-            string datasetPath = Directory.GetCurrentDirectory() + "\\Files\\1\\1\\test_data.csv";
-            experiment.LoadDataset(1, "test_data.csv");
+            experiment.LoadDataset(1, "test_data.xlsx");
 
             // Get statistics
             var statistics = experiment.ColumnStatistics();

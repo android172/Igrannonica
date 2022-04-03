@@ -56,10 +56,10 @@ class MLClientInstance(Thread):
                 extension = file_name.split(".")[-1]
                 if   extension == 'csv':
                     network.data.load_from_csv(StringIO(response.text))
-                # elif extension == 'xlsx':
-                #     network.data.load_from_csv(path)
-                # elif extension == 'json':
-                #     network.data.load_from_csv(path)
+                elif extension == 'json':
+                    network.data.load_from_json(file_path)
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_from_excel(file_path)
                 else:
                     print(f"File type with extension .{extension} is not supported.")
                     return

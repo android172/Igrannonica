@@ -30,6 +30,12 @@ class MLData:
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
         self.dataset = pd.read_csv(pathOrBuffer)
+    
+    def load_from_json(self, pathOrBuffer):
+        self.dataset = pd.read_json(pathOrBuffer)
+    
+    def load_from_excel(self, pathOrBuffer):
+        self.dataset = pd.read_excel(pathOrBuffer)
         
     def load_test_from_csv(self, path):
         train_length = self.dataset.shape[0]
