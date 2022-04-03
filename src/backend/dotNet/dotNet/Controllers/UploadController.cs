@@ -224,8 +224,9 @@ namespace dotNet.Controllers
             return Ok("LabelEncoding izvrseno");
         }
 
-        [HttpGet("statistika/{brojKolona}")]
-        public Statistika getStat(int brojKolona)
+        [HttpGet("statistika")]
+        [HttpGet("statistika")]
+        public string getStat()
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -240,25 +241,13 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
-                    return new Statistika(null, null);
+                    return null;
             }
             else
-                return new Statistika(null, null);
+                return null;
 
-            int[] nizIndeksa = new int[brojKolona];
-            for(int i = 0; i < brojKolona; i++)
-            {
-                nizIndeksa[i] = i;
-            }
-
-            for (int i = 0; i < brojKolona; i++)
-                Console.WriteLine(nizIndeksa[i]);
-
-            //Dictionary<string, StatisticsNumerical> numerickaS = eksperiment.NumericalStatistics(nizIndeksa);
-            //Dictionary<string, StatisticsCategorical> kategorijskaS = eksperiment.CategoricalStatistics(nizIndeksa);
-
-            //return new Statistika(numerickaS, kategorijskaS);
-            return new Statistika(null, null);
+            string statistika = eksperiment.ColumnStatistics();
+            return statistika;
         }
     }
 }
