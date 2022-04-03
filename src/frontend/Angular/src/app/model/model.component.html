@@ -1,3 +1,4 @@
+<div id="body1">
 <div id="div1">
     <button id="sacuvaj" (click)="submit()">Sacuvaj izmene</button>
     <input id="nazivE">
@@ -22,7 +23,7 @@
             <p>Izbor kolone za izlaz</p>
             <div id="ulaziIzlaz">
                 <label class="container" *ngFor="let m of kolone">{{m}}
-                    <input type="checkbox" name="izl" value="{{m}}" >
+                    <input type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" >
                     <span class="checkmark"></span>
                 </label>    
             </div>
@@ -57,7 +58,7 @@
                 </div>
                 <div id="grupa">
                     <h3> Input size </h3>
-                    <input type="text" id="is" name="is">
+                    <input type="text" id="is" value="{{brojU}}">
                 </div>
                 <div id="grupa">
                     <h3> Number of epochs </h3>
@@ -65,7 +66,7 @@
                 </div>
                 <div id="grupa">
                     <h3> Output size </h3>
-                    <input type="text" id="os" name="os">
+                    <input type="text" id="os" value="{{brojI}}">
                 </div>
                 <div id="grupa">
                     <h3> Loss function </h3>
@@ -86,5 +87,22 @@
             </div>
         </div>
     </div>
+</div>
+<div id="centrirano2">
+    <div id="div3">
+
+        <div id="lista">
+
+        </div>
+
+    </div>
+    <div id="div4">
+
+        <div id="model">
+
+        </div>
+    </div>
+</div>
+
 </div>
 

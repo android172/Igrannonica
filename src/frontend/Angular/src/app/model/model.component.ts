@@ -30,6 +30,9 @@ export class ModelComponent implements OnInit {
   message: any;
   public idModela : any;
 
+  public brojU : number = 0;
+  public brojI : number = 0;
+  public kolone2 : any[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -53,6 +56,7 @@ export class ModelComponent implements OnInit {
     //console.log(data);
     this.message = this.shared.getMessage();
     this.kolone = Object.assign([],this.message);
+    this.kolone2 = Object.assign([],this.kolone);
     this.idModela = data;
     this.ucitajNazivModela(this.idModela);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
@@ -66,6 +70,11 @@ export class ModelComponent implements OnInit {
         (<HTMLInputElement>document.getElementById("is")).defaultValue = this.json1['inputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("os")).defaultValue = this.json1['outputSize'];
+        /*
+        this.lossF= this.json1['lossFunction'];
+        this.optm = this.json1['optimizer'];
+        this.regM = this.json1['regularization'];
+        */
         (<HTMLInputElement>document.getElementById("lf")).defaultValue = this.json1['lossFunction'];
         (<HTMLInputElement>document.getElementById("o")).defaultValue = this.json1['optimizer'];
         (<HTMLInputElement>document.getElementById("rm")).defaultValue = this.json1['regularization'];
@@ -116,6 +125,7 @@ export class ModelComponent implements OnInit {
           if(element === nizK[i].value){
            // console.log(element);
             this.kolone.splice(index,1);
+            this.brojU++;
           }
         });
         //console.log(this.kolone);
@@ -132,10 +142,46 @@ export class ModelComponent implements OnInit {
         if(ind == 0)
         {
           this.kolone.splice(i, 0, nizK[i].value);
+          this.brojU--;
         }
       }
     }
   }
+
+  funkcija2(){
+    let nizK = <any>document.getElementsByName("izl"); 
+    for(let i=0; i<nizK.length; i++)
+    {
+      if(nizK[i].checked)
+      {
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           this.kolone2.splice(index,1);
+            this.brojI++;
+            return;
+          }
+        });
+      }
+      if(!nizK[i].checked)
+      {
+        var ind = 0;
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+            ind = 1;
+          }
+        });
+        if(ind == 0)
+        {
+          this.kolone2.splice(i, 0, nizK[i].value);
+          this.brojI--;
+          return;
+        }
+      }
+    }
+  }
+
+
+
 
   submit(){
 
