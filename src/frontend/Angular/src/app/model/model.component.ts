@@ -143,6 +143,7 @@ export class ModelComponent implements OnInit {
     if(!(nazivEks === this.nazivEksperimenta))
     {
        this.proveriE();
+       this.sendMessage();
     }
     var nazivMod = (<HTMLInputElement>document.getElementById("nazivM")).value;
     if(!(nazivMod === this.nazivModela))
@@ -163,6 +164,7 @@ export class ModelComponent implements OnInit {
         res=>{
 
         }, error=>{
+          this.ucitajNaziv();
           if(error.error === "Postoji eksperiment sa tim imenom")
           {
              var div1 = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
@@ -183,6 +185,7 @@ export class ModelComponent implements OnInit {
       res=>{
 
       }, error=>{
+        this.ucitajNazivModela(this.idModela);
         //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {

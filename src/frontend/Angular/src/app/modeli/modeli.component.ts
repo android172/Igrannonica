@@ -38,7 +38,7 @@ export class ModeliComponent implements OnInit {
         this.messageReceived = message;
         console.log(this.messageReceived);
        // this.ocisti();
-        this.ucitaj();
+        this.ngOnInit();
       }
     )
   }
