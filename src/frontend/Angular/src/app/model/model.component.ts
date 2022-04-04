@@ -40,6 +40,10 @@ export class ModelComponent implements OnInit {
   //public niz : any[] = [];
   public brHL : number = 0;
   public nizHL : any[] = [];
+  public nizCvorova : any[] = [];
+  public brCvorova : any;
+  public pom : string = "";
+
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -250,20 +254,10 @@ export class ModelComponent implements OnInit {
 
   treniraj(){
     
-  //  this.pom = true;
-//    this.numberofHLayers();
     this.signalR.ZapocniTreniranje(tokenGetter(),1);
   }
-/*
-  numberofHLayers(){
 
-    var dd2 = <any>document.getElementById("dd2");
-    this.brHL = dd2.options[dd2.selectedIndex].value;
-    console.log(this.brHL);
-    this.counter(this.brHL);
-  }
-*/
-  counter(broj:number){
+  counter1(broj:number){
     
     for(let i=0; i<broj; i++)
     {
@@ -272,7 +266,7 @@ export class ModelComponent implements OnInit {
     return this.nizHL;
   }
 
-  promeni(br : any){
+  promeni1(br : any){
     if(br == 1)
     {
         this.brHL++;
@@ -287,6 +281,20 @@ export class ModelComponent implements OnInit {
       }
       this.nizHL.pop();
     }
-    console.log(this.nizHL.length);
   }
+
+  brojCvorova(ind:number){
+
+    for(let i=0; i<this.brHL; i++){
+    
+      if(i == ind)
+      {
+        var x = i;
+        this.pom = x.toString();
+        this.nizCvorova[i] = (<HTMLInputElement>document.getElementById(this.pom)).value;
+        console.log(this.nizCvorova[i]);
+      }
+    }
+  }
+
 }

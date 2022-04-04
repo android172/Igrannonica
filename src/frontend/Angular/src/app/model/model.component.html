@@ -104,12 +104,13 @@
         <div id="lista">
             <div id="grupa2">
                 <h3>Hidden layers</h3>
-                <button id="plus1" (click)="promeni(1)">+</button>
+                <button id="plus1" (click)="promeni1(1)">+</button>
                 <div type="text" id="hl" name="hl">{{brHL}}</div>
-                <button id="minus1" (click)="promeni(2)" >—</button>
+                <button id="minus1" (click)="promeni1(2)" >—</button>
             </div>
             <div id="grupa3">
-                <div *ngFor="let in of counter(brHL);let i = index">
+                <div *ngFor="let in of counter1(brHL);let i = index">
+                    
                     <div id="grupaHL">
                         <select id="dd4">
                             <option id="ddp" value="ReLU">ReLU</option>
@@ -117,9 +118,7 @@
                             <option id="ddp" value="Sigmoid">Sigmoid</option>
                             <option id="ddp" value="Linear">Linear</option>
                         </select>
-                        <button id="plus">+</button>
-                        <p id="broj">1</p>
-                        <button id="minus" >—</button>
+                       <input id="{{i}}" class="broj" (keyup)="brojCvorova(i)">        
                     </div>
                 </div>
             </div>
@@ -132,8 +131,13 @@
         </div>
     </div>
 </div>
-<button id="pokreniM" (click)="treniraj()">
-    Pokreni model
-</button>
+    <div id="centrirano3">
+    <button id="pokreniM" (click)="treniraj()">
+        Pokreni model
+    </button>
+    <div id="div">
+
+    </div>
+    </div>
 </div>
 
