@@ -185,6 +185,11 @@ th{
 .trbody{
     border-bottom: 1px solid rgb(122, 122, 122);
 }
+
+.selectedCol
+{
+    background-color: red;
+}
 /*
 .head-table{
     background-color: aqua;

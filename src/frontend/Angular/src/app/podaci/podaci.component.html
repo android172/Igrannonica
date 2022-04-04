@@ -109,8 +109,8 @@
             <div id="table">
                 <table>
                     <tr class="head-table">
-                        <th *ngFor="let header of dajHeadere();  let j = index">
-                            <button class="tr-button" (click)="getData(j)">  {{header}} </button>
+                        <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedCol]="isSelectedNum(j)">
+                            {{header}}
                         </th>
                     </tr>
                     <tr class="trbody" *ngFor="let red of json | paginate

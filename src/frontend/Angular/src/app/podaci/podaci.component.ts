@@ -58,6 +58,9 @@ export class PodaciComponent implements OnInit {
   keys: any;
   valuesKat:any;
   keysKat:any;
+  selectedName = "";
+  selectedArray:string[] = [];
+  headers:string[] = [];
 
   public kolone: any[] = [];
   message: any;
@@ -98,7 +101,7 @@ export class PodaciComponent implements OnInit {
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
-        this.dajStatistiku();
+        //this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;
         this.gty(1);
@@ -207,10 +210,34 @@ export class PodaciComponent implements OnInit {
     })
   }
   
-  getData(i: number)
+  getData(i: number, header:string)
   {
+    if(this.selectedColumns.includes(i))
+    {
+      this.selectedColumns.forEach((element,index)=>{
+        if(element==i) delete this.selectedColumns[index];
+     });
+     return;
+    }
     this.dodajKomandu("Dodata kolona: "+ i);
     this.selectedColumns.push(i);
+    console.log(this.selectedColumns);
+    this.selectedName = header;
+  }
+
+  isSelected(header:string)
+  {
+    return this.selectedName === header;
+  }
+
+  isSelectedNum(i:number)
+  {
+    let temp:boolean = false;
+    this.selectedColumns.forEach((element)=>{
+     if(element==i) 
+        temp = true;
+   });
+   return temp;
   }
 
   dodajKomandu(str: string)
