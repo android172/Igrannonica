@@ -173,12 +173,13 @@ th{
     color: #a7baff;
 }
 .tr-button:hover{
-    border: 1px solid rgb(255, 69, 100);
-    border-radius: 10px; 
-    box-shadow: 0px 0px 10px 5px rgba(255, 18, 89, 0.349); 
+    /*border: 1px solid rgb(255, 69, 100);*/
+    background-color: rgba(45, 54, 158, 0.401);
+    /*border-radius: 10px;*/
+    /*box-shadow: 0px 0px 10px 5px rgba(255, 18, 89, 0.349); */
 }
 .tr-button:active{
-    background-color: rgba(255, 18, 89, 0.349);
+    background-color: rgba(32, 39, 114, 0.401);
     color: rgb(196, 196, 196);
 }
 
@@ -186,10 +187,20 @@ th{
     border-bottom: 1px solid rgb(122, 122, 122);
 }
 
+.selectedColHeader
+{
+    background-color: #627de02e;
+}
+
 .selectedCol
 {
-    background-color: red;
+    background-color: #627de02e;
 }
+
+/* .selectedCol:nth-of-type(even)
+{
+    background-color: #F45E82;
+}*/
 /*
 .head-table{
     background-color: aqua;

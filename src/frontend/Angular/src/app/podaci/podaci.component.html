@@ -109,7 +109,7 @@
             <div id="table">
                 <table>
                     <tr class="head-table">
-                        <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedCol]="isSelectedNum(j)">
+                        <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
                             {{header}}
                         </th>
                     </tr>
