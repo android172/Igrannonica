@@ -7,6 +7,7 @@ import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tokenGetter } from '../app.module';
+import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Component({
   selector: 'app-model',
@@ -33,6 +34,12 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
+
+ // public pom : boolean = false;
+  //public brHL : number = 0;
+  //public niz : any[] = [];
+  public brHL : number = 0;
+  public nizHL : any[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -243,6 +250,43 @@ export class ModelComponent implements OnInit {
 
   treniraj(){
     
+  //  this.pom = true;
+//    this.numberofHLayers();
     this.signalR.ZapocniTreniranje(tokenGetter(),1);
+  }
+/*
+  numberofHLayers(){
+
+    var dd2 = <any>document.getElementById("dd2");
+    this.brHL = dd2.options[dd2.selectedIndex].value;
+    console.log(this.brHL);
+    this.counter(this.brHL);
+  }
+*/
+  counter(broj:number){
+    
+    for(let i=0; i<broj; i++)
+    {
+      this.nizHL[i] = i+1;
+    }
+    return this.nizHL;
+  }
+
+  promeni(br : any){
+    if(br == 1)
+    {
+        this.brHL++;
+        this.nizHL.push(this.brHL);
+    }
+    else{
+
+      if(this.brHL >= 1)
+        this.brHL--;
+      else{
+        this.brHL = 0;
+      }
+      this.nizHL.pop();
+    }
+    console.log(this.nizHL.length);
   }
 }
