@@ -87,7 +87,8 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `RegularizationRate` float null,
   `LossFunction` VARCHAR(256),
   `Optimizer` VARCHAR(256),
-  `Kolone` INT NULL,
+  `UlazneKolone` VARCHAR(256),
+  `IzlazneKolone` VARCHAR(256),
   PRIMARY KEY (`id`),
   CONSTRAINT `model`
     FOREIGN KEY (`id`)

@@ -131,10 +131,18 @@ namespace dotNet.Controllers
         public IActionResult Podesavanja(int id) {
             ANNSettings podesavanje = db.dbmodel.podesavanja(id);
             if (podesavanje != null)
+            {
                 return Ok(podesavanje);
+            }
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }
-        
+        [Authorize]
+        [HttpGet("Podesavanja/Kolone")]
+        public IActionResult Kolone(int id)
+        {
+            return Ok(db.dbmodel.Kolone(id));
+        }
+
         [Authorize]
         [HttpGet("Eksperiment/Naziv/{id}")]
         public IActionResult ExperimentNaziv(int id)

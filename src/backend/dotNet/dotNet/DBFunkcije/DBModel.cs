@@ -1,5 +1,6 @@
 ﻿using dotNet.Models;
 using MySql.Data.MySqlClient;
+using System;
 
 namespace dotNet.DBFunkcije
 {
@@ -121,8 +122,8 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        ProblemType fun;
-                        if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
+                        ProblemType fun = ProblemType.Regression;
+                        if (reader.GetString("Problemtype")== "Regression") fun = ProblemType.Regression;
                         else fun = ProblemType.Classification;
                         ANNSettings settings = new ANNSettings(
                             fun,
@@ -138,7 +139,7 @@ namespace dotNet.DBFunkcije
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
                             );
-
+                        Console.WriteLine(fun);
                         return settings;
                     }
                     return null;
@@ -216,5 +217,39 @@ namespace dotNet.DBFunkcije
                 }
             }
         }
+
+        public List<List<int>> Kolone(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<List<int>> list = new List<List<int>>();
+                string query = "select * from podesavanja where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        List<int> list1 = new List<int>();
+                        string kolone = reader.GetString("ulaznekolone");
+                        foreach(string i in kolone.Split(','))
+                        {
+                            list1.Add(int.Parse(i));
+                        }
+                        list.Add(list1);
+                        kolone = reader.GetString("izlaznekolone");
+                        list1 = new List<int>();
+                        foreach (string i in kolone.Split(','))
+                        {
+                            list1.Add(int.Parse(i));
+                        }
+                        list.Add(list1);
+                    }
+                }
+                return list;
+            }
+        }
+
     }
 }
