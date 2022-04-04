@@ -118,7 +118,7 @@
                             <option id="ddp" value="Sigmoid">Sigmoid</option>
                             <option id="ddp" value="Linear">Linear</option>
                         </select>
-                       <input id="{{i}}" class="broj" (keyup)="brojCvorova(i)">        
+                       <input type="number" min="1" [defaultValue]="1" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
                     </div>
                 </div>
             </div>
