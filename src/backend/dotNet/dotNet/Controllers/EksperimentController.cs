@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace dotNet.Controllers
 {
@@ -14,6 +15,8 @@ namespace dotNet.Controllers
     {
         private IConfiguration _config;
         DB db;
+        string id,bs,lr,ins,noe,os,lf,rm,rr,o;
+     
         public EksperimentController(IConfiguration config)
         {
             _config = config;
@@ -135,7 +138,31 @@ namespace dotNet.Controllers
                 return Ok(podesavanje);
             return BadRequest("Ne postoje podesavanja za ovaj model");
         }
-        
+
+        [Authorize]
+        [HttpPut("Podesavanja")]
+        public IActionResult updatePodesavanja(string json)//JObject json = JObject.Parse(str)
+        {
+            Console.WriteLine(json);
+            List<Podesavanja> json1 = JsonConvert.DeserializeObject<List<Podesavanja>>(json);
+            foreach (var item in json1)
+            {
+                id = item.id;
+                bs = item.BatchSize;
+                lr = item.LearningRate;
+                ins = item.InputSize;
+                noe = item.NumberOfEpochs;
+                os = item.OutputSize;
+                lf = item.LossFunction;
+                rm = item.RegularizationMethod;
+                rr = item.RegularizationRate;
+                o = item.Optimizer;
+            }
+            if (db.dbmodel.izmeniPodesavanja(id,bs,lr,ins,noe,os,lf,rm,rr,o))
+                return Ok("Izmenjena podesavanja.");
+            return BadRequest("Doslo je do greske");
+        }
+
         [Authorize]
         [HttpGet("Eksperiment/Naziv/{id}")]
         public IActionResult ExperimentNaziv(int id)

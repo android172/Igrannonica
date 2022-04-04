@@ -177,6 +177,35 @@ namespace dotNet.DBFunkcije
             }
         }
 
+        public bool izmeniPodesavanja(string id, string bs, string lr, string ins,string noe,string os, string lf, string rm, string rr, string o)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update podesavanja set `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os, `LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@idp", id);
+                cmd.Parameters.AddWithValue("@lr", lr);
+                cmd.Parameters.AddWithValue("@bs", bs);
+                cmd.Parameters.AddWithValue("@ins", ins);
+                cmd.Parameters.AddWithValue("@noe", noe);
+                cmd.Parameters.AddWithValue("@os", os);
+                cmd.Parameters.AddWithValue("@rm", rm);
+                cmd.Parameters.AddWithValue("@rr", rr);
+                cmd.Parameters.AddWithValue("@lf", lf);
+                cmd.Parameters.AddWithValue("@o", o);
+
+                connection.Open();
+                using (MySqlDataReader read = cmd.ExecuteReader())
+                {
+                    if (read.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
         private int[] HiddenLayers(string niz)
         {
             List<int> hiddenLayers = new List<int>();
