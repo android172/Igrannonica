@@ -119,7 +119,7 @@
                         currentPage: page,
                         totalItems: totalItems
                     };  index as i">
-                        <td *ngFor="let fieldValue of dajRed(i)">
+                        <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)">
                         {{fieldValue}}
                         </td>
                     </tr>
