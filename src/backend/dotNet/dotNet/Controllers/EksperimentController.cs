@@ -145,7 +145,7 @@ namespace dotNet.Controllers
         public IActionResult Kolone(int id)
         {
             return Ok(db.dbmodel.Kolone(id));
-
+        }
         [Authorize]
         [HttpPut("Podesavanja")]
         public IActionResult updatePodesavanja(string json)//JObject json = JObject.Parse(str)
