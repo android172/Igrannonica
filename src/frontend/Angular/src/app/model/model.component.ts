@@ -308,8 +308,8 @@ export class ModelComponent implements OnInit {
   promeni1(br : any){
     if(br == 1)
     {
-        this.brHL++;
-        this.nizHL.push(this.brHL);
+        this.hiddLay.push(1);
+        this.aktFunk.push(1);
     }
     else{
 
@@ -318,7 +318,8 @@ export class ModelComponent implements OnInit {
       else{
         this.brHL = 0;
       }
-      this.nizHL.pop();
+      this.hiddLay.pop();
+      this.aktFunk.pop();
     }
   }
 

@@ -105,20 +105,20 @@
             <div id="grupa2">
                 <h3>Hidden layers</h3>
                 <button id="plus1" (click)="promeni1(1)">+</button>
-                <div type="text" id="hl" name="hl">{{brHL}}</div>
+                <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
                 <button id="minus1" (click)="promeni1(2)" >—</button>
             </div>
             <div id="grupa3">
-                <div *ngFor="let in of counter1(brHL);let i = index">
+                <div *ngFor="let  in of hiddLay;let i = index">
                     
                     <div id="grupaHL">
-                        <select id="dd4">
+                        <select id="dd4" [selectedIndex]="aktFunk[i]">
                             <option id="ddp" value="ReLU">ReLU</option>
                             <option id="ddp" value="Tahn">Tahn</option>
                             <option id="ddp" value="Sigmoid">Sigmoid</option>
                             <option id="ddp" value="Linear">Linear</option>
                         </select>
-                       <input type="number" min="1" [defaultValue]="1" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
+                       <input type="number" min="1" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
                     </div>
                 </div>
             </div>
