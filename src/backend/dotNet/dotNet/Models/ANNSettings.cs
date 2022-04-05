@@ -4,7 +4,7 @@ namespace dotNet.Models {
     public class ANNSettings {
 
         // General info
-        public ProblemType ANNType;
+        public ProblemType ANNType { get; set; }
 
         public ANNSettings(
             ProblemType aNNType, 
