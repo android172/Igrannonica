@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class PodaciComponent implements OnInit {
 
   ngOnInit(): void {
-    this.getStat();
+    //this.getStat();
   }
 
   constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService) { 
@@ -58,6 +58,9 @@ export class PodaciComponent implements OnInit {
   keys: any;
   valuesKat:any;
   keysKat:any;
+  selectedName = "";
+  selectedArray:string[] = [];
+  headers:string[] = [];
 
   public kolone: any[] = [];
   message: any;
@@ -98,27 +101,22 @@ export class PodaciComponent implements OnInit {
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
-        this.dajStatistiku();
+        //this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;
         this.gty(1);
+        this.page = 1;
     })
   }
 
   dajStatistiku()
   {
-    let kolone = this.dajHeadere();
-    if(kolone != undefined)
-    {
-      let brojKolona = kolone.length;
-      console.log("Fja statistika, broj kolona: " + kolone.length);
-      console.log(kolone);
-      this.http.get("http://localhost:5008/api/Upload/statistika/" + brojKolona).subscribe(
-        (response: any) => {
-          console.log(response);
-        }
-      )
-    }
+    this.http.get("http://localhost:5008/api/Upload/statistika", {responseType: 'text'}).subscribe(
+      (response: any) => {
+        console.log("TEST");
+        console.log(response);
+      }
+    )
   }
 
   promeniBrojRedova(value: any)
@@ -128,6 +126,7 @@ export class PodaciComponent implements OnInit {
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
+        this.page = 1;
     })
   }
 
@@ -211,10 +210,34 @@ export class PodaciComponent implements OnInit {
     })
   }
   
-  getData(i: number)
+  getData(i: number, header:string)
   {
+    if(this.selectedColumns.includes(i))
+    {
+      this.selectedColumns.forEach((element,index)=>{
+        if(element==i) delete this.selectedColumns[index];
+     });
+     return;
+    }
     this.dodajKomandu("Dodata kolona: "+ i);
     this.selectedColumns.push(i);
+    console.log(this.selectedColumns);
+    this.selectedName = header;
+  }
+
+  isSelected(header:string)
+  {
+    return this.selectedName === header;
+  }
+
+  isSelectedNum(i:number)
+  {
+    let temp:boolean = false;
+    this.selectedColumns.forEach((element)=>{
+     if(element==i) 
+        temp = true;
+   });
+   return temp;
   }
 
   dodajKomandu(str: string)
