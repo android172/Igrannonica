@@ -42,7 +42,7 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajNaziv();
-    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
+    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     this.signalR.startConnection();
   }
   posaljiZahtev(data:number){
@@ -135,6 +135,7 @@ export class ModelComponent implements OnInit {
 
   submit(){
 
+    this.izmeniPodesavanja();
     var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
     if(!(nazivEks === this.nazivEksperimenta))
     {
@@ -145,6 +146,7 @@ export class ModelComponent implements OnInit {
     {
        this.proveriM();
     }
+
   }
 
   proveriE(){
@@ -166,6 +168,43 @@ export class ModelComponent implements OnInit {
       )
   }
 
+  izmeniPodesavanja(){
+    var bs = (<HTMLInputElement>document.getElementById("bs")).value;
+    var lr = (<HTMLInputElement>document.getElementById("lr")).value;
+    var ins = (<HTMLInputElement>document.getElementById("is")).value;
+    var noe = (<HTMLInputElement>document.getElementById("noe")).value;
+    var os = (<HTMLInputElement>document.getElementById("os")).value;
+    var lf = (<HTMLInputElement>document.getElementById("lf")).value;
+    var o = (<HTMLInputElement>document.getElementById("o")).value;
+    var rm = (<HTMLInputElement>document.getElementById("rm")).value;
+    var rr = (<HTMLInputElement>document.getElementById("rr")).value;
+    
+
+    var jsonPod = [
+      {
+        "id":this.idModela,
+        "BatchSize": bs,
+        "LearningRate": lr,
+        "InputSize": ins,
+        "NumberOfEpochs": noe,
+        "OutputSize": os,
+        "LossFunction": lf,
+        "Optimizer": o,
+        "RegularizationMethod": rm,
+        "RegularizationRate": rr
+      }
+    ];
+    console.log(jsonPod);
+    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?json=" + JSON.stringify(jsonPod),{responseType : "text"}).subscribe(
+      res=>{
+        
+      },err=>{
+        //console.log(err.error);
+      }
+    )
+  }
+
+  
   
   proveriM(){
 
