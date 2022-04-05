@@ -213,10 +213,11 @@ export class PodaciComponent implements OnInit {
   getData(i: number, header:string)
   {
     if(this.selectedColumns.includes(i))
-    {
-      this.selectedColumns.forEach((element,index)=>{
-        if(element==i) delete this.selectedColumns[index];
-     });
+    { 
+      const index = this.selectedColumns.indexOf(i, 0);
+      if (index > -1) {
+      this.selectedColumns.splice(index, 1);
+      }    
      return;
     }
     this.dodajKomandu("Dodata kolona: "+ i);
