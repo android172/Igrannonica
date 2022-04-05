@@ -105,9 +105,9 @@ export class PodaciComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", filetest, this.fileNameTest);  
 
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post("http://localhost:5008/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
-          console.log("Res");
+          this.dodajKomandu("Ucitan testni skup");
       },error =>{
         console.log(error.error);	
         

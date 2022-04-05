@@ -52,17 +52,16 @@
 
             <div id="testniskup-comp">
 
-                <div id="unos-fajla" class="visible-testniskup">
-                    <input type="file" class="file-input" accept=".csv" (change)="onFileSelectedTest($event)" #fileUpload>
-
-                    <div class="file-upload okvir2">
-
-                        <button mat-mini-fab color="primary" id="ucitaj-testniskup" class="upload-btn" (click)="fileUpload.click()">
-                            Učitaj podatke
-                        </button> 
-                        <br>                
-                    <span style="color:white; text-align: center;">{{fileNameTest || "Podaci nisu učitani."}} &nbsp;</span>   
-                </div>
+                <div id="unos-fajla" class="visible-testniskup"> 
+                    <form id="forma-test">
+                        <div class="form-group">       
+                            <label id="label-input" for="exampleFormControlFile1">
+                                <img src="assets/uploadfile.png"> 
+                                &nbsp; Ucitaj podatke</label>                 
+                            <input type="file" class="form-control-file" accept=".csv" id="exampleFormControlFile1" (change)="onFileSelectedTest($event)">
+                            <span style="color:white;  text-align: center; font-size: 14px;">{{fileNameTest || "Podaci nisu učitani."}} </span>
+                        </div>
+                      </form>
                 </div>
 
                 <div id="proizvoljan-unos" class="invisible-unos">
