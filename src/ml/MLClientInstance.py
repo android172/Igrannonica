@@ -2,6 +2,7 @@ import json
 import requests
 from threading import Thread
 from io import BytesIO
+import os
 
 from ANN import ANN
 from ANNSettings import ANNSettings
@@ -34,7 +35,8 @@ class MLClientInstance(Thread):
                 experiment_id = self.connection.receive()
                 # Receive dataset name
                 file_name = self.connection.receive()
-                file_path = f"./data/{file_name}"
+                file_dir = "./data"
+                file_path = f"{file_dir}/{file_name}"
                 
                 if self.token == "":
                     response = requests.get(
@@ -50,6 +52,10 @@ class MLClientInstance(Thread):
                     print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
                     return
                 
+                
+                if not os.path.exists(file_dir):
+                    os.makedirs(file_dir)
+                    
                 with open(file_path, "wb") as file:
                     Thread(target = lambda : file.write(response.content)).start()
                     
