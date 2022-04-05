@@ -147,16 +147,20 @@ namespace dotNet.Controllers
 
             int[] niz = new int[size];
             var j = page * size - size;
+
+            if (ukupanBrRedovaFajla == 0)
+                ukupanBrRedovaFajla = eksperiment.GetRowCount();
+
             for (var i = 0; i < size; i++)
             {
+                if (j >= ukupanBrRedovaFajla)
+                    break;
+
                 Console.WriteLine("Vrednost j: " + j);
                 niz[i] = j++;
             }
 
             var redovi = eksperiment.GetRows(niz);
-
-            if (ukupanBrRedovaFajla == 0)
-                ukupanBrRedovaFajla = eksperiment.GetRowCount();
 
             Console.WriteLine($"Page: {page}  Size: {size}");
 

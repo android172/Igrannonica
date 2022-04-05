@@ -41,45 +41,56 @@
         <div id="testniskup" class="p1 placement">
             <div>Testni skup</div>
 
-            <select id="testniskup-menu">
-                <option value="Učitaj testni skup">Učitaj testni skup</option>
-                <option value="Proizvoljan unos vrednosti">Proizvoljan unos vrednosti</option>
-            </select>
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button ngbDropdownItem id="ucitajTestniSkup" (click)="izborUnosa('Testni skup')">Učitaj testni skup</button>
+                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Proizvoljan unos vrednosti</button>
+                </div>
+            </div>
+
 
             <div id="testniskup-comp">
 
-                <div id="unos-fajla">
-                    <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+                <div id="unos-fajla" class="visible-testniskup">
+                    <input type="file" class="file-input" accept=".csv" (change)="onFileSelectedTest($event)" #fileUpload>
 
                     <div class="file-upload okvir2">
 
                         <button mat-mini-fab color="primary" id="ucitaj-testniskup" class="upload-btn" (click)="fileUpload.click()">
                             Učitaj podatke
-                        </button>                 
-                    <span style="color:white; margin-left: 10px; text-align: center; position:absolute; left:200px; top:530px;">{{fileName || "Podaci nisu učitani."}} &nbsp;</span>   
+                        </button> 
+                        <br>                
+                    <span style="color:white; text-align: center;">{{fileNameTest || "Podaci nisu učitani."}} &nbsp;</span>   
                 </div>
                 </div>
 
-                <div id="proizvoljan-unos">
-
+                <div id="proizvoljan-unos" class="invisible-unos">
+                        <input type="text"> 
                 </div>
             </div>
         </div>
         <div id="nedostajucevrednosti" class="placement">
             <div>Nedostajuće vrednosti</div>
             <div id="select-elements">
-                <select id="Zamena">
-                    <option value="Zameni sa mean u koloni">Zameni sa mean u koloni</option>
-                    <option value="Zameni sa median u koloni">Zameni sa median u koloni</option>
-                    <option value="Zameni sa mode u koloni">Zameni sa mode u koloni</option>
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena vrednosti</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                      <button ngbDropdownItem  (click)="izborUnosa('Testni skup')">Zameni sa mean u koloni</button>
+                      <button ngbDropdownItem  (click)="izborUnosa('Proizvoljno')">Zameni sa median u koloni</button>
+                      <button ngbDropdownItem  (click)="izborUnosa('Proizvoljno')">Zameni sa mode u koloni</button>
+                    </div>
+                </div>
+                
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje vrednosti</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+                      <button ngbDropdownItem (click)="izborUnosa('Testni skup')">Izbaci sve vrste</button>
+                      <button ngbDropdownItem (click)="izborUnosa('Proizvoljno')">Izbaci sve kolone</button>
+                      <button ngbDropdownItem (click)="izborUnosa('Proizvoljno')">Izbaci vrste za izabrane kolone</button>
+                    </div>
+                </div>
 
-                </select>
-                <select id="Brisanje">
-                    <option value="Izbaci sve vrste">Izbaci sve vrste</option>
-                    <option value="Izbaci sve kolone">Izbaci sve kolone</option>
-                    <option value="Izbaci vrste za izabrane kolone">Izbaci vrste za izabrane kolone</option>
-
-                </select>
             </div>
            <div id="prazni-string">
                 <div>Zamena praznih stringova sa NA za zeljene kolone:</div>

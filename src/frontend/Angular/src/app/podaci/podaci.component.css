@@ -60,6 +60,65 @@ img{
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
 
+/*************** TESTNI SKUP *********************/ 
+
+#testniskup-comp{
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+#proizvoljan-unos{
+    text-align: center;
+    justify-content: center;
+
+}
+
+.visible-testniskup{
+    visibility: visible;
+}
+.visible-unos{
+  visibility: visible;
+}
+.invisible-testniskup{
+    visibility: hidden;
+}
+.invisible-unos{
+    visibility: hidden;
+}
+.btn-design2{
+    height: 35px;
+    width: 235px;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
+
+/*  */
+
+.btn-design{
+    
+    color: white;
+    background-color: rgb(33, 79, 138);
+    width: 120px;
+    height: 35px;
+    margin: 10px 0 15px 0;
+    justify-content: center;
+
+}
+.btn-design2{
+    height: 35px;
+    width: 235px;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
+
+
+
 /*********** TRACKER ***************/ 
 
 #tracker{
@@ -376,12 +435,12 @@ th{
 }
 
 /*   NEDOSTAJUCE VREDNOSTI */ 
-
+/*
 #Zamena, #Brisanje{
     height: 30px;
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
     margin: 0 15px;
-}
+}*/
 
 #select-elements{
     margin: 20px auto auto 30px;
