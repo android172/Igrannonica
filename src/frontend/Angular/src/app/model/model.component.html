@@ -1,3 +1,4 @@
+<div id="body1">
 <div id="div1">
     <button id="sacuvaj" (click)="submit()">Sacuvaj izmene</button>
     <input id="nazivE">
@@ -22,25 +23,121 @@
             <p>Izbor kolone za izlaz</p>
             <div id="ulaziIzlaz">
                 <label class="container" *ngFor="let m of kolone">{{m}}
-                    <input type="checkbox" name="izl" value="{{m}}" >
+                    <input type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" >
                     <span class="checkmark"></span>
                 </label>    
             </div>
             <div id="poruka"></div>
         </div>
-        <button id="pokreniM" (click)="treniraj()">
-            Pokreni model
-        </button>
+    </div>
+    <div id="div2">
+        <div id="box">
+            <div id="podesavanja">
+                
+                <div id="grupa1">
+                    <div id="grupa">
+                        <h3> Number of epochs </h3>
+                        <input type="text" id="noe" name="noe">
+                    </div>
+
+                    <div id="grupa">
+                        <h3> Learning rate </h3>
+                        <input type="text" id="lr" name="lr">
+                    </div>
+
+                    <div id="grupa">
+                        <h3> Batch size </h3>
+                        <input type="text" id="bs" name="bs">
+                    </div>
+                </div>
+
+                <div id="grupa1">
+                    <div id="grupa">
+                        <h3> Regularization method </h3>
+                        <select name="" id="dd1">
+                            <option id="ddp" value="L1">L1</option>
+                            <option id="ddp" value="L2">L2</option>
+                        </select>
+                    </div>
+
+                    <div id="grupa">
+                        <h3> Regularization rate </h3>
+                        <input type="text" id="rr" name="rr">
+                    </div>
+
+                    <div id="grupa">
+                        <h3> Loss function </h3>
+                        <select name="" id="dd2">
+                            <option id="ddp" value="L1 loss">L1 loss</option>
+                            <option id="ddp" value="Cross-entropy loss">Cross-entropy loss</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="grupa1">
+                    <div id="grupa">
+                        <h3> Input size </h3>
+                        <div type="text" id="is">{{brojU}}</div>
+                    </div>
+
+                    <div id="grupa">
+                        <h3> Output size </h3>
+                        <div type="text" id="os" >{{brojI}}</div>
+                    </div>
+    
+                    <div id="grupa">
+                        <h3> Optimizer </h3>
+                        <select name="" id="dd3">
+                            <option id="ddp" value="SGD">SGD</option>
+                            <option id="ddp" value="AdaGrad">AdaGrad</option>
+                            <option id="ddp" value="AdaDelta">AdaDelta</option>
+                            <option id="ddp" value="Adam">Adam</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div id="podesavanja">
-    <input type="text" id="bs" name="bs">
-    <input type="text" id="lr" name="lr">
-    <input type="text" id="is" name="is">
-    <input type="text" id="noe" name="noe">
-    <input type="text" id="os" name="os">
-    <input type="text" id="lf" name="lf">
-    <input type="text" id="o" name="o">
-    <input type="text" id="rm" name="rm">
-    <input type="text" id="rr" name="rr">
+<div id="centrirano2">
+    <div id="div3">
+        <div id="lista">
+            <div id="grupa2">
+                <h3>Hidden layers</h3>
+                <button id="plus1" (click)="promeni1(1)">+</button>
+                <div type="text" id="hl" name="hl">{{brHL}}</div>
+                <button id="minus1" (click)="promeni1(2)" >—</button>
+            </div>
+            <div id="grupa3">
+                <div *ngFor="let in of counter1(brHL);let i = index">
+                    
+                    <div id="grupaHL">
+                        <select id="dd4">
+                            <option id="ddp" value="ReLU">ReLU</option>
+                            <option id="ddp" value="Tahn">Tahn</option>
+                            <option id="ddp" value="Sigmoid">Sigmoid</option>
+                            <option id="ddp" value="Linear">Linear</option>
+                        </select>
+                       <input type="number" min="1" [defaultValue]="1" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="div4">
+
+        <div id="model">
+
+        </div>
+    </div>
 </div>
+    <div id="centrirano3">
+    <button id="pokreniM" (click)="treniraj()">
+        Pokreni model
+    </button>
+    <div id="div">
+
+    </div>
+    </div>
+</div>
+
