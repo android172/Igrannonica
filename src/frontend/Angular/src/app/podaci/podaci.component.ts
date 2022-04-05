@@ -260,7 +260,10 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nema selektovanih kolona");
 
     for(let i=0;i<this.selectedColumns.length;i++)
-      this.dodajKomandu("Kolona " + this.selectedColumns[i]);
+    {
+      if(this.selectedColumns[i] != undefined)
+        this.dodajKomandu("Kolona " + this.selectedColumns[i]);
+    }
   }
 }
 
