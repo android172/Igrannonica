@@ -305,6 +305,9 @@ namespace dotNet.DBFunkcije
                     case "t":
                         funkcije.Add(ActivationFunction.Tanh);
                         break;
+                    case "l":
+                        funkcije.Add(ActivationFunction.Linear);
+                        break;
                 }
             }
             return funkcije.ToArray();
