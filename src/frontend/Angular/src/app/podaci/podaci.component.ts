@@ -62,6 +62,7 @@ export class PodaciComponent implements OnInit {
   selectedName = "";
   selectedArray:string[] = [];
   headers:string[] = [];
+  rowsAndPages:number[][] = [];
 
   public kolone: any[] = [];
   message: any;
@@ -427,6 +428,48 @@ export class PodaciComponent implements OnInit {
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu zamenjene");
     })
+  }
+
+  getRow(i:number,p:number)
+  {
+    for(let j = 0;j<this.rowsAndPages.length;j++)
+    {
+      if(this.rowsAndPages[j][0] == i && this.rowsAndPages[j][1] == p)
+      {
+        this.rowsAndPages.splice(j,1);
+        return;
+      }
+    }
+    this.dodajKomandu("Dodat red: "+ i + " na strani: "+ p);
+    this.rowsAndPages.push([i,p]);
+    //console.log(this.rowsAndPages);
+  }
+
+  isSelectedRow(i:number){
+    let temp:boolean = false;
+    this.rowsAndPages.forEach((el)=>{
+     
+      if(el[0] == i && el[1] == this.page)
+        temp = true;
+    });
+    return temp;
+  }
+
+  getSelectedRows()
+  {
+    if(this.rowsAndPages.length == 0)
+      this.dodajKomandu("Nema selektovanih redova");
+    else
+    {
+      for(let i=0;i<this.rowsAndPages.length;i++)
+      this.dodajKomandu("Red: " + this.rowsAndPages[i][0] + " Strana: " + this.rowsAndPages[i][1]);
+    }
+  }
+  izbrisiSelektovaneRedove()
+  {
+    this.rowsAndPages = [];
+
+    this.dodajKomandu("Redovi deselektovani");
   }
 }
 

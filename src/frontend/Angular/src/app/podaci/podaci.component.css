@@ -258,6 +258,25 @@ input#exampleFormControlFile1{
     border-radius: 5px;
     margin-left: 5px;
 }
+#selektovani-redovi{
+    color: white;
+    background-color: rgb(39, 88, 43);
+    border: 1px solid rgb(26, 60, 31);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+#restore-rows{
+    color: white;
+    background-color: rgb(105, 114, 50);
+    border: 1px solid rgb(69, 78, 33);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+/****** SELEKTOVANJE REDOVA *****/
+.selectedRow{
+    background-color: rgba(255, 0, 0, 0.162);
+}
+
 
 /* ---------------------   TABELA  ----------------------  */ 
 #tabela-statistika{

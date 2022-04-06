@@ -140,8 +140,8 @@
                         itemsPerPage: itemsPerPage,
                         currentPage: page,
                         totalItems: totalItems
-                    };  index as i">
-                        <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)">
+                    };  index as i" (click)="getRow(i,this.page)">
+                        <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)" [class.selectedRow]="isSelectedRow(i)">
                         {{fieldValue}}
                         </td>
                     </tr>
@@ -176,6 +176,8 @@
     <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
     <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
+    <button id="selektovani-redovi" (click)="getSelectedRows()">Selektovani redovi</button>
+    <button id="restore-rows" (click)="izbrisiSelektovaneRedove()">Deselektuj redove</button>
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>
     </div>
