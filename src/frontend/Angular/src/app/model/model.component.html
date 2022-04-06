@@ -54,9 +54,9 @@
                 <div id="grupa1">
                     <div id="grupa">
                         <h3> Regularization method </h3>
-                        <select name="" id="dd1">
-                            <option id="ddp" value="L1">L1</option>
-                            <option id="ddp" value="L2">L2</option>
+                        <select name="" id="dd1" (change)="selectRM($event)">
+                            <option id="ddp" value="0">L1</option>
+                            <option id="ddp" value="1">L2</option>
                         </select>
                     </div>
 
@@ -67,9 +67,9 @@
 
                     <div id="grupa">
                         <h3> Loss function </h3>
-                        <select name="" id="dd2">
-                            <option id="ddp" value="L1 loss">L1 loss</option>
-                            <option id="ddp" value="Cross-entropy loss">Cross-entropy loss</option>
+                        <select name="" id="dd2" (change)="selectLF($event)">
+                            <option id="ddp" value="0">L1 loss</option>
+                            <option id="ddp" value="1">Cross-entropy loss</option>
                         </select>
                     </div>
                 </div>
@@ -87,11 +87,20 @@
     
                     <div id="grupa">
                         <h3> Optimizer </h3>
-                        <select name="" id="dd3">
-                            <option id="ddp" value="SGD">SGD</option>
-                            <option id="ddp" value="AdaGrad">AdaGrad</option>
-                            <option id="ddp" value="AdaDelta">AdaDelta</option>
-                            <option id="ddp" value="Adam">Adam</option>
+                        <select name="" id="dd3" (change)="selectO($event)">
+                            <option id="ddp" value="0">SGD</option>
+                            <option id="ddp" value="1">AdaGrad</option>
+                            <option id="ddp" value="2">AdaDelta</option>
+                            <option id="ddp" value="3">Adam</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="grupa1">
+                    <div id="grupa">
+                        <h3> Problem type </h3>
+                        <select name="" id="dd3" (change)="selectPT($event)">
+                            <option id="ddp" value="1">Classification</option>
+                            <option id="ddp" value="0">Regression</option>
                         </select>
                     </div>
                 </div>
@@ -112,11 +121,11 @@
                 <div *ngFor="let  in of hiddLay;let i = index">
                     
                     <div id="grupaHL">
-                        <select id="dd4" [selectedIndex]="aktFunk[i]">
-                            <option id="ddp" value="ReLU">ReLU</option>
-                            <option id="ddp" value="Tahn">Tahn</option>
-                            <option id="ddp" value="Sigmoid">Sigmoid</option>
-                            <option id="ddp" value="Linear">Linear</option>
+                        <select id="dd4" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
+                            <option id="ddp" value="0">ReLU</option>
+                            <option id="ddp" value="1">Tahn</option>
+                            <option id="ddp" value="2">Sigmoid</option>
+                            <option id="ddp" value="3">Linear</option>
                         </select>
                        <input type="number" min="1" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
                     </div>

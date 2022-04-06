@@ -7,12 +7,13 @@ namespace dotNet.DBFunkcije
     public class DBModel
     {
         private string connectionString;
-
+        private string pom = "";
+        String s;
         public DBModel(string connectionString)
         {
             this.connectionString = connectionString;
         }
-
+       
         public List<ModelDto> modeli(int id)
         {
             List<ModelDto> result = new List<ModelDto>();
@@ -178,22 +179,91 @@ namespace dotNet.DBFunkcije
             }
         }
 
-        public bool izmeniPodesavanja(string id, string bs, string lr, string ins,string noe,string os, string lf, string rm, string rr, string o)
+        public bool izmeniPodesavanja(int id, ANNSettings json)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update podesavanja set `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os, `LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
+                string query = "update podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
-                cmd.Parameters.AddWithValue("@lr", lr);
-                cmd.Parameters.AddWithValue("@bs", bs);
-                cmd.Parameters.AddWithValue("@ins", ins);
-                cmd.Parameters.AddWithValue("@noe", noe);
-                cmd.Parameters.AddWithValue("@os", os);
-                cmd.Parameters.AddWithValue("@rm", rm);
-                cmd.Parameters.AddWithValue("@rr", rr);
-                cmd.Parameters.AddWithValue("@lf", lf);
-                cmd.Parameters.AddWithValue("@o", o);
+                cmd.Parameters.AddWithValue("@lr", json.LearningRate);
+                cmd.Parameters.AddWithValue("@bs", json.BatchSize);
+                cmd.Parameters.AddWithValue("@ins", json.InputSize);
+                cmd.Parameters.AddWithValue("@noe", json.NumberOfEpochs);
+                cmd.Parameters.AddWithValue("@os", json.OutputSize);
+                cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
+
+                Console.WriteLine(json.ActivationFunctions[0]);
+
+                for(var i = 0; i < json.HiddenLayers.Length - 1; i++)
+                {
+                    s += json.HiddenLayers[i] + ",";
+                }
+                s += json.HiddenLayers[json.HiddenLayers.Length - 1];
+
+                cmd.Parameters.AddWithValue("@hl", s);
+
+                s = "";
+
+                for(var i = 0; i < json.ActivationFunctions.Length-1; i++)
+                {
+                    if (json.ActivationFunctions[i] == ActivationFunction.LeakyReLU)
+                        s += "lr,";
+                    if (json.ActivationFunctions[i] == ActivationFunction.Tanh)
+                        s += "t,";
+                    if (json.ActivationFunctions[i] == ActivationFunction.ReLU)
+                        s += "r,";
+                    if (json.ActivationFunctions[i] == ActivationFunction.Sigmoid)
+                        s += "s,";
+                }
+                if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.LeakyReLU)
+                    s += "lr";
+                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Tanh)
+                    s += "t";
+                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.ReLU)
+                    s += "r";
+                else
+                    s += "s";
+
+                cmd.Parameters.AddWithValue("@af", s);
+
+                if (json.ANNType == ProblemType.Regression)
+                {
+                    pom = "Regression";
+                }
+                else
+                    pom = "Classification";
+                cmd.Parameters.AddWithValue("@pt", pom);
+
+                if (json.LossFunction == LossFunction.L1Loss)
+                {
+                    pom = "L1Loss";
+                }
+                else if (json.LossFunction == LossFunction.MSELoss)
+                    pom = "MSELoss";
+                else
+                    pom = "CrossEntropyLoss";
+
+                cmd.Parameters.AddWithValue("@lf", pom);
+
+                if (json.Optimizer == Optimizer.Adadelta)
+                    pom = "Adadelta";
+                else if (json.Optimizer == Optimizer.Adam)
+                    pom = "Adam";
+                else if (json.Optimizer == Optimizer.Adagrad)
+                    pom = "Adagrad";
+                else
+                    pom = "SGD";
+
+                cmd.Parameters.AddWithValue("@o", pom);
+
+                if (json.Regularization == RegularizationMethod.L1)
+                    pom = "L1";
+                else
+                    if(json.Regularization == RegularizationMethod.L2)
+                        pom = "L2";
+               
+                cmd.Parameters.AddWithValue("@rm", pom);
 
                 connection.Open();
                 using (MySqlDataReader read = cmd.ExecuteReader())
