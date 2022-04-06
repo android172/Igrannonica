@@ -69,7 +69,8 @@
                         <h3> Loss function </h3>
                         <select name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
-                            <option id="ddp" value="1">Cross-entropy loss</option>
+                            <option id="ddp" value="1">MSELoss</option>
+                            <option id="ddp" value="2">Cross-entropy loss</option>
                         </select>
                     </div>
                 </div>
@@ -123,9 +124,10 @@
                     <div id="grupaHL">
                         <select id="dd4" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
                             <option id="ddp" value="0">ReLU</option>
-                            <option id="ddp" value="1">Tahn</option>
+                            <option id="ddp" value="1">LeakyReLU</option>
                             <option id="ddp" value="2">Sigmoid</option>
-                            <option id="ddp" value="3">Linear</option>
+                            <option id="ddp" value="3">Tahn</option>
+                            <option id="ddp" value="4">Linear</option>
                         </select>
                        <input type="number" min="1" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
                     </div>

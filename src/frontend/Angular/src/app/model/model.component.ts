@@ -84,7 +84,11 @@ export class ModelComponent implements OnInit {
         (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
         (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
         this.hiddLay = this.json1['hiddenLayers'];
-        
+        this.brHL = this.hiddLay.length;
+         for(let i=0; i<this.brHL;i++)
+        {
+          this.nizCvorova[i] = this.hiddLay[i];
+        }
         (<HTMLDivElement>document.getElementById("is")).innerHTML = this.json1['inputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLDivElement>document.getElementById("os")).innerHTML = this.json1['outputSize'];
@@ -340,8 +344,10 @@ export class ModelComponent implements OnInit {
   promeni1(br : any){
     if(br == 1)
     {
+        this.brHL++;
         this.hiddLay.push(1);
         this.aktFunk.push(1);
+        this.nizCvorova.push(1);
     }
     else{
 
@@ -352,6 +358,7 @@ export class ModelComponent implements OnInit {
       }
       this.hiddLay.pop();
       this.aktFunk.pop();
+      this.nizCvorova.pop();
     }
   }
 
