@@ -27,7 +27,6 @@
                     <span class="checkmark"></span>
                 </label>    
             </div>
-            <div id="poruka"></div>
         </div>
     </div>
     <div id="div2">
@@ -35,55 +34,53 @@
             <div id="podesavanja">
                 
                 <div id="grupa1">
+                
                     <div id="grupa">
-                        <h3> Number of epochs </h3>
-                        <input type="text" id="noe" name="noe">
+                        <h3> Input size </h3>
+                        <div type="text" id="is">{{brojU}}</div>
                     </div>
 
-                    <div id="grupa">
-                        <h3> Learning rate </h3>
-                        <input type="text" id="lr" name="lr">
+                    <div id="grupa12">
+                        <h3> Output size </h3>
+                        <div type="text" id="os" >{{brojI}}</div>
                     </div>
+
+                </div>
+
+                <div id="grupa1">
+                
+                    <div id="grupa">
+                        <h3> Ulazne kolone </h3>
+                        <select id="dd5">
+                            <option id="is" *ngFor="let uK of ulazneKolone" value="{{uK}}">{{uK}}</option>
+                        </select>
+                    </div>
+
+                    <div id="grupa12">
+                        <h3> Izlazne kolone </h3>
+                        <select id="dd5">
+                            <option id="os" *ngFor="let iK of izlazneKolone" value="{{iK}}">{{iK}}</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div id="grupa1">
 
                     <div id="grupa">
                         <h3> Batch size </h3>
                         <input type="text" id="bs" name="bs">
-                    </div>
-                </div>
-
-                <div id="grupa1">
-                    <div id="grupa">
-                        <h3> Regularization method </h3>
-                        <select name="" id="dd1" (change)="selectRM($event)">
-                            <option id="ddp" value="0">L1</option>
-                            <option id="ddp" value="1">L2</option>
-                        </select>
-                    </div>
-
-                    <div id="grupa">
-                        <h3> Regularization rate </h3>
-                        <input type="text" id="rr" name="rr">
                     </div>
 
                     <div id="grupa">
                         <h3> Loss function </h3>
                         <select name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
-                            <option id="ddp" value="1">Cross-entropy loss</option>
+                            <option id="ddp" value="1">MSELoss</option>
+                            <option id="ddp" value="2">Cross-entropy loss</option>
                         </select>
                     </div>
-                </div>
-                
-                <div id="grupa1">
-                    <div id="grupa">
-                        <h3> Input size </h3>
-                        <div type="text" id="is">{{brojU}}</div>
-                    </div>
-
-                    <div id="grupa">
-                        <h3> Output size </h3>
-                        <div type="text" id="os" >{{brojI}}</div>
-                    </div>
+        
     
                     <div id="grupa">
                         <h3> Optimizer </h3>
@@ -95,16 +92,42 @@
                         </select>
                     </div>
                 </div>
-                <div id="grupa1">
-                    <div id="grupa">
-                        <h3> Problem type </h3>
-                        <select name="" id="dd3" (change)="selectPT($event)">
-                            <option id="ddp" value="1">Classification</option>
-                            <option id="ddp" value="0">Regression</option>
-                        </select>
-                    </div>
-                </div>
             </div>
+        </div>
+    </div>
+</div>
+<div id="centrirano4">
+    <div id="podesavanja2">
+
+        <div id="grupa">
+            <h3> Number of epochs </h3>
+            <input type="text" id="noe" name="noe">
+        </div>
+
+        <div id="grupa">
+            <h3> Learning rate </h3>
+            <input type="text" id="lr" name="lr">
+        </div>
+
+        <div id="grupa">
+            <h3> Regularization method </h3>
+            <select name="" id="dd1" (change)="selectRM($event)">
+                <option id="ddp" value="0">L1</option>
+                <option id="ddp" value="1">L2</option>
+            </select>
+        </div>
+
+        <div id="grupa">
+            <h3> Regularization rate </h3>
+            <input type="text" id="rr" name="rr">
+        </div>
+
+        <div id="grupa">
+            <h3> Problem type </h3>
+            <select name="" id="dd3" (change)="selectPT($event)">
+                <option id="ddp" value="1">Classification</option>
+                <option id="ddp" value="0">Regression</option>
+            </select>
         </div>
     </div>
 </div>
@@ -123,9 +146,10 @@
                     <div id="grupaHL">
                         <select id="dd4" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
                             <option id="ddp" value="0">ReLU</option>
-                            <option id="ddp" value="1">Tahn</option>
+                            <option id="ddp" value="1">LeakyReLU</option>
                             <option id="ddp" value="2">Sigmoid</option>
-                            <option id="ddp" value="3">Linear</option>
+                            <option id="ddp" value="3">Tahn</option>
+                            <option id="ddp" value="4">Linear</option>
                         </select>
                        <input type="number" min="1" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
                     </div>
