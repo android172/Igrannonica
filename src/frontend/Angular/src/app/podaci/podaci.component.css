@@ -59,6 +59,96 @@ img{
 #brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
+/*************** TESTNI SKUP *********************/ 
+
+#testniskup-comp{
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+#proizvoljan-unos{
+    text-align: center;
+    justify-content: center;
+
+}
+
+.visible-testniskup{
+    visibility: visible;
+}
+.visible-unos{
+  visibility: visible;
+}
+.invisible-testniskup{
+    visibility: hidden;
+}
+.invisible-unos{
+    visibility: hidden;
+}
+.btn-design2{
+    height: 35px;
+    width: 10%;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
+
+input#exampleFormControlFile1{
+    display: none;
+ }
+ #label-input{
+     width: 145px;
+     background-color: rgb(46, 132, 189);
+     color: rgb(255, 255, 255);
+     height: 35px;
+     align-items: center;
+     font-size: 15px;
+     display: flex;
+     justify-content: center;
+     margin: 20px auto 10px auto;
+     box-sizing: border-box;
+     border-radius: 10px;
+     border: 2px solid rgba(44, 75, 90, 0.8);
+     cursor: pointer;
+     -webkit-transition-duration: 0.2s;
+     transition-duration: 0.2s;
+     -webkit-transition-property: box-shadow,transform;
+     transition-property: box-shadow,transform;
+ 
+ }
+ #label-input:hover, #label-input:active{
+     background-color: rgb(39, 91, 139);
+     box-shadow:0 0 15px rgba(0, 0, 0, 0.5);
+     -webkit-transform: scale(1.1);
+     transform: scale(1.1);
+ }
+ #label-input img{
+     width: 25px;
+     height: 25px;
+ }
+ 
+/*  */
+
+.btn-design{
+    
+    color: white;
+    background-color: rgb(33, 79, 138);
+    width: 120px;
+    height: 35px;
+    margin: 10px 0 15px 0;
+    justify-content: center;
+
+}
+.btn-design2{
+    height: 35px;
+    width: 235px;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
 
 /*********** TRACKER ***************/ 
 
@@ -376,12 +466,12 @@ th{
 }
 
 /*   NEDOSTAJUCE VREDNOSTI */ 
-
+/*
 #Zamena, #Brisanje{
     height: 30px;
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
     margin: 0 15px;
-}
+}*/
 
 #select-elements{
     margin: 20px auto auto 30px;

@@ -43,6 +43,7 @@ export class PodaciComponent implements OnInit {
   isArray(val:any): boolean { return val instanceof Array }
 
   fileName = '';
+  fileNameTest = '';
   json: any;
   page: number = 1;
   itemsPerPage: any;
@@ -108,6 +109,28 @@ export class PodaciComponent implements OnInit {
         this.page = 1;
     })
   }
+  onFileSelectedTest(event:any){
+    const filetest:File = event.target.files[0];
+
+    if(filetest)
+    {
+      this.fileNameTest = filetest.name;
+
+      const formData = new FormData();
+      formData.append("file", filetest, this.fileNameTest);  
+
+      const upload$ = this.http.post("http://localhost:5008/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+        res=>{
+          this.dodajKomandu("Ucitan testni skup");
+      },error =>{
+        console.log(error.error);	
+        this.dodajKomandu("Fajl nije unet");
+        
+      });
+    }
+
+  }
+
 
   dajStatistiku()
   {
@@ -263,5 +286,19 @@ export class PodaciComponent implements OnInit {
     for(let i=0;i<this.selectedColumns.length;i++)
       this.dodajKomandu("Kolona " + this.selectedColumns[i]);
   }
+  izborUnosa(str:string)
+  {
+    if(str === "Testni skup")
+    {
+      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "visible-testniskup";  
+      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";  
+    }
+    if(str === "Proizvoljno")
+    {
+      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "visible-unos";   
+      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";  
+    }
+  }
+
 }
 

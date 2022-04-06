@@ -252,5 +252,59 @@ namespace dotNet.Controllers
             string statistika = eksperiment.ColumnStatistics();
             return statistika;
         }
+        [HttpPost("uploadTest/{idEksperimenta}")]
+        public IActionResult UploadTest(IFormFile file, int idEksperimenta)
+        {
+
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            // kreiranje foldera 
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                return BadRequest("Folder korisnika ne postoji");
+            }
+
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                return BadRequest("Eksperiment nije kreiran");
+            }
+
+            // ucitavanje bilo kog fajla 
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            //System.IO.File.WriteAllBytes(path, bytes);
+            eksperiment.LoadDatasetTest(bytes, file.FileName);
+
+            return Ok("Testni skup ucitan.");
+        }
+
     }
+
 }
