@@ -503,7 +503,7 @@ th{
     margin-left: 5px;
 }
 
-#statistikaKolone
+/* #statistikaKolone
 {
     line-height: 3px;
 }
@@ -511,7 +511,7 @@ th{
 #ulStat
 {
     list-style-type: none;
-}
+} */
 
 #statistika::-webkit-scrollbar{
     width: 15px;
@@ -525,4 +525,9 @@ th{
 }
 #statistika::-webkit-scrollbar-thumb{
     background-color: #38395f;
+}
+
+.space
+{
+    margin-bottom: 15px;
 }

@@ -44,6 +44,7 @@ export class PodaciComponent implements OnInit {
 
   fileName = '';
   json: any;
+  jsonStatistika: any;
   page: number = 1;
   itemsPerPage: any;
   //totalItems : any;
@@ -61,6 +62,8 @@ export class PodaciComponent implements OnInit {
   selectedName = "";
   selectedArray:string[] = [];
   headers:string[] = [];
+  statistikaCat: any[] = [];
+  statistikaNum: any[] = [];
 
   public kolone: any[] = [];
   message: any;
@@ -98,10 +101,13 @@ export class PodaciComponent implements OnInit {
   {      
     this.http.get("http://localhost:5008/api/Upload/paging/1/10").subscribe(
        (response: any) => {
+         this.jsonStatistika = undefined
+         this.statistikaCat = []
+         this.statistikaNum = []
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
-        //this.dajStatistiku();
+        this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;
         this.gty(1);
@@ -113,10 +119,67 @@ export class PodaciComponent implements OnInit {
   {
     this.http.get("http://localhost:5008/api/Upload/statistika", {responseType: 'text'}).subscribe(
       (response: any) => {
-        console.log("TEST");
-        console.log(response);
+        console.table(response);
+        this.jsonStatistika = JSON.parse(response);
+        //console.log(this.jsonStatistika);
+        this.ucitajStatistiku();
       }
     )
+  }
+
+  ucitajStatistiku()
+  {
+    if(this.jsonStatistika == undefined)
+      return;
+
+    this.keys = Object.keys(this.jsonStatistika);
+    this.values = Object.values(this.jsonStatistika);  // niz parova key : value
+    //console.log(this.keys);
+    //console.table(this.values);
+    for (let index = 0; index < this.keys.length; index++) {
+      const key = this.keys[index];
+      //console.log(this.jsonStatistika[key].Maximum);
+      if(this.jsonStatistika[key].Maximum == undefined)
+      {
+        // console.log(this.jsonStatistika[key].MostCommon);
+        // console.log(this.jsonStatistika[key].Frequencies);
+        let niz = [];
+        niz.push({
+          imeKljucVC:"ValidCount",
+          ValidCount:this.jsonStatistika[key].ValidCount
+        });
+        niz.push({
+          imeKljucNC:"NaCount",
+          NaCount:this.jsonStatistika[key].NaCount
+        });
+        niz.push({
+          imeKljucUC:"UniqueCount",
+          UniqueCount:this.jsonStatistika[key].UniqueCount
+        });
+        // niz.push(this.jsonStatistika[key].MostCommon[0]);
+        // niz.push(this.jsonStatistika[key].MostCommon[1]);
+        // for (let index = 0; index < this.jsonStatistika[key].Frequencies.length; index++) {
+          niz.push({
+            imeKljucF:"Frequencies",
+            Frequencies:this.jsonStatistika[key].Frequencies
+          });
+        // }
+        console.log(niz)
+        this.statistikaCat.push({
+          key:key,
+          data:niz
+        });
+      }
+      else
+      {
+        this.statistikaNum.push({
+          key:key,
+          data:this.jsonStatistika[key]
+        });
+      }
+    }
+    console.log(this.statistikaNum);
+    console.log(this.statistikaCat);
   }
 
   promeniBrojRedova(value: any)
