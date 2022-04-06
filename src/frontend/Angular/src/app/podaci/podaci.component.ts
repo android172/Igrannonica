@@ -401,5 +401,32 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Vrednosti nisu dodate");
     })
   }
+
+  replaceEmptyWithNA()
+  {
+    this.http.post("http://localhost:5008/api/Upload/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Zamenjene numericke vrendosti");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Vrednosti nisu zamenjene");
+    })
+  }
+  replaceZeroWithNA(){
+
+    this.http.post("http://localhost:5008/api/Upload/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Zamenjene prazne numericke vrednosti");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Vrednosti nisu zamenjene");
+    })
+  }
 }
 

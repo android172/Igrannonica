@@ -444,5 +444,64 @@ namespace dotNet.Controllers
 
             return Ok("Mode");
         }
+        [HttpPost("replaceEmpty")]
+        public IActionResult replaceEmpty(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (niz.Length == 0)
+                return BadRequest("Vrednosti za zamenu ne postoje");
+
+            eksperiment.ReplaceEmptyWithNA(niz);
+
+            return Ok("Zamenjene string vrednosti sa NA");
+        }
+        [HttpPost("replaceZero")]
+        public IActionResult replaceZero(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (niz.Length == 0)
+                return BadRequest("Vrednosti za zamenu ne postoje");
+
+            eksperiment.ReplaceZeroWithNA(niz);
+
+            return Ok("Zamenjene 0 vrednosti sa NA");
+        }
+
     }
 }
