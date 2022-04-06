@@ -111,7 +111,7 @@ namespace dotNet.Controllers
             
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
-            eksperiment.LoadDataset(path);
+            eksperiment.LoadDataset(idEksperimenta, fileName);
 
             // upis csv-a u bazu 
             bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
@@ -147,16 +147,20 @@ namespace dotNet.Controllers
 
             int[] niz = new int[size];
             var j = page * size - size;
+
+            if (ukupanBrRedovaFajla == 0)
+                ukupanBrRedovaFajla = eksperiment.GetRowCount();
+
             for (var i = 0; i < size; i++)
             {
+                if (j >= ukupanBrRedovaFajla)
+                    break;
+                
                 Console.WriteLine("Vrednost j: " + j);
                 niz[i] = j++;
             }
 
-            var redovi = eksperiment.GetRows(niz);
-
-            if (ukupanBrRedovaFajla == 0)
-                ukupanBrRedovaFajla = eksperiment.GetRowCount();
+            var redovi = eksperiment.GetRows(niz);      
 
             Console.WriteLine($"Page: {page}  Size: {size}");
 

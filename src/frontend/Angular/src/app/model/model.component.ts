@@ -7,6 +7,7 @@ import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tokenGetter } from '../app.module';
+import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Component({
   selector: 'app-model',
@@ -30,6 +31,19 @@ export class ModelComponent implements OnInit {
   message: any;
   public idModela : any;
 
+  public brojU : number = 0;
+  public brojI : number = 0;
+  public kolone2 : any[] = [];
+
+ // public pom : boolean = false;
+  //public brHL : number = 0;
+  //public niz : any[] = [];
+  public brHL : number = 0;
+  public nizHL : any[] = [];
+  public nizCvorova : any[] = [];
+  public brCvorova : any;
+  public pom : string = "";
+
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -40,15 +54,20 @@ export class ModelComponent implements OnInit {
     )
   }
 
+  sendMessage():void{
+    this.shared.sendUpdate("Update");
+  }
+
   ngOnInit(): void {
     this.ucitajNaziv();
-    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);})
+    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     this.signalR.startConnection();
   }
   posaljiZahtev(data:number){
     //console.log(data);
     this.message = this.shared.getMessage();
     this.kolone = Object.assign([],this.message);
+    this.kolone2 = Object.assign([],this.kolone);
     this.idModela = data;
     this.ucitajNazivModela(this.idModela);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
@@ -62,6 +81,11 @@ export class ModelComponent implements OnInit {
         (<HTMLInputElement>document.getElementById("is")).defaultValue = this.json1['inputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("os")).defaultValue = this.json1['outputSize'];
+        /*
+        this.lossF= this.json1['lossFunction'];
+        this.optm = this.json1['optimizer'];
+        this.regM = this.json1['regularization'];
+        */
         (<HTMLInputElement>document.getElementById("lf")).defaultValue = this.json1['lossFunction'];
         (<HTMLInputElement>document.getElementById("o")).defaultValue = this.json1['optimizer'];
         (<HTMLInputElement>document.getElementById("rm")).defaultValue = this.json1['regularization'];
@@ -112,6 +136,7 @@ export class ModelComponent implements OnInit {
           if(element === nizK[i].value){
            // console.log(element);
             this.kolone.splice(index,1);
+            this.brojU++;
           }
         });
         //console.log(this.kolone);
@@ -128,23 +153,63 @@ export class ModelComponent implements OnInit {
         if(ind == 0)
         {
           this.kolone.splice(i, 0, nizK[i].value);
+          this.brojU--;
         }
       }
     }
   }
 
+  funkcija2(){
+    let nizK = <any>document.getElementsByName("izl"); 
+    for(let i=0; i<nizK.length; i++)
+    {
+      if(nizK[i].checked)
+      {
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           this.kolone2.splice(index,1);
+            this.brojI++;
+            return;
+          }
+        });
+      }
+      if(!nizK[i].checked)
+      {
+        var ind = 0;
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+            ind = 1;
+          }
+        });
+        if(ind == 0)
+        {
+          this.kolone2.splice(i, 0, nizK[i].value);
+          this.brojI--;
+          return;
+        }
+      }
+    }
+  }
+
+
+
+
   submit(){
 
+    this.izmeniPodesavanja();
     var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
     if(!(nazivEks === this.nazivEksperimenta))
     {
        this.proveriE();
+       this.sendMessage();
     }
     var nazivMod = (<HTMLInputElement>document.getElementById("nazivM")).value;
     if(!(nazivMod === this.nazivModela))
     {
        this.proveriM();
+       this.sendMessage();
     }
+
   }
 
   proveriE(){
@@ -158,6 +223,7 @@ export class ModelComponent implements OnInit {
         res=>{
 
         }, error=>{
+          this.ucitajNaziv();
           if(error.error === "Postoji eksperiment sa tim imenom")
           {
              var div1 = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
@@ -166,6 +232,43 @@ export class ModelComponent implements OnInit {
       )
   }
 
+  izmeniPodesavanja(){
+    var bs = (<HTMLInputElement>document.getElementById("bs")).value;
+    var lr = (<HTMLInputElement>document.getElementById("lr")).value;
+    var ins = (<HTMLInputElement>document.getElementById("is")).value;
+    var noe = (<HTMLInputElement>document.getElementById("noe")).value;
+    var os = (<HTMLInputElement>document.getElementById("os")).value;
+    var lf = (<HTMLInputElement>document.getElementById("lf")).value;
+    var o = (<HTMLInputElement>document.getElementById("o")).value;
+    var rm = (<HTMLInputElement>document.getElementById("rm")).value;
+    var rr = (<HTMLInputElement>document.getElementById("rr")).value;
+    
+
+    var jsonPod = [
+      {
+        "id":this.idModela,
+        "BatchSize": bs,
+        "LearningRate": lr,
+        "InputSize": ins,
+        "NumberOfEpochs": noe,
+        "OutputSize": os,
+        "LossFunction": lf,
+        "Optimizer": o,
+        "RegularizationMethod": rm,
+        "RegularizationRate": rr
+      }
+    ];
+    console.log(jsonPod);
+    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?json=" + JSON.stringify(jsonPod),{responseType : "text"}).subscribe(
+      res=>{
+        
+      },err=>{
+        //console.log(err.error);
+      }
+    )
+  }
+
+  
   
   proveriM(){
 
@@ -178,7 +281,8 @@ export class ModelComponent implements OnInit {
       res=>{
 
       }, error=>{
-        console.log(error.error);
+        this.ucitajNazivModela(this.idModela);
+        //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
@@ -191,4 +295,46 @@ export class ModelComponent implements OnInit {
     
     this.signalR.ZapocniTreniranje(tokenGetter(),1);
   }
+
+  counter1(broj:number){
+    
+    for(let i=0; i<broj; i++)
+    {
+      this.nizHL[i] = i+1;
+    }
+    return this.nizHL;
+  }
+
+  promeni1(br : any){
+    if(br == 1)
+    {
+        this.hiddLay.push(1);
+        this.aktFunk.push(1);
+    }
+    else{
+
+      if(this.brHL >= 1)
+        this.brHL--;
+      else{
+        this.brHL = 0;
+      }
+      this.hiddLay.pop();
+      this.aktFunk.pop();
+    }
+  }
+
+  brojCvorova(ind:number){
+
+    for(let i=0; i<this.brHL; i++){
+    
+      if(i == ind)
+      {
+        var x = i;
+        this.pom = x.toString();
+        this.nizCvorova[i] = (<HTMLInputElement>document.getElementById(this.pom)).value;
+        console.log(this.nizCvorova[i]);
+      }
+    }
+  }
+
 }

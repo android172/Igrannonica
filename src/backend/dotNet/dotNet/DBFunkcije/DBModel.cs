@@ -1,5 +1,6 @@
 ﻿using dotNet.Models;
 using MySql.Data.MySqlClient;
+using System;
 
 namespace dotNet.DBFunkcije
 {
@@ -121,8 +122,8 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        ProblemType fun;
-                        if (reader.GetString("Problemtype").Equals("Reggresion")) fun = ProblemType.Regression;
+                        ProblemType fun = ProblemType.Regression;
+                        if (reader.GetString("Problemtype")== "Regression") fun = ProblemType.Regression;
                         else fun = ProblemType.Classification;
                         ANNSettings settings = new ANNSettings(
                             fun,
@@ -138,7 +139,7 @@ namespace dotNet.DBFunkcije
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
                             );
-
+                        Console.WriteLine(fun);
                         return settings;
                     }
                     return null;
@@ -151,7 +152,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam',5);";
+                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam','','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -160,8 +161,51 @@ namespace dotNet.DBFunkcije
 
             }
         }
-            
-        
+
+        public bool izbrisiPodesavanja(int idp)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from podesavanja where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", idp);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public bool izmeniPodesavanja(string id, string bs, string lr, string ins,string noe,string os, string lf, string rm, string rr, string o)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update podesavanja set `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os, `LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@idp", id);
+                cmd.Parameters.AddWithValue("@lr", lr);
+                cmd.Parameters.AddWithValue("@bs", bs);
+                cmd.Parameters.AddWithValue("@ins", ins);
+                cmd.Parameters.AddWithValue("@noe", noe);
+                cmd.Parameters.AddWithValue("@os", os);
+                cmd.Parameters.AddWithValue("@rm", rm);
+                cmd.Parameters.AddWithValue("@rr", rr);
+                cmd.Parameters.AddWithValue("@lf", lf);
+                cmd.Parameters.AddWithValue("@o", o);
+
+                connection.Open();
+                using (MySqlDataReader read = cmd.ExecuteReader())
+                {
+                    if (read.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
 
         private int[] HiddenLayers(string niz)
         {
@@ -216,5 +260,39 @@ namespace dotNet.DBFunkcije
                 }
             }
         }
+
+        public List<List<int>> Kolone(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<List<int>> list = new List<List<int>>();
+                string query = "select * from podesavanja where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        List<int> list1 = new List<int>();
+                        string kolone = reader.GetString("ulaznekolone");
+                        foreach(string i in kolone.Split(','))
+                        {
+                            list1.Add(int.Parse(i));
+                        }
+                        list.Add(list1);
+                        kolone = reader.GetString("izlaznekolone");
+                        list1 = new List<int>();
+                        foreach (string i in kolone.Split(','))
+                        {
+                            list1.Add(int.Parse(i));
+                        }
+                        list.Add(list1);
+                    }
+                }
+                return list;
+            }
+        }
+
     }
 }

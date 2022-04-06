@@ -1,3 +1,10 @@
+# Dependencies:
+#    torch
+#    numpy
+#    pandas
+#    sklearn
+#    openpyxl
+
 import socket
 from MLClientInstance import MLClientInstance
 
