@@ -156,7 +156,7 @@
                 <div id="statistikaKolone" *ngFor="let item of element.data | keyvalue">
                     <div>
                         <div>
-                            <div>
+                            <div class="item">
                                 {{item.key}}: &nbsp; {{item.value}}
                             </div>
                         </div>
@@ -167,26 +167,26 @@
                 <div class="mt-2" id="imeKolone">{{element.key}}</div>
                 <div id="statistikaKolone" *ngFor="let item of element.data">
                     <div>
-                        <div *ngIf="item.imeKljucVC">
+                        <div class="item" *ngIf="item.imeKljucVC">
                             {{item.imeKljucVC}}: {{item.ValidCount}}
                         </div>
-                        <div *ngIf="item.imeKljucNC">
+                        <div class="item" *ngIf="item.imeKljucNC">
                             {{item.imeKljucNC}}: {{item.NaCount}}
                         </div>
-                        <div *ngIf="item.imeKljucUC">
+                        <div class="item" *ngIf="item.imeKljucUC">
                             {{item.imeKljucUC}}: {{item.UniqueCount}}
                         </div>
                         <div *ngIf="item.Frequencies">
                             <div *ngFor="let freq of item.Frequencies; index as i">
                                 <div *ngIf="i==0">
-                                    Most Common: &nbsp; <br> &nbsp;&nbsp;&nbsp;&nbsp;{{item.Frequencies[i][0]}}: &nbsp; {{item.Frequencies[i][1]}}
+                                    Most Common: &nbsp; <br> <div class="uvuceno">{{item.Frequencies[i][0]}}: &nbsp; {{item.Frequencies[i][1]}}</div>
                                 </div>
                             </div>
                         </div>
                         <div *ngIf="item.imeKljucF">
                             {{item.imeKljucF}}:
-                            <div *ngFor="let freq of item.Frequencies">
-                                <div>&nbsp;&nbsp;&nbsp;&nbsp;{{freq[0]}}: &nbsp; {{freq[1]}} </div>
+                            <div class="uvucenoBezMB" *ngFor="let freq of item.Frequencies">
+                                <div>{{freq[0]}}: &nbsp; {{freq[1]}} </div>
                             </div>
                         </div>
                     </div>
