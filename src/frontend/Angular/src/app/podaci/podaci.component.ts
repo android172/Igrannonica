@@ -471,5 +471,30 @@ export class PodaciComponent implements OnInit {
 
     this.dodajKomandu("Redovi deselektovani");
   }
+
+  deleteRows()
+  {
+    let redoviZaBrisanje:number[] = [];
+
+    for(let j = 0;j<this.rowsAndPages.length;j++)
+    {
+      let temp = (this.rowsAndPages[j][1] - 1) * this.itemsPerPage + this.rowsAndPages[j][0]; 
+      redoviZaBrisanje.push(temp); 
+    }
+
+    this.http.post("http://localhost:5008/api/Upload/deleteRows",redoviZaBrisanje,{responseType: 'text'}).subscribe(
+      res => {
+        //console.log(res);
+        this.totalItems = (parseInt)(res);
+        console.log(this.totalItems);
+        this.loadDefaultItemsPerPage();
+        this.rowsAndPages = [];
+        this.dodajKomandu("Redovi obrisani");
+    },error=>{
+      //console.log(error.error);
+      this.dodajKomandu("Redovi nisu obrisani");
+    })
+  }
+
 }
 

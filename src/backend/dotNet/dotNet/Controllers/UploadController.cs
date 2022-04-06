@@ -502,6 +502,37 @@ namespace dotNet.Controllers
 
             return Ok("Zamenjene 0 vrednosti sa NA");
         }
+        [HttpPost("deleteRows")]
+        public string deleteRows(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
 
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return "6"; //BadRequest();
+            }
+            else
+                return "7"; // BadRequest("Korisnik nije ulogovan.");
+
+            if (niz.Length == 0)
+                return "8";// BadRequest("Niz je prazan");
+            
+            foreach(var i in niz)
+            {
+                eksperiment.DeleteRow(i);
+            }
+
+            return eksperiment.GetRowCount().ToString();
+        }
     }
 }
