@@ -500,13 +500,15 @@ th{
     display: list-item;
     list-style-type: disc;
     list-style-position: inside;
-    margin-left: 5px;
+    margin-left: 15px;
     margin-top: 15px;
+    cursor: pointer;
 }
 
-#statistikaKolone
+#imeKolone:hover
 {
-    margin-left: 50px;
+    color: #CED9FF;
+    transition: 0.1s;
 }
 
 /* #ulStat
@@ -530,7 +532,7 @@ th{
 
 .uvuceno
 {
-    margin-left:40px;
+    margin-left:50px;
     margin-bottom: 5px;
 }
 
@@ -541,5 +543,5 @@ th{
 
 .uvucenoBezMB
 {
-    margin-left:40px;
+    margin-left: 50px;
 }

@@ -152,9 +152,9 @@
         <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div *ngFor="let element of statistikaNum; index as i">
-                <div id="imeKolone" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapseNum{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
-                <div id="statistikaKolone" class="collapse" id="collapseNum{{i}}" *ngFor="let item of element.data | keyvalue">
-                    <div>
+                <div id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseNum{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
+                <div class="collapse" id="collapseNum{{i}}" *ngFor="let item of element.data | keyvalue">
+                    <div class="uvuceno">
                         <div>
                             <div class="item">
                                 {{item.key}}: &nbsp; {{item.value}}
@@ -164,9 +164,9 @@
                 </div>
             </div>
             <div *ngFor="let element of statistikaCat; index as i">
-                <div class="mt-2" id="imeKolone" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapseCat{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
-                <div id="statistikaKolone" class="collapse" id="collapseCat{{i}}" *ngFor="let item of element.data">
-                    <div>
+                <div class="mt-2" id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseCat{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
+                <div class="collapse" id="collapseCat{{i}}" *ngFor="let item of element.data">
+                    <div class="uvuceno">
                         <div class="item" *ngIf="item.imeKljucVC">
                             {{item.imeKljucVC}}: {{item.ValidCount}}
                         </div>
