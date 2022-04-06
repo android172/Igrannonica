@@ -304,7 +304,36 @@ namespace dotNet.Controllers
 
             return Ok("Testni skup ucitan.");
         }
+        [HttpPost("setRatio/{ratio}")]
+        public IActionResult setRatio(float ratio)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
 
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (float.IsNaN(ratio))
+                return BadRequest("Nije unet ratio.");
+
+           
+            eksperiment.TrainTestSplit(ratio);
+
+            return Ok("Dodat ratio.");
+        }
     }
 
 }

@@ -327,5 +327,26 @@ export class PodaciComponent implements OnInit {
       (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+10.5}%`;
     }
   }
+
+  setRatio()
+  {
+    let ratio = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value); 
+
+    if(Number.isNaN(ratio))
+    {
+      this.dodajKomandu("Nije unet ratio");
+      console.log("Uneta vrednost: "+ratio);
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.dodajKomandu("Dodat ratio: "+ ratio);
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Ratio nije dodat");
+    })
+
+  }
 }
 
