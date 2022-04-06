@@ -361,5 +361,45 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Kolone nisu obrisane");
     })
   }
+
+  fillWithMean()
+  {
+    this.http.post("http://localhost:5008/api/Upload/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Dodate Mean vrednosti");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Vrednosti nisu dodate");
+    })
+  }
+  fillWithMedian()
+  {
+    this.http.post("http://localhost:5008/api/Upload/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Dodate median vrednosti");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Vrednosti nisu dodate");
+    })
+  }
+  fillWithMode()
+  {
+    this.http.post("http://localhost:5008/api/Upload/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Dodate mode vrednosti");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Vrednosti nisu dodate");
+    })
+  }
 }
 
