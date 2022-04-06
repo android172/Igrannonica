@@ -15,7 +15,6 @@ namespace dotNet.Controllers
     {
         private IConfiguration _config;
         DB db;
-        string id,bs,lr,ins,noe,os,lf,rm,rr,o;
      
         public EksperimentController(IConfiguration config)
         {
@@ -148,24 +147,10 @@ namespace dotNet.Controllers
         }
         [Authorize]
         [HttpPut("Podesavanja")]
-        public IActionResult updatePodesavanja(string json)//JObject json = JObject.Parse(str)
+        public IActionResult updatePodesavanja(int id, [FromBody]ANNSettings json)
         {
             Console.WriteLine(json);
-            List<Podesavanja> json1 = JsonConvert.DeserializeObject<List<Podesavanja>>(json);
-            foreach (var item in json1)
-            {
-                id = item.id;
-                bs = item.BatchSize;
-                lr = item.LearningRate;
-                ins = item.InputSize;
-                noe = item.NumberOfEpochs;
-                os = item.OutputSize;
-                lf = item.LossFunction;
-                rm = item.RegularizationMethod;
-                rr = item.RegularizationRate;
-                o = item.Optimizer;
-            }
-            if (db.dbmodel.izmeniPodesavanja(id,bs,lr,ins,noe,os,lf,rm,rr,o))
+            if (db.dbmodel.izmeniPodesavanja(id,json))
                 return Ok("Izmenjena podesavanja.");
             return BadRequest("Doslo je do greske");
         }

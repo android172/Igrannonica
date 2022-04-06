@@ -41,9 +41,18 @@ export class ModelComponent implements OnInit {
   public brHL : number = 0;
   public nizHL : any[] = [];
   public nizCvorova : any[] = [];
+  public nizCvorovaStr: string[] = [];
   public brCvorova : any;
   public pom : string = "";
+  public s: string = "";
 
+  selectedLF: number = 0;
+  selectedO: number = 0;
+  selectedRM: number = 0;
+  selectedPT: number = 0;
+
+  public ulazneKolone : string[] = [];
+  public izlazneKolone : string[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -80,17 +89,14 @@ export class ModelComponent implements OnInit {
         (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
         (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
         this.hiddLay = this.json1['hiddenLayers'];
-        (<HTMLInputElement>document.getElementById("is")).defaultValue = this.json1['inputSize'];
+        this.brHL = this.hiddLay.length;
+         for(let i=0; i<this.brHL;i++)
+        {
+          this.nizCvorova[i] = this.hiddLay[i];
+        }
+        this.brojU = this.json1['inputSize'];
+        this.brojI = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
-        (<HTMLInputElement>document.getElementById("os")).defaultValue = this.json1['outputSize'];
-        /*
-        this.lossF= this.json1['lossFunction'];
-        this.optm = this.json1['optimizer'];
-        this.regM = this.json1['regularization'];
-        */
-        (<HTMLInputElement>document.getElementById("lf")).defaultValue = this.json1['lossFunction'];
-        (<HTMLInputElement>document.getElementById("o")).defaultValue = this.json1['optimizer'];
-        (<HTMLInputElement>document.getElementById("rm")).defaultValue = this.json1['regularization'];
         (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
       },
       error=>{
@@ -130,21 +136,45 @@ export class ModelComponent implements OnInit {
 
   funkcija(){
     let nizK = <any>document.getElementsByName("ulz"); 
+    var ind1;
     for(let i=0; i<nizK.length; i++)
     {
       if(nizK[i].checked)
       {
+        ind1 = 0;
+        for(let j=0; j<this.ulazneKolone.length; j++)
+        {
+            if(this.ulazneKolone[j] === nizK[i].value)
+            {
+                ind1 = 1;
+            }
+        }
+        if(ind1 == 0)
+        {
+           this.ulazneKolone.push(nizK[i].value);
+        }
+        console.log(this.ulazneKolone);
+
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            // console.log(element);
             this.kolone.splice(index,1);
             this.brojU++;
+            console.log(this.brojU);
           }
         });
         //console.log(this.kolone);
       }
       if(!nizK[i].checked)
       {
+        for(let j=0; j < this.ulazneKolone.length; j++)
+        {
+          if(this.ulazneKolone[j] == nizK[i].value)
+          {
+            this.ulazneKolone.splice(j,1);
+          }
+        }
+        console.log(this.ulazneKolone);
         var ind = 0;
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -163,10 +193,25 @@ export class ModelComponent implements OnInit {
 
   funkcija2(){
     let nizK = <any>document.getElementsByName("izl"); 
+    var ind2;
     for(let i=0; i<nizK.length; i++)
     {
       if(nizK[i].checked)
       {
+        ind2 = 0;
+        for(let j=0; j<this.izlazneKolone.length; j++)
+        {
+            if(this.izlazneKolone[j] === nizK[i].value)
+            {
+                ind2 = 1;
+            }
+        }
+        if(ind2 == 0)
+        {
+           this.izlazneKolone.push(nizK[i].value);
+        }
+        console.log(this.ulazneKolone);
+
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            this.kolone2.splice(index,1);
@@ -177,6 +222,14 @@ export class ModelComponent implements OnInit {
       }
       if(!nizK[i].checked)
       {
+        for(let j=0; j < this.izlazneKolone.length; j++)
+        {
+          if(this.izlazneKolone[j] == nizK[i].value)
+          {
+            this.izlazneKolone.splice(j,1);
+          }
+        }
+        console.log(this.izlazneKolone);
         var ind = 0;
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -192,7 +245,6 @@ export class ModelComponent implements OnInit {
       }
     }
   }
-
 
 
 
@@ -234,38 +286,71 @@ export class ModelComponent implements OnInit {
       )
   }
 
-  izmeniPodesavanja(){
-    var bs = (<HTMLInputElement>document.getElementById("bs")).value;
-    var lr = (<HTMLInputElement>document.getElementById("lr")).value;
-    var ins = (<HTMLInputElement>document.getElementById("is")).value;
-    var noe = (<HTMLInputElement>document.getElementById("noe")).value;
-    var os = (<HTMLInputElement>document.getElementById("os")).value;
-    var lf = (<HTMLInputElement>document.getElementById("lf")).value;
-    var o = (<HTMLInputElement>document.getElementById("o")).value;
-    var rm = (<HTMLInputElement>document.getElementById("rm")).value;
-    var rr = (<HTMLInputElement>document.getElementById("rr")).value;
-    
+  selectLF(event: any){
+    var str = event.target.value;
+    this.selectedLF = Number(str);
+    console.log(this.selectedLF);
+  }
+  selectO(event: any){
+    var str = event.target.value;
+    this.selectedO = Number(str);
+  }
+  selectRM(event: any){
+    var str = event.target.value;
+    this.selectedRM = Number(str);
+  }
+  selectPT(event: any){
+    var str = event.target.value;
+    this.selectedPT = Number(str);
+  }
 
-    var jsonPod = [
+  uzmiAK(ind:any, event: any){
+    for(let i=0;i<this.aktFunk.length;i++)
+    {
+      if(ind==i)
       {
-        "id":this.idModela,
+        var str = event.target.value;
+        this.aktFunk[i] = Number(str);
+      }
+    }
+  }
+
+  izmeniPodesavanja(){
+    this.s = (<HTMLInputElement>document.getElementById("bs")).value;
+    var bs = Number(this.s);
+    this.s = (<HTMLInputElement>document.getElementById("lr")).value;
+    var lr = Number(this.s);
+    this.s = (<HTMLDivElement>document.getElementById("is")).innerHTML;
+    var ins = Number(this.s);
+    this.s = (<HTMLInputElement>document.getElementById("noe")).value;
+    var noe = Number(this.s);
+    this.s = (<HTMLDivElement>document.getElementById("os")).innerHTML;
+    var os = Number(this.s);
+    this.s = (<HTMLInputElement>document.getElementById("rr")).value;
+    var rr = Number(this.s);
+
+    var jsonPod = 
+    {
+        "ANNType":this.selectedPT,
         "BatchSize": bs,
         "LearningRate": lr,
         "InputSize": ins,
         "NumberOfEpochs": noe,
         "OutputSize": os,
-        "LossFunction": lf,
-        "Optimizer": o,
-        "RegularizationMethod": rm,
-        "RegularizationRate": rr
-      }
-    ];
-    console.log(jsonPod);
-    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?json=" + JSON.stringify(jsonPod),{responseType : "text"}).subscribe(
+        "LossFunction": this.selectedLF,
+        "Optimizer": this.selectedO,
+        "Regularization": this.selectedRM,
+        "RegularizationRate": rr,
+        "HiddenLayers":this.nizCvorova,
+        "ActivationFunctions":this.aktFunk
+    };
+    
+    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
       res=>{
         
       },err=>{
-        //console.log(err.error);
+        console.log(jsonPod);
+        console.log(err.error);
       }
     )
   }
@@ -313,8 +398,10 @@ export class ModelComponent implements OnInit {
   promeni1(br : any){
     if(br == 1)
     {
+        this.brHL++;
         this.hiddLay.push(1);
         this.aktFunk.push(1);
+        this.nizCvorova.push(1);
     }
     else{
 
@@ -325,6 +412,7 @@ export class ModelComponent implements OnInit {
       }
       this.hiddLay.pop();
       this.aktFunk.pop();
+      this.nizCvorova.pop();
     }
   }
 
@@ -336,7 +424,8 @@ export class ModelComponent implements OnInit {
       {
         var x = i;
         this.pom = x.toString();
-        this.nizCvorova[i] = (<HTMLInputElement>document.getElementById(this.pom)).value;
+        var str = (<HTMLInputElement>document.getElementById(this.pom)).value;
+        this.nizCvorova[i]=Number(str);
         console.log(this.nizCvorova[i]);
       }
     }
