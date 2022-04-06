@@ -300,5 +300,32 @@ export class PodaciComponent implements OnInit {
     }
   }
 
+  ispisRatio(){
+    let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value; 
+    let val1:number = (parseFloat)((<HTMLInputElement>document.getElementById("input-ratio")).value);
+    (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost ;  
+    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + vrednost;
+    if(val1 < 0.5)
+    {
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+9.5}%`;
+    }
+    else{
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+10.5}%`;
+    }
+  }
+  upisRatio()
+  {
+    let vrednost = (<HTMLInputElement>document.getElementById("vrednost-ratio")).value; 
+    let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value); 
+    (<HTMLInputElement>document.getElementById("input-ratio")).value ="" + vrednost; 
+    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + vrednost;
+    if(val1 < 0.5)
+    {
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+9.5}%`;
+    }
+    else{
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+10.5}%`;
+    }
+  }
 }
 

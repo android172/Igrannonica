@@ -65,7 +65,18 @@
 
 
                 <div id="proizvoljan-unos" class="invisible-unos">
-
+                    <div id="slider">
+                        <div id="current-value">0.5</div>
+                        <br>
+                        <br>
+                        <br>
+                        <input type="range" min="0" max="1" step="0.0001" value="0.5" (change)="ispisRatio()" id="input-ratio">
+                    </div>
+                    <br><br><br><br>
+                    <div id="div-ratio">
+                        <input type="number" min="0" max="1" step="0.0001" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
+                        <button id="btn-ratio">Primeni</button>
+                    </div>   
                 </div>
             </div>
         </div>
