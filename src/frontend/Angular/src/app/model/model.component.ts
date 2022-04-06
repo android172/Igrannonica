@@ -51,6 +51,9 @@ export class ModelComponent implements OnInit {
   selectedRM: number = 0;
   selectedPT: number = 0;
 
+  public ulazneKolone : string[] = [];
+  public izlazneKolone : string[] = [];
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -89,9 +92,9 @@ export class ModelComponent implements OnInit {
         {
           this.nizCvorova[i] = this.hiddLay[i];
         }
-        (<HTMLDivElement>document.getElementById("is")).innerHTML = this.json1['inputSize'];
+        this.brojU = this.json1['inputSize'];
+        this.brojI = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
-        (<HTMLDivElement>document.getElementById("os")).innerHTML = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
       },
       error=>{
@@ -131,21 +134,45 @@ export class ModelComponent implements OnInit {
 
   funkcija(){
     let nizK = <any>document.getElementsByName("ulz"); 
+    var ind1;
     for(let i=0; i<nizK.length; i++)
     {
       if(nizK[i].checked)
       {
+        ind1 = 0;
+        for(let j=0; j<this.ulazneKolone.length; j++)
+        {
+            if(this.ulazneKolone[j] === nizK[i].value)
+            {
+                ind1 = 1;
+            }
+        }
+        if(ind1 == 0)
+        {
+           this.ulazneKolone.push(nizK[i].value);
+        }
+        console.log(this.ulazneKolone);
+
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            // console.log(element);
             this.kolone.splice(index,1);
             this.brojU++;
+            console.log(this.brojU);
           }
         });
         //console.log(this.kolone);
       }
       if(!nizK[i].checked)
       {
+        for(let j=0; j < this.ulazneKolone.length; j++)
+        {
+          if(this.ulazneKolone[j] == nizK[i].value)
+          {
+            this.ulazneKolone.splice(j,1);
+          }
+        }
+        console.log(this.ulazneKolone);
         var ind = 0;
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -164,10 +191,25 @@ export class ModelComponent implements OnInit {
 
   funkcija2(){
     let nizK = <any>document.getElementsByName("izl"); 
+    var ind2;
     for(let i=0; i<nizK.length; i++)
     {
       if(nizK[i].checked)
       {
+        ind2 = 0;
+        for(let j=0; j<this.izlazneKolone.length; j++)
+        {
+            if(this.izlazneKolone[j] === nizK[i].value)
+            {
+                ind2 = 1;
+            }
+        }
+        if(ind2 == 0)
+        {
+           this.izlazneKolone.push(nizK[i].value);
+        }
+        console.log(this.ulazneKolone);
+
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            this.kolone2.splice(index,1);
@@ -178,6 +220,14 @@ export class ModelComponent implements OnInit {
       }
       if(!nizK[i].checked)
       {
+        for(let j=0; j < this.izlazneKolone.length; j++)
+        {
+          if(this.izlazneKolone[j] == nizK[i].value)
+          {
+            this.izlazneKolone.splice(j,1);
+          }
+        }
+        console.log(this.izlazneKolone);
         var ind = 0;
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -193,7 +243,6 @@ export class ModelComponent implements OnInit {
       }
     }
   }
-
 
 
 
