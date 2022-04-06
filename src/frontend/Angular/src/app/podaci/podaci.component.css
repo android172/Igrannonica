@@ -89,8 +89,8 @@ img{
     text-align: center;
     line-height: 30px;
     justify-content: center;
-    background-color: rgb(43, 65, 164);
-    border: 2px solid rgb(187, 189, 211);
+    background-color: #006ce8;
+    border: 2px solid rgb(247, 247, 255);
     border-top-left-radius: 10%;
     border-top-right-radius: 10%;
     border-bottom-left-radius: 40%;
@@ -109,6 +109,9 @@ img{
     border: 2px solid rgb(77, 77, 97);
     color: rgb(255, 255, 255);
     border-radius: 7px;
+}
+#input-ratio{
+    margin-top: 10px;
 }
 /*************** TESTNI SKUP *********************/ 
 
