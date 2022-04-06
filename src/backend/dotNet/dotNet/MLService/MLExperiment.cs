@@ -17,15 +17,19 @@ namespace dotNet.MLService {
         // ///////////////// //
 
         public void LoadDataset(int experimentId, string fileName) {
-            connection.Send(Command.LoadData);
-            connection.Send(experimentId);
-            connection.Send(fileName);
+            lock (_lock) {
+                connection.Send(Command.LoadData);
+                connection.Send(experimentId);
+                connection.Send(fileName);
+            }
         }
 
         public void LoadDatasetTest(byte[] data, string fileName) {
-            connection.Send(Command.LoadTestData);
-            connection.Send(data);
-            connection.Send(fileName);
+            lock (_lock) {
+                connection.Send(Command.LoadTestData);
+                connection.Send(data);
+                connection.Send(fileName);
+            }
         }
 
         public void LoadInputs(int[] inputs) {

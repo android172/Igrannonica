@@ -4,6 +4,7 @@
 #    pandas
 #    sklearn
 #    openpyxl
+#    requests
 
 import socket
 from MLClientInstance import MLClientInstance

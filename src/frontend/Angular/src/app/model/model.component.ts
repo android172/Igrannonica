@@ -61,7 +61,9 @@ export class ModelComponent implements OnInit {
   ngOnInit(): void {
     this.ucitajNaziv();
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
-    this.signalR.startConnection();
+    let token = tokenGetter()
+    if (token != null)
+      this.signalR.startConnection(token);
   }
   posaljiZahtev(data:number){
     //console.log(data);
@@ -293,7 +295,10 @@ export class ModelComponent implements OnInit {
 
   treniraj(){
     
-    this.signalR.ZapocniTreniranje(tokenGetter(),1);
+    // this.signalR.ZapocniTreniranje(tokenGetter(),1);
+    this.http.post("http://localhost:5008/api/mltest/train", null).subscribe(
+      res => {}
+    )
   }
 
   counter1(broj:number){
