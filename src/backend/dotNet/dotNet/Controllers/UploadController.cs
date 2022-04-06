@@ -334,6 +334,37 @@ namespace dotNet.Controllers
 
             return Ok("Dodat ratio.");
         }
-    }
+        [HttpPost("deleteColumns")]
+        public IActionResult deleteColumns(int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
 
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (niz.Length == 0)
+                return BadRequest("Prazan niz");
+
+            foreach(var i in niz)
+            {
+                eksperiment.DeleteColumn(i);
+            }
+
+            return Ok("Obrisane zeljene kolone");
+        }
+    }
 }

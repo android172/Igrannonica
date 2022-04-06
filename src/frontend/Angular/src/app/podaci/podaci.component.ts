@@ -348,5 +348,18 @@ export class PodaciComponent implements OnInit {
     })
 
   }
+  deleteColumns()
+  {
+    this.http.post("http://localhost:5008/api/Upload/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Uspesno obrisane kolone");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Kolone nisu obrisane");
+    })
+  }
 }
 
