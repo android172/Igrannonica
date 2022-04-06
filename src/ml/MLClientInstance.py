@@ -6,6 +6,7 @@ import os
 
 from ANN import ANN
 from ANNSettings import ANNSettings
+from SignalRConnection import SignalRConnection
 
 class MLClientInstance(Thread):
     
@@ -38,7 +39,7 @@ class MLClientInstance(Thread):
                 file_dir = "./data"
                 file_path = f"{file_dir}/{file_name}"
                 
-                if self.token == "":
+                if self.token == "" or self.token == "st":
                     response = requests.get(
                         f"http://localhost:5008/api/file/downloadTest/{experiment_id}"
                     )
@@ -472,9 +473,15 @@ class MLClientInstance(Thread):
                 # Initialize random data if no dataset is selected
                 if network.data.dataset is None:
                     network.initialize_random_data()
+                
                 # Train
                 print("Traning commences.")
-                network.train()
+                Thread(target= lambda : self.train(network)).start()
                 
-                print("Traning complete.")
                 
+    def train(self, network):
+        sr_connection = SignalRConnection(self.token)
+        sr_connection.set_method("SendLoss")
+        for loss in network.train():
+            sr_connection.send_string(loss)
+        print("Traning complete.")

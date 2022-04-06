@@ -6,15 +6,21 @@ import * as signalR from "@aspnet/signalr";
 })
 export class SignalRService {
   constructor() { }
-  public data:Array<{value:number}> = [];
+  
+  public data:Array<{value:string}> = [];
   public connectionId:any
   private hubConnection!: signalR.HubConnection; 
-  public startConnection = ()=>{
+
+  public startConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5008/hub').build();
-    this.hubConnection.start().then(()=>console.log('povezan')).then(()=>this.getConnectionId()).catch(()=>console.log("Doslo do greske"));
+    this.hubConnection.start().then(
+      ()=> {
+        console.log('povezan')
+        this.LossListener()
+      }).then(()=>this.getConnectionId(token)).catch(()=>console.log("Doslo do greske"));
   }
-  public getConnectionId = () => {
-    this.hubConnection.invoke('getconnectionid').then(
+  public getConnectionId(token:string) {
+    this.hubConnection.invoke('getconnectionid', token).then(
       (data) => {
         console.log(data);
           this.connectionId = data;
@@ -39,6 +45,7 @@ export class SignalRService {
   public LossListener(){
       this.hubConnection.on('loss', (data) => {
         this.data.push(data);
+        console.log(data);
       })
     }
 }
