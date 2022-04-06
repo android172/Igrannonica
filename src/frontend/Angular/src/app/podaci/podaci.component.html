@@ -134,11 +134,11 @@
             ></pagination-controls>
         </div>
 
-        <div id="statistika" style="overflow-y: auto">
+        <!--<div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
-            <div *ngFor="let key of keys" >
+            <div *ngFor="let key of keys; index as i" >
                 <div id="imeKolone">{{key}}</div>
-                <div id="statistikaKolone" *ngFor="let item of numerickaS[key] | keyvalue;">
+                <div id="statistikaKolone" *ngFor="let item of values[i] | keyvalue;">
                     <ul id="ulStat">
                         <li>
                             <span>
@@ -146,6 +146,50 @@
                             </span>
                         </li>
                     </ul> 
+                </div>
+            </div>
+        </div>-->
+        <div id="statistika" style="overflow-y: auto">
+            <div id="statNaslov">Statisticki pokazatelji</div>
+            <div *ngFor="let element of statistikaNum">
+                <div id="imeKolone">{{element.key}}</div>
+                <div id="statistikaKolone" *ngFor="let item of element.data | keyvalue">
+                    <div>
+                        <div>
+                            <div class="item">
+                                {{item.key}}: &nbsp; {{item.value}}
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div *ngFor="let element of statistikaCat">
+                <div class="mt-2" id="imeKolone">{{element.key}}</div>
+                <div id="statistikaKolone" *ngFor="let item of element.data">
+                    <div>
+                        <div class="item" *ngIf="item.imeKljucVC">
+                            {{item.imeKljucVC}}: {{item.ValidCount}}
+                        </div>
+                        <div class="item" *ngIf="item.imeKljucNC">
+                            {{item.imeKljucNC}}: {{item.NaCount}}
+                        </div>
+                        <div class="item" *ngIf="item.imeKljucUC">
+                            {{item.imeKljucUC}}: {{item.UniqueCount}}
+                        </div>
+                        <div *ngIf="item.Frequencies">
+                            <div *ngFor="let freq of item.Frequencies; index as i">
+                                <div *ngIf="i==0">
+                                    Most Common: &nbsp; <br> <div class="uvuceno">{{item.Frequencies[i][0]}}: &nbsp; {{item.Frequencies[i][1]}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="item.imeKljucF">
+                            {{item.imeKljucF}}:
+                            <div class="uvucenoBezMB" *ngFor="let freq of item.Frequencies">
+                                <div>{{freq[0]}}: &nbsp; {{freq[1]}} </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
