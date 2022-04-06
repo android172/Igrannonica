@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">
 <div id="body1">
 
 
@@ -153,7 +154,11 @@
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'">Kolone sa numeričkim veličinama:</div>
             <div *ngFor="let element of statistikaNum; index as i">
-                <div id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseNum{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
+                <div id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseNum{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}<div class="strelica"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                  </svg></div>
+            </div>
                 <div class="collapse" id="collapseNum{{i}}" *ngFor="let item of element.data | keyvalue">
                     <div class="uvuceno">
                         <div>
@@ -166,7 +171,10 @@
             </div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'">Kolone sa kategorijskim veličinama:</div>
             <div *ngFor="let element of statistikaCat; index as i">
-                <div class="mt-2" id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseCat{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}</div>
+                <div class="mt-2" id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseCat{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}<div class="strelica"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                  </svg></div></div>
                 <div class="collapse" id="collapseCat{{i}}" *ngFor="let item of element.data">
                     <div class="uvuceno">
                         <div class="item" *ngIf="item.imeKljucVC">
