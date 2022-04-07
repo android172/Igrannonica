@@ -1,3 +1,12 @@
+# Dependencies:
+#    torch
+#    numpy
+#    pandas
+#    sklearn
+#    openpyxl
+#    requests
+#    signalrcore
+
 import socket
 from MLClientInstance import MLClientInstance
 

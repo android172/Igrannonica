@@ -1,7 +1,6 @@
 
 from math import sqrt
 import random
-import statistics
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -150,6 +149,8 @@ class ANN:
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
+                
+            yield f"{epoch}:{loss}"
     
     # Metrics
     def compute_regression_statistics(self, dataset):

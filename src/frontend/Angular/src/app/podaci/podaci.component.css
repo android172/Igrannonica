@@ -59,6 +59,150 @@ img{
 #brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
+/************* SLIDER *****************/ 
+
+#slider{
+    width: 270px;
+    justify-content: center;
+    margin: -40px auto;
+
+}
+#slider input[type="range"]{
+    width: 220px;
+    height: 10px;
+    outline: none;
+
+}
+#slider input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 15px;
+    height: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#current-value{
+    font-size: 14px;
+    position: absolute;
+    left: 15%;   /* 9 - 23 */ 
+    width: 55px;
+    height: 45px;
+    text-align: center;
+    line-height: 30px;
+    justify-content: center;
+    background-color: #006ce8;
+    border: 2px solid rgb(247, 247, 255);
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
+}
+
+#div-ratio{
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: auto;
+}
+
+#btn-ratio{
+    background-color: #6264b8;
+    border: 2px solid rgb(77, 77, 97);
+    color: rgb(255, 255, 255);
+    border-radius: 7px;
+}
+#input-ratio{
+    margin-top: 10px;
+}
+/*************** TESTNI SKUP *********************/ 
+
+#testniskup-comp{
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+#proizvoljan-unos{
+    text-align: center;
+    justify-content: center;
+
+}
+
+.visible-testniskup{
+    visibility: visible;
+}
+.visible-unos{
+  visibility: visible;
+}
+.invisible-testniskup{
+    visibility: hidden;
+}
+.invisible-unos{
+    visibility: hidden;
+}
+.btn-design2{
+    height: 35px;
+    width: 10%;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
+
+input#exampleFormControlFile1{
+    display: none;
+ }
+ #label-input{
+     width: 145px;
+     background-color: rgb(46, 132, 189);
+     color: rgb(255, 255, 255);
+     height: 35px;
+     align-items: center;
+     font-size: 15px;
+     display: flex;
+     justify-content: center;
+     margin: 20px auto 10px auto;
+     box-sizing: border-box;
+     border-radius: 10px;
+     border: 2px solid rgba(44, 75, 90, 0.8);
+     cursor: pointer;
+     -webkit-transition-duration: 0.2s;
+     transition-duration: 0.2s;
+     -webkit-transition-property: box-shadow,transform;
+     transition-property: box-shadow,transform;
+ 
+ }
+ #label-input:hover, #label-input:active{
+     background-color: rgb(39, 91, 139);
+     box-shadow:0 0 15px rgba(0, 0, 0, 0.5);
+     -webkit-transform: scale(1.1);
+     transform: scale(1.1);
+ }
+ #label-input img{
+     width: 25px;
+     height: 25px;
+ }
+ 
+/*  */
+
+.btn-design{
+    
+    color: white;
+    background-color: rgb(33, 79, 138);
+    width: 120px;
+    height: 35px;
+    margin: 10px 0 15px 0;
+    justify-content: center;
+
+}
+.btn-design2{
+    height: 35px;
+    width: 235px;
+    margin: 0 15px;
+    color: white;
+    background-color: rgb(33, 79, 138);
+    justify-content: center;
+}
 
 /*********** TRACKER ***************/ 
 
@@ -114,6 +258,25 @@ img{
     border-radius: 5px;
     margin-left: 5px;
 }
+#selektovani-redovi{
+    color: white;
+    background-color: rgb(39, 88, 43);
+    border: 1px solid rgb(26, 60, 31);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+#restore-rows{
+    color: white;
+    background-color: rgb(105, 114, 50);
+    border: 1px solid rgb(69, 78, 33);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+/****** SELEKTOVANJE REDOVA *****/
+.selectedRow{
+    background-color: rgba(255, 0, 0, 0.162);
+}
+
 
 /* ---------------------   TABELA  ----------------------  */ 
 #tabela-statistika{
@@ -163,28 +326,44 @@ td {
 th{
     padding: 12px 10px;
     position: sticky;
-    top: 0;
+    top: -12px;
     background-color: #272741;
 }
 .tr-button{
     transition: box-shadow .2s;
-    background: transparent;
+    /* background: transparent; */
     border: none !important;
     color: #a7baff;
 }
 .tr-button:hover{
-    border: 1px solid rgb(255, 69, 100);
-    border-radius: 10px; 
-    box-shadow: 0px 0px 10px 5px rgba(255, 18, 89, 0.349); 
+    /*border: 1px solid rgb(255, 69, 100);*/
+    background-color: rgb(44, 50, 121);
+    /*border-radius: 10px;*/
+    /*box-shadow: 0px 0px 10px 5px rgba(255, 18, 89, 0.349); */
 }
 .tr-button:active{
-    background-color: rgba(255, 18, 89, 0.349);
+    background-color: rgb(44, 49, 99);
     color: rgb(196, 196, 196);
 }
 
 .trbody{
     border-bottom: 1px solid rgb(122, 122, 122);
 }
+
+.selectedColHeader
+{
+    background-color: #344480;
+}
+
+.selectedCol
+{
+    background-color: #627de02e;
+}
+
+/* .selectedCol:nth-of-type(even)
+{
+    background-color: #F45E82;
+}*/
 /*
 .head-table{
     background-color: aqua;
@@ -263,6 +442,10 @@ th{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     font-size: 16px;
+}
+#vrednost-ratio{
+    background-color: #f9fbff;
+    border-radius: 7px;
 }
 #nedostajucevrednosti{
     width: 45.5%;
@@ -360,12 +543,12 @@ th{
 }
 
 /*   NEDOSTAJUCE VREDNOSTI */ 
-
+/*
 #Zamena, #Brisanje{
     height: 30px;
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
     margin: 0 15px;
-}
+}*/
 
 #select-elements{
     margin: 20px auto auto 30px;
@@ -463,7 +646,7 @@ th{
     color: white;
     width: 360px;
     max-height: 540px;
-    /*min-height: 540px;*/
+    min-height: 540px;
 }
 
 #statNaslov
@@ -471,9 +654,10 @@ th{
     display: flex;
     justify-content: center;
     color: #CED9FF;
-    font-size: 16px;
+    font-size: 17px;
     margin-top: 10px;
     margin-bottom: 15px;
+    font-weight: 500;
 }
 
 #imeKolone
@@ -484,18 +668,22 @@ th{
     display: list-item;
     list-style-type: disc;
     list-style-position: inside;
-    margin-left: 5px;
+    margin-left: 15px;
+    margin-top: 15px;
+    cursor: pointer;
 }
 
-#statistikaKolone
+#imeKolone:hover
 {
-    line-height: 3px;
+    color: #fb9ab0;
+    transition: 0.1s;
+    text-shadow: 3px 3px 3px #272741;
 }
 
-#ulStat
+/* #ulStat
 {
     list-style-type: none;
-}
+} */
 
 #statistika::-webkit-scrollbar{
     width: 15px;
@@ -509,4 +697,38 @@ th{
 }
 #statistika::-webkit-scrollbar-thumb{
     background-color: #38395f;
+}
+
+.uvuceno
+{
+    margin-left:50px;
+    margin-bottom: 5px;
+}
+
+.item
+{
+    margin-bottom: 5px;
+}
+
+.uvucenoBezMB
+{
+    margin-left: 50px;
+}
+
+.numcatVisible
+{
+    visibility: visible;
+    color: #CED9FF;
+    font-size: 16px;
+}
+
+.numcatHidden
+{
+    visibility: hidden;
+}
+
+.strelica
+{
+    float: right;
+    color: #CED9FF;;
 }

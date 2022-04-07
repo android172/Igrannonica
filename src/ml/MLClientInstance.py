@@ -1,14 +1,19 @@
-
 import json
+import requests
 from threading import Thread
+from io import BytesIO
+import os
+from shutil import rmtree
 
 from ANN import ANN
 from ANNSettings import ANNSettings
+from SignalRConnection import SignalRConnection
 
 class MLClientInstance(Thread):
     
     def setupConnection(self, connection) -> None:
         self.connection = connection
+        self.token = ""
     
     def run(self) -> None:
         super().run()
@@ -19,22 +24,122 @@ class MLClientInstance(Thread):
             # Receive command
             received = self.connection.receive()
                 
+            # Load token
+            if received == 'SetToken':
+                # Receive token
+                self.token = self.connection.receive()
+                
+                print("Token set.")
+                
             # Load data #
-            if received == 'LoadData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_from_csv(path)
+            elif received == 'LoadData':
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                # Receive dataset name
+                file_name = self.connection.receive()
+                file_dir = f"./data/{experiment_id}"
+                file_path = f"{file_dir}/{file_name}"
+                
+                if self.token == "" or self.token == "st":
+                    response = requests.get(
+                        f"http://localhost:5008/api/file/downloadTest/{experiment_id}"
+                    )
+                else:
+                    response = requests.post(
+                        f"http://localhost:5008/api/file/download/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"}
+                    )
+                
+                if response.status_code != 200:
+                    print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
+                    return
+                
+                # Clean of previous datasets
+                if os.path.exists(file_dir):
+                    rmtree(file_dir)
+                os.makedirs(file_dir)
+                    
+                with open(file_path, "wb") as file:
+                    Thread(target = lambda : file.write(response.content)).start()
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_from_csv(BytesIO(response.content))
+                elif extension == 'json':
+                    network.data.load_from_json(BytesIO(response.content))
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_from_excel(BytesIO(response.content))
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
+                    
                 network.data.initialize_column_types()
                 
                 print("Dataset loaded.")
                 
             elif received == 'LoadTestData':
-                # Receive path to dataset
-                path = self.connection.receive()
-                network.data.load_test_from_csv(path)
+                # Receive data
+                data = self.connection.receive_bytes()
+                # Receive file name
+                file_name = self.connection.receive()
                 
-                print("Test dataset loaded.")
+                print(data)
+                    
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.load_test_from_csv(BytesIO(data))
+                elif extension == 'json':
+                    network.data.load_test_from_json(BytesIO(data))
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.load_test_from_excel(BytesIO(data))
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    return
                 
+                print("Test Dataset loaded.")
+                
+            elif received == 'SaveDataset':
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                
+                file_dir = f"./data/{experiment_id}"
+                
+                if not os.path.exists(file_dir):
+                    self.connection.send("ERROR :: File does not exist.")
+                    return
+                
+                file_name = os.listdir(file_dir)[0]
+                file_path = f"{file_dir}/{file_name}"
+                
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.save_to_csv(file_path)
+                elif extension == 'json':
+                    network.data.save_to_json(file_path)
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.save_to_excel(file_path)
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    self.connection.send("ERROR :: Internal MLServer error.")
+                    return
+                
+                files = {'file' : (file_name, open(file_path, 'rb'))}
+                
+                if self.token == "" or self.token == "st":
+                    response = requests.get(
+                        f"http://localhost:5008/api/file/updateTest/{experiment_id}", 
+                        files=files
+                    )
+                else :
+                    response = requests.post(
+                        f"http://localhost:5008/api/file/update/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"}, 
+                        files=files
+                    )
+                
+                self.connection.send("OK")
+                print("Changes saved.")
+            
             elif received == 'SelectInputs':
                 # Receive inputs
                 inputs_string = self.connection.receive()
@@ -408,9 +513,15 @@ class MLClientInstance(Thread):
                 # Initialize random data if no dataset is selected
                 if network.data.dataset is None:
                     network.initialize_random_data()
+                
                 # Train
                 print("Traning commences.")
-                network.train()
+                Thread(target= lambda : self.train(network)).start()
                 
-                print("Traning complete.")
                 
+    def train(self, network):
+        sr_connection = SignalRConnection(self.token)
+        sr_connection.set_method("SendLoss")
+        for loss in network.train():
+            sr_connection.send_string(loss)
+        print("Traning complete.")

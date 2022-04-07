@@ -27,18 +27,43 @@ class MLData:
         self.column_types   = None
     
     # Load dataset
-    def load_from_csv(self, path):
-        self.dataset = pd.read_csv(path)
+    def load_from_csv(self, pathOrBuffer):
+        self.dataset = pd.read_csv(pathOrBuffer)
+    
+    def load_from_json(self, pathOrBuffer):
+        self.dataset = pd.read_json(pathOrBuffer)
+    
+    def load_from_excel(self, pathOrBuffer):
+        self.dataset = pd.read_excel(pathOrBuffer)
+    
+    def load_test_from_csv(self, pathOrBuffer):
+        dataset_test = pd.read_csv(pathOrBuffer)
+        self.load_test_dataset(dataset_test)
+    
+    def load_test_from_json(self, pathOrBuffer):
+        dataset_test = pd.read_json(pathOrBuffer)
+        self.load_test_dataset(dataset_test)
         
-    def load_test_from_csv(self, path):
+    def load_test_from_excel(self, pathOrBuffer):
+        dataset_test = pd.read_excel(pathOrBuffer)
+        self.load_test_dataset(dataset_test)
+        
+    def load_test_dataset(self, dataset_test):
         train_length = self.dataset.shape[0]
-        
-        dataset_test = pd.read_csv(path)
         self.dataset = pd.concat([self.dataset, dataset_test])
-        
         self.train_indices = [i for i in range(train_length)]
         self.test_indices = [i for i in range(train_length, self.dataset.shape[0])]
+        
+    # Save changes
+    def save_to_csv(self, path):
+        self.dataset.to_csv(path)
     
+    def save_to_json(self, path):
+        self.dataset.to_json(path)
+        
+    def save_to_excel(self, path):
+        self.dataset.to_excel(path)
+        
     # Select columns
     def select_input_columns(self, columns):
         self.input_columns = columns

@@ -4,26 +4,25 @@ namespace dotNet.DBFunkcije
 {
     public class DB
     {
+        public static IConfiguration config;
         public DBEksperiment dbeksperiment;
         public DBModel dbmodel;
         public DBKorisnik dbkorisnik;
         public DB(IConfiguration config)
         {
-            if(DatabaseConnection.config==null)
-                DatabaseConnection.config = config;
-            DatabaseConnection connection = DatabaseConnection.Instance;
-            dbeksperiment = new DBEksperiment(connection.Connection);
-            dbkorisnik = new DBKorisnik(connection.Connection);
-            dbmodel = new DBModel(connection.Connection);
+            if(DB.config==null)
+                DB.config = config;
+            dbeksperiment = new DBEksperiment(config.GetConnectionString("connectionString"));
+            dbkorisnik = new DBKorisnik(config.GetConnectionString("connectionString"));
+            dbmodel = new DBModel(config.GetConnectionString("connectionString"));
         }
         public DB()
         {
-            if (DatabaseConnection.config != null)
+            if (config != null)
             {
-                DatabaseConnection connection = DatabaseConnection.Instance;
-                dbeksperiment = new DBEksperiment(connection.Connection);
-                dbkorisnik = new DBKorisnik(connection.Connection);
-                dbmodel = new DBModel(connection.Connection);
+                dbeksperiment = new DBEksperiment(config.GetConnectionString("connectionString"));
+                dbkorisnik = new DBKorisnik(config.GetConnectionString("connectionString"));
+                dbmodel = new DBModel(config.GetConnectionString("connectionString"));
             }
         }
     }

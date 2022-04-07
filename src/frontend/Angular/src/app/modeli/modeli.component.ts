@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
+import { SharedService } from '../shared/shared.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-modeli',
   templateUrl: './modeli.component.html',
@@ -14,8 +17,10 @@ export class ModeliComponent implements OnInit {
   modeli : any[] = [];
   id: any;
   ActivateAddEdit: boolean = false;
+  messageReceived: any;
+  subscriptionName: Subscription = new Subscription;
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.id = params['id'];
@@ -25,6 +30,20 @@ export class ModeliComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ucitajImeE();
+    this.subscriptionName = this.shared.getUpdate().subscribe
+    (
+      message => {
+        this.ActivateAddEdit = false;
+        this.messageReceived = message;
+        console.log(this.messageReceived);
+       // this.ocisti();
+        this.ngOnInit();
+      }
+    )
+  }
+
+  ucitaj(){
     this.ucitajImeE();
   }
 
@@ -39,19 +58,26 @@ export class ModeliComponent implements OnInit {
   napraviModel(){
     console.log(this.id);
     var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
-    if(ime==""){
-      //(<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
-      alert("Ovo polje mora biti popunjeno!");
+    var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
+    if(ime === ""){
+      ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="*Polje ne sme biti prazno";
       return;
+    }
+    if(div === "*Model sa tim nazivom vec postoji"){
+      div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
     }
     this.http.post("http://localhost:5008/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.ucitajModel();
+        ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
       },
       error=>{
         console.log(error.error);
-        alert("Vec postoji model sa tim imenom!");
+        if(error.error === "Vec postoji model sa tim imenom")
+        {
+           var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+        }
       }
     );
   }

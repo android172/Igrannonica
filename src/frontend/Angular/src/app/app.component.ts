@@ -23,7 +23,7 @@ export class AppComponent {
 
   ngDoCheck(): void
   {
-    if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment"))
+    if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment" && this.router.url != "/moji-eksperimenti"))
     {
       this.header = false;
       if((this.router.url).indexOf("eksperiment") != -1)

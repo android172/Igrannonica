@@ -4,38 +4,63 @@ using dotNet.Models;
 namespace dotNet.MLService {
     public class MLExperiment {
         private readonly MLConnection connection;
+        private readonly object _lock = new();
 
-        public MLExperiment(IConfiguration configuration) {
+        public MLExperiment(IConfiguration configuration, string token) {
             connection = new MLConnection(configuration);
+            connection.Send(Command.SetToken);
+            connection.Send(token);
         }
 
         // ///////////////// //
         // Data introduction //
         // ///////////////// //
 
-        public void LoadDataset(string path) {
-            connection.Send(Command.LoadData);
-            connection.Send(path);
+        public void LoadDataset(int experimentId, string fileName) {
+            lock (_lock) {
+                connection.Send(Command.LoadData);
+                connection.Send(experimentId);
+                connection.Send(fileName);
+            }
         }
 
-        public void LoadDatasetTest(string path) {
-            connection.Send(Command.LoadTestData);
-            connection.Send(path);
+        public void LoadDatasetTest(byte[] data, string fileName) {
+            lock (_lock) {
+                connection.Send(Command.LoadTestData);
+                connection.Send(data);
+                connection.Send(fileName);
+            }
+        }
+
+        public void SaveDataset(int experimentId) {
+            lock (_lock) {
+                connection.Send(Command.SaveDataset);
+                connection.Send(experimentId);
+                string response = connection.Receive();
+                if (response != "OK")
+                    throw new MLException(response);
+            }
         }
 
         public void LoadInputs(int[] inputs) {
-            connection.Send(Command.SelectInputs);
-            connection.Send(EncodeIntArray(inputs));
+            lock (_lock) {
+                connection.Send(Command.SelectInputs);
+                connection.Send(EncodeIntArray(inputs));
+            }
         }
 
         public void LoadOutputs(int[] outputs) {
-            connection.Send(Command.SelectOutputs);
-            connection.Send(EncodeIntArray(outputs));
+            lock(_lock) {
+                connection.Send(Command.SelectOutputs);
+                connection.Send(EncodeIntArray(outputs));
+            }
         }
 
         public void TrainTestSplit(float ratio) {
-            connection.Send(Command.RandomTrainTestSplit);
-            connection.Send(ratio);
+            lock(_lock) {
+                connection.Send(Command.RandomTrainTestSplit);
+                connection.Send(ratio);
+            }
         }
 
         // /////////// //
@@ -43,19 +68,25 @@ namespace dotNet.MLService {
         // /////////// //
 
         public string GetRows(int[] rowIndices) {
-            connection.Send(Command.GetRows);
-            connection.Send(EncodeIntArray(rowIndices));
-            return connection.Receive();
+            lock (_lock) {
+                connection.Send(Command.GetRows);
+                connection.Send(EncodeIntArray(rowIndices));
+                return connection.Receive();
+            }
         }
 
         public int GetRowCount() {
-            connection.Send(Command.GetRowCount);
-            return int.Parse(connection.Receive());
+            lock(_lock) {
+                connection.Send(Command.GetRowCount);
+                return int.Parse(connection.Receive());
+            }
         }
 
         public string GetColumnTypes() {
-            connection.Send(Command.GetColumnTypes);
-            return connection.Receive();
+            lock(_lock) {
+                connection.Send(Command.GetColumnTypes);
+                return connection.Receive();
+            }
         }
 
         // ///////////////// //
@@ -64,175 +95,234 @@ namespace dotNet.MLService {
 
         // CRUD operations
         public void AddRow(string[] newRow) {
-            connection.Send(Command.AddRow);
-            connection.Send(EncodeStringArray(newRow));
+            lock (_lock) {
+                connection.Send(Command.AddRow);
+                connection.Send(EncodeStringArray(newRow));
+            }
         }
 
         public void AddRowToTest(string[] newRow) {
-            connection.Send(Command.AddRowToTest);
-            connection.Send(EncodeStringArray(newRow));
+            lock (_lock) {
+                connection.Send(Command.AddRowToTest);
+                connection.Send(EncodeStringArray(newRow));
+            }
         }
 
         public void UpdateRow(int rowIndex, string[] rowValues) {
-            connection.Send(Command.UpdateRow);
-            connection.Send(rowIndex);
-            connection.Send(EncodeStringArray(rowValues));
+            lock (_lock) {
+                connection.Send(Command.UpdateRow);
+                connection.Send(rowIndex);
+                connection.Send(EncodeStringArray(rowValues));
+            }
         }
 
         public void DeleteRow(int rowIndex) {
-            connection.Send(Command.DeleteRow);
-            connection.Send(rowIndex);
+            lock (_lock) {
+                connection.Send(Command.DeleteRow);
+                connection.Send(rowIndex);
+            }
         }
 
         public void AddColumn(string columnName, string[] column) {
-            connection.Send(Command.AddColumn);
-            connection.Send(EncodeStringArray(column));
-            connection.Send(columnName);
+            lock (_lock) {
+                connection.Send(Command.AddColumn);
+                connection.Send(EncodeStringArray(column));
+                connection.Send(columnName);
+            }
         }
 
         public void UpdateColumn(int columnIndex, string[] columnValues) {
-            connection.Send(Command.UpdateColumn);
-            connection.Send(columnIndex);
-            connection.Send(EncodeStringArray(columnValues));
+            lock (_lock) {
+                connection.Send(Command.UpdateColumn);
+                connection.Send(columnIndex);
+                connection.Send(EncodeStringArray(columnValues));
+            }
         }
 
         public void RenameColumns(int columnIndex, string columnName) {
-            connection.Send(Command.RenameColumn);
-            connection.Send(columnIndex);
-            connection.Send(columnName);
+            lock (_lock) {
+                connection.Send(Command.RenameColumn);
+                connection.Send(columnIndex);
+                connection.Send(columnName);
+            }
         }
 
         public void ReplaceColumn(int columnIndex, string newColumnName, string[] newColumnValues) {
-            connection.Send(Command.UpdateAndRenameColumn);
-            connection.Send(columnIndex);
-            connection.Send(EncodeStringArray(newColumnValues));
-            connection.Send(newColumnName);
+            lock (_lock) {
+                connection.Send(Command.UpdateAndRenameColumn);
+                connection.Send(columnIndex);
+                connection.Send(EncodeStringArray(newColumnValues));
+                connection.Send(newColumnName);
+            }
         }
 
-        public void DeleteColumn(int columnIndex) { 
-            connection.Send(Command.DeleteColumn);
-            connection.Send(columnIndex);
+        public void DeleteColumn(int columnIndex) {
+            lock (_lock) {
+                connection.Send(Command.DeleteColumn);
+                connection.Send(columnIndex);
+            }
         }
 
         public void UpdataValue(int row, int column, object value) {
-            connection.Send(Command.UpdateValue);
-            connection.Send(row);
-            connection.Send(column);
-            connection.Send(value);
+            lock (_lock) {
+                connection.Send(Command.UpdateValue);
+                connection.Send(row);
+                connection.Send(column);
+                connection.Send(value);
+            }
         }
 
         // Replace with NA
         public void ReplaceEmptyWithNA(int[] columns) {
-            connection.Send(Command.EmptyStringToNA);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.EmptyStringToNA);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void ReplaceZeroWithNA(int[] columns) {
-            connection.Send(Command.ZeroToNA);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.ZeroToNA);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         // Drop NA values
         public void DropNAListwise() {
-            connection.Send(Command.DropNAListwise);
+            lock(_lock) {
+                connection.Send(Command.DropNAListwise);
+            }
         }
 
         public void DropNAPairwise() {
-            connection.Send(Command.DropNAPairwise);
+            lock(_lock) {
+                connection.Send(Command.DropNAPairwise);
+            }
         }
 
         public void DropNAColumns() {
-            connection.Send(Command.DropNAColumns);
+            lock(_lock) {
+                connection.Send(Command.DropNAColumns);
+            }
         }
 
         // Fill NA values
         public void FillNAWithMean(int[] columns) {
-            connection.Send(Command.FillNAWithMean);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.FillNAWithMean);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void FillNAWithMedian(int[] columns) {
-            connection.Send(Command.FillNAWithMedian);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.FillNAWithMedian);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void FillNAWithMode(int[] columns) {
-            connection.Send(Command.FillNAWithMode);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.FillNAWithMode);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
         public void FillNAWithRegression(int naColumn, int[] inputColumns) {
-            connection.Send(Command.FillNAWithRegression);
-            connection.Send(naColumn);
-            connection.Send(EncodeIntArray(inputColumns));
+            lock(_lock) {
+                connection.Send(Command.FillNAWithRegression);
+                connection.Send(naColumn);
+                connection.Send(EncodeIntArray(inputColumns));
+            }
         }
 
         // Encoding
         public void OneHotEncoding(int[] columns) {
-            connection.Send(Command.OneHotEncoding);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.OneHotEncoding);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
-        public void LabelEncoding(int[] columns)
-        {
-            connection.Send(Command.LabelEncoding);
-            connection.Send(EncodeIntArray(columns));
+        public void LabelEncoding(int[] columns) {
+            lock(_lock) {
+                connection.Send(Command.LabelEncoding);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         // Normalization
         public void ScaleAbsoluteMax(int[] columns) { 
-            connection.Send(Command.ScaleAbsoluteMax);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.ScaleAbsoluteMax);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void ScaleMinMax(int[] columns) {
-            connection.Send(Command.ScaleMinMax);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.ScaleMinMax);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void ScaleZScore(int[] columns) { 
-            connection.Send(Command.ScaleZScore);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.ScaleZScore);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         // Outliers
         public void RemoveOutliersStandardDeviation(int[] columns, float treshold) {
-            connection.Send(Command.RemoveOutliersStandardDeviation);
-            connection.Send(EncodeIntArray(columns));
-            connection.Send(treshold);
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersStandardDeviation);
+                connection.Send(EncodeIntArray(columns));
+                connection.Send(treshold);
+            }
         }
 
         public void RemoveOutliersQuantiles(int[] columns, float treshold) {
-            connection.Send(Command.RemoveOutliersQuantiles);
-            connection.Send(EncodeIntArray(columns));
-            connection.Send(treshold);
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersQuantiles);
+                connection.Send(EncodeIntArray(columns));
+                connection.Send(treshold);
+            }
         }
 
         public void RemoveOutliersZScore(int[] columns, float treshold) {
-            connection.Send(Command.RemoveOutliersZScore);
-            connection.Send(EncodeIntArray(columns));
-            connection.Send(treshold);
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersZScore);
+                connection.Send(EncodeIntArray(columns));
+                connection.Send(treshold);
+            }
         }
 
         public void RemoveOutliersIQR(int[] columns) {
-            connection.Send(Command.RemoveOutliersIQR);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersIQR);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         public void RemoveOutliersIsolationForest(int[] columns) {
-            connection.Send(Command.RemoveOutliersIsolationForest);
-            connection.Send(EncodeIntArray(columns));
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersIsolationForest);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
-        public void RemoveOutliersOneClassSVM(int[] columns)
-        {
-            connection.Send(Command.RemoveOutliersOneClassSVM);
-            connection.Send(EncodeIntArray(columns));
+        public void RemoveOutliersOneClassSVM(int[] columns) {
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersOneClassSVM);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
-        public void RemoveOutliersByLocalFactor(int[] columns)
-        {
-            connection.Send(Command.RemoveOutliersByLocalFactor);
-            connection.Send(EncodeIntArray(columns));
+        public void RemoveOutliersByLocalFactor(int[] columns) {
+            lock(_lock) {
+                connection.Send(Command.RemoveOutliersByLocalFactor);
+                connection.Send(EncodeIntArray(columns));
+            }
         }
 
         // ///////////// //
@@ -241,20 +331,26 @@ namespace dotNet.MLService {
 
         // Get column statistics
         public string NumericalStatistics(int[] columns) {
-            connection.Send(Command.NumericalStatistics);
-            connection.Send(EncodeIntArray(columns));
-            return connection.Receive();
+            lock(_lock) {
+                connection.Send(Command.NumericalStatistics);
+                connection.Send(EncodeIntArray(columns));
+                return connection.Receive();
+            }
         }
 
         public string CategoricalStatistics(int[] columns) {
-            connection.Send(Command.CategoricalStatistics);
-            connection.Send(EncodeIntArray(columns));
-            return connection.Receive();
+            lock(_lock) {
+                connection.Send(Command.CategoricalStatistics);
+                connection.Send(EncodeIntArray(columns));
+                return connection.Receive();
+            }
         }
 
         public string ColumnStatistics() {
-            connection.Send(Command.AllStatistics);
-            return connection.Receive();
+            lock(_lock) {
+                connection.Send(Command.AllStatistics);
+                return connection.Receive();
+            }
         }
 
         // /////// //
@@ -262,17 +358,23 @@ namespace dotNet.MLService {
         // /////// //
 
         public string ComputeMetrics() {
-            connection.Send(Command.ComputeMetrics);
-            return connection.Receive();
+            lock(_lock) {
+                connection.Send(Command.ComputeMetrics);
+                return connection.Receive();
+            }
         }
 
         public void ApplySettings(ANNSettings annSettings) {
-            connection.Send(Command.ChangeSettings);
-            connection.Send(annSettings);
+            lock(_lock) {
+                connection.Send(Command.ChangeSettings);
+                connection.Send(annSettings);
+            }
         }
 
         public void Start() {
-            connection.Send(Command.Start);
+            lock(_lock) {
+                connection.Send(Command.Start);
+            }
         }
 
         // Helper functions
@@ -293,9 +395,11 @@ namespace dotNet.MLService {
     }
 
     public enum Command {
+        SetToken,
         // Data introduction
         LoadData,
         LoadTestData,
+        SaveDataset,
         SelectInputs,
         SelectOutputs,
         RandomTrainTestSplit,

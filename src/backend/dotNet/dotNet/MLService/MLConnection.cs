@@ -24,6 +24,12 @@ namespace dotNet.MLService {
             socket.Send(buffer);
         }
 
+        public void Send(byte[] buffer)
+        {
+            socket.Send(BitConverter.GetBytes(buffer.Length));
+            socket.Send(buffer);
+        }
+
         public string Receive() {
             byte[] buffer_length = new byte[4];
             socket.Receive(buffer_length);

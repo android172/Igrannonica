@@ -13,6 +13,10 @@ class MLConnection:
         buffer_length = struct.unpack("<I", self.socket.recv(4))[0]
         return self.socket.recv(buffer_length).decode()
     
+    def receive_bytes(self):
+        buffer_length = struct.unpack("<I", self.socket.recv(4))[0]
+        return self.socket.recv(buffer_length)
+    
     def send(self, message):
         buffer = str(message).encode()
         buffer_length = len(buffer)
