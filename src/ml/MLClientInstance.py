@@ -3,6 +3,7 @@ import requests
 from threading import Thread
 from io import BytesIO
 import os
+from shutil import rmtree
 
 from ANN import ANN
 from ANNSettings import ANNSettings
@@ -36,7 +37,7 @@ class MLClientInstance(Thread):
                 experiment_id = self.connection.receive()
                 # Receive dataset name
                 file_name = self.connection.receive()
-                file_dir = f"./data/{self.token}/{experiment_id}"
+                file_dir = f"./data/{experiment_id}"
                 file_path = f"{file_dir}/{file_name}"
                 
                 if self.token == "" or self.token == "st":
@@ -54,11 +55,9 @@ class MLClientInstance(Thread):
                     return
                 
                 # Clean of previous datasets
-                if os.listdir(file_dir)[0] != file_name:
-                    os.removedirs(file_dir)
-                
-                if not os.path.exists(file_dir):
-                    os.makedirs(file_dir)
+                if os.path.exists(file_dir):
+                    rmtree(file_dir)
+                os.makedirs(file_dir)
                     
                 with open(file_path, "wb") as file:
                     Thread(target = lambda : file.write(response.content)).start()
@@ -103,7 +102,7 @@ class MLClientInstance(Thread):
                 # Receive experiment id
                 experiment_id = self.connection.receive()
                 
-                file_dir = f"./data/{self.token}/{experiment_id}"
+                file_dir = f"./data/{experiment_id}"
                 
                 if not os.path.exists(file_dir):
                     self.connection.send("ERROR :: File does not exist.")

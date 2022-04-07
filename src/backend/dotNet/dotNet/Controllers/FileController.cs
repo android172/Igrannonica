@@ -30,7 +30,7 @@ namespace dotNet.Controllers
         }
 
         [HttpPost("download/{idEksperimenta}")]
-        public FileContentResult Download(int idEksperimenta)
+        public ActionResult Download(int idEksperimenta)
         {
             Console.WriteLine(idEksperimenta);
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
@@ -47,10 +47,10 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
-                    return null;
+                    return BadRequest();
             }
             else
-                return null;
+                return BadRequest("Korisnik nije ulogovan.");
 
             string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
 
@@ -59,17 +59,19 @@ namespace dotNet.Controllers
                 korisnik.Id.ToString(), idEksperimenta.ToString(), fileName
                 );
 
-            return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
+            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
+            catch { return NotFound("File not found."); }
         }
 
         [HttpGet("downloadTest/{idEksperimenta}")]
-        public FileContentResult DownloadTest(int idEksperimenta)
+        public ActionResult DownloadTest(int idEksperimenta)
         {
             string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
             
             string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName);
 
-            return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
+            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
+            catch { return NotFound("File not found."); }
         }
 
         [HttpPost("upload/{idEksperimenta}")]
