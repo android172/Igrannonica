@@ -32,6 +32,16 @@ namespace dotNet.MLService {
             }
         }
 
+        public void SaveDataset(int experimentId) {
+            lock (_lock) {
+                connection.Send(Command.SaveDataset);
+                connection.Send(experimentId);
+                string response = connection.Receive();
+                if (response != "OK")
+                    throw new MLException(response);
+            }
+        }
+
         public void LoadInputs(int[] inputs) {
             lock (_lock) {
                 connection.Send(Command.SelectInputs);
@@ -389,6 +399,7 @@ namespace dotNet.MLService {
         // Data introduction
         LoadData,
         LoadTestData,
+        SaveDataset,
         SelectInputs,
         SelectOutputs,
         RandomTrainTestSplit,

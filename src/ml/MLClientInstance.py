@@ -36,7 +36,7 @@ class MLClientInstance(Thread):
                 experiment_id = self.connection.receive()
                 # Receive dataset name
                 file_name = self.connection.receive()
-                file_dir = "./data"
+                file_dir = f"./data/{self.token}/{experiment_id}"
                 file_path = f"{file_dir}/{file_name}"
                 
                 if self.token == "" or self.token == "st":
@@ -53,6 +53,9 @@ class MLClientInstance(Thread):
                     print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
                     return
                 
+                # Clean of previous datasets
+                if os.listdir(file_dir)[0] != file_name:
+                    os.removedirs(file_dir)
                 
                 if not os.path.exists(file_dir):
                     os.makedirs(file_dir)
@@ -71,7 +74,6 @@ class MLClientInstance(Thread):
                     print(f"File type with extension .{extension} is not supported.")
                     return
                     
-                network.data.dataset_path = file_path
                 network.data.initialize_column_types()
                 
                 print("Dataset loaded.")
@@ -94,12 +96,51 @@ class MLClientInstance(Thread):
                 else:
                     print(f"File type with extension .{extension} is not supported.")
                     return
-                    
-                network.data.dataset_path = file_path
-                network.data.initialize_column_types()
                 
                 print("Test Dataset loaded.")
                 
+            elif received == 'SaveDataset':
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                
+                file_dir = f"./data/{self.token}/{experiment_id}"
+                
+                if not os.path.exists(file_dir):
+                    self.connection.send("ERROR :: File does not exist.")
+                    return
+                
+                file_name = os.listdir(file_dir)[0]
+                file_path = f"{file_dir}/{file_name}"
+                
+                extension = file_name.split(".")[-1]
+                if   extension == 'csv':
+                    network.data.save_to_csv(file_path)
+                elif extension == 'json':
+                    network.data.save_to_json(file_path)
+                elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                    network.data.save_to_excel(file_path)
+                else:
+                    print(f"File type with extension .{extension} is not supported.")
+                    self.connection.send("ERROR :: Internal MLServer error.")
+                    return
+                
+                files = {'file' : (file_name, open(file_path, 'rb'))}
+                
+                if self.token == "" or self.token == "st":
+                    response = requests.get(
+                        f"http://localhost:5008/api/file/updateTest/{experiment_id}", 
+                        files=files
+                    )
+                else :
+                    response = requests.post(
+                        f"http://localhost:5008/api/file/update/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"}, 
+                        files=files
+                    )
+                
+                self.connection.send("OK")
+                print("Changes saved.")
+            
             elif received == 'SelectInputs':
                 # Receive inputs
                 inputs_string = self.connection.receive()

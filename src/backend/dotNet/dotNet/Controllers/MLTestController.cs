@@ -157,12 +157,19 @@ namespace dotNet.Controllers {
             // Normalize rows
             experiment.ScaleZScore(new int[] { 3, 12 });
 
+
             // Get rows
             var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
             Console.WriteLine(rows);
 
             // Encode categorical values
             experiment.OneHotEncoding(new int[] { 4, 5, 13 });
+
+            // Save dataset
+            //try { experiment.SaveDataset(1); }
+            //catch (MLException e) { Console.WriteLine(e.Message); }
+
+            //return "";
 
             // Replace NA values
             //experiment.ReplaceZeroWithNA(new int[] { 8 });
