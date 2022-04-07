@@ -166,5 +166,103 @@ namespace dotNet.Controllers
             }
             return Ok("Fajl je upisan.");
         }
+
+        [HttpPost("update/{idEksperimenta}")]
+        public IActionResult Update(IFormFile file, int idEksperimenta)
+        {
+
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            // kreiranje foldera 
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
+            // ucitavanje bilo kog fajla 
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            // Path
+            string fileName = file.FileName;
+            string path = folderEksperiment + "\\" + fileName;
+
+            // upis u fajl 
+            System.IO.File.WriteAllBytes(path, bytes);
+
+            return Ok("Fajl je upisan.");
+        }
+
+        [HttpGet("updateTest/{idEksperimenta}")]
+        public IActionResult UpdateTest(IFormFile file, int idEksperimenta)
+        {
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            // kreiranje foldera 
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\1";
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
+            // ucitavanje bilo kog fajla 
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            // Path
+            string fileName = file.FileName;
+            string path = folderEksperiment + "\\" + fileName;
+
+            Console.WriteLine(path);
+
+            // upis u fajl 
+            System.IO.File.WriteAllBytes(path, bytes);
+
+            return Ok("Fajl je upisan.");
+        }
     }
 }

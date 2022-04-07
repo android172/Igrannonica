@@ -19,7 +19,6 @@ from StatisticsNumerical import StatisticsNumerical
 class MLData:
     
     def __init__(self) -> None:
-        self.dataset_path   = "data"
         self.dataset        = None
         self.input_columns  = None
         self.output_columns = None
@@ -54,6 +53,16 @@ class MLData:
         self.dataset = pd.concat([self.dataset, dataset_test])
         self.train_indices = [i for i in range(train_length)]
         self.test_indices = [i for i in range(train_length, self.dataset.shape[0])]
+        
+    # Save changes
+    def save_to_csv(self, path):
+        self.dataset.to_csv(path)
+    
+    def save_to_json(self, path):
+        self.dataset.to_json(path)
+        
+    def save_to_excel(self, path):
+        self.dataset.to_excel(path)
         
     # Select columns
     def select_input_columns(self, columns):
