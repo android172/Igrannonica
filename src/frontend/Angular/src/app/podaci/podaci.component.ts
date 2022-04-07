@@ -66,6 +66,7 @@ export class PodaciComponent implements OnInit {
   statistikaCat: any[] = [];
   statistikaNum: any[] = [];
   rowsAndPages:number[][] = [];
+  ucitanCsv: boolean = false;
 
   public kolone: any[] = [];
   message: any;
@@ -109,6 +110,7 @@ export class PodaciComponent implements OnInit {
          //console.log(response);
         console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
+        this.ucitanCsv = true;
         this.dajStatistiku();
          //this.json = response;
         this.totalItems = response.totalItems;

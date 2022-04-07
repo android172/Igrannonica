@@ -646,7 +646,7 @@ th{
     color: white;
     width: 360px;
     max-height: 540px;
-    /*min-height: 540px;*/
+    min-height: 540px;
 }
 
 #statNaslov
@@ -654,9 +654,10 @@ th{
     display: flex;
     justify-content: center;
     color: #CED9FF;
-    font-size: 16px;
+    font-size: 17px;
     margin-top: 10px;
     margin-bottom: 15px;
+    font-weight: 500;
 }
 
 #imeKolone
@@ -667,13 +668,16 @@ th{
     display: list-item;
     list-style-type: disc;
     list-style-position: inside;
-    margin-left: 5px;
+    margin-left: 15px;
     margin-top: 15px;
+    cursor: pointer;
 }
 
-#statistikaKolone
+#imeKolone:hover
 {
-    margin-left: 50px;
+    color: #fb9ab0;
+    transition: 0.1s;
+    text-shadow: 3px 3px 3px #272741;
 }
 
 /* #ulStat
@@ -697,7 +701,7 @@ th{
 
 .uvuceno
 {
-    margin-left:40px;
+    margin-left:50px;
     margin-bottom: 5px;
 }
 
@@ -708,5 +712,23 @@ th{
 
 .uvucenoBezMB
 {
-    margin-left:40px;
+    margin-left: 50px;
+}
+
+.numcatVisible
+{
+    visibility: visible;
+    color: #CED9FF;
+    font-size: 16px;
+}
+
+.numcatHidden
+{
+    visibility: hidden;
+}
+
+.strelica
+{
+    float: right;
+    color: #CED9FF;;
 }
