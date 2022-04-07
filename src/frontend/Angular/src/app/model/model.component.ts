@@ -49,7 +49,7 @@ export class ModelComponent implements OnInit {
   selectedLF: number = 0;
   selectedO: number = 0;
   selectedRM: number = 0;
-  selectedPT: number = 0;
+  selectedPT: number = 1;
 
   public ulazneKolone : string[] = [];
   public izlazneKolone : string[] = [];

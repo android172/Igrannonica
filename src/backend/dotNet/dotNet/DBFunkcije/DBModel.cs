@@ -193,7 +193,7 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
 
-                Console.WriteLine(json.ActivationFunctions[0]);
+                //Console.WriteLine(json.ActivationFunctions[0]);
 
                 for(var i = 0; i < json.HiddenLayers.Length - 1; i++)
                 {
@@ -215,6 +215,8 @@ namespace dotNet.DBFunkcije
                         s += "r,";
                     if (json.ActivationFunctions[i] == ActivationFunction.Sigmoid)
                         s += "s,";
+                    if (json.ActivationFunctions[i] == ActivationFunction.Linear)
+                        s += "l,";
                 }
                 if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.LeakyReLU)
                     s += "lr";
@@ -222,8 +224,10 @@ namespace dotNet.DBFunkcije
                     s += "t";
                 else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.ReLU)
                     s += "r";
-                else
+                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Sigmoid)
                     s += "s";
+                else
+                    s += "l";
 
                 cmd.Parameters.AddWithValue("@af", s);
 
