@@ -76,6 +76,18 @@ export class ModelComponent implements OnInit {
   }
   posaljiZahtev(data:number){
     //console.log(data);
+    this.aktFunk = [];
+    this.hiddLay = [];
+    this.brHL = 0;
+    this.nizHL  = [];
+    this.nizCvorova = [];
+    this.nizCvorovaStr = [];
+    this.selectedLF = 0;
+    this.selectedO = 0;
+    this.selectedRM = 0;
+    this.selectedPT = 1;
+    this.ulazneKolone = [];
+    this.izlazneKolone = [];
     this.message = this.shared.getMessage();
     this.kolone = Object.assign([],this.message);
     this.kolone2 = Object.assign([],this.kolone);
