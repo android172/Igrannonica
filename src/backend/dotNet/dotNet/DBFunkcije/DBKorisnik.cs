@@ -1,6 +1,7 @@
 ﻿using dotNet.Models;
 using dotNet.ModelValidation;
 using MySql.Data.MySqlClient;
+using System.Security.Cryptography;
 
 namespace dotNet.DBFunkcije
 {
@@ -36,15 +37,25 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where `korisnickoime`=@ime and sifra=@sifra";
+                string query = "select * from korisnik where `korisnickoime`=@ime ";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
-                cmd.Parameters.AddWithValue("@sifra", sifra);
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
+                        string korSifra = reader.GetString("sifra");
+                        byte[] hashByte = Convert.FromBase64String(korSifra);
+                        byte[] salt = new byte[16];
+                        Array.Copy(hashByte, 0, salt, 0, 16);
+                        var pbkdf2 = new Rfc2898DeriveBytes(sifra, salt, 100000);
+                        byte[] hash = pbkdf2.GetBytes(20);
+                        for(int i = 0; i < 20; i++)
+                        {
+                            if (hashByte[i + 16] != hash[i])
+                                return null;
+                        }
                         Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
                         return rezultat;
                     }
@@ -96,10 +107,18 @@ namespace dotNet.DBFunkcije
 
                 if (korisnikValid.korisnickoIme && korisnikValid.email)
                 {
+                    byte[] salt;
+                    new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+                    var pbkdf2 = new Rfc2898DeriveBytes(korisnik.Sifra, salt, 100000);
+                    byte[] hash = pbkdf2.GetBytes(20);
+                    byte[] hashBytes = new byte[36];
+                    Array.Copy(salt, 0, hashBytes, 0, 16);
+                    Array.Copy(hash, 0, hashBytes, 16, 20);
+                    string savedPasswordHash = Convert.ToBase64String(hashBytes);
                     cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)", connection);
                     cmd.Parameters.AddWithValue("@kime", username);
                     cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
-                    cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+                    cmd.Parameters.AddWithValue("@sifra", savedPasswordHash);
                     cmd.Parameters.AddWithValue("@email", mail);
 
                     if (cmd.ExecuteNonQuery() > 0)
