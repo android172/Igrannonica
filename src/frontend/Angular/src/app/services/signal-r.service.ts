@@ -16,7 +16,7 @@ export class SignalRService {
     this.hubConnection.start().then(
       ()=> {
         console.log('povezan')
-        this.LossListener()
+        //this.LossListener()
       }).then(()=>this.getConnectionId(token)).catch(()=>console.log("Doslo do greske"));
   }
   public getConnectionId(token:string) {
@@ -42,11 +42,12 @@ export class SignalRService {
       else console.log(data);
     })
   }
-  public LossListener(){
-      this.hubConnection.on('loss', (data) => {
-        this.data.push(data);
-        console.log(data);
-      })
-    }
+  public LossListener()
+  {
+    this.hubConnection.on('loss', (data) => {
+      this.data.push(data);
+      // console.log(data);
+    })
+  }
 }
 

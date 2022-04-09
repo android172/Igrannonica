@@ -145,7 +145,7 @@ export class PodaciComponent implements OnInit {
   {
     this.http.get("http://localhost:5008/api/Upload/statistika", {responseType: 'text'}).subscribe(
       (response: any) => {
-        console.table(response);
+        //console.table(response);
         this.jsonStatistika = JSON.parse(response);
         //console.log(this.jsonStatistika);
         this.ucitajStatistiku();
@@ -190,7 +190,7 @@ export class PodaciComponent implements OnInit {
             Frequencies:this.jsonStatistika[key].Frequencies
           });
         // }
-        console.log(niz)
+        //console.log(niz)
         this.statistikaCat.push({
           key:key,
           data:niz
@@ -204,8 +204,8 @@ export class PodaciComponent implements OnInit {
         });
       }
     }
-    console.log(this.statistikaNum);
-    console.log(this.statistikaCat);
+    //console.log(this.statistikaNum);
+    //console.log(this.statistikaCat);
   }
 
   promeniBrojRedova(value: any)

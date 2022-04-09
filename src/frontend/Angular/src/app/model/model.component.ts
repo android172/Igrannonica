@@ -54,7 +54,7 @@ export class ModelComponent implements OnInit {
   public ulazneKolone : string[] = [];
   public izlazneKolone : string[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -72,7 +72,11 @@ export class ModelComponent implements OnInit {
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     let token = tokenGetter()
     if (token != null)
+    {
       this.signalR.startConnection(token);
+      //this.signalR.LossListener();
+      //console.log(this.signalR.data);
+    }
   }
   posaljiZahtev(data:number){
     //console.log(data);
@@ -186,7 +190,7 @@ export class ModelComponent implements OnInit {
             this.ulazneKolone.splice(j,1);
           }
         }
-        console.log(this.ulazneKolone);
+        //console.log(this.ulazneKolone);
         var ind = 0;
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -241,7 +245,7 @@ export class ModelComponent implements OnInit {
             this.izlazneKolone.splice(j,1);
           }
         }
-        console.log(this.izlazneKolone);
+        //console.log(this.izlazneKolone);
         var ind = 0;
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -394,7 +398,9 @@ export class ModelComponent implements OnInit {
     
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.http.post("http://localhost:5008/api/mltest/train", null).subscribe(
-      res => {}
+      res => {
+        this.signalR.LossListener();
+      }
     )
   }
 

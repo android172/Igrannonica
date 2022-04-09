@@ -169,7 +169,9 @@
         Pokreni model
     </button>
     <div id="div">
-
+        <table *ngFor="let elem of signalR.data" style="color:white">
+            <tr><td>{{elem}}</td></tr>
+        </table>
     </div>
     </div>
 </div>
