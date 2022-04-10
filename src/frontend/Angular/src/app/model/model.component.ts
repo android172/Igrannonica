@@ -404,14 +404,14 @@ export class ModelComponent implements OnInit {
   promeni1(br : any){
     if(br == 1)
     {
-      if(this.brHL < 9 ){
+      if(this.brHL < 10 ){
         this.brHL++;
         this.hiddLay.push(1);
         this.aktFunk.push(1);
         this.nizCvorova.push(1);
       }
       else{
-        this.brHL = 9;
+        this.brHL = 10;
       }
     }
     else{

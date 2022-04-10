@@ -99,11 +99,19 @@ p
 #div2{
     position: relative;
     display: flex;
-    width: 650px;
+    width: 520px;
     height: 350px;
     float: left;
     box-sizing: border-box;
-    justify-content: center;
+}
+
+#div21{
+  position: relative;
+ /* display: flex;*/
+  width: 848px;
+  height: 350px;
+  float: right;
+  box-sizing: border-box;
 }
 
 #centrirano
@@ -111,17 +119,18 @@ p
     position: relative;
     display: flex;
     
-   justify-content: center;
+ /*  justify-content: center;*/
     clear: both;
     
 }
 
 #ulaziIzlaz{
 
-    width: 300px;
+    width: 260px;
     height: 300px;
     border: 4px solid rgba(89, 119, 223, 1);
-    border-radius: 10px;
+    border-radius: 10px 10px 10px 10px;
+    border-right: 2px solid rgba(89, 119, 223, 1);;
     float: left;
     padding-top: 25px;
     padding-left: 30px;
@@ -130,15 +139,31 @@ p
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     background-color: #272741;
 }
+#ulaziIzlaz2{
+
+  width: 260px;
+  height: 300px;
+  border: 4px solid rgba(89, 119, 223, 1);
+  border-radius: 10px 10px 10px 10px;
+  border-left: 2px solid rgba(89, 119, 223, 1);;
+  float: left;
+  padding-top: 25px;
+  padding-left: 30px;
+  overflow: auto;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
+}
 
 #divUI{
 
-    width: 300px;
+    width: 260px;
     height: 350px;
     float: left;
+    /*
     margin-top: 50px;
     margin-left: 25px;
-    margin-right: 25px;
+    margin-right: 25px;*/
 }
 
 #pokreniM{
@@ -275,6 +300,11 @@ h3{
   color: #FFFFFF;
   margin-bottom: 5px;
 }
+
+h4{
+  color: #FFFFFF;
+  margin-bottom: 5px;
+}
 /*
 #lr,#is,#os,#noe,#bs,#rr,#rm,#lf,#o
 {
@@ -284,8 +314,8 @@ h3{
 
 #box
 {
-  width: 600px;
-  height: 300px;
+  width: 795px;
+  height: 250px;
   border: 4px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -294,7 +324,7 @@ h3{
   overflow: auto;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
-  margin-top: 82px;
+  margin-top: 42px;
  /* margin-right: 50px;*/
   margin-left: 50px;
   background-color: #272741;
@@ -303,31 +333,54 @@ h3{
 #grupa
 {
   float: left;
-  margin-left: 20px;
-  min-width: 160px;
-  margin-bottom: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  min-width: 130px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#grupaP2
+{
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  min-width: 130px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+#grupaUI
+{
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  min-width: 130px;
+  margin-bottom: 20px;
 }
 
 #grupa1{
   float: left;
   height: 90px;
-  width: 100%;
-  margin-top: 50px;
 }
 
 #grupa12{
   float: left;
-  height: 50px;
-  width: 100%;
+  height: 80px;
+  width: 250px;
 }
 
 #podesavanja{
 
-  width: 550px;
-  height: 270px;
+ /* height: 270px;*/
   margin-left: 20px;
   margin-top: 20px;
 }
+
+#podesavanja2{
+
+  width: 100%;
+ }
 
 input
 {
@@ -355,6 +408,7 @@ input
 #poruke{
   float: right;
   width: 600px;
+  height: 40px;
 }
 
 
@@ -384,7 +438,7 @@ input
 
 #div4{
   position: relative;
-  width: 955px;
+  width: 100%;
   height: 500px;
   float: left;
   box-sizing: border-box;
@@ -394,7 +448,7 @@ input
 
 #model{
 
-  width: 955px;
+  width: 100%;
   height: 500px;
   border: 4px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
@@ -420,8 +474,10 @@ input
     position: relative;
     display: flex;
     
-   justify-content: center;
+   /*justify-content: center;*/
     clear: both;
+
+    margin-top: 30px;
     
 }
 
@@ -430,7 +486,7 @@ input
   border: 2px solid  #bc7ca1;
   background: rgba(176, 167, 234, 0.3);
   border-radius: 8px;
-  min-width: 150px;
+  min-width: 130px;
   height: 28px;
   color: #CED9FF;
 }
@@ -449,7 +505,7 @@ input
   border: 2px solid #bc7ca1;
   background: rgba(176, 167, 234, 0.3) ; 
   border-radius: 8px;
-  min-width: 150px;
+  min-width: 130px;
   height: 29px;
   color: #CED9FF;
 }
