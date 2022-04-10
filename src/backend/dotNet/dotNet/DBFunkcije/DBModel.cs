@@ -138,7 +138,8 @@ namespace dotNet.DBFunkcije
                             Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
-                            Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
+                            Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
+                            0 // Ispraviti
                             );
                         Console.WriteLine(fun);
                         return settings;

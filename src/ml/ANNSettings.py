@@ -18,7 +18,8 @@ class ANNSettings:
         regularization      = 0,
         regularizationRate  = 0.0,
         lossFunction        = 0,
-        optimizer           = 0
+        optimizer           = 0,
+        kFoldCV             = 0
         ) -> None:
         
         self.problemType         = problemType
@@ -33,6 +34,7 @@ class ANNSettings:
         self.regularizationRate  = regularizationRate
         self.lossFunction        = lossFunction
         self.optimizer           = optimizer
+        self.kFoldCV             = kFoldCV
     
     def load(data) -> None:
         jsonObj = json.loads(data)
@@ -48,7 +50,8 @@ class ANNSettings:
             regularization      = jsonObj["Regularization"],
             regularizationRate  = jsonObj["RegularizationRate"],
             lossFunction        = jsonObj["LossFunction"],
-            optimizer           = jsonObj["Optimizer"]
+            optimizer           = jsonObj["Optimizer"],
+            kFoldCV             = jsonObj["KFoldCV"]
         )
     
     
