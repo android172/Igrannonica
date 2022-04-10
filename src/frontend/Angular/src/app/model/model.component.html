@@ -169,9 +169,16 @@
         Pokreni model
     </button>
     <div id="div">
-        <table *ngFor="let elem of signalR.data" style="color:white">
+        <div id="grafik" style="display: block">
+            <canvas baseChart
+                    [data]="signalR.lineChartData"
+                    [options]="chartOptions"
+                    [type]="'line'">
+            </canvas>
+        </div>
+        <!-- <table *ngFor="let elem of signalR.data" style="color:white">
             <tr><td>{{elem}}</td></tr>
-        </table>
+        </table> -->
     </div>
     </div>
 </div>

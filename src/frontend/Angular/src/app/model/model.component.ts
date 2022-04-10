@@ -8,6 +8,11 @@ import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tokenGetter } from '../app.module';
 import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { ChartData } from 'chart.js';
+import { ChartOptions } from 'chart.js';
+import { ChartType } from 'chart.js';
+import { ViewChild } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-model',
@@ -16,6 +21,8 @@ import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 })
 export class ModelComponent implements OnInit {
   private eventsSubscription!: Subscription;
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() mod!: Observable<number>;
   idEksperimenta: any;
@@ -400,6 +407,15 @@ export class ModelComponent implements OnInit {
     this.http.post("http://localhost:5008/api/mltest/train", null).subscribe(
       res => {
         this.signalR.LossListener();
+      //   setTimeout(() => {
+      //     this.chart?.update();
+      //     console.log(this.chart?.chart);
+      // }, 20);
+        let subscription = this.signalR.switchChange.asObservable().subscribe(
+          value=>{
+            this.chart?.update();
+          }
+        )
       }
     )
   }
@@ -448,5 +464,20 @@ export class ModelComponent implements OnInit {
       }
     }
   }
+
+  public chartOptions: any = {
+    scaleShowVerticalLines: true,
+    responsive: true,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  };
+  public chartLabels: string[] = ['Real time data for the chart'];
+  public chartType: string = 'line';
+  public chartLegend: boolean = true;
 
 }
