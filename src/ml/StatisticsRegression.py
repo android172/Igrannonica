@@ -9,8 +9,8 @@ class StatisticsRegression:
         R2  = 0,
         AdjustedR2 = 0
         ) -> None:
-        self.MAE = float(MAE)
-        self.MSE = float(MSE)
-        self.RSE = float(RSE)
-        self.R2  = float(R2)
-        self.AdjustedR2 = float(AdjustedR2)
+        self.MAE = str(float(MAE))
+        self.MSE = str(float(MSE))
+        self.RSE = str(float(RSE))
+        self.R2  = str(float(R2))
+        self.AdjustedR2 = str(float(AdjustedR2))
