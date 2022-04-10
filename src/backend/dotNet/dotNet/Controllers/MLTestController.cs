@@ -137,13 +137,11 @@ namespace dotNet.Controllers {
                 experiment = new(configuration, "st");  
             
             // Load data
-            Console.WriteLine(experiment.IsDataLoaded());
             experiment.LoadDataset(1, "test_data.csv");
-            Console.WriteLine(experiment.IsDataLoaded());
 
             // Get statistics
-            //var statistics = experiment.ColumnStatistics();
-            //Console.WriteLine(statistics);
+            var statistics = experiment.ColumnStatistics();
+            Console.WriteLine(statistics);
 
             // Get column types
             //Console.WriteLine(experiment.GetColumnTypes());
@@ -224,7 +222,8 @@ namespace dotNet.Controllers {
             experiment.Start();
 
             // Get metrics
-            //experiment.ComputeMetrics();
+            var stats = experiment.ComputeMetrics();
+            Console.WriteLine(stats);
 
             return "done";
         }

@@ -12,13 +12,13 @@ class StatisticsClassification:
         ConfusionMatrix  = []
         ) -> None:
         
-        self.Accuracy         = float(Accuracy)
-        self.BalancedAccuracy = float(BalancedAccuracy)
-        self.Precision        = float(Precision)
-        self.Recall           = float(Recall)
-        self.F1Score          = float(F1Score)
-        self.HammingLoss      = float(HammingLoss)
-        self.CrossEntropyLoss = float(CrossEntropyLoss)
+        self.Accuracy         = str(float(Accuracy))
+        self.BalancedAccuracy = str(float(BalancedAccuracy))
+        self.Precision        = str(float(Precision))
+        self.Recall           = str(float(Recall))
+        self.F1Score          = str(float(F1Score))
+        self.HammingLoss      = str(float(HammingLoss))
+        self.CrossEntropyLoss = str(float(CrossEntropyLoss))
         self.ConfusionMatrix  = [[int(i) for i in row] for row in ConfusionMatrix]
     
     
