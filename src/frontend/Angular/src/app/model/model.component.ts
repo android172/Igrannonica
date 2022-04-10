@@ -45,6 +45,7 @@ export class ModelComponent implements OnInit {
   public brCvorova : any;
   public pom : string = "";
   public s: string = "";
+  public broj : number = 0;
 
   selectedLF: number = 0;
   selectedO: number = 0;
@@ -436,7 +437,22 @@ export class ModelComponent implements OnInit {
         var x = i;
         this.pom = x.toString();
         var str = (<HTMLInputElement>document.getElementById(this.pom)).value;
-        this.nizCvorova[i]=Number(str);
+
+        if(Number(str) >= 14)
+        {
+           this.broj = 14;
+           (<HTMLInputElement>document.getElementById(this.pom)).value = "14";
+        }
+        else
+          if(Number(str) < 1)
+          {
+            this.broj = 1;
+            (<HTMLInputElement>document.getElementById(this.pom)).value = "1";
+          }
+        else{
+          this.broj = Number(str);
+        }
+        this.nizCvorova[i]=this.broj;
         console.log(this.nizCvorova[i]);
       }
     }

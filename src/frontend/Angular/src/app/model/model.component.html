@@ -9,7 +9,7 @@
         <div id="divUI">
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
-                <label class="container" *ngFor="let e of message">{{e}}
+                <label class="container" *ngFor="let e of kolone2">{{e}}
                     <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                     <span class="checkmark"></span>
                 </label>
@@ -133,7 +133,7 @@
                             <option id="ddp" value="3">Tahn</option>
                             <option id="ddp" value="4">Linear</option>
                         </select>
-                       <input type="number" min="1"  max="14" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)">        
+                       <input type="number" min="1"  max="14" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)" (change)="brojCvorova(i)">        
                     </div>
                 </div>
             </div>
