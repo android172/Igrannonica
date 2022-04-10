@@ -12,6 +12,21 @@ export class PodaciComponent implements OnInit {
 
   ngOnInit(): void {
     //this.getStat();
+    this.ucitanipodaci();
+  }
+
+  ucitanipodaci(){
+    this.http.get("http://localhost:5008/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.fileName=res;
+        (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
+        (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
+        (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
+        (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
+        this.loadDefaultItemsPerPage();
+      }
+    )
   }
 
   constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService) { 
@@ -145,9 +160,7 @@ export class PodaciComponent implements OnInit {
   {
     this.http.get("http://localhost:5008/api/Upload/statistika", {responseType: 'text'}).subscribe(
       (response: any) => {
-        console.table(response);
         this.jsonStatistika = JSON.parse(response);
-        //console.log(this.jsonStatistika);
         this.ucitajStatistiku();
       }
     )

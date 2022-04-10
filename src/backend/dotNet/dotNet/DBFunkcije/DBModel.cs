@@ -139,9 +139,8 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
-                            0 // Ispraviti
+                            reader.GetInt32("CrossValidationK")
                             );
-                        Console.WriteLine(fun);
                         return settings;
                     }
                     return null;
@@ -154,12 +153,12 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam','','');";
+                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 cmd.ExecuteNonQuery();
-
+                
 
             }
         }
@@ -184,7 +183,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
+                string query = "update podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o ,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
@@ -193,9 +192,9 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@noe", json.NumberOfEpochs);
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
-
+                cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
                 //Console.WriteLine(json.ActivationFunctions[0]);
-
+                
                 for(var i = 0; i < json.HiddenLayers.Length - 1; i++)
                 {
                     s += json.HiddenLayers[i] + ",";

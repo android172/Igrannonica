@@ -6,6 +6,7 @@ using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Newtonsoft.Json;
+using dotNet.MLService;
 
 namespace dotNet.Controllers
 {
@@ -168,6 +169,30 @@ namespace dotNet.Controllers
             {
                 return BadRequest("Greska");
             }
+        }
+        [Authorize]
+        [HttpGet("Eksperiment/Csv")]
+        public IActionResult EksperimentCsv(int id)
+        {
+            string csv = db.dbeksperiment.uzmi_naziv_csv(id);
+            Console.WriteLine(csv);
+            if (csv != "")
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                {
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if(!eksperiment.IsDataLoaded())
+                        eksperiment.LoadDataset(id, csv);
+                    return Ok(csv);
+                }
+                return BadRequest();
+            }
+            return NotFound();
         }
 
         [Authorize]
