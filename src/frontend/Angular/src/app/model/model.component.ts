@@ -332,12 +332,10 @@ export class ModelComponent implements OnInit {
     var bs = Number(this.s);
     this.s = (<HTMLInputElement>document.getElementById("lr")).value;
     var lr = Number(this.s);
-    this.s = (<HTMLDivElement>document.getElementById("is")).innerHTML;
-    var ins = Number(this.s);
+    var ins = this.brojU;
     this.s = (<HTMLInputElement>document.getElementById("noe")).value;
     var noe = Number(this.s);
-    this.s = (<HTMLDivElement>document.getElementById("os")).innerHTML;
-    var os = Number(this.s);
+    var os = this.brojI;
     this.s = (<HTMLInputElement>document.getElementById("rr")).value;
     var rr = Number(this.s);
 
@@ -398,22 +396,23 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  counter1(broj:number){
+  counter1(i:number){
     
-    for(let i=0; i<broj; i++)
-    {
-      this.nizHL[i] = i+1;
-    }
-    return this.nizHL;
+    return new Array(i);
   }
 
   promeni1(br : any){
     if(br == 1)
     {
+      if(this.brHL < 9 ){
         this.brHL++;
         this.hiddLay.push(1);
         this.aktFunk.push(1);
         this.nizCvorova.push(1);
+      }
+      else{
+        this.brHL = 9;
+      }
     }
     else{
 
