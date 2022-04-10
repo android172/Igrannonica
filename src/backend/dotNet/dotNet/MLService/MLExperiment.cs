@@ -15,6 +15,15 @@ namespace dotNet.MLService {
         // ///////////////// //
         // Data introduction //
         // ///////////////// //
+        public bool IsDataLoaded() {
+            lock (_lock) {
+                connection.Send(Command.IsDataLoaded);
+                var loaded = connection.Receive();
+                if (loaded != null && loaded.Equals("True"))
+                    return true;
+                return false;
+            }
+        }
 
         public void LoadDataset(int experimentId, string fileName) {
             lock (_lock) {
@@ -397,6 +406,7 @@ namespace dotNet.MLService {
     public enum Command {
         SetToken,
         // Data introduction
+        IsDataLoaded,
         LoadData,
         LoadTestData,
         SaveDataset,

@@ -117,7 +117,8 @@ namespace dotNet.Controllers {
                 regularization: RegularizationMethod.L1,
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
-                optimizer: Optimizer.Adam
+                optimizer: Optimizer.Adam,
+                0
                 );
 
             experiment.ApplySettings(settings);
@@ -133,22 +134,25 @@ namespace dotNet.Controllers {
         [HttpGet]
         public string Test() {
             if (experiment == null)
-                experiment = new(configuration, "st");
+                experiment = new(configuration, "st");  
+            
             // Load data
+            Console.WriteLine(experiment.IsDataLoaded());
             experiment.LoadDataset(1, "test_data.csv");
+            Console.WriteLine(experiment.IsDataLoaded());
 
             // Get statistics
-            var statistics = experiment.ColumnStatistics();
-            Console.WriteLine(statistics);
+            //var statistics = experiment.ColumnStatistics();
+            //Console.WriteLine(statistics);
 
             // Get column types
-            Console.WriteLine(experiment.GetColumnTypes());
+            //Console.WriteLine(experiment.GetColumnTypes());
 
             // Add row and column
-            experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
-                                      "1", "1", "1", "12412.1", "0"});
-            int rowCounts = experiment.GetRowCount();
-            Console.WriteLine(rowCounts);
+            //experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
+            //                          "1", "1", "1", "12412.1", "0"});
+            //int rowCounts = experiment.GetRowCount();
+            //Console.WriteLine(rowCounts);
             //var column = new string[rowCounts];
             //for (int i = 0; i < column.Length; i++)
             //    column[i] = "2";
@@ -159,8 +163,8 @@ namespace dotNet.Controllers {
 
 
             // Get rows
-            var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
-            Console.WriteLine(rows);
+            //var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
+            //Console.WriteLine(rows);
 
             // Encode categorical values
             experiment.OneHotEncoding(new int[] { 4, 5, 13 });
@@ -198,10 +202,10 @@ namespace dotNet.Controllers {
             activationFunctions[4] = ActivationFunction.ReLU;
 
             ANNSettings settings = new(
-                aNNType: ProblemType.Classification,
+                aNNType: ProblemType.Regression,
                 learningRate: 0.001f,
                 batchSize:  64,
-                numberOfEpochs: 1,
+                numberOfEpochs: 20,
                 inputSize:  13,
                 outputSize: 2,
                 hiddenLayers: hiddentLayers,
@@ -209,7 +213,8 @@ namespace dotNet.Controllers {
                 regularization: RegularizationMethod.L1,
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
-                optimizer: Optimizer.Adam
+                optimizer: Optimizer.Adam,
+                5
                 );
 
             experiment.ApplySettings(settings);

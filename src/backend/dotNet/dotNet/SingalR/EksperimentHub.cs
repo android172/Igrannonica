@@ -16,7 +16,8 @@ namespace dotNet.SingalR
 
         public void SendLoss(string token, string loss)
         {
-            Clients.Clients(users[token]).SendAsync("loss", loss);
+            try { Clients.Clients(users[token]).SendAsync("loss", loss); }
+            catch (Exception e) { Console.WriteLine(loss); }
         }
 
         public void ZaustaviTreniranje()

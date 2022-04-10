@@ -18,7 +18,8 @@ namespace dotNet.Models {
             RegularizationMethod regularization,
             float regularizationRate,
             LossFunction lossFunction, 
-            Optimizer optimizer) {
+            Optimizer optimizer,
+            int kFoldCV) {
 
             ANNType = aNNType;
             LearningRate = learningRate;
@@ -32,6 +33,7 @@ namespace dotNet.Models {
             RegularizationRate = regularizationRate;
             LossFunction = lossFunction;
             Optimizer = optimizer;
+            KFoldCV = kFoldCV;
         }
 
         public float LearningRate { get; set;}
@@ -48,6 +50,7 @@ namespace dotNet.Models {
         public float RegularizationRate { get; set; }
         public LossFunction LossFunction { get; set; }
         public Optimizer Optimizer { get; set; }
+        public int KFoldCV { get; set; }
 
         // To JSON string
         public override string ToString() {

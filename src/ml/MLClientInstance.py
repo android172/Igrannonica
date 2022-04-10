@@ -32,9 +32,16 @@ class MLClientInstance(Thread):
                 print("Token set.")
                 
             # Load data #
+            elif received == 'IsDataLoaded':
+                loaded = network.data.dataset is not None
+                self.connection.send(loaded)
+                
+                print("Is Dataset loaded returned {loaded}.")
+            
             elif received == 'LoadData':
                 # Receive experiment id
                 experiment_id = self.connection.receive()
+                self.experiment_id = experiment_id
                 # Receive dataset name
                 file_name = self.connection.receive()
                 file_dir = f"./data/{experiment_id}"
@@ -523,5 +530,5 @@ class MLClientInstance(Thread):
         sr_connection = SignalRConnection(self.token)
         sr_connection.set_method("SendLoss")
         for loss in network.train():
-            sr_connection.send_string(loss)
+            sr_connection.send_string(json.dumps(loss))
         print("Traning complete.")

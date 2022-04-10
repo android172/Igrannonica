@@ -6,8 +6,10 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torch.utils.data import SubsetRandomSampler
 
 from sklearn import metrics
+from sklearn.model_selection import KFold
 
 from MLData import MLData
 from StatisticsClassification import StatisticsClassification
@@ -70,7 +72,11 @@ class ANN:
         
         # Load problem type
         self.isRegression = annSettings.problemType == 0
-         
+        
+        # Load validation if needed
+        self.cv_k = annSettings.kFoldCV
+        self.cv   = self.cv_k > 1
+        
         # Create ANN according to the given settings
         model = NN().to(device)
         # Add all hidden layers
@@ -123,34 +129,83 @@ class ANN:
             self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
     
     # Training
-    def train(self):
-        if self.train_loader is None:
-            self.initialize_loaders()
+    def train_epoch(self, train_loader):
+        for bach_index, (data, target) in enumerate(train_loader):
+            data = data.to(device)
+            target = target.to(device)
+            data = data.reshape(data.shape[0], -1)
+            
+            # Forward
+            scores = self.model.forward(data)
+            loss = self.criterion(scores, target)
+            
+            if self.regularization_method == 0:
+                L1_reg = torch.tensor(0., requires_grad=True)
+                for name, param in self.model.named_parameters():
+                    if 'weight' in name:
+                        L1_reg = L1_reg + torch.norm(param, 1)
+                loss += self.regularization_rate * L1_reg
+                
+            # Backwards
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+        return loss.item()
+
+    def test_epoch(self, test_loader):
+        test_loss = 0.0
         
+        self.model.eval()
+        for bach_index, (data, target) in enumerate(test_loader):
+            data = data.to(device)
+            target = target.to(device)
+            data = data.reshape(data.shape[0], -1)
+            
+            # Forward
+            scores = self.model.forward(data)
+            loss = self.criterion(scores, target)
+            
+            test_loss += loss.item()
+        
+        self.model.train()
+        
+        return test_loss / len(test_loader)
+    
+    def train(self):
         # Train the network
-        for epoch in range(self.num_epochs):
-            for bach_index, (data, target) in enumerate(self.train_loader):
-                data = data.to(device)
-                target = target.to(device)
-                data = data.reshape(data.shape[0], -1)
+        if self.cv:
+            # Train with K-Fold Cross Validation
+            train_dataset = self.data.get_train_dataset()
+            
+            initial_state = {k:v for k,v in self.model.state_dict().items()}
+            
+            for fold, (train_indices, validation_indices) in enumerate(KFold(self.cv_k, shuffle=True).split(train_dataset)):
+                train_subs = SubsetRandomSampler(train_indices)
+                val_subs   = SubsetRandomSampler(validation_indices)
+                train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=train_subs)
+                val_loader   = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=val_subs)
                 
-                # Forward
-                scores = self.model.forward(data)
-                loss = self.criterion(scores, target)
+                self.model.load_state_dict(initial_state)
                 
-                if self.regularization_method == 0:
-                    L1_reg = torch.tensor(0., requires_grad=True)
-                    for name, param in self.model.named_parameters():
-                        if 'weight' in name:
-                            L1_reg = L1_reg + torch.norm(param, 1)
-                    loss += self.regularization_rate * L1_reg
-                
-                # Backwards
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
-                
-            yield f"{epoch}:{loss}"
+                for epoch in range(self.num_epochs):
+                    loss = self.train_epoch(train_loader)
+                    valLoss = self.test_epoch(val_loader)
+                    yield {
+                        "fold"    : fold,
+                        "epoch"   : epoch,
+                        "loss"    : loss,
+                        "valLoss" : valLoss
+                    }
+            
+        else:
+            if self.train_loader is None:
+                self.initialize_loaders()
+            for epoch in range(self.num_epochs):
+                loss = self.train_epoch(self.train_loader)
+                yield {
+                    "epoch" : epoch,
+                    "loss"  : loss
+                }
     
     # Metrics
     def compute_regression_statistics(self, dataset):
