@@ -68,14 +68,19 @@ export class SignalRService {
     datasets: [
       {
         data: [],
-        label: 'Series A',
+        label: 'Loss funkcija',
         backgroundColor: 'rgba(148,159,177,0.2)',
-        borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
+        borderColor: '#F45E82',
+        pointBackgroundColor: '#fb9ab0',
+        pointBorderColor: '#fb9ab0',
+        pointBorderWidth: 2,
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-        fill: 'origin',
+        pointHoverBorderColor: '#F45E82',
+        fill: {
+                target: 'origin',
+                above: 'rgb(205, 0, 50, 0.1)',   // Area will be red above the origin
+                below: 'rgb(0, 0, 255)'
+        },
       }]
     }
 }
