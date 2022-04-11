@@ -506,7 +506,7 @@ export class ModelComponent implements OnInit {
         ticks: {
           beginAtZero: true,
           color: 'white'
-        }
+        },
       },
       x:{
         title: {

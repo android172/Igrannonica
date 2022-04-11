@@ -52,11 +52,20 @@ export class SignalRService {
   {
     this.hubConnection.on('loss', (data) => {
       this.data.push(data);
-      var pom = data.split(":");
-      console.log(pom);
-      this.lineChartData.labels?.push(pom[0]);
-      this.lineChartData.datasets[0].data.push(pom[1]);
-      console.log(this.lineChartData.datasets[0].data);
+      var pom = data.split(",");
+      //console.log(pom);
+      var epoha = pom[0];
+      var loss = pom[1];
+      var epohaNiz = epoha.split(":");
+      var lossNiz = loss.split(":");
+      var brojEpohe = epohaNiz[1];
+      var brojLoss = lossNiz[1];
+      var brojLossPravi = brojLoss.split("}");
+      console.log(brojEpohe);
+      console.log(brojLossPravi[0]);
+      this.lineChartData.datasets[0].data.push(brojLossPravi[0]);
+      this.lineChartData.labels?.push(brojEpohe);
+      //console.log(this.lineChartData.datasets[0].data);
       this.switch = !this.switch;
       this.switchChange.next(this.switch);
     })
