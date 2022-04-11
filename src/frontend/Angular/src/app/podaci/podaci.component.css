@@ -66,7 +66,7 @@ img{
     justify-content: center;
     margin: -40px auto;
 
-}
+}/*
 #slider input[type="range"]{
     width: 220px;
     height: 10px;
@@ -79,6 +79,21 @@ img{
     height: 20px;
     cursor: pointer;
     border-radius: 5px;
+}*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 220px;
+      -webkit-appearance: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+    }
+    
+    
+    input[type='range']::-webkit-slider-thumb {
+      cursor: pointer;
+    }
+
 }
 #current-value{
     font-size: 14px;
