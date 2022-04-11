@@ -8,6 +8,11 @@ import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tokenGetter } from '../app.module';
 import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { ChartData } from 'chart.js';
+import { ChartOptions } from 'chart.js';
+import { ChartType } from 'chart.js';
+import { ViewChild } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-model',
@@ -16,6 +21,8 @@ import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 })
 export class ModelComponent implements OnInit {
   private eventsSubscription!: Subscription;
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() mod!: Observable<number>;
   idEksperimenta: any;
@@ -55,7 +62,7 @@ export class ModelComponent implements OnInit {
   public ulazneKolone : string[] = [];
   public izlazneKolone : string[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -73,7 +80,11 @@ export class ModelComponent implements OnInit {
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     let token = tokenGetter()
     if (token != null)
+    {
       this.signalR.startConnection(token);
+      //this.signalR.LossListener();
+      //console.log(this.signalR.data);
+    }
   }
   posaljiZahtev(data:number){
     //console.log(data);
@@ -187,7 +198,7 @@ export class ModelComponent implements OnInit {
             this.ulazneKolone.splice(j,1);
           }
         }
-        console.log(this.ulazneKolone);
+        //console.log(this.ulazneKolone);
         var ind = 0;
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -242,7 +253,7 @@ export class ModelComponent implements OnInit {
             this.izlazneKolone.splice(j,1);
           }
         }
-        console.log(this.izlazneKolone);
+        //console.log(this.izlazneKolone);
         var ind = 0;
         this.kolone2.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
@@ -393,7 +404,18 @@ export class ModelComponent implements OnInit {
     
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.http.get("http://localhost:5008/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
-      res => {}
+      res => {
+        this.signalR.LossListener();
+      //   setTimeout(() => {
+      //     this.chart?.update();
+      //     console.log(this.chart?.chart);
+      // }, 20);
+        let subscription = this.signalR.switchChange.asObservable().subscribe(
+          value=>{
+            this.chart?.update();
+          }
+        )
+      }
     )
   }
 
@@ -457,5 +479,52 @@ export class ModelComponent implements OnInit {
       }
     }
   }
+
+  public chartOptions: any = {
+    scaleShowVerticalLines: true,
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+          font: {
+            size: 18
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Vrednost loss-a',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          beginAtZero: true,
+          color: 'white'
+        }
+      },
+      x:{
+        title: {
+          display: true,
+          text: 'Broj epoha',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: 'white'
+        }
+      }
+    }
+  };
+  public chartLabels: string[] = ['Real time data for the chart'];
+  public chartType: string = 'line';
+  public chartLegend: boolean = true;
 
 }

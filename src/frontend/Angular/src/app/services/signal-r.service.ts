@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
+import { ChartConfiguration } from 'chart.js';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +9,12 @@ import * as signalR from "@aspnet/signalr";
 export class SignalRService {
   constructor() { }
   
+  public labels: number[] = [];
+  //public dataSet: number[] = []
   public data:Array<{value:string}> = [];
   public connectionId:any
+  public switch: boolean = false;
+  public switchChange: Subject<boolean> = new Subject<boolean>();
   private hubConnection!: signalR.HubConnection; 
 
   public startConnection(token: string) {
@@ -16,7 +22,7 @@ export class SignalRService {
     this.hubConnection.start().then(
       ()=> {
         console.log('povezan')
-        this.LossListener()
+        //this.LossListener()
       }).then(()=>this.getConnectionId(token)).catch(()=>console.log("Doslo do greske"));
   }
   public getConnectionId(token:string) {
@@ -42,11 +48,39 @@ export class SignalRService {
       else console.log(data);
     })
   }
-  public LossListener(){
-      this.hubConnection.on('loss', (data) => {
-        this.data.push(data);
-        console.log(data);
-      })
+  public LossListener()
+  {
+    this.hubConnection.on('loss', (data) => {
+      this.data.push(data);
+      var pom = data.split(":");
+      console.log(pom);
+      this.lineChartData.labels?.push(pom[0]);
+      this.lineChartData.datasets[0].data.push(pom[1]);
+      console.log(this.lineChartData.datasets[0].data);
+      this.switch = !this.switch;
+      this.switchChange.next(this.switch);
+    })
+  }
+
+  public lineChartData: ChartConfiguration['data'] = {
+    // labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Loss funkcija',
+        backgroundColor: 'rgba(148,159,177,0.2)',
+        borderColor: '#F45E82',
+        pointBackgroundColor: '#fb9ab0',
+        pointBorderColor: '#fb9ab0',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#F45E82',
+        fill: {
+                target: 'origin',
+                above: '#9f707b32'
+        },
+      }]
     }
 }
 

@@ -28,6 +28,7 @@ import { PodaciComponent } from './podaci/podaci.component';
 import { ModelComponent } from './model/model.component';
 import { ModeliComponent } from './modeli/modeli.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgChartsModule } from 'ng2-charts';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -69,7 +70,8 @@ export function tokenGetter() {
         skipWhenExpired: true
       }
     }),
-    NgbModule
+    NgbModule,
+    NgChartsModule
   ],
   providers: [
     CookieService
