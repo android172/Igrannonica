@@ -577,7 +577,7 @@ input
 #div{
 
   width: 70vw;
-  height: 70vh;
+  height: 65vh;
   border: 4px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -622,5 +622,5 @@ input
 {
   width: 90%;
   height: 90%;
-  margin-top: 50px;
+  margin-top: 20px;
 }

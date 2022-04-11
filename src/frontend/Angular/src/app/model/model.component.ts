@@ -468,12 +468,44 @@ export class ModelComponent implements OnInit {
   public chartOptions: any = {
     scaleShowVerticalLines: true,
     responsive: true,
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+          font: {
+            size: 18
+          }
         }
-      }]
+      }
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Vrednost loss-a',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          beginAtZero: true,
+          color: 'white'
+        }
+      },
+      x:{
+        title: {
+          display: true,
+          text: 'Broj epoha',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: 'white'
+        }
+      }
     }
   };
   public chartLabels: string[] = ['Real time data for the chart'];

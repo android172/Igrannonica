@@ -78,8 +78,7 @@ export class SignalRService {
         pointHoverBorderColor: '#F45E82',
         fill: {
                 target: 'origin',
-                above: 'rgb(205, 0, 50, 0.1)',   // Area will be red above the origin
-                below: 'rgb(0, 0, 255)'
+                above: '#9f707b32'
         },
       }]
     }
