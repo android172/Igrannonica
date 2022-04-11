@@ -209,5 +209,31 @@ namespace dotNet.Controllers
                 return BadRequest("Greska");
             }
         }
+
+        [Authorize]
+        [HttpGet("Model/Treniraj")]
+        public IActionResult ModelTreniraj(int id)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            MLExperiment eksperiment;
+            Model model = db.dbmodel.model(id);
+            if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+            {
+                eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (!eksperiment.IsDataLoaded())
+                {
+                    string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
+                    eksperiment.LoadDataset(model.Vlasnik, csv);
+                }
+                List<List<int>> kolone = db.dbmodel.Kolone(id);
+                eksperiment.LoadInputs(kolone[0].ToArray());
+                eksperiment.LoadOutputs(kolone[1].ToArray());
+                ANNSettings podesavanja = db.dbmodel.podesavanja(id);
+                eksperiment.ApplySettings(podesavanja);
+                eksperiment.Start();
+                return Ok("Pocelo treniranje");
+            }
+            return BadRequest("Greska");
+        }
     }
 }

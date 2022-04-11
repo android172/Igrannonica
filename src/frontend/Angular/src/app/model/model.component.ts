@@ -392,7 +392,7 @@ export class ModelComponent implements OnInit {
   treniraj(){
     
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
-    this.http.post("http://localhost:5008/api/mltest/train", null).subscribe(
+    this.http.get("http://localhost:5008/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {}
     )
   }
