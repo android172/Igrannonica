@@ -168,6 +168,7 @@ p
 
 #pokreniM{
 
+  /*
     width: 150px;
     height: 40px;
 
@@ -181,8 +182,38 @@ p
     color: #FFFFFF;
 
     transition-duration: 0.3s;
-  
-    position: absolute;
+  */
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+
+    width: 80px;
+    height: 80px;
+  border-radius: 80px;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+}
+
+#pokreniM:hover{
+
+    box-shadow: 0px 0px 10px 5px rgba(74, 89, 199, 0.7); 
+
+}
+
+#playbutton{
+  width: 80px;
+  height: 80px;
+
+  transform: translate(-8px,-3px);
+}
+
+#tekstZT{
+
+  width: 150px;
+  margin: 0px;
+  padding: 0px;
+  float: right;
+  margin-top: 50px;
+  color: #CED9FF;
 }
 
 /* width */
@@ -364,7 +395,9 @@ h4{
   height: 90px;
   margin-top: 0px;
   margin-bottom: 20px;
-  margin-left: 30px;
+  margin-left: 60px;
+  margin-right: 20px;
+  width: 770px;
 }
 
 #grupa12{
@@ -762,24 +795,24 @@ input
 
 #crossV{
 
-  border: 2px solid  #bc7ca1;
+  border: 2px solid  rgb(46, 132, 189);;
   background: rgba(176, 167, 234, 0.3);
   border-radius: 8px;
   width: 150px;
   height: 28px;
   color: #CED9FF;
-  margin-top: 18px;
+  margin-top: 10px;
 }
 
 #crossVd{
 
   border: 2px solid  rgb(46, 132, 189);
-  background: rgba(176, 167, 234);
+  background: rgb(192,194,206,0.5);
   border-radius: 8px;
   width: 150px;
   height: 28px;
   color: #CED9FF;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 #bcv{
@@ -809,4 +842,74 @@ input
   width: 150px;
   margin-top: 10px;
 
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 24px;
+  margin-top: 15px;
+  margin-right: 15px;
+  margin-left: 10px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(192,194,206,0.5);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: rgb(46, 132, 189);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px rgb(46, 132, 189);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#tekstCV{
+
+  color: white;
+  width: 70px;
+  float: left;
 }
