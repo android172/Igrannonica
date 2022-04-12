@@ -36,7 +36,7 @@ class MLClientInstance(Thread):
                 loaded = network.data.dataset is not None
                 self.connection.send(loaded)
                 
-                print("Is Dataset loaded returned {loaded}.")
+                print(f"Is Dataset loaded returned {loaded}.")
             
             elif received == 'LoadData':
                 # Receive experiment id

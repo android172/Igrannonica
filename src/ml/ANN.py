@@ -39,6 +39,12 @@ class ANN:
         self.test_loader   = None
         self.optimizer     = None
         self.criterion     = None
+        self.isRegression  = False
+        self.cv            = False
+        self.cv_k          = 0
+        self.regularization_method = None
+        self.regularization_rate   = 0.0
+        self.weights_history = {}
         
     # Load data
     def initialize_random_data(self):
@@ -62,6 +68,8 @@ class ANN:
     
     # Load Settings
     def load_settings(self, annSettings):
+        self.weights_history = {}
+        
         # Load settings
         self.learning_rate = annSettings.learningRate
         self.batch_size    = annSettings.batchSize
@@ -127,6 +135,28 @@ class ANN:
             self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         else:
             self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+    
+    # Weights
+    def load_weights(self, weights_path):
+        state_dict = torch.load(weights_path)
+        return self.load_state_dict(state_dict)
+
+    def load_weights_at(self, epoch):
+        model = self.weights_history.get(epoch, None)
+        if model == None:
+            return False
+        return self.load_state_dict(model.state_dict())
+    
+    def save_weights(self, path):
+        torch.save(self.model.state_dict(), path)
+    
+    def load_state_dict(self, state_dict):
+        if state_dict is None:
+            return False
+        a, b = self.model.load_state_dict(state_dict)
+        if len(a) > 0 or len(b) > 0:
+            return False
+        return True
     
     # Training
     def train_epoch(self, train_loader):
@@ -196,6 +226,7 @@ class ANN:
                         "loss"    : loss,
                         "valLoss" : valLoss
                     }
+                    self.weights_history[f"{fold}:{epoch}"] = {j:k for j, k in self.model.state_dict()}
             
         else:
             if self.train_loader is None:
@@ -206,6 +237,7 @@ class ANN:
                     "epoch" : epoch,
                     "loss"  : loss
                 }
+                self.weights_history[f"{epoch}"] = {j:k for j, k in self.model.state_dict()}
     
     # Metrics
     def compute_regression_statistics(self, dataset):
