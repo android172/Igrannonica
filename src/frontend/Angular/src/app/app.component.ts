@@ -21,24 +21,37 @@ export class AppComponent {
   ngOnInit(): void {
   }
 
+  // ngDoCheck(): void
+  // {
+  //   if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment" && this.router.url != "/moji-eksperimenti"))
+  //   {
+  //     this.header = false;
+  //     if((this.router.url).indexOf("eksperiment") != -1)
+  //     {
+  //       this.header2 = true;
+  //     }
+  //     else
+  //     {
+  //       this.header2 = false;
+  //     }
+  //   }
+  //   else
+  //   {
+  //     this.header = true;
+  //     this.header2 = false;
+  //   }
+  // }
+
   ngDoCheck(): void
   {
-    if(this.router.url=="/prijava" || this.router.url=="/registracija" || ((this.router.url).indexOf("eksperiment") != -1 && this.router.url != "/novi-eksperiment" && this.router.url != "/moji-eksperimenti"))
+    this.header2 = false;
+    if(this.router.url=="/prijava" || this.router.url=="/registracija")
     {
       this.header = false;
-      if((this.router.url).indexOf("eksperiment") != -1)
-      {
-        this.header2 = true;
-      }
-      else
-      {
-        this.header2 = false;
-      }
     }
     else
     {
       this.header = true;
-      this.header2 = false;
     }
   }
 }
