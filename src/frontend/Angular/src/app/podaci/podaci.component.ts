@@ -387,13 +387,14 @@ export class PodaciComponent implements OnInit {
     let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value; 
     let val1:number = (parseFloat)((<HTMLInputElement>document.getElementById("input-ratio")).value);
     (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost ;  
-    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + vrednost;
+    let procenat:number = Math.round(val1 * 100);
+    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
     if(val1 < 0.5)
     {
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+9.5}%`;
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 10}%`;
     }
     else{
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+10.5}%`;
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 18}%`;
     }
   }
   upisRatio()
@@ -401,13 +402,14 @@ export class PodaciComponent implements OnInit {
     let vrednost = (<HTMLInputElement>document.getElementById("vrednost-ratio")).value; 
     let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value); 
     (<HTMLInputElement>document.getElementById("input-ratio")).value ="" + vrednost; 
-    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + vrednost;
+    let procenat:number = Math.round(val1 * 100);
+    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
     if(val1 < 0.5)
     {
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+9.5}%`;
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-10}%`;
     }
     else{
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*10+10.5}%`;
+      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-18}%`;
     }
   }
 

@@ -98,8 +98,8 @@ img{
 }*/
 #current-value{
     font-size: 15px;
-    position: absolute;
-    left: 15%;   /* 9 - 23 */ 
+    position: relative;
+    left: 40%;   /* 9 - 23 */ 
     width: 55px;
     height: 45px;
     text-align: center;

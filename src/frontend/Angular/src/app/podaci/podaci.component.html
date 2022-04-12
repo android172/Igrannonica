@@ -69,14 +69,12 @@
                     <div id="slider">
                         <div style="margin: auto; color: #c1cdff; position: relative; top: -25px;">Uneti vrednost iz intervala [0,1]</div>
                         <div id="current-value">50%</div>
-                        <br>
-                        <br>
                         
-                        <input type="range" min="0" max="1" step="0.001" value="0.5" (change)="ispisRatio()" id="input-ratio">
+                        <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio">
                     </div>
                     <br><br><br>
                     <div id="div-ratio">
-                        <input type="number" min="0" max="1" step="0.001" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
+                        <input type="number" min="0" max="1" step="0.01" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
                         <button id="btn-ratio" (click)="setRatio()">Primeni</button>
                     </div>   
                 </div>
