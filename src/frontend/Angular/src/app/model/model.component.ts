@@ -34,8 +34,7 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
-
- // public pom : boolean = false;
+  // public pom : boolean = false;
   //public brHL : number = 0;
   //public niz : any[] = [];
   public brHL : number = 0;
@@ -54,6 +53,9 @@ export class ModelComponent implements OnInit {
 
   public ulazneKolone : string[] = [];
   public izlazneKolone : string[] = [];
+  public izabraneU : number[] = [];
+  public izabraneI : number[] = [];
+  public pomocni : number[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -93,6 +95,7 @@ export class ModelComponent implements OnInit {
     this.kolone = Object.assign([],this.message);
     this.kolone2 = Object.assign([],this.kolone);
     this.idModela = data;
+    this.uzmiKolone();
     this.ucitajNazivModela(this.idModela);
     this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
@@ -262,7 +265,6 @@ export class ModelComponent implements OnInit {
 
 
   submit(){
-
     this.izmeniPodesavanja();
     var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
     if(!(nazivEks === this.nazivEksperimenta))
@@ -326,6 +328,48 @@ export class ModelComponent implements OnInit {
         this.aktFunk[i] = Number(str);
       }
     }
+  }
+
+  uzmiKolone()
+  {
+    console.log(this.idModela);
+    this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
+        res=>{
+          this.pomocni=Object.assign([],res);
+          this.izabraneU=Object.assign([],this.pomocni[0]);
+          this.izabraneI=Object.assign([],this.pomocni[1]);
+          this.cekiraj();
+        },error=>{
+          console.log(error.error);
+        }
+    );
+  }
+
+  cekiraj()
+  {
+    for(let i=0;i<this.message.length;i++)
+      for(let j=0;j<this.izabraneU.length;j++)
+        if(i==this.izabraneU[j])
+        {
+          let nizU = <any>document.getElementsByName("ulz"); 
+          for(let p=0;p<nizU.length;p++)
+            if(nizU[p].value===this.message[i])
+            {
+              nizU[p].checked=true;
+            }
+        }
+    for(let i=0;i<this.message.length;i++)
+      for(let j=0;j<this.izabraneI.length;j++)
+        if(i==this.izabraneI[j])
+        {
+          let nizI = <any>document.getElementsByName("izl"); 
+          for(let p=0;p<nizI.length;p++)
+            if(nizI[p].value===this.message[i])
+            {
+              nizI[p].checked=true;
+            }
+          }
+    
   }
 
   izmeniPodesavanja(){
