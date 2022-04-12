@@ -568,15 +568,20 @@ export class PodaciComponent implements OnInit {
 
     this.http.post("http://localhost:5008/api/Upload/deleteRows",redoviZaBrisanje,{responseType: 'text'}).subscribe(
       res => {
-        //console.log(res);
-        this.totalItems = (parseInt)(res);
-        console.log(this.totalItems);
-        this.loadDefaultItemsPerPage();
-        this.rowsAndPages = [];
-        this.dodajKomandu("Redovi obrisani");
+        if(res == "Korisnik nije pronadjen" || res == "Token nije setovan" || res == "Redovi za brisanje nisu izabrani")
+        {
+          this.rowsAndPages = []; // deselekcija redova 
+          this.dodajKomandu(res);
+        }
+        else 
+        {
+          this.totalItems = (parseInt)(res);
+          this.loadDefaultItemsPerPage();
+          this.rowsAndPages = []; // deselekcija redova 
+          this.dodajKomandu("Redovi obrisani");
+        }
     },error=>{
-      //console.log(error.error);
-      this.dodajKomandu("Redovi nisu obrisani");
+      this.dodajKomandu("Brisanje redova nije izvršeno");
     })
   }
 

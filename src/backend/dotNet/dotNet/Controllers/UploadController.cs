@@ -519,19 +519,19 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
-                    return "6"; //BadRequest();
+                    return "Korisnik nije pronadjen"; //BadRequest
             }
             else
-                return "7"; // BadRequest("Korisnik nije ulogovan.");
+                return "Token nije setovan";  
 
             if (niz.Length == 0)
-                return "8";// BadRequest("Niz je prazan");
+                return "Redovi za brisanje nisu izabrani";
             
             foreach(var i in niz)
             {
                 eksperiment.DeleteRow(i);
             }
-
+            // Ukupan broj redova ucitanog fajla
             return eksperiment.GetRowCount().ToString();
         }
     }
