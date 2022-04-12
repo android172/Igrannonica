@@ -100,7 +100,7 @@ p
     position: relative;
     display: flex;
     width: 520px;
-    height: 350px;
+    height: 420px;
     float: left;
     box-sizing: border-box;
 }
@@ -127,7 +127,7 @@ p
 #ulaziIzlaz{
 
     width: 260px;
-    height: 300px;
+    height: 380px;
     border: 4px solid rgba(89, 119, 223, 1);
     border-radius: 10px 10px 10px 10px;
     border-right: 2px solid rgba(89, 119, 223, 1);;
@@ -142,7 +142,7 @@ p
 #ulaziIzlaz2{
 
   width: 260px;
-  height: 300px;
+  height: 380px;
   border: 4px solid rgba(89, 119, 223, 1);
   border-radius: 10px 10px 10px 10px;
   border-left: 2px solid rgba(89, 119, 223, 1);;
@@ -158,7 +158,7 @@ p
 #divUI{
 
     width: 260px;
-    height: 350px;
+    height: 420px;
     float: left;
     /*
     margin-top: 50px;
@@ -261,7 +261,7 @@ p
   
   /* When the checkbox is checked, add a blue background */
   .container input:checked ~ .checkmark {
-    background: linear-gradient(162.06deg, #59D75E -16.65%, #8DFF92 97.46%);
+    background: #F45E82;
   
   }
   /* Create the checkmark/indicator (hidden when not checked) */
@@ -333,21 +333,21 @@ h4{
 #grupa
 {
   float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  min-width: 130px;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 150px;
   margin-bottom: 20px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 #grupaP2
 {
   float: left;
+  height: 90px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: 10px;
   margin-right: 10px;
-  min-width: 130px;
-  margin-bottom: 20px;
-  margin-top: 40px;
 }
 
 #grupaUI
@@ -362,12 +362,15 @@ h4{
 #grupa1{
   float: left;
   height: 90px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  margin-left: 30px;
 }
 
 #grupa12{
   float: left;
   height: 80px;
-  width: 250px;
+  width: 200px;
 }
 
 #podesavanja{
@@ -379,7 +382,11 @@ h4{
 
 #podesavanja2{
 
-  width: 100%;
+  width: 90%;
+  display: table;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: auto;
  }
 
 input
@@ -486,7 +493,7 @@ input
   border: 2px solid  #bc7ca1;
   background: rgba(176, 167, 234, 0.3);
   border-radius: 8px;
-  min-width: 130px;
+  width: 150px;
   height: 28px;
   color: #CED9FF;
 }
@@ -505,7 +512,7 @@ input
   border: 2px solid #bc7ca1;
   background: rgba(176, 167, 234, 0.3) ; 
   border-radius: 8px;
-  min-width: 130px;
+  min-width: 150px;
   height: 29px;
   color: #CED9FF;
 }
@@ -515,7 +522,7 @@ input
   border: 2px solid rgb(37, 164, 214) ;
   background: rgb(33, 79, 138);
   border-radius: 8px;
-  width: 200px;
+  width: 170px;
   height: 29px;
   color: #CED9FF;
 
@@ -745,4 +752,61 @@ input
   width: 90%;
   height: 90%;
   margin-top: 20px;
+}
+
+
+#cp{
+
+  margin-top: 20px;
+}
+
+#crossV{
+
+  border: 2px solid  #bc7ca1;
+  background: rgba(176, 167, 234, 0.3);
+  border-radius: 8px;
+  width: 150px;
+  height: 28px;
+  color: #CED9FF;
+  margin-top: 18px;
+}
+
+#crossVd{
+
+  border: 2px solid  rgb(46, 132, 189);
+  background: rgba(176, 167, 234);
+  border-radius: 8px;
+  width: 150px;
+  height: 28px;
+  color: #CED9FF;
+  margin-top: 20px;
+}
+
+#bcv{
+
+  background: rgb(46, 132, 189);
+  border-radius: 8px;
+  width: 150px;
+  height: 30px;
+  color: #FFFFFF;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+}
+
+#grupaCV
+{
+  float: left;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 150px;
+  margin-bottom: 20px;
+  margin-top: 0px;
+}
+
+#grupaP{
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 150px;
+  margin-top: 10px;
+
 }

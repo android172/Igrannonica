@@ -53,6 +53,9 @@ export class ModelComponent implements OnInit {
   public pom : string = "";
   public s: string = "";
   public broj : number = 0;
+  public crossV : number = 5;
+  public flag: boolean = true;
+  cv: number = 0;
 
   selectedLF: number = 0;
   selectedO: number = 0;
@@ -122,6 +125,15 @@ export class ModelComponent implements OnInit {
         this.brojI = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
+        this.crossV = this.json1['kFoldCV'];
+        console.log(this.crossV);
+        if(this.crossV == 0)
+        {
+          this.flag = true;
+        }
+        else{
+          this.flag = false;
+        }
       },
       error=>{
         console.log(error);
@@ -350,6 +362,12 @@ export class ModelComponent implements OnInit {
     var os = this.brojI;
     this.s = (<HTMLInputElement>document.getElementById("rr")).value;
     var rr = Number(this.s);
+    if(this.flag == true)
+      this.cv = 0;
+    else{
+      var str = (<HTMLInputElement>document.getElementById("crossV")).value;
+      this.cv = Number(str);
+    }
 
     var jsonPod = 
     {
@@ -364,7 +382,8 @@ export class ModelComponent implements OnInit {
         "Regularization": this.selectedRM,
         "RegularizationRate": rr,
         "HiddenLayers":this.nizCvorova,
-        "ActivationFunctions":this.aktFunk
+        "ActivationFunctions":this.aktFunk,
+        "KFoldCV":this.cv
     };
     
     this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
@@ -527,4 +546,12 @@ export class ModelComponent implements OnInit {
   public chartType: string = 'line';
   public chartLegend: boolean = true;
 
+
+  dugmeCV(){
+
+    if(this.flag == true)
+      this.flag = false;
+    else
+      this.flag = true;
+  }
 }

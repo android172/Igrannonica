@@ -49,17 +49,18 @@
                     </div>
 
                 </div>
-                <div id="grupa1">
 
-                    <div id="grupa">
+                <div id="grupaP2">
+
+                    <div id="grupaP">
                         <h4> Problem type </h4>
                         <select name="" id="dd3" (change)="selectPT($event)">
                             <option id="ddp" value="1">Classification</option>
                             <option id="ddp" value="0">Regression</option>
                         </select>
                     </div>
-
-                    <div id="grupa">
+            
+                    <div id="grupaP">
                         <h4> Loss function </h4>
                         <select name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
@@ -67,9 +68,9 @@
                             <option id="ddp" value="2">Cross-entropy loss</option>
                         </select>
                     </div>
-        
-    
-                    <div id="grupa">
+            
+            
+                    <div id="grupaP">
                         <h4> Optimizer </h4>
                         <select name="" id="dd3" (change)="selectO($event)">
                             <option id="ddp" value="0">SGD</option>
@@ -78,20 +79,27 @@
                             <option id="ddp" value="3">Adam</option>
                         </select>
                     </div>
-                </div>
-                <div id="podesavanja2">
 
-                    <div id="grupaP2">
-                        <h4> Number of epochs </h4>
-                        <input type="text" id="noe" name="noe">
+                </div>
+
+                <div id="grupa12">
+
+                    <div id="grupaCV">
+                        <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
+                        <div *ngIf="!flag; else onemoguceno">
+                            <input id="crossV" min="2" max="20" [defaultValue]="crossV">
+                        </div>
+                        <ng-template #onemoguceno>
+                            <input id="crossVd" disabled>
+                          </ng-template>
                     </div>
-            
-                    <div id="grupaP2">
-                        <h4> Learning rate </h4>
-                        <input type="text" id="lr" name="lr">
-                    </div>
-            
-                    <div id="grupaP2">
+    
+                    
+                </div>
+
+                <div id="grupaP2">
+
+                    <div id="grupaP">
                         <h4> Regularization</h4>
                         <select name="" id="dd1" (change)="selectRM($event)">
                             <option id="ddp" value="0">L1</option>
@@ -99,20 +107,36 @@
                         </select>
                     </div>
             
-                    <div id="grupaP2">
+                    <div id="grupaP">
                         <h4> Regularization rate </h4>
                         <input type="text" id="rr" name="rr">
                     </div>
             
-                    <div id="grupaP2">
+                    <div id="grupaP">
                         <h4> Batch size </h4>
                             <input type="text" id="bs" name="bs">
                     </div>
+
                 </div>
+                
             </div>
+        </div>
+        <div id="grupa1">
+
+            <div id="grupa">
+                <h4> Number of epochs </h4>
+                <input type="text" id="noe" name="noe">
+            </div>
+    
+            <div id="grupa">
+                <h4> Learning rate </h4>
+                <input type="text" id="lr" name="lr">
+            </div>
+
         </div>
     </div>
 </div>
+
 <div id="centrirano2">
     <div id="div3">
         <div id="lista">
