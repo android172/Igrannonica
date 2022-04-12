@@ -9,14 +9,15 @@
        <div type="button" id="m" *ngFor="let m of modeli"> 
            <p (click)="send(m.id)">  {{ m.name }}  </p><div id="divB">
            <button (click)="obrisiModel(m.id)" id="delete">
-            <div class="icon-trash" style="float: left;">
-                <div class="trash-lid" style="background-color: #E5E9EA"></div>
-                <div class="trash-container" style="background-color: #E5E9EA"></div>
-                <div class="trash-line-1"></div>
-                <div class="trash-line-2"></div>
-                <div class="trash-line-3"></div>
-              </div>
+            <i style="font-size:24px" class="fa">&#xf014;</i>           
            </button></div>
        </div>
    </div>
 </div>
+<h1>fa fa-trash-o</h1>
+
+<i class="fa fa-trash-o"></i>
+<i class="fa fa-trash-o" style="font-size:24px"></i>
+<i class="fa fa-trash-o" style="font-size:36px"></i>
+<i class="fa fa-trash-o" style="font-size:48px;color:black"></i>
+<br>
