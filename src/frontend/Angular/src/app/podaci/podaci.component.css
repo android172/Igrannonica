@@ -230,7 +230,7 @@ input#exampleFormControlFile1{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: rgb(180, 180, 180);
-    width: 932px;
+    width: 950px;
     height: 70px;
     overflow-y: scroll;
 }
@@ -297,6 +297,7 @@ input#exampleFormControlFile1{
 #tabela-statistika{
     display: flex;
     margin-bottom: 10px;
+    justify-content: space-between;
 }
 
 #table
@@ -309,7 +310,7 @@ input#exampleFormControlFile1{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: white;
-    width: 932px;
+    width: 950px;
     overflow: scroll;
     max-height: 542px;
     min-height: 542px;
