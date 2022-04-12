@@ -266,5 +266,113 @@ namespace dotNet.Controllers
 
             return Ok("Fajl je upisan.");
         }
+
+        // Za upisivanje i citanje modela
+
+        [HttpPost("downloadModel/{idEksperimenta}")]
+        public ActionResult Download(int idEksperimenta, string imeModela)
+        {
+            //Console.WriteLine(idEksperimenta);
+            //var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            //var handler = new JwtSecurityTokenHandler();
+            //var jsonToken = handler.ReadToken(token);
+            //var tokenS = jsonToken as JwtSecurityToken;
+            //Korisnik korisnik;
+            //MLExperiment eksperiment;
+
+            //if (tokenS != null)
+            //{
+            //    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+            //    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+            //        eksperiment = Korisnik.eksperimenti[token.ToString()];
+            //    else
+            //        return BadRequest();
+            //}
+            //else
+            //    return BadRequest("Korisnik nije ulogovan.");
+
+            string fileName = imeModela + ".pt";
+
+            string path = System.IO.Path.Combine(
+                Directory.GetCurrentDirectory(), "Files",
+                "1", idEksperimenta.ToString(), "Models", fileName
+                );
+            //string path = System.IO.Path.Combine(
+            //    Directory.GetCurrentDirectory(), "Files",
+            //    korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", fileName
+            //    );
+
+            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
+            catch { return NotFound("File not found."); }
+        }
+
+
+        [HttpPost("uploadModel/{idEksperimenta}")]
+        public IActionResult uploadModel(IFormFile file, int idEksperimenta, string imeModela)
+        {
+
+            //var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            //var handler = new JwtSecurityTokenHandler();
+            //var jsonToken = handler.ReadToken(token);
+            //var tokenS = jsonToken as JwtSecurityToken;
+            //Korisnik korisnik;
+            //MLExperiment eksperiment;
+
+            //if (tokenS != null)
+            //{
+            //    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+            //    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+            //        eksperiment = Korisnik.eksperimenti[token.ToString()];
+            //    else
+            //        return BadRequest();
+            //}
+            //else
+            //    return BadRequest("Korisnik nije ulogovan.");
+
+            //if (file == null)
+            //    return BadRequest("Fajl nije unet.");
+
+            // kreiranje foldera 
+            //string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\1";
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
+            // kreiranje foldera za modele
+            string folderModeli = folderEksperiment + "\\Models";
+
+            if (!System.IO.Directory.Exists(folderModeli))
+            {
+                Directory.CreateDirectory(folderModeli);
+            }
+
+            // ucitavanje modela
+            string fileName = imeModela + ".pt";
+            string path = folderModeli + "\\" + fileName;
+
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            // upis u fajl 
+            System.IO.File.WriteAllBytes(path, bytes);
+
+            return Ok("Fajl je upisan.");
+        }
+
     }
 }

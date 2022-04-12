@@ -219,11 +219,11 @@ namespace dotNet.Controllers {
 
 
             // Start training
-            experiment.Start();
+            //experiment.Start();
 
             // Get metrics
-            var stats = experiment.ComputeMetrics();
-            Console.WriteLine(stats);
+            //var stats = experiment.ComputeMetrics();
+            //Console.WriteLine(stats);
 
             return "done";
         }
