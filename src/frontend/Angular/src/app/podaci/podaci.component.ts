@@ -13,6 +13,7 @@ export class PodaciComponent implements OnInit {
   ngOnInit(): void {
     //this.getStat();
     this.ucitanipodaci();
+    this.ucitajNaziv();
   }
 
   ucitanipodaci(){
@@ -82,6 +83,7 @@ export class PodaciComponent implements OnInit {
   statistikaNum: any[] = [];
   rowsAndPages:number[][] = [];
   ucitanCsv: boolean = false;
+  nazivEksperimenta:any;
 
   public kolone: any[] = [];
   message: any;
@@ -576,6 +578,47 @@ export class PodaciComponent implements OnInit {
       //console.log(error.error);
       this.dodajKomandu("Redovi nisu obrisani");
     })
+  }
+  ucitajNaziv()
+  {
+    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+          this.nazivEksperimenta = res;
+          var div = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value = this.nazivEksperimenta;
+          console.log(this.nazivEksperimenta);
+        },error=>{
+          console.log(error.error);
+        }
+    );
+  }
+
+  submit(){
+    var nazivEks = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value;
+    if(!(nazivEks === this.nazivEksperimenta))
+    {
+       this.proveriE();
+    }
+  }
+
+  proveriE(){
+      var nazivE = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value;
+      //var div = (<HTMLDivElement>document.getElementById("poruka-err")).innerHTML;
+      //if(div === "*Eksperiment sa tim nazivom vec postoji"){
+      //  div = (<HTMLDivElement>document.getElementById("poruka-err")).innerHTML = "";
+      //}
+      this.http.put("http://localhost:5008/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+        res=>{
+
+        }, error=>{
+          this.ucitajNaziv();
+          if(error.error === "Postoji eksperiment sa tim imenom")
+          {
+            //(<HTMLDivElement>document.getElementById("poruka-err")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
+            alert("Postoji eksperiment sa tim imenom.");
+          }
+        }
+      )
   }
 
 }
