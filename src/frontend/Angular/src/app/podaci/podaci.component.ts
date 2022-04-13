@@ -587,7 +587,7 @@ export class PodaciComponent implements OnInit {
       data.value = "";
     }*/
     console.log(typeof(data.value));
-    this.http.put("http://localhost:5008/api/Upload/updateValue/" + row + "/" + column + "/" + data.value, {responseType: 'text'}).subscribe(
+    this.http.put("http://localhost:5008/api/Upload/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
