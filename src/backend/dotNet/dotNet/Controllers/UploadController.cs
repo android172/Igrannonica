@@ -19,14 +19,12 @@ namespace dotNet.Controllers
     {
         private IConfiguration _config;
         DB db;
-        private int ukupanBrRedovaFajla;
         //private static MLExperiment? experiment = null;
 
         public UploadController(IConfiguration config)
         {
             _config = config;
             db = new DB(_config);
-            ukupanBrRedovaFajla = 0;
         }
 
         [HttpPost("upload/{idEksperimenta}")]
@@ -145,22 +143,23 @@ namespace dotNet.Controllers
             else
                 return new Paging(null, 1);
 
-            int[] niz = new int[size];
             var j = page * size - size;
+            int ukupanBrRedovaFajla = eksperiment.GetRowCount();
 
-            if (ukupanBrRedovaFajla == 0)
-                ukupanBrRedovaFajla = eksperiment.GetRowCount();
+            if (j + size - 1 > ukupanBrRedovaFajla)
+            {
+                size = ukupanBrRedovaFajla - j;
+            }
+
+            int[] niz = new int[size];
 
             for (var i = 0; i < size; i++)
             {
-                if (j >= ukupanBrRedovaFajla)
-                    break;
-                
                 Console.WriteLine("Vrednost j: " + j);
                 niz[i] = j++;
             }
 
-            var redovi = eksperiment.GetRows(niz);      
+            var redovi = eksperiment.GetRows(niz);
 
             Console.WriteLine($"Page: {page}  Size: {size}");
 
