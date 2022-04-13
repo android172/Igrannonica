@@ -115,6 +115,7 @@ export class ModelComponent implements OnInit {
       res=>{
         console.log(res);
         this.json1=res;
+        (<HTMLInputElement>document.getElementById("dd3")).value = this.json1.annType;
         this.aktFunk =  this.json1['activationFunctions'];
         (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
         (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
@@ -194,8 +195,6 @@ export class ModelComponent implements OnInit {
         {
            this.ulazneKolone.push(nizK[i].value);
         }
-        console.log(this.ulazneKolone);
-
         this.kolone.forEach((element:any,index:any) => { 
           if(element === nizK[i].value){
            // console.log(element);
@@ -291,6 +290,7 @@ export class ModelComponent implements OnInit {
 
   submit(){
     this.izmeniPodesavanja();
+    this.uzmiCekirane();
     var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
     if(!(nazivEks === this.nazivEksperimenta))
     {
@@ -370,6 +370,36 @@ export class ModelComponent implements OnInit {
     );
   }
 
+  uzmiCekirane(){
+    var ulazne=[];
+    var izlazne=[];
+    let nizU = <any>document.getElementsByName("ulz"); 
+    for(let i =0;i<nizU.length;i++){
+      if(nizU[i].checked==true){
+        for(let j =0;j<this.message.length;j++){
+          if(nizU[i].value==this.message[j]){
+            ulazne.push(j);
+          }
+        }
+      }
+    }
+    let nizI = <any>document.getElementsByName("izl");
+    for(let i =0;i<nizI.length;i++){
+      if(nizI[i].checked==true){
+        for(let j =0;j<this.message.length;j++){
+          if(nizI[i].value==this.message[j])
+            izlazne.push(j);
+        }
+      }
+    }
+    this.http.post("http://localhost:5008/api/Eksperiment/Podesavanja/Kolone?id="+this.idModela,{ulazne,izlazne}).subscribe(
+      res=>{
+        console.log(res);
+      }
+    );
+  }
+
+
   cekiraj()
   {
     for(let i=0;i<this.message.length;i++)
@@ -408,11 +438,12 @@ export class ModelComponent implements OnInit {
     var os = this.brojI;
     this.s = (<HTMLInputElement>document.getElementById("rr")).value;
     var rr = Number(this.s);
-    if(this.flag == true)
-      this.cv = 0;
-    else{
+    if(this.flag == true){
       var str = (<HTMLInputElement>document.getElementById("crossV")).value;
       this.cv = Number(str);
+    }
+    else{
+      this.cv = 0;
     }
 
     var jsonPod = 
@@ -466,8 +497,12 @@ export class ModelComponent implements OnInit {
   }
 
   treniraj(){
-    
+    this.izmeniPodesavanja();
+    this.uzmiCekirane();
+    console.log("sacuvano");
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
+    this.signalR.clearChartData();
+    this.chart?.update();
     this.http.get("http://localhost:5008/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {
         this.signalR.LossListener();

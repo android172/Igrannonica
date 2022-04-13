@@ -91,5 +91,11 @@ export class SignalRService {
         },
       }]
     }
+  
+    public clearChartData()
+    {
+      this.lineChartData.datasets[0].data = [];
+      this.lineChartData.labels = [];
+    }
 }
 

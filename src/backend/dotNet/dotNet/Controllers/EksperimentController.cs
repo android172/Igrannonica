@@ -146,6 +146,15 @@ namespace dotNet.Controllers
         {
             return Ok(db.dbmodel.Kolone(id));
         }
+
+        [Authorize]
+        [HttpPost("Podesavanja/Kolone")]
+        public IActionResult UcitajKolone(int id,[FromBody]Kolone kolone)
+        {
+            if(db.dbmodel.UpisiKolone(id, kolone))
+                return Ok(kolone);
+            return BadRequest("Doslo do greske");
+        }
         [Authorize]
         [HttpPut("Podesavanja")]
         public IActionResult updatePodesavanja(int id, [FromBody]ANNSettings json)
@@ -186,8 +195,8 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                 {
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
-                    if(!eksperiment.IsDataLoaded())
-                        eksperiment.LoadDataset(id, csv);
+                    //if(!eksperiment.IsDataLoaded())
+                    eksperiment.LoadDataset(id, csv);
                     return Ok(csv);
                 }
                 return BadRequest();

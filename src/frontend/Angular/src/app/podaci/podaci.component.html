@@ -31,8 +31,9 @@
         </div>
 
         <div id="desnielement">
-            <div id="naziveksperimenta">Naziv Eksperimenta</div>
-            <button id="sacuvajizmene">Sačuvaj izmene</button> 
+            <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
+            <input type="text" id="naziveksperimenta">
+            <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
         </div>
         
     </div>
@@ -68,15 +69,13 @@
                 <div id="proizvoljan-unos" class="invisible-unos">
                     <div id="slider">
                         <div style="margin: auto; color: #c1cdff; position: relative; top: -25px;">Uneti vrednost iz intervala [0,1]</div>
-                        <div id="current-value">0.5</div>
-                        <br>
-                        <br>
+                        <div id="current-value">50%</div>
                         
-                        <input type="range" min="0" max="1" step="0.0001" value="0.5" (change)="ispisRatio()" id="input-ratio">
+                        <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio">
                     </div>
                     <br><br><br>
                     <div id="div-ratio">
-                        <input type="number" min="0" max="1" step="0.0001" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
+                        <input type="number" min="0" max="1" step="0.01" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
                         <button id="btn-ratio" (click)="setRatio()">Primeni</button>
                     </div>   
                 </div>
@@ -97,8 +96,8 @@
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje vrednosti</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-                      <button ngbDropdownItem (click)="deleteRows()">Izbaci sve vrste</button>
-                      <button ngbDropdownItem (click)="deleteColumns()">Izbaci sve kolone</button>
+                      <button ngbDropdownItem (click)="deleteRows()">Izbaci selektovane vrste</button>
+                      <button ngbDropdownItem (click)="deleteColumns()">Izbaci selektovane kolone</button>
                       <button ngbDropdownItem (click)="izborUnosa('Proizvoljno')">Izbaci vrste za izabrane kolone</button>
                     </div>
                 </div>
@@ -143,7 +142,7 @@
                         totalItems: totalItems
                     };  index as i" (click)="getRow(i,this.page)">
                         <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)" [class.selectedRow]="isSelectedRow(i)">
-                        {{fieldValue}}
+                            <input type="text" value="{{fieldValue}}" id="input-data" (change)="izmeniPolje(i,j,this.page,$event.target)">
                         </td>
                     </tr>
                 </table>
@@ -174,7 +173,12 @@
         </div>-->
         <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
-            <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'">Kolone sa numeričkim veličinama:</div>
+            <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              </svg></div>Kolone sa numeričkim veličinama:</div>
+            <div class="collapse show" id="numericke">
             <div *ngFor="let element of statistikaNum; index as i">
                 <div id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseNum{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}<div class="strelica"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -191,7 +195,13 @@
                     </div> 
                 </div>
             </div>
-            <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'">Kolone sa kategorijskim veličinama:</div>
+            </div>
+            <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#kategorijske" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              </svg></div>Kolone sa kategorijskim veličinama:</div>
+            <div class="collapse show" id="kategorijske">
             <div *ngFor="let element of statistikaCat; index as i">
                 <div class="mt-2" id="imeKolone" data-bs-toggle="collapse" attr.data-bs-target="#collapseCat{{i}}" aria-expanded="false" aria-controls="collapseExample">{{element.key}}<div class="strelica"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -223,6 +233,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
