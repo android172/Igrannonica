@@ -255,7 +255,7 @@ namespace dotNet.DBFunkcije
                     s += "l";
 
                 cmd.Parameters.AddWithValue("@af", s);
-
+                Console.WriteLine(json.ANNType);
                 if (json.ANNType == ProblemType.Regression)
                 {
                     pom = "Regression";
@@ -295,14 +295,10 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@rm", pom);
 
                 connection.Open();
-                using (MySqlDataReader read = cmd.ExecuteReader())
-                {
-                    if (read.Read())
-                    {
-                        return true;
-                    }
-                    return false;
-                }
+                if(cmd.ExecuteNonQuery()!=0)
+                    return true;
+                return false;
+                
             }
         }
 
@@ -379,13 +375,15 @@ namespace dotNet.DBFunkcije
                     {
                         List<int> list1 = new List<int>();
                         string kolone = reader.GetString("ulaznekolone");
+                        if (kolone != "")
                         foreach(string i in kolone.Split(','))
                         {
                             list1.Add(int.Parse(i));
                         }
                         list.Add(list1);
-                        kolone = reader.GetString("izlaznekolone");
                         list1 = new List<int>();
+                        kolone = reader.GetString("izlaznekolone");
+                        if(kolone !="")
                         foreach (string i in kolone.Split(','))
                         {
                             list1.Add(int.Parse(i));
@@ -395,6 +393,37 @@ namespace dotNet.DBFunkcije
                 }
                 return list;
             }
+        }
+        public bool UpisiKolone(int id,Kolone kolone)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update podesavanja set ulaznekolone=@kol1 , izlaznekolone=@kol2,inputsize=@is,outputsize=@os where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@kol1",KoloneToString(kolone.ulazne));
+                cmd.Parameters.AddWithValue("@is",kolone.ulazne.Length);
+                cmd.Parameters.AddWithValue("@kol2", KoloneToString(kolone.izlazne));
+                cmd.Parameters.AddWithValue("@os", kolone.izlazne.Length);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public string KoloneToString(int[] niz)
+        {
+            string str = "";
+            for(int i = 0; i < niz.Length; i++)
+            {
+                str+=niz[i].ToString();
+                if (i < niz.Length - 1)
+                    str += ",";
+            }
+            return str;
         }
 
     }
