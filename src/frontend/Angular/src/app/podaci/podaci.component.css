@@ -59,6 +59,21 @@ img{
 #brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
+/************ Data manipulation ************/ 
+
+#input-data{
+    background: none;
+    border: none;
+    color: white;
+    width: 68px;
+    overflow: visible;
+}
+#table tr:nth-of-type(even) input{
+    
+    color: #c1cdff;
+
+}
+
 /************* SLIDER *****************/ 
 
 #slider{
@@ -310,10 +325,9 @@ input#exampleFormControlFile1{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: white;
-    width: 950px;
+    width: 960px;
     overflow: scroll;
-    max-height: 542px;
-    min-height: 542px;
+    height: 550px;
   
 }
 #table::-webkit-scrollbar{
@@ -661,8 +675,7 @@ th{
     border-radius: 10px;
     color: white;
     width: 360px;
-    max-height: 540px;
-    min-height: 540px;
+    height: 550px;
 }
 
 #statNaslov

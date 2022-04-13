@@ -578,5 +578,28 @@ export class PodaciComponent implements OnInit {
     })
   }
 
+  izmeniPolje(row:number,column:number,page:any,data:any)
+  {
+    row = page * this.itemsPerPage - this.itemsPerPage + row;
+/*
+    if(data == undefined)
+    {
+      data.value = "";
+    }*/
+    console.log(typeof(data.value));
+    this.http.put("http://localhost:5008/api/Upload/updateValue/" + row + "/" + column + "/" + data.value, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        //this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.rowsAndPages = [];
+        this.dodajKomandu("Polje izmenjeno");
+    },error=>{
+      console.log(error.error);
+      this.rowsAndPages = [];
+      this.dodajKomandu("Polje nije izmenjeno");
+    })
+  }
+
 }
 
