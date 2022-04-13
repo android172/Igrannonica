@@ -47,8 +47,8 @@ img{
 }
 
 #brojRedovaTabelePoruka{
-    position: static;
-    left: 300px;
+    position: relative;
+    /*left: 5%;*/
     width: 15%;
     color: #CED9FF;
 }
@@ -59,6 +59,20 @@ img{
 #brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
+
+/****** PORUKA ERROR ****************/
+/*
+#poruka-err{
+    color: #F45E82;
+    font-size: small;
+}
+#ispisPoruke{
+    width: 50px;
+    position: relative;
+    margin: 1px 0;
+    float: right;
+    background-color: #006ce8;
+}*
 /************* SLIDER *****************/ 
 
 #slider{
