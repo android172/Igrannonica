@@ -142,10 +142,10 @@ class ANN:
         return self.load_state_dict(state_dict)
 
     def load_weights_at(self, epoch):
-        model = self.weights_history.get(epoch, None)
-        if model == None:
+        state_dict = self.weights_history.get(epoch, None)
+        if state_dict == None:
             return False
-        return self.load_state_dict(model.state_dict())
+        return self.load_state_dict(state_dict)
     
     def save_weights(self, path):
         torch.save(self.model.state_dict(), path)
@@ -226,7 +226,7 @@ class ANN:
                         "loss"    : loss,
                         "valLoss" : valLoss
                     }
-                    self.weights_history[f"{fold}:{epoch}"] = {j:k for j, k in self.model.state_dict()}
+                    self.weights_history[f"{fold}:{epoch}"] = {j:k for j, k in self.model.state_dict().items()}
             
         else:
             if self.train_loader is None:
@@ -237,7 +237,7 @@ class ANN:
                     "epoch" : epoch,
                     "loss"  : loss
                 }
-                self.weights_history[f"{epoch}"] = {j:k for j, k in self.model.state_dict()}
+                self.weights_history[f"{epoch}"] = {j:k for j, k in self.model.state_dict().items()}
     
     # Metrics
     def compute_regression_statistics(self, dataset):

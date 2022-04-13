@@ -32,8 +32,19 @@ namespace dotNet.Controllers
         [HttpPost("download/{idEksperimenta}")]
         public ActionResult Download(int idEksperimenta)
         {
-            Console.WriteLine(idEksperimenta);
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+            /// TEMP
+            if (token.Equals("") || token.Equals("st")) {
+                string fileName1 = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+
+                string path1 = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName1);
+
+                try { return File(System.IO.File.ReadAllBytes(path1), "application/octet-stream", fileName1); }
+                catch { return NotFound("File not found."); }
+            }
+            /// 
+
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
@@ -63,21 +74,9 @@ namespace dotNet.Controllers
             catch { return NotFound("File not found."); }
         }
 
-        [HttpGet("downloadTest/{idEksperimenta}")]
-        public ActionResult DownloadTest(int idEksperimenta)
-        {
-            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-            
-            string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName);
-
-            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
-            catch { return NotFound("File not found."); }
-        }
-
         [HttpPost("upload/{idEksperimenta}")]
         public IActionResult Upload(IFormFile file, int idEksperimenta)
         {
-
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -172,8 +171,49 @@ namespace dotNet.Controllers
         [HttpPost("update/{idEksperimenta}")]
         public IActionResult Update(IFormFile file, int idEksperimenta)
         {
-
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+            /// TEMP
+            if (token.Equals("") || token.Equals("st"))
+            {
+                if (file == null)
+                    return BadRequest("Fajl nije unet.");
+
+                // kreiranje foldera 
+                string folder1 = Directory.GetCurrentDirectory() + "\\Files\\1";
+
+                if (!System.IO.Directory.Exists(folder1))
+                {
+                    Directory.CreateDirectory(folder1);
+                }
+
+                // kreiranje foldera sa nazivom eksperimenta
+                string folderEksperiment1 = folder1 + "\\" + idEksperimenta;
+
+                if (!System.IO.Directory.Exists(folderEksperiment1))
+                {
+                    Directory.CreateDirectory(folderEksperiment1);
+                }
+
+                // ucitavanje bilo kog fajla 
+                long length1 = file.Length;
+                using var fileStream1 = file.OpenReadStream();
+                byte[] bytes1 = new byte[length1];
+                fileStream1.Read(bytes1, 0, (int)file.Length);
+
+                // Path
+                string fileName1 = file.FileName;
+                string path1 = folderEksperiment1 + "\\" + fileName1;
+
+                Console.WriteLine(path1);
+
+                // upis u fajl 
+                System.IO.File.WriteAllBytes(path1, bytes1);
+
+                return Ok("Fajl je upisan.");
+            }
+            /// 
+
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
@@ -227,81 +267,51 @@ namespace dotNet.Controllers
             return Ok("Fajl je upisan.");
         }
 
-        [HttpGet("updateTest/{idEksperimenta}")]
-        public IActionResult UpdateTest(IFormFile file, int idEksperimenta)
-        {
-            if (file == null)
-                return BadRequest("Fajl nije unet.");
-
-            // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\1";
-
-            if (!System.IO.Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
-
-            if (!System.IO.Directory.Exists(folderEksperiment))
-            {
-                Directory.CreateDirectory(folderEksperiment);
-            }
-
-            // ucitavanje bilo kog fajla 
-            long length = file.Length;
-            using var fileStream = file.OpenReadStream();
-            byte[] bytes = new byte[length];
-            fileStream.Read(bytes, 0, (int)file.Length);
-
-            // Path
-            string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
-
-            Console.WriteLine(path);
-
-            // upis u fajl 
-            System.IO.File.WriteAllBytes(path, bytes);
-
-            return Ok("Fajl je upisan.");
-        }
-
         // Za upisivanje i citanje modela
 
         [HttpPost("downloadModel/{idEksperimenta}")]
-        public ActionResult Download(int idEksperimenta, string imeModela)
+        public ActionResult Download(int idEksperimenta, string modelName)
         {
-            //Console.WriteLine(idEksperimenta);
-            //var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            //var handler = new JwtSecurityTokenHandler();
-            //var jsonToken = handler.ReadToken(token);
-            //var tokenS = jsonToken as JwtSecurityToken;
-            //Korisnik korisnik;
-            //MLExperiment eksperiment;
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            //if (tokenS != null)
-            //{
-            //    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+            /// TEMP
+            if (token.Equals("") || token.Equals("st")) {
+                string fileName1 = modelName + ".pt";
 
-            //    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-            //        eksperiment = Korisnik.eksperimenti[token.ToString()];
-            //    else
-            //        return BadRequest();
-            //}
-            //else
-            //    return BadRequest("Korisnik nije ulogovan.");
+                string path1 = System.IO.Path.Combine(
+                    Directory.GetCurrentDirectory(), "Files",
+                    "1", idEksperimenta.ToString(), "Models", fileName1
+                    );
 
-            string fileName = imeModela + ".pt";
+                try { return File(System.IO.File.ReadAllBytes(path1), "application/octet-stream", fileName1); }
+                catch { return NotFound("File not found."); }
+            }
+            ///
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            string fileName = modelName + ".pt";
 
             string path = System.IO.Path.Combine(
                 Directory.GetCurrentDirectory(), "Files",
-                "1", idEksperimenta.ToString(), "Models", fileName
+                korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", fileName
                 );
-            //string path = System.IO.Path.Combine(
-            //    Directory.GetCurrentDirectory(), "Files",
-            //    korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", fileName
-            //    );
 
             try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
             catch { return NotFound("File not found."); }
@@ -309,34 +319,74 @@ namespace dotNet.Controllers
 
 
         [HttpPost("uploadModel/{idEksperimenta}")]
-        public IActionResult uploadModel(IFormFile file, int idEksperimenta, string imeModela)
+        public IActionResult uploadModel(IFormFile file, int idEksperimenta, string modelName)
         {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            //var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            //var handler = new JwtSecurityTokenHandler();
-            //var jsonToken = handler.ReadToken(token);
-            //var tokenS = jsonToken as JwtSecurityToken;
-            //Korisnik korisnik;
-            //MLExperiment eksperiment;
+            /// TEMP
+            if (token.Equals("") || token.Equals("st")) {
+                string folder1 = Directory.GetCurrentDirectory() + "\\Files\\1";
 
-            //if (tokenS != null)
-            //{
-            //    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                if (!System.IO.Directory.Exists(folder1))
+                {
+                    Directory.CreateDirectory(folder1);
+                }
 
-            //    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-            //        eksperiment = Korisnik.eksperimenti[token.ToString()];
-            //    else
-            //        return BadRequest();
-            //}
-            //else
-            //    return BadRequest("Korisnik nije ulogovan.");
+                // kreiranje foldera sa nazivom eksperimenta
+                string folderEksperiment1 = folder1 + "\\" + idEksperimenta;
 
-            //if (file == null)
-            //    return BadRequest("Fajl nije unet.");
+                if (!System.IO.Directory.Exists(folderEksperiment1))
+                {
+                    Directory.CreateDirectory(folderEksperiment1);
+                }
+
+                // kreiranje foldera za modele
+                string folderModeli1 = folderEksperiment1 + "\\Models";
+
+                if (!System.IO.Directory.Exists(folderModeli1))
+                {
+                    Directory.CreateDirectory(folderModeli1);
+                }
+
+                // ucitavanje modela
+                string fileName1 = modelName + ".pt";
+                string path1 = folderModeli1 + "\\" + fileName1;
+
+                long length1 = file.Length;
+                using var fileStream1 = file.OpenReadStream();
+                byte[] bytes1 = new byte[length1];
+                fileStream1.Read(bytes1, 0, (int)file.Length);
+
+                // upis u fajl 
+                System.IO.File.WriteAllBytes(path1, bytes1);
+
+                return Ok("Fajl je upisan.");
+            }
+            ///
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
 
             // kreiranje foldera 
-            //string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\1";
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
 
             if (!System.IO.Directory.Exists(folder))
             {
@@ -360,7 +410,7 @@ namespace dotNet.Controllers
             }
 
             // ucitavanje modela
-            string fileName = imeModela + ".pt";
+            string fileName = modelName + ".pt";
             string path = folderModeli + "\\" + fileName;
 
             long length = file.Length;

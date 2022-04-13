@@ -41,10 +41,9 @@ namespace dotNet.MLService {
             }
         }
 
-        public void SaveDataset(int experimentId) {
+        public void SaveDataset() {
             lock (_lock) {
                 connection.Send(Command.SaveDataset);
-                connection.Send(experimentId);
                 string response = connection.Receive();
                 if (response != "OK")
                     throw new MLException(response);
@@ -366,6 +365,35 @@ namespace dotNet.MLService {
         // Network //
         // /////// //
 
+        // Saving and loading ANN models
+        public void SaveModel(string modelName) {
+            lock (_lock) {
+                connection.Send(Command.SaveModel);
+                connection.Send(modelName);
+            }
+        }
+
+        public void LoadModel(string modelName) {
+            lock (_lock) {
+                connection.Send(Command.LoadModel);
+                connection.Send(modelName);
+                string response = connection.Receive();
+                if (response != "OK")
+                    throw new MLException(response);
+            }
+        }
+
+        public void LoadEpoch(string epoch) {
+            lock (_lock) {
+                connection.Send(Command.LoadEpoch);
+                connection.Send(epoch);
+                string response = connection.Receive();
+                if (response != "OK")
+                    throw new MLException(response);
+            }
+        }
+
+        // Working with ANN-s
         public string ComputeMetrics() {
             lock(_lock) {
                 connection.Send(Command.ComputeMetrics);
@@ -454,6 +482,9 @@ namespace dotNet.MLService {
         CategoricalStatistics,
         AllStatistics,
         // Network
+        SaveModel,
+        LoadModel,
+        LoadEpoch,
         ComputeMetrics,
         ChangeSettings,
         Start

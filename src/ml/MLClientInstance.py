@@ -14,6 +14,7 @@ class MLClientInstance(Thread):
     def setupConnection(self, connection) -> None:
         self.connection = connection
         self.token = ""
+        self.experiment_id = 1
     
     def run(self) -> None:
         super().run()
@@ -47,15 +48,10 @@ class MLClientInstance(Thread):
                 file_dir = f"./data/{experiment_id}"
                 file_path = f"{file_dir}/{file_name}"
                 
-                if self.token == "" or self.token == "st":
-                    response = requests.get(
-                        f"http://localhost:5008/api/file/downloadTest/{experiment_id}"
-                    )
-                else:
-                    response = requests.post(
-                        f"http://localhost:5008/api/file/download/{experiment_id}", 
-                        headers={"Authorization" : f"Bearer {self.token}"}
-                    )
+                response = requests.post(
+                    f"http://localhost:5008/api/file/download/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}
+                )
                 
                 if response.status_code != 200:
                     print(f"Couldn't download requested dataset from server; Error code {response.status_code}.")
@@ -106,13 +102,11 @@ class MLClientInstance(Thread):
                 print("Test Dataset loaded.")
                 
             elif received == 'SaveDataset':
-                # Receive experiment id
-                experiment_id = self.connection.receive()
-                
+                experiment_id = self.experiment_id
                 file_dir = f"./data/{experiment_id}"
                 
                 if not os.path.exists(file_dir):
-                    self.connection.send("ERROR :: File does not exist.")
+                    self.report_error("ERROR :: File does not exist.")
                     return
                 
                 file_name = os.listdir(file_dir)[0]
@@ -127,22 +121,16 @@ class MLClientInstance(Thread):
                     network.data.save_to_excel(file_path)
                 else:
                     print(f"File type with extension .{extension} is not supported.")
-                    self.connection.send("ERROR :: Internal MLServer error.")
+                    self.report_error("ERROR :: Internal MLServer error.")
                     return
                 
                 files = {'file' : (file_name, open(file_path, 'rb'))}
                 
-                if self.token == "" or self.token == "st":
-                    response = requests.get(
-                        f"http://localhost:5008/api/file/updateTest/{experiment_id}", 
-                        files=files
-                    )
-                else :
-                    response = requests.post(
-                        f"http://localhost:5008/api/file/update/{experiment_id}", 
-                        headers={"Authorization" : f"Bearer {self.token}"}, 
-                        files=files
-                    )
+                response = requests.post(
+                    f"http://localhost:5008/api/file/update/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}, 
+                    files=files
+                )
                 
                 self.connection.send("OK")
                 print("Changes saved.")
@@ -495,6 +483,74 @@ class MLClientInstance(Thread):
                 self.connection.send(json.dumps(statistics))
                 
                 print(f"Categorical and Numerical statistics computed for all columns.")
+                
+            # Model selection #
+            elif received == 'SaveModel':
+                # Receive model name
+                model_name = self.connection.receive()
+                
+                experiment_id = self.experiment_id
+                model_dir = f"./data/{experiment_id}/models"
+                model_path = f"{model_dir}/{model_name}.pt"
+                
+                if not os.path.exists(model_dir):
+                    os.makedirs(model_dir)
+                
+                network.save_weights(model_path)
+                
+                response = requests.post(
+                    f"http://localhost:5008/api/file/uploadModel/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}, 
+                    params={"modelName" : model_name},
+                    files={'file' : (f"{model_name}.pt", open(model_path, 'rb'))}
+                )
+                
+                print("Model weights saved.")
+                
+            elif received == 'LoadModel':
+                # Receive model name
+                model_name = self.connection.receive()
+                
+                experiment_id = self.experiment_id
+                model_dir = f"./data/{experiment_id}/models"
+                model_path = f"{model_dir}/{model_name}.pt"
+                
+                if not os.path.exists(model_dir):
+                    os.makedirs(model_dir)
+                
+                response = requests.post(
+                    f"http://localhost:5008/api/file/downloadModel/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}, 
+                    params={"modelName" : model_name}
+                )
+                
+                if response.status_code != 200:
+                    self.report_error("ERROR :: Couldn't download requested model.")
+                    return
+
+                with open(model_path, "wb") as file:
+                    file.write(response.content)
+                
+                compleated = network.load_weights(model_path)
+                
+                if not compleated:
+                    self.report_error("ERROR :: Wrong model shape given.")
+                    return
+                
+                self.connection.send("OK")
+                print(f"Model {model_name} loaded.")
+            
+            elif received == 'LoadEpoch':
+                # Receive epoch to load
+                epoch = self.connection.receive()
+                
+                compleated = network.load_weights_at(epoch)
+                
+                if not compleated:
+                    self.report_error("ERROR :: Wrong model shape given.")
+                    return
+                    
+                print(f"Model loaded from epoch {epoch}")
             
             # Working with networks #
             elif received == 'ComputeMetrics':
@@ -532,3 +588,7 @@ class MLClientInstance(Thread):
         for loss in network.train():
             sr_connection.send_string(json.dumps(loss))
         print("Traning complete.")
+        
+    def report_error(self, message):
+        print(message)
+        self.connection.send(message)

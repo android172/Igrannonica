@@ -203,7 +203,7 @@ namespace dotNet.Controllers {
                 aNNType: ProblemType.Regression,
                 learningRate: 0.001f,
                 batchSize:  64,
-                numberOfEpochs: 20,
+                numberOfEpochs: 10,
                 inputSize:  13,
                 outputSize: 2,
                 hiddenLayers: hiddentLayers,
@@ -212,14 +212,20 @@ namespace dotNet.Controllers {
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam,
-                5
+                kFoldCV: 0
                 );
 
             experiment.ApplySettings(settings);
 
 
             // Start training
-            //experiment.Start();
+            experiment.Start();
+
+            // Save model / load model
+            Thread.Sleep(10000);
+            try { experiment.LoadEpoch("2"); }
+            catch (MLException e) { Console.WriteLine(e.Message); }
+            experiment.SaveModel("TestModel");
 
             // Get metrics
             //var stats = experiment.ComputeMetrics();
