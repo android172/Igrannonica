@@ -91,11 +91,11 @@ img{
 /************* SLIDER *****************/ 
 
 #slider{
-    width: 270px;
+    width: 220px;
     justify-content: center;
     margin: -40px auto;
 
-}/*
+}
 #slider input[type="range"]{
     width: 220px;
     height: 10px;
@@ -108,7 +108,8 @@ img{
     height: 20px;
     cursor: pointer;
     border-radius: 5px;
-}*/
+}
+/*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input[type='range'] {
       overflow: hidden;
@@ -123,11 +124,11 @@ img{
       cursor: pointer;
     }
 
-}
+}*/
 #current-value{
-    font-size: 14px;
-    position: absolute;
-    left: 15%;   /* 9 - 23 */ 
+    font-size: 15px;
+    position: relative;
+    left: 40%;
     width: 55px;
     height: 45px;
     text-align: center;
