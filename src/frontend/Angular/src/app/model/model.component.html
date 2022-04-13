@@ -85,6 +85,18 @@
                 <div id="grupa12">
 
                     <div id="grupaCV">
+                        <h4 id="tekstCV">Cross<br> validation</h4>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle" (click)="dugmeCV()">
+                            <span class="slider round"></span>
+                          </label>
+                          <div *ngIf="flag; else onemoguceno">
+                            <input id="crossV" min="2" max="20" [defaultValue]="crossV">
+                        </div>
+                        <ng-template #onemoguceno>
+                            <input id="crossVd" disabled>
+                          </ng-template>
+                        <!--
                         <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
                         <div *ngIf="!flag; else onemoguceno">
                             <input id="crossV" min="2" max="20" [defaultValue]="crossV">
@@ -92,6 +104,7 @@
                         <ng-template #onemoguceno>
                             <input id="crossVd" disabled>
                           </ng-template>
+                        -->
                     </div>
     
                     
@@ -133,6 +146,10 @@
                 <input type="text" id="lr" name="lr">
             </div>
 
+            <button id="pokreniM" (click)="treniraj()">
+                <img id="playbutton" src="assets/play-button.png">
+            </button>
+            <h4 id="tekstZT">Započni treniranje</h4>
         </div>
     </div>
 </div>
@@ -187,9 +204,6 @@
     </div>
 </div>
     <div id="centrirano3">
-    <button id="pokreniM" (click)="treniraj()">
-        Pokreni model
-    </button>
     <div id="div">
         <div id="grafik">
             <div id="canvas">

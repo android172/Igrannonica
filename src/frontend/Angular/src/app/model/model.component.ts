@@ -132,10 +132,12 @@ export class ModelComponent implements OnInit {
         console.log(this.crossV);
         if(this.crossV == 0)
         {
-          this.flag = true;
+          this.flag = false;
+          (<HTMLInputElement>document.getElementById("toggle")).checked = false;
         }
         else{
-          this.flag = false;
+          this.flag = true;
+          (<HTMLInputElement>document.getElementById("toggle")).checked = true;
         }
       },
       error=>{
@@ -593,9 +595,13 @@ export class ModelComponent implements OnInit {
 
   dugmeCV(){
 
-    if(this.flag == true)
+    if(this.flag == true){
       this.flag = false;
-    else
+      (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+    }
+    else{
       this.flag = true;
+      (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+    }
   }
 }
