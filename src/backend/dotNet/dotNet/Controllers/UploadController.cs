@@ -152,6 +152,7 @@ namespace dotNet.Controllers
             }
 
             int[] niz = new int[size];
+            
 
             for (var i = 0; i < size; i++)
             {
@@ -518,20 +519,46 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
-                    return "6"; //BadRequest();
+                    return "Korisnik nije pronadjen"; //BadRequest
             }
             else
-                return "7"; // BadRequest("Korisnik nije ulogovan.");
+                return "Token nije setovan";  
 
             if (niz.Length == 0)
-                return "8";// BadRequest("Niz je prazan");
+                return "Redovi za brisanje nisu izabrani";
             
             foreach(var i in niz)
             {
                 eksperiment.DeleteRow(i);
             }
-
+            // Ukupan broj redova ucitanog fajla
             return eksperiment.GetRowCount().ToString();
+        }
+        [HttpPut("updateValue/{row}/{column}/{data}")]
+        public IActionResult updateAValue(int row,int column, string data)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            
+            Console.WriteLine("DATA: " + data);
+            eksperiment.UpdataValue(row, column, data);
+
+            return Ok("Polje je izmenjeno"); 
         }
     }
 }

@@ -47,8 +47,8 @@ img{
 }
 
 #brojRedovaTabelePoruka{
-    position: static;
-    left: 300px;
+    position: relative;
+    /*left: 5%;*/
     width: 15%;
     color: #CED9FF;
 }
@@ -59,14 +59,43 @@ img{
 #brojRedovaTabele{ 
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
+
+/****** PORUKA ERROR ****************/
+/*
+#poruka-err{
+    color: #F45E82;
+    font-size: small;
+}
+#ispisPoruke{
+    width: 50px;
+    position: relative;
+    margin: 1px 0;
+    float: right;
+    background-color: #006ce8;
+}*
+/************ Data manipulation ************/ 
+
+#input-data{
+    background: none;
+    border: none;
+    color: white;
+    width: 68px;
+    overflow: visible;
+}
+#table tr:nth-of-type(even) input{
+    
+    color: #c1cdff;
+
+}
+
 /************* SLIDER *****************/ 
 
 #slider{
-    width: 270px;
+    width: 220px;
     justify-content: center;
     margin: -40px auto;
 
-}/*
+}
 #slider input[type="range"]{
     width: 220px;
     height: 10px;
@@ -79,7 +108,8 @@ img{
     height: 20px;
     cursor: pointer;
     border-radius: 5px;
-}*/
+}
+/*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input[type='range'] {
       overflow: hidden;
@@ -94,11 +124,11 @@ img{
       cursor: pointer;
     }
 
-}
+}*/
 #current-value{
-    font-size: 14px;
-    position: absolute;
-    left: 15%;   /* 9 - 23 */ 
+    font-size: 15px;
+    position: relative;
+    left: 40%;
     width: 55px;
     height: 45px;
     text-align: center;
@@ -230,7 +260,7 @@ input#exampleFormControlFile1{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: rgb(180, 180, 180);
-    width: 932px;
+    width: 950px;
     height: 70px;
     overflow-y: scroll;
 }
@@ -297,6 +327,7 @@ input#exampleFormControlFile1{
 #tabela-statistika{
     display: flex;
     margin-bottom: 10px;
+    justify-content: space-between;
 }
 
 #table
@@ -309,10 +340,9 @@ input#exampleFormControlFile1{
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: white;
-    width: 932px;
+    width: 960px;
     overflow: scroll;
-    max-height: 542px;
-    min-height: 542px;
+    height: 550px;
   
 }
 #table::-webkit-scrollbar{
@@ -660,8 +690,7 @@ th{
     border-radius: 10px;
     color: white;
     width: 360px;
-    max-height: 540px;
-    min-height: 540px;
+    height: 550px;
 }
 
 #statNaslov
