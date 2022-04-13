@@ -144,7 +144,7 @@
                         totalItems: totalItems
                     };  index as i" (click)="getRow(i,this.page)">
                         <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)" [class.selectedRow]="isSelectedRow(i)">
-                        {{fieldValue}}
+                            <input type="text" value="{{fieldValue}}" id="input-data" (change)="izmeniPolje(i,j,this.page,$event.target)">
                         </td>
                     </tr>
                 </table>

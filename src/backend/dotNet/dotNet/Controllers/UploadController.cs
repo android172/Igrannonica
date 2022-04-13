@@ -152,6 +152,7 @@ namespace dotNet.Controllers
             }
 
             int[] niz = new int[size];
+            
 
             for (var i = 0; i < size; i++)
             {
@@ -532,6 +533,32 @@ namespace dotNet.Controllers
             }
 
             return eksperiment.GetRowCount().ToString();
+        }
+        [HttpPut("updateValue/{row}/{column}/{data}")]
+        public IActionResult updateAValue(int row,int column, string data)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            
+            Console.WriteLine("DATA: " + data);
+            eksperiment.UpdataValue(row, column, data);
+
+            return Ok("Polje je izmenjeno"); 
         }
     }
 }
