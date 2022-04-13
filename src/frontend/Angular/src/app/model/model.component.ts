@@ -468,6 +468,8 @@ export class ModelComponent implements OnInit {
   treniraj(){
     
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
+    this.signalR.clearChartData();
+    this.chart?.update();
     this.http.get("http://localhost:5008/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {
         this.signalR.LossListener();
