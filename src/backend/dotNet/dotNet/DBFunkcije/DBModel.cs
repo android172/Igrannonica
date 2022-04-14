@@ -19,7 +19,7 @@ namespace dotNet.DBFunkcije
             List<ModelDto> result = new List<ModelDto>();
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-            string query = "select * from model where ideksperimenta=@id";
+            string query = "select * from model where idEksperimenta=@id";
             MySqlCommand cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -89,7 +89,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into model (`naziv`,`ideksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
+                string query = "insert into model (`naziv`,`idEksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", ime);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -140,7 +140,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from podesavanja where id=@id";
+                string query = "select * from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -178,7 +178,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam',0,'','');";
+                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -192,7 +192,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "delete from podesavanja where id=@id";
+                string query = "delete from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", idp);
                 connection.Open();
@@ -208,7 +208,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o ,`CrossValidationK`=@Kv where id=@idp";
+                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o ,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
@@ -365,7 +365,7 @@ namespace dotNet.DBFunkcije
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 List<List<int>> list = new List<List<int>>();
-                string query = "select * from podesavanja where id=@id";
+                string query = "select * from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -374,7 +374,7 @@ namespace dotNet.DBFunkcije
                     if (reader.Read())
                     {
                         List<int> list1 = new List<int>();
-                        string kolone = reader.GetString("ulaznekolone");
+                        string kolone = reader.GetString("Ulaznekolone");
                         if (kolone != "")
                         foreach(string i in kolone.Split(','))
                         {
@@ -382,7 +382,7 @@ namespace dotNet.DBFunkcije
                         }
                         list.Add(list1);
                         list1 = new List<int>();
-                        kolone = reader.GetString("izlaznekolone");
+                        kolone = reader.GetString("Izlaznekolone");
                         if(kolone !="")
                         foreach (string i in kolone.Split(','))
                         {
@@ -398,7 +398,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update podesavanja set ulaznekolone=@kol1 , izlaznekolone=@kol2,inputsize=@is,outputsize=@os where id=@id";
+                string query = "update Podesavanja set Ulaznekolone=@kol1 , Izlaznekolone=@kol2,InputSize=@is,OutputSize=@os where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@kol1",KoloneToString(kolone.ulazne));
                 cmd.Parameters.AddWithValue("@is",kolone.ulazne.Length);

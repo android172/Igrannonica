@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { localhost } from '../app.module';
 
 @Component({
   selector: 'app-novi-eksperiment',
@@ -20,7 +21,7 @@ export class NoviEksperimentComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
       return;
     }
-    this.http.post("http://localhost:5008/api/Eksperiment/Eksperiment?ime="+ime,null,{responseType: 'text'}).subscribe(
+    this.http.post(localhost+"Eksperiment/Eksperiment?ime="+ime,null,{responseType: 'text'}).subscribe(
       res=>{
         this.router.navigate(['/eksperiment'],{ queryParams: { id: res } });
       },

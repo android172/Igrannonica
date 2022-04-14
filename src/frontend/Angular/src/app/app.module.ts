@@ -33,7 +33,8 @@ import { NgChartsModule } from 'ng2-charts';
 export function tokenGetter() {
   return localStorage.getItem("token");
 }
-
+export const localhost="http://147.91.204.115:10062/api/";
+export const localhub="http://147.91.204.115:10062/hub";
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +67,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:4200","localhost:5008"],
+        allowedDomains: ["147.91.204.115:10062","147.91.204.115:10061"],
         skipWhenExpired: true
       }
     }),
@@ -78,4 +79,5 @@ export function tokenGetter() {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+}

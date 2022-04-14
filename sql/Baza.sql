@@ -10,18 +10,18 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema Baza
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `Baza` ;
+DROP SCHEMA IF EXISTS `NeuralNetic` ;
 
 -- -----------------------------------------------------
 -- Schema Baza
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `Baza` DEFAULT CHARACTER SET utf8 ;
-USE `Baza` ;
+CREATE SCHEMA IF NOT EXISTS `NeuralNetic` DEFAULT CHARACTER SET utf8 ;
+USE `NeuralNetic` ;
 
 -- -----------------------------------------------------
--- Table `Baza`.`Korisnik`
+-- Table `NeuralNetic`.`Korisnik`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Baza`.`Korisnik` (
+CREATE TABLE IF NOT EXISTS `NeuralNetic`.`Korisnik` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `KorisnickoIme` VARCHAR(256) NOT NULL,
   `Ime` VARCHAR(256) NOT NULL,
@@ -34,9 +34,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Baza`.`Eksperiment`
+-- Table `NeuralNetic`.`Eksperiment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Baza`.`Eksperiment` (
+CREATE TABLE IF NOT EXISTS `NeuralNetic`.`Eksperiment` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Naziv` VARCHAR(256) NULL,
   `vlasnik` INT UNSIGNED NOT NULL,
@@ -45,16 +45,16 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Eksperiment` (
   INDEX `vlasnik_idx` (`vlasnik` ASC) VISIBLE,
   CONSTRAINT `vlasnik`
     FOREIGN KEY (`vlasnik`)
-    REFERENCES `Baza`.`Korisnik` (`id`)
+    REFERENCES `NeuralNetic`.`Korisnik` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Baza`.`model`
+-- Table `NeuralNetic`.`model`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Baza`.`model` (
+CREATE TABLE IF NOT EXISTS `NeuralNetic`.`model` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `naziv` VARCHAR(256) NULL,
   `idEksperimenta` INT UNSIGNED NOT NULL,
@@ -64,16 +64,16 @@ CREATE TABLE IF NOT EXISTS `Baza`.`model` (
   INDEX `eksperiment_idx` (`idEksperimenta` ASC) VISIBLE,
   CONSTRAINT `eksperiment`
     FOREIGN KEY (`idEksperimenta`)
-    REFERENCES `Baza`.`Eksperiment` (`id`)
+    REFERENCES `NeuralNetic`.`Eksperiment` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Baza`.`Podesavanja`
+-- Table `NeuralNetic`.`Podesavanja`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
+CREATE TABLE IF NOT EXISTS `NeuralNetic`.`Podesavanja` (
   `id` INT UNSIGNED NOT NULL,
   `ProblemType` VARCHAR(256) NULL,
   `LearningRate` FLOAT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   PRIMARY KEY (`id`),
   CONSTRAINT `model`
     FOREIGN KEY (`id`)
-    REFERENCES `Baza`.`model` (`id`)
+    REFERENCES `NeuralNetic`.`model` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

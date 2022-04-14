@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { localhost } from '../app.module';
 
 @Component({
   selector: 'app-profilna-strana-izmena-podataka',
@@ -132,7 +133,7 @@ export class ProfilnaStranaIzmenaPodatakaComponent implements OnInit {
     var regexp5 = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,60}$");
     var test5 = regexp5.test(sifra2); 
 
-      this.http.post('http://localhost:5008/api/Auth/update',{"KorisnickoIme":korisnickoIme,"Ime":ime,"StaraSifra":sifra,"Sifra":sifra2,"Email":email},{responseType: 'text'}).subscribe(
+      this.http.post(localhost+'Auth/update',{"KorisnickoIme":korisnickoIme,"Ime":ime,"StaraSifra":sifra,"Sifra":sifra2,"Email":email},{responseType: 'text'}).subscribe(
         token=>{
           localStorage.clear();
           localStorage.setItem("token",token);
