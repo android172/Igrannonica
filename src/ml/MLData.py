@@ -152,7 +152,7 @@ class MLData:
         self.dataset.iloc[row] = series
     
     def remove_row(self, row):
-        self.dataset.drop(row, inplace=True)
+        self.dataset.drop(self.dataset.index[row], inplace=True, )
         if self.train_indices is not None:
             self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
             self.test_indices  = [index - 1 if index > row else index for index in self.test_indices  if index != row]
