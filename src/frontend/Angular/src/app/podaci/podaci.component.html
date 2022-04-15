@@ -239,10 +239,10 @@
     </div>
 
     <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
-    <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
-    <button id="selektovani-redovi" (click)="getSelectedRows()">Selektovani redovi</button>
     <button id="restore-rows" (click)="izbrisiSelektovaneRedove()">Deselektuj redove</button>
+    <button id="selektovani-redovi" (click)="getSelectedRows()">Selektovani redovi</button> 
+    <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>
     </div>

@@ -290,30 +290,30 @@ input#exampleFormControlFile1{
 
 #clear-tracker{
     color: white;
-    background-color: rgb(114, 76, 50);
-    border: 1px solid rgb(78, 55, 33);
+    background-color: rgb(88, 77, 44);
+    border: 1px solid rgb(68, 65, 31);
     border-radius: 5px;
     margin-left: 5px;
 }
 
 #selektovane-kolone{
     color: white;
-    background-color: rgb(114, 50, 111);
-    border: 1px solid rgb(78, 33, 74);
+    background-color: rgb(50, 50, 114);
+    border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
 }
 #selektovani-redovi{
     color: white;
-    background-color: rgb(39, 88, 43);
-    border: 1px solid rgb(26, 60, 31);
+    background-color: rgb(116, 38, 38);
+    border: 1px solid rgb(60, 26, 26);
     border-radius: 5px;
     margin-left: 5px;
 }
 #restore-rows{
     color: white;
-    background-color: rgb(105, 114, 50);
-    border: 1px solid rgb(69, 78, 33);
+    background-color: rgb(116, 38, 38);
+    border: 1px solid rgb(60, 26, 26);
     border-radius: 5px;
     margin-left: 5px;
 }
@@ -393,6 +393,15 @@ th{
 
 .trbody{
     border-bottom: 1px solid rgb(122, 122, 122);
+}
+
+#table tr:hover:nth-child(even)
+{
+    background-color: #603753e2;
+}
+#table tr:hover:nth-child(odd)
+{
+    background-color: rgba(255, 0, 0, 0.09);
 }
 
 .selectedColHeader
