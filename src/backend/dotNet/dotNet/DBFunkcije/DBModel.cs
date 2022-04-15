@@ -268,8 +268,8 @@ namespace dotNet.DBFunkcije
                 {
                     pom = "L1Loss";
                 }
-                else if (json.LossFunction == LossFunction.MSELoss)
-                    pom = "MSELoss";
+                else if (json.LossFunction == LossFunction.L2Loss)
+                    pom = "L2Loss";
                 else
                     pom = "CrossEntropyLoss";
 

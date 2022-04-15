@@ -30,6 +30,7 @@ namespace dotNet.MLService {
                 connection.Send(Command.LoadData);
                 connection.Send(experimentId);
                 connection.Send(fileName);
+                CheckStatus();
             }
         }
 
@@ -38,15 +39,14 @@ namespace dotNet.MLService {
                 connection.Send(Command.LoadTestData);
                 connection.Send(data);
                 connection.Send(fileName);
+                CheckStatus();
             }
         }
 
         public void SaveDataset() {
             lock (_lock) {
                 connection.Send(Command.SaveDataset);
-                string response = connection.Receive();
-                if (response != "OK")
-                    throw new MLException(response);
+                CheckStatus();
             }
         }
 
@@ -54,20 +54,23 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.SelectInputs);
                 connection.Send(EncodeIntArray(inputs));
+                CheckStatus();
             }
         }
 
         public void LoadOutputs(int[] outputs) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.SelectOutputs);
                 connection.Send(EncodeIntArray(outputs));
+                CheckStatus();
             }
         }
 
         public void TrainTestSplit(float ratio) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RandomTrainTestSplit);
                 connection.Send(ratio);
+                CheckStatus();
             }
         }
 
@@ -79,19 +82,20 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.GetRows);
                 connection.Send(EncodeIntArray(rowIndices));
+                CheckStatus();
                 return connection.Receive();
             }
         }
 
         public int GetRowCount() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.GetRowCount);
                 return int.Parse(connection.Receive());
             }
         }
 
         public string GetColumnTypes() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.GetColumnTypes);
                 return connection.Receive();
             }
@@ -106,6 +110,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.AddRow);
                 connection.Send(EncodeStringArray(newRow));
+                CheckStatus();
             }
         }
 
@@ -113,6 +118,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.AddRowToTest);
                 connection.Send(EncodeStringArray(newRow));
+                CheckStatus();
             }
         }
 
@@ -121,6 +127,7 @@ namespace dotNet.MLService {
                 connection.Send(Command.UpdateRow);
                 connection.Send(rowIndex);
                 connection.Send(EncodeStringArray(rowValues));
+                CheckStatus();
             }
         }
 
@@ -128,6 +135,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.DeleteRow);
                 connection.Send(rowIndex);
+                CheckStatus();
             }
         }
 
@@ -177,159 +185,180 @@ namespace dotNet.MLService {
                 connection.Send(row);
                 connection.Send(column);
                 connection.Send(value);
+                CheckStatus();
             }
         }
 
         // Replace with NA
         public void ReplaceEmptyWithNA(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.EmptyStringToNA);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void ReplaceZeroWithNA(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.ZeroToNA);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         // Drop NA values
         public void DropNAListwise() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.DropNAListwise);
             }
         }
 
-        public void DropNAPairwise() {
-            lock(_lock) {
+        public void DropNAPairwise(int[] columns) {
+            lock (_lock) {
                 connection.Send(Command.DropNAPairwise);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void DropNAColumns() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.DropNAColumns);
             }
         }
 
         // Fill NA values
         public void FillNAWithMean(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.FillNAWithMean);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void FillNAWithMedian(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.FillNAWithMedian);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void FillNAWithMode(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.FillNAWithMode);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
         public void FillNAWithRegression(int naColumn, int[] inputColumns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.FillNAWithRegression);
                 connection.Send(naColumn);
                 connection.Send(EncodeIntArray(inputColumns));
+                CheckStatus();
             }
         }
 
         // Encoding
         public void OneHotEncoding(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.OneHotEncoding);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void LabelEncoding(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.LabelEncoding);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         // Normalization
-        public void ScaleAbsoluteMax(int[] columns) { 
-            lock(_lock) {
+        public void ScaleAbsoluteMax(int[] columns) {
+            lock (_lock) {
                 connection.Send(Command.ScaleAbsoluteMax);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void ScaleMinMax(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.ScaleMinMax);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
-        public void ScaleZScore(int[] columns) { 
-            lock(_lock) {
+        public void ScaleZScore(int[] columns) {
+            lock (_lock) {
                 connection.Send(Command.ScaleZScore);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         // Outliers
         public void RemoveOutliersStandardDeviation(int[] columns, float treshold) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersStandardDeviation);
                 connection.Send(EncodeIntArray(columns));
                 connection.Send(treshold);
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersQuantiles(int[] columns, float treshold) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersQuantiles);
                 connection.Send(EncodeIntArray(columns));
                 connection.Send(treshold);
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersZScore(int[] columns, float treshold) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersZScore);
                 connection.Send(EncodeIntArray(columns));
                 connection.Send(treshold);
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersIQR(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersIQR);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersIsolationForest(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersIsolationForest);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersOneClassSVM(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersOneClassSVM);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
         public void RemoveOutliersByLocalFactor(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.RemoveOutliersByLocalFactor);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
@@ -339,23 +368,25 @@ namespace dotNet.MLService {
 
         // Get column statistics
         public string NumericalStatistics(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.NumericalStatistics);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
                 return connection.Receive();
             }
         }
 
         public string CategoricalStatistics(int[] columns) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.CategoricalStatistics);
                 connection.Send(EncodeIntArray(columns));
+                CheckStatus();
                 return connection.Receive();
             }
         }
 
         public string ColumnStatistics() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.AllStatistics);
                 return connection.Receive();
             }
@@ -370,6 +401,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.SaveModel);
                 connection.Send(modelName);
+                CheckStatus();
             }
         }
 
@@ -377,9 +409,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.LoadModel);
                 connection.Send(modelName);
-                string response = connection.Receive();
-                if (response != "OK")
-                    throw new MLException(response);
+                CheckStatus();
             }
         }
 
@@ -387,29 +417,28 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.LoadEpoch);
                 connection.Send(epoch);
-                string response = connection.Receive();
-                if (response != "OK")
-                    throw new MLException(response);
+                CheckStatus();
             }
         }
 
         // Working with ANN-s
         public string ComputeMetrics() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.ComputeMetrics);
+                CheckStatus();
                 return connection.Receive();
             }
         }
 
         public void ApplySettings(ANNSettings annSettings) {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.ChangeSettings);
                 connection.Send(annSettings);
             }
         }
 
         public void Start() {
-            lock(_lock) {
+            lock (_lock) {
                 connection.Send(Command.Start);
             }
         }
@@ -428,6 +457,12 @@ namespace dotNet.MLService {
             if (array == null)
                 array = Array.Empty<string>();
             return Newtonsoft.Json.JsonConvert.SerializeObject(new { Data = array });
+        }
+
+        private void CheckStatus() {
+            string response = connection.Receive();
+            if (response != "OK")
+                throw new MLException(response);
         }
     }
 
