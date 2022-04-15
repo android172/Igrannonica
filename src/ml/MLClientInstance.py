@@ -54,7 +54,7 @@ class MLClientInstance(Thread):
                 os.makedirs(file_dir)
                 
                 response = requests.post(
-                    f"http://localhost:5008/api/file/download/{experiment_id}", 
+                    f"http://147.91.204.115:10062/api/file/download/{experiment_id}", 
                     headers={"Authorization" : f"Bearer {self.token}"}
                 )
                 
@@ -133,7 +133,7 @@ class MLClientInstance(Thread):
                 files = {'file' : (file_name, open(file_path, 'rb'))}
                 
                 response = requests.post(
-                    f"http://localhost:5008/api/file/update/{experiment_id}", 
+                    f"http://147.91.204.115:10062/api/file/update/{experiment_id}", 
                     headers={"Authorization" : f"Bearer {self.token}"}, 
                     files=files
                 )
@@ -702,7 +702,7 @@ class MLClientInstance(Thread):
                 network.save_weights(model_path)
                 
                 response = requests.post(
-                    f"http://localhost:5008/api/file/uploadModel/{experiment_id}", 
+                    f"http://147.91.204.115:10062/api/file/uploadModel/{experiment_id}", 
                     headers={"Authorization" : f"Bearer {self.token}"}, 
                     params={"modelName" : model_name},
                     files={'file' : (f"{model_name}.pt", open(model_path, 'rb'))}
@@ -727,7 +727,7 @@ class MLClientInstance(Thread):
                     os.makedirs(model_dir)
                 
                 response = requests.post(
-                    f"http://localhost:5008/api/file/downloadModel/{experiment_id}", 
+                    f"http://147.91.204.115:10062/api/file/downloadModel/{experiment_id}", 
                     headers={"Authorization" : f"Bearer {self.token}"}, 
                     params={"modelName" : model_name}
                 )

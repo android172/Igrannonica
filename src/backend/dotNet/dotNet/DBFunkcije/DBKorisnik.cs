@@ -19,14 +19,14 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik";
+                string query = "select * from Korisnik";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("Ime"), reader.GetString("Sifra"), reader.GetString("email"));
                         return rezultat;
                     }
                     return null;
@@ -37,7 +37,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where `korisnickoime`=@ime ";
+                string query = "select * from Korisnik where `KorisnickoIme`=@ime ";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
                 connection.Open();
@@ -45,7 +45,7 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        string korSifra = reader.GetString("sifra");
+                        string korSifra = reader.GetString("Sifra");
                         byte[] hashByte = Convert.FromBase64String(korSifra);
                         byte[] salt = new byte[16];
                         Array.Copy(hashByte, 0, salt, 0, 16);
@@ -56,7 +56,7 @@ namespace dotNet.DBFunkcije
                             if (hashByte[i + 16] != hash[i])
                                 return null;
                         }
-                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                        Korisnik rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("Ime"), reader.GetString("Sifra"), reader.GetString("email"));
                         return rezultat;
                     }
                     return null;
@@ -86,7 +86,7 @@ namespace dotNet.DBFunkcije
             string mail = EmailTransform(korisnik.Email);
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where `KorisnickoIme`=@ime";
+                string query = "select * from Korisnik where `KorisnickoIme`=@ime";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", username);
                 connection.Open();
@@ -96,7 +96,7 @@ namespace dotNet.DBFunkcije
                         korisnikValid.korisnickoIme = true;
                 }
 
-                string query1 = "select * from korisnik where `email`=@email";
+                string query1 = "select * from Korisnik where `email`=@email";
                 cmd = new MySqlCommand(query1, connection);
                 cmd.Parameters.AddWithValue("@email", mail);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -115,7 +115,7 @@ namespace dotNet.DBFunkcije
                     Array.Copy(salt, 0, hashBytes, 0, 16);
                     Array.Copy(hash, 0, hashBytes, 16, 20);
                     string savedPasswordHash = Convert.ToBase64String(hashBytes);
-                    cmd = new MySqlCommand("Insert into korisnik (`korisnickoime`,`ime`,`sifra`,`email`) values (@kime,@ime,@sifra,@email)", connection);
+                    cmd = new MySqlCommand("Insert into Korisnik (`KorisnickoIme`,`Ime`,`Sifra`,`email`) values (@kime,@ime,@sifra,@email)", connection);
                     cmd.Parameters.AddWithValue("@kime", username);
                     cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
                     cmd.Parameters.AddWithValue("@sifra", savedPasswordHash);
@@ -134,7 +134,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where id=@id";
+                string query = "select * from Korisnik where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -143,7 +143,7 @@ namespace dotNet.DBFunkcije
                     Korisnik rezultat = null;
                     if (reader.Read())
                     {
-                        rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("ime"), reader.GetString("sifra"), reader.GetString("email"));
+                        rezultat = new Korisnik(reader.GetInt32("id"), reader.GetString("KorisnickoIme"), reader.GetString("Ime"), reader.GetString("Sifra"), reader.GetString("email"));
                     }
                     return rezultat;
                 }
@@ -153,7 +153,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where email=@id";
+                string query = "select * from Korisnik where email=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", email);
                 connection.Open();
@@ -171,7 +171,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from korisnik where korisnickoime=@id";
+                string query = "select * from Korisnik where KorisnickoIme=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", korisnickoime);
                 connection.Open();
@@ -187,7 +187,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update korisnik set `korisnickoime` =@korisnickoime , `ime`=@ime , `sifra`=@sifra , `email`=@email where `id`=@id";
+                string query = "update Korisnik set `KorisnickoIme` =@korisnickoime , `Ime`=@ime , `Sifra`=@sifra , `email`=@email where `id`=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", korisnik.Id);
                 cmd.Parameters.AddWithValue("@korisnickoime", korisnik.KorisnickoIme);

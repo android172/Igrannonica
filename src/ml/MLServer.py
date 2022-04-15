@@ -13,7 +13,7 @@ from MLClientInstance import MLClientInstance
 from MLConnection import MLConnection
 
 # Global Constants
-ipAddress, port = "127.0.0.1", 25001
+ipAddress, port = "147.91.204.115", 10070
 
 class MLServer:
     def __init__(self) -> None:
