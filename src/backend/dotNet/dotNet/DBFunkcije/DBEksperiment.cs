@@ -40,7 +40,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from Eksperiment where naziv=@naziv and vlasnik=@id";
+                string query = "select * from Eksperiment where Naziv=@naziv and vlasnik=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", naziv);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -81,14 +81,9 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
                 connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return true;
-                    }
-                    return false;
-                }
+                if(cmd.ExecuteNonQuery()!=0)
+                    return true;
+                return false;
             }
         }
 
@@ -104,7 +99,6 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        Console.WriteLine("OK");
                         string naziv = reader.GetString("Naziv");
                         return naziv;
                     }

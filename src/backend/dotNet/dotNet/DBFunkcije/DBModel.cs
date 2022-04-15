@@ -30,7 +30,7 @@ namespace dotNet.DBFunkcije
                     {
                         ModelDto ex = new ModelDto();
                         ex.Id = reader.GetInt32("id");
-                        ex.Name = reader.GetString("Naziv");
+                        ex.Name = reader.GetString("naziv");
                         ex.CreatedDate = reader.GetDateTime("napravljen");
                         ex.UpdatedDate = reader.GetDateTime("obnovljen");
                         result.Add(ex);
@@ -54,7 +54,7 @@ namespace dotNet.DBFunkcije
                     {
                         Model ex = new Model();
                         ex.Id = reader.GetInt32("id");
-                        ex.Name = reader.GetString("Naziv");
+                        ex.Name = reader.GetString("naziv");
                         ex.CreatedDate = reader.GetDateTime("napravljen");
                         ex.UpdatedDate = reader.GetDateTime("obnovljen");
                         ex.Vlasnik = reader.GetInt32("ideksperimenta");
@@ -149,17 +149,17 @@ namespace dotNet.DBFunkcije
                     if (reader.Read())
                     {
                         ProblemType fun = ProblemType.Regression;
-                        if (reader.GetString("Problemtype")== "Regression") fun = ProblemType.Regression;
+                        if (reader.GetString("ProblemType")== "Regression") fun = ProblemType.Regression;
                         else fun = ProblemType.Classification;
                         ANNSettings settings = new ANNSettings(
                             fun,
                             reader.GetFloat("LearningRate"),
                             reader.GetInt32("BatchSize"),
                             reader.GetInt32("numberOfEpochs"),
-                            reader.GetInt32("inputSize"),
+                            reader.GetInt32("InputSize"),
                             reader.GetInt32("OutputSize"),
                             HiddenLayers(reader.GetString("HiddenLayers")),
-                            aktivacionefunkcije(reader.GetString("aktivacionefunkcije")),
+                            aktivacionefunkcije(reader.GetString("AktivacioneFunkcije")),
                             Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
@@ -374,7 +374,7 @@ namespace dotNet.DBFunkcije
                     if (reader.Read())
                     {
                         List<int> list1 = new List<int>();
-                        string kolone = reader.GetString("Ulaznekolone");
+                        string kolone = reader.GetString("UlazneKolone");
                         if (kolone != "")
                         foreach(string i in kolone.Split(','))
                         {
@@ -382,7 +382,7 @@ namespace dotNet.DBFunkcije
                         }
                         list.Add(list1);
                         list1 = new List<int>();
-                        kolone = reader.GetString("Izlaznekolone");
+                        kolone = reader.GetString("IzlazneKolone");
                         if(kolone !="")
                         foreach (string i in kolone.Split(','))
                         {
@@ -398,7 +398,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Podesavanja set Ulaznekolone=@kol1 , Izlaznekolone=@kol2,InputSize=@is,OutputSize=@os where id=@id";
+                string query = "update Podesavanja set UlazneKolone=@kol1 , IzlazneKolone=@kol2,InputSize=@is,OutputSize=@os where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@kol1",KoloneToString(kolone.ulazne));
                 cmd.Parameters.AddWithValue("@is",kolone.ulazne.Length);
