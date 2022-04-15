@@ -34,7 +34,9 @@ class MLClientInstance(Thread):
                 
             # Load data #
             elif received == 'IsDataLoaded':
-                loaded = network.data.dataset is not None
+                # Receive experiment id
+                experiment_id = self.connection.receive()
+                loaded = network.data.dataset is not None and experiment_id == self.experiment_id
                 self.connection.send(loaded)
                 
                 print(f"Is Dataset loaded returned {loaded}.")
@@ -62,7 +64,6 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Couldn't download requested dataset from server; " +
                                       f"Error code {response.status_code}.")
                     return
-                
                     
                 with open(file_path, "wb") as file:
                     Thread(target = lambda : file.write(response.content)).start()

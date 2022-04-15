@@ -15,9 +15,10 @@ namespace dotNet.MLService {
         // ///////////////// //
         // Data introduction //
         // ///////////////// //
-        public bool IsDataLoaded() {
+        public bool IsDataLoaded(int experimentId) {
             lock (_lock) {
                 connection.Send(Command.IsDataLoaded);
+                connection.Send(experimentId);
                 var loaded = connection.Receive();
                 if (loaded != null && loaded.Equals("True"))
                     return true;
