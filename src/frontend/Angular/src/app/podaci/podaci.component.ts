@@ -568,8 +568,9 @@ export class PodaciComponent implements OnInit {
       let temp = (this.rowsAndPages[j][1] - 1) * this.itemsPerPage + this.rowsAndPages[j][0]; 
       redoviZaBrisanje.push(temp); 
     }
+    let redovi = redoviZaBrisanje.sort((n1,n2) => n1 - n2);
 
-    this.http.post(url+"/api/Upload/deleteRows",redoviZaBrisanje,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/deleteRows",redovi,{responseType: 'text'}).subscribe(
       res => {
         if(res == "Korisnik nije pronadjen" || res == "Token nije setovan" || res == "Redovi za brisanje nisu izabrani")
         {
