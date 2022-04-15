@@ -4,6 +4,7 @@ import { MeniService } from '../meni.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-prijava',
@@ -60,7 +61,7 @@ export class PrijavaComponent implements OnInit {
 
     if(pom){
 
-      this.http.post('http://localhost:5008/api/Auth',{"KorisnickoIme":korisnickoIme,"Sifra":sifra},{responseType: 'text'}).subscribe(
+      this.http.post(url+'/api/Auth',{"KorisnickoIme":korisnickoIme,"Sifra":sifra},{responseType: 'text'}).subscribe(
         token=>{
           localStorage.setItem("token",token); 
           this.router.navigate(['/']);  

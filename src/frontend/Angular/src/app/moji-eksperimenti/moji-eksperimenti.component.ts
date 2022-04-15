@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-moji-eksperimenti',
@@ -21,7 +22,7 @@ export class MojiEksperimentiComponent implements OnInit {
   ucitajEksp()
   {
   
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperimenti').subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
           console.log(res);
           this.json = res;

@@ -6,7 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { tokenGetter } from '../app.module';
+import { tokenGetter, url } from '../app.module';
 import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { ChartData } from 'chart.js';
 import { ChartOptions } from 'chart.js';
@@ -111,7 +111,7 @@ export class ModelComponent implements OnInit {
     this.idModela = data;
     this.uzmiKolone();
     this.ucitajNazivModela(this.idModela);
-    this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
+    this.http.get(url+"/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
         this.json1=res;
@@ -150,7 +150,7 @@ export class ModelComponent implements OnInit {
 
   ucitajNazivModela(id : any){
 
-  this.http.get("http://localhost:5008/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
+  this.http.get(url+"/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.nazivModela = res;
@@ -164,7 +164,7 @@ export class ModelComponent implements OnInit {
 
   ucitajNaziv()
   {
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
           this.nazivEksperimenta = res;
@@ -313,7 +313,7 @@ export class ModelComponent implements OnInit {
       if(div === "*Eksperiment sa tim nazivom vec postoji"){
         div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "";
       }
-      this.http.put("http://localhost:5008/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+      this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
         res=>{
 
         }, error=>{
@@ -358,7 +358,7 @@ export class ModelComponent implements OnInit {
   uzmiKolone()
   {
     console.log(this.idModela);
-    this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
+    this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
         res=>{
           this.pomocni=Object.assign([],res);
           this.izabraneU=Object.assign([],this.pomocni[0]);
@@ -392,7 +392,7 @@ export class ModelComponent implements OnInit {
         }
       }
     }
-    this.http.post("http://localhost:5008/api/Eksperiment/Podesavanja/Kolone?id="+this.idModela,{ulazne,izlazne}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Podesavanja/Kolone?id="+this.idModela,{ulazne,izlazne}).subscribe(
       res=>{
         console.log(res);
       }
@@ -463,7 +463,7 @@ export class ModelComponent implements OnInit {
         "KFoldCV":this.cv
     };
     
-    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
+    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
       res=>{
         
       },err=>{
@@ -482,7 +482,7 @@ export class ModelComponent implements OnInit {
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
     }
-    this.http.put("http://localhost:5008/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+    this.http.put(url+"/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
 
       }, error=>{
@@ -503,7 +503,7 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
-    this.http.get("http://localhost:5008/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
+    this.http.get(url+"/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {
         this.signalR.LossListener();
       //   setTimeout(() => {

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
 import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-modeli',
@@ -66,7 +67,7 @@ export class ModeliComponent implements OnInit {
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
     }
-    this.http.post("http://localhost:5008/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.ucitajModel();
@@ -85,7 +86,7 @@ export class ModeliComponent implements OnInit {
   ucitajModel()
   {
     this.ActivateAddEdit=true;
-    this.http.get('http://localhost:5008/api/Eksperiment/Modeli/' + this.id).subscribe(
+    this.http.get(url+'/api/Eksperiment/Modeli/' + this.id).subscribe(
         res=>{
           console.log(res);
           this.json = res;
@@ -98,7 +99,7 @@ export class ModeliComponent implements OnInit {
   }
 
   ucitajImeE(){
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.id,{responseType: 'text'}).subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.id,{responseType: 'text'}).subscribe(
         res=>{
           var div = (<HTMLDivElement>document.getElementById("imeE")).innerHTML = res;
           this.ucitajModel();
@@ -113,7 +114,7 @@ export class ModeliComponent implements OnInit {
   {
     if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
     {
-      this.http.delete('http://localhost:5008/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
+      this.http.delete(url+'/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
        res=>{
          console.log(res);
             this.ucitajModel();

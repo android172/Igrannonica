@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-podaci',
@@ -17,7 +18,7 @@ export class PodaciComponent implements OnInit {
   }
 
   ucitanipodaci(){
-    this.http.get("http://localhost:5008/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
+    this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.fileName=res;
@@ -99,7 +100,7 @@ export class PodaciComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", file, this.fileName);  	
 
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post(url+"/api/Upload/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
@@ -119,7 +120,7 @@ export class PodaciComponent implements OnInit {
 
   loadDefaultItemsPerPage()
   {      
-    this.http.get("http://localhost:5008/api/Upload/paging/1/10").subscribe(
+    this.http.get(url+"/api/Upload/paging/1/10").subscribe(
        (response: any) => {
          this.jsonStatistika = undefined
          this.statistikaCat = []
@@ -145,7 +146,7 @@ export class PodaciComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", filetest, this.fileNameTest);  
 
-      const upload$ = this.http.post("http://localhost:5008/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post(url+"/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.dodajKomandu("Ucitan testni skup");
       },error =>{
@@ -160,7 +161,7 @@ export class PodaciComponent implements OnInit {
 
   dajStatistiku()
   {
-    this.http.get("http://localhost:5008/api/Upload/statistika", {responseType: 'text'}).subscribe(
+    this.http.get(url+"/api/Upload/statistika", {responseType: 'text'}).subscribe(
       (response: any) => {
         //console.table(response);
         this.jsonStatistika = JSON.parse(response);
@@ -227,7 +228,7 @@ export class PodaciComponent implements OnInit {
   promeniBrojRedova(value: any)
   {
     this.itemsPerPage = parseInt(value);
-    this.http.get("http://localhost:5008/api/Upload/paging/1/" + this.itemsPerPage).subscribe(
+    this.http.get(url+"/api/Upload/paging/1/" + this.itemsPerPage).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -240,7 +241,7 @@ export class PodaciComponent implements OnInit {
    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
    console.log(this.itemsPerPage);
    console.log(this.page);
-   this.http.get("http://localhost:5008/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+   this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -280,7 +281,7 @@ export class PodaciComponent implements OnInit {
       return;
     }
 
-    this.http.post("http://localhost:5008/api/Upload/oneHotEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/oneHotEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -302,7 +303,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("LabelEncoding nije izvršeno");
       return;
     }
-    this.http.post("http://localhost:5008/api/Upload/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -425,7 +426,7 @@ export class PodaciComponent implements OnInit {
       console.log("Uneta vrednost: "+ratio);
       return;
     }
-    this.http.post("http://localhost:5008/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.dodajKomandu("Dodat ratio: "+ ratio);
@@ -437,7 +438,7 @@ export class PodaciComponent implements OnInit {
   }
   deleteColumns()
   {
-    this.http.post("http://localhost:5008/api/Upload/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -451,7 +452,7 @@ export class PodaciComponent implements OnInit {
 
   fillWithMean()
   {
-    this.http.post("http://localhost:5008/api/Upload/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -464,7 +465,7 @@ export class PodaciComponent implements OnInit {
   }
   fillWithMedian()
   {
-    this.http.post("http://localhost:5008/api/Upload/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -477,7 +478,7 @@ export class PodaciComponent implements OnInit {
   }
   fillWithMode()
   {
-    this.http.post("http://localhost:5008/api/Upload/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -491,7 +492,7 @@ export class PodaciComponent implements OnInit {
 
   replaceEmptyWithNA()
   {
-    this.http.post("http://localhost:5008/api/Upload/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -504,7 +505,7 @@ export class PodaciComponent implements OnInit {
   }
   replaceZeroWithNA(){
 
-    this.http.post("http://localhost:5008/api/Upload/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -568,7 +569,7 @@ export class PodaciComponent implements OnInit {
       redoviZaBrisanje.push(temp); 
     }
 
-    this.http.post("http://localhost:5008/api/Upload/deleteRows",redoviZaBrisanje,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/deleteRows",redoviZaBrisanje,{responseType: 'text'}).subscribe(
       res => {
         if(res == "Korisnik nije pronadjen" || res == "Token nije setovan" || res == "Redovi za brisanje nisu izabrani")
         {
@@ -588,7 +589,7 @@ export class PodaciComponent implements OnInit {
   }
   ucitajNaziv()
   {
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
           this.nazivEksperimenta = res;
@@ -614,7 +615,7 @@ export class PodaciComponent implements OnInit {
       //if(div === "*Eksperiment sa tim nazivom vec postoji"){
       //  div = (<HTMLDivElement>document.getElementById("poruka-err")).innerHTML = "";
       //}
-      this.http.put("http://localhost:5008/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+      this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
         res=>{
 
         }, error=>{
@@ -637,7 +638,7 @@ export class PodaciComponent implements OnInit {
       data.value = "";
     }*/
     console.log(typeof(data.value));
-    this.http.put("http://localhost:5008/api/Upload/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
+    this.http.put(url+"/api/Upload/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();

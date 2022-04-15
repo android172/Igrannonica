@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 import { ChartConfiguration } from 'chart.js';
 import { Subject } from 'rxjs';
+import { url } from '../app.module';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class SignalRService {
   private hubConnection!: signalR.HubConnection; 
 
   public startConnection(token: string) {
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5008/hub').build();
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(url+'/hub').build();
     this.hubConnection.start().then(
       ()=> {
         console.log('povezan')

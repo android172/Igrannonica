@@ -33,6 +33,7 @@ import { NgChartsModule } from 'ng2-charts';
 export function tokenGetter() {
   return localStorage.getItem("token");
 }
+export const url = "http://localhost:5008";
 
 @NgModule({
   declarations: [
