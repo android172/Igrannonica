@@ -106,13 +106,13 @@ namespace dotNet.Controllers
             {
                 sb.AppendLine(line);
             }
+
+            // upis csv-a u bazu 
+            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
             
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
             eksperiment.LoadDataset(idEksperimenta, fileName);
-
-            // upis csv-a u bazu 
-            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
 
             if(!fajlNijeSmesten)
             {
