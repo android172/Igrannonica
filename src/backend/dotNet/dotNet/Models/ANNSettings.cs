@@ -79,7 +79,8 @@ namespace dotNet.Models {
     public enum LossFunction {
         L1Loss,
         L2Loss,
-        CrossEntropyLoss
+        CrossEntropyLoss,
+        MSELoss
     }
 
     public enum Optimizer {

@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
     {
-        builder.WithOrigins("http://147.91.204.115:10061", "http://softeng.pmf.kg.ac.rs:10061").AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins("http://147.91.204.115:10061", "http://softeng.pmf.kg.ac.rs:10061").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 

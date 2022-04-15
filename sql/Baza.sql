@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `NeuralNetic`.`Korisnik` (
   `KorisnickoIme` VARCHAR(256) NOT NULL,
   `Ime` VARCHAR(256) NOT NULL,
   `Sifra` VARCHAR(256) NOT NULL,
-  `email` VARCHAR(256) NOT NULL,
+  `Email` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `KorisnickoIme_UNIQUE` (`KorisnickoIme` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
