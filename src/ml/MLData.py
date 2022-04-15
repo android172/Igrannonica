@@ -68,13 +68,13 @@ class MLData:
         
     # Save changes
     def save_to_csv(self, path):
-        self.dataset.to_csv(path)
+        self.dataset.to_csv(path, index=False)
     
     def save_to_json(self, path):
-        self.dataset.to_json(path)
+        self.dataset.to_json(path, index=False)
         
     def save_to_excel(self, path):
-        self.dataset.to_excel(path)
+        self.dataset.to_excel(path, index=False)
         
     # Select columns
     def select_input_columns(self, columns):

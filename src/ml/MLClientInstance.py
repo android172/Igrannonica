@@ -267,6 +267,7 @@ class MLClientInstance(Thread):
                     self.report_error(f"ERROR :: Row with index {row} doesn't exist.")
                     return
                 
+                self.connection.send("OK")
                 print(f"Row {row} removed from the dataset.")
                 
             elif received == 'AddColumn':
