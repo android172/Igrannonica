@@ -601,32 +601,41 @@ export class PodaciComponent implements OnInit {
     );
   }
 
+  
+  proveriE(){
+    var nazivE = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value;
+
+    this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta,null, {responseType : "text"}).subscribe(
+      res=>{
+        console.log(res);
+      }, error=>{
+        this.ucitajNaziv();
+        if(error.error === "Postoji eksperiment sa tim imenom")
+        {
+          alert("Postoji eksperiment sa tim imenom.");
+        }
+        
+      }
+    )
+}
   submit(){
     var nazivEks = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value;
+
     if(!(nazivEks === this.nazivEksperimenta))
     {
-       this.proveriE();
+      this.proveriE();
     }
-  }
 
-  proveriE(){
-      var nazivE = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value;
-      //var div = (<HTMLDivElement>document.getElementById("poruka-err")).innerHTML;
-      //if(div === "*Eksperiment sa tim nazivom vec postoji"){
-      //  div = (<HTMLDivElement>document.getElementById("poruka-err")).innerHTML = "";
-      //}
-      this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
-        res=>{
-
-        }, error=>{
-          this.ucitajNaziv();
-          if(error.error === "Postoji eksperiment sa tim imenom")
-          {
-            //(<HTMLDivElement>document.getElementById("poruka-err")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
-            alert("Postoji eksperiment sa tim imenom.");
-          }
-        }
-      )
+    this.http.post(url + "/api/Upload/sacuvajIzmene",null, {responseType: 'text'}).subscribe(
+    res => {
+      console.log(res);
+    
+      this.dodajKomandu("Sve izmene su sacuvane");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Izmene nisu sacuvane");
+    })
+    
   }
 
   izmeniPolje(row:number,column:number,page:any,data:any)

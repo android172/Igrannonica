@@ -560,5 +560,29 @@ namespace dotNet.Controllers
 
             return Ok("Polje je izmenjeno"); 
         }
+        [HttpPost("sacuvajIzmene")]
+        public IActionResult saveChanges()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.SaveDataset();
+
+            return Ok("Izmene sacuvane");
+        }
     }
 }
