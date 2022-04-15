@@ -106,13 +106,13 @@ namespace dotNet.Controllers
             {
                 sb.AppendLine(line);
             }
+
+            // upis csv-a u bazu 
+            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
             
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
             eksperiment.LoadDataset(idEksperimenta, fileName);
-
-            // upis csv-a u bazu 
-            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
 
             if(!fajlNijeSmesten)
             {
@@ -316,7 +316,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -346,7 +346,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -378,7 +378,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -404,7 +404,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -430,7 +430,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -456,7 +456,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -485,7 +485,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -514,7 +514,7 @@ namespace dotNet.Controllers
 
             if (tokenS != null)
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                //korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
@@ -559,6 +559,30 @@ namespace dotNet.Controllers
             eksperiment.UpdataValue(row, column, data);
 
             return Ok("Polje je izmenjeno"); 
+        }
+        [HttpPost("sacuvajIzmene")]
+        public IActionResult saveChanges()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.SaveDataset();
+
+            return Ok("Izmene sacuvane");
         }
     }
 }

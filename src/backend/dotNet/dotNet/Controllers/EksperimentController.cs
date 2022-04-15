@@ -195,8 +195,8 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                 {
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
-                    //if(!eksperiment.IsDataLoaded())
-                    eksperiment.LoadDataset(id, csv);
+                    if (!eksperiment.IsDataLoaded(id))
+                        eksperiment.LoadDataset(id, csv);
                     return Ok(csv);
                 }
                 return BadRequest();
@@ -229,7 +229,7 @@ namespace dotNet.Controllers
             if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
             {
                 eksperiment = Korisnik.eksperimenti[token.ToString()];
-                if (!eksperiment.IsDataLoaded())
+                if (!eksperiment.IsDataLoaded(model.Vlasnik))
                 {
                     string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
                     eksperiment.LoadDataset(model.Vlasnik, csv);
