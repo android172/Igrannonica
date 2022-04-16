@@ -121,6 +121,72 @@ namespace dotNet.Controllers
             }
             return Ok("Fajl je upisan.");      
         }
+        [HttpPost("fileUpload/{idEksperimenta}")]
+        public IActionResult uploadAnyFile(IFormFile file, int idEksperimenta)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            // kreiranje foldera 
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
+            // cuvanje fajla - putanja 
+            string fileName = file.FileName;
+            string path = folderEksperiment + "\\" + fileName;
+
+            // citanje fajla 
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            // upis csv-a u bazu 
+            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
+
+            // upis u fajl 
+            System.IO.File.WriteAllBytes(path, bytes);
+
+            eksperiment.LoadDataset(idEksperimenta, fileName);
+
+            if (!fajlNijeSmesten)
+            {
+                Console.WriteLine("Fajl nije upisan u bazu");
+                return BadRequest("Neuspesan upis csv-a u bazu");
+            }
+            return Ok("Fajl je upisan.");
+        }
 
         [HttpGet("paging/{page}/{size}")]
         public Paging Proba(int page, int size)

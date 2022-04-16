@@ -100,7 +100,7 @@ export class PodaciComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", file, this.fileName);  	
 
-      const upload$ = this.http.post(url+"/api/Upload/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post(url+"/api/Upload/fileUpload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
