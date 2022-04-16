@@ -687,5 +687,90 @@ namespace dotNet.Controllers
 
             return Ok("Izmene sacuvane");
         }
+        [HttpPost("absoluteMaxScaling")]
+        public IActionResult absoluteMaxScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleAbsoluteMax(kolone);
+
+            return Ok("Absolute Max Scaling izvrseno");
+        }
+
+        [HttpPost("minMaxScaling")]
+        public IActionResult minMaxScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleMinMax(kolone);
+
+            return Ok("Min-Max Scaling izvrseno");
+        }
+
+        [HttpPost("zScoreScaling")]
+        public IActionResult zScoreScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleZScore(kolone);
+
+            return Ok("Z-Score Scaling izvrseno");
+        }
+
+
     }
 }
