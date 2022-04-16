@@ -272,6 +272,15 @@ export class PodaciComponent implements OnInit {
   dajRed(i: number)
   {
     var redValues = Object.values(this.json[i]);
+
+    for(var i=0;i<redValues.length;i++)
+    {
+      if(redValues[i] == null)
+      {
+        redValues[i] = "NA";
+      }
+    }
+
     return redValues;
   }
 
