@@ -87,6 +87,52 @@ img{
     color: #c1cdff;
 
 }
+/********* NORMALIZACIJA *******/ 
+
+#box2{
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    margin: 25px auto;
+    width: 100%;
+    text-align: center;
+    color: #CED9FF;
+    height: 160px;
+    align-items: center;
+}
+
+#normalizacija,#outliers {
+    background-color: #272741;
+    border: 4px solid #5977DF;
+    padding: 5px;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    font-size: 16px;
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+#normalizacija{
+    width: 30%;
+    min-width: 60px;
+    height: 150px;
+}
+#outliers{
+    width: 40%;
+    min-width: 60px;
+    height: 150px;
+}
+
+.btn-design3{
+    color: white;
+    background-color: rgb(33, 79, 138);
+    width: 100%;
+    height: 35px;
+    margin: 20px 0 15px 0;
+    justify-content: center;
+}
 
 /************* SLIDER *****************/ 
 

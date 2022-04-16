@@ -531,7 +531,7 @@ export class PodaciComponent implements OnInit {
         return;
       }
     }
-    this.dodajKomandu("Dodat red: "+ i + " na strani: "+ p);
+    this.dodajKomandu("Izabran red "+ i + " sa strane "+ p);
     this.rowsAndPages.push([i,p]);
     //console.log(this.rowsAndPages);
   }
@@ -663,6 +663,63 @@ export class PodaciComponent implements OnInit {
       console.log(error.error);
       this.rowsAndPages = [];
       this.dodajKomandu("Polje nije izmenjeno");
+    })
+  }
+
+  absoluteMaxScaling()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Upload/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Absolute Maximum Scaling izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
+    })
+  }
+
+  minMaxScaling()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Upload/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Min-Max Scaling izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Min-Max Scaling nije izvrseno");
+    })
+  }
+
+  zScoreScaling()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post("http://localhost:5008/api/Upload/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Z-score Scaling izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
   }
 

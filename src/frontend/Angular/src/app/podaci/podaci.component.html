@@ -126,6 +126,25 @@
         </div>
     </div>
 
+    <div id="box2">
+        <div id="normalizacija">
+            <div>Normalizacija</div>
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-design3" id="dropdownBasic1" ngbDropdownToggle>Izaberi tip normalizacije</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button ngbDropdownItem id="absolute-max" (click)="absoluteMaxScaling()">Absolute Maximum Scaling</button>
+                  <button ngbDropdownItem id="minmax" (click)="minMaxScaling()">Min-Max Scaling</button> 
+                  <button ngbDropdownItem id="zscore" (click)="zScoreScaling()">Z-score Scaling</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="outliers">
+            <div>Odstupanje - Outliers</div>
+        </div>
+    </div>
+
     <div id="tabela-statistika">
         <div page>
             <div id="table">
