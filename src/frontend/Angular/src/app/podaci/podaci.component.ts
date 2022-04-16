@@ -114,6 +114,10 @@ export class PodaciComponent implements OnInit {
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
+
+        if(error.error === "Unet nedozvoljen tip fajla."){
+          console.log("Nedozvoljeno");
+        }
       });
     }
   }

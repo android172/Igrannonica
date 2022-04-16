@@ -146,6 +146,12 @@ namespace dotNet.Controllers
             if (file == null)
                 return BadRequest("Fajl nije unet.");
 
+            if (checkFileType(file.FileName))
+            {
+                Console.WriteLine("Unet je nedozvoljen tip fajla.");
+                return BadRequest("Unet nedozvoljen tip fajla.");
+            }
+
             // kreiranje foldera 
             string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
 
@@ -186,6 +192,29 @@ namespace dotNet.Controllers
                 return BadRequest("Neuspesan upis csv-a u bazu");
             }
             return Ok("Fajl je upisan.");
+        }
+        private bool checkFileType(string filename)
+        {
+            string extension = System.IO.Path.GetExtension(filename);
+
+            if (String.Compare(extension, ".csv", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".json", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsx", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xls", true) == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         [HttpGet("paging/{page}/{size}")]
