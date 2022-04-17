@@ -78,7 +78,7 @@ class MLData:
         
     # Select columns
     def select_input_columns(self, columns):
-        column_types = self.get_column_types()
+        column_types = [str(i) for i in self.dataset.dtypes]
         for ci in columns:
             if column_types[ci] != 'int64' and column_types[ci] != 'float64':
                 return False
@@ -86,7 +86,7 @@ class MLData:
         return True
     
     def select_output_columns(self, columns):
-        column_types = self.get_column_types()
+        column_types = [str(i) for i in self.dataset.dtypes]
         for ci in columns:
             if column_types[ci] != 'int64' and column_types[ci] != 'float64':
                 return False
@@ -138,7 +138,7 @@ class MLData:
         return self.dataset.shape[0]
     
     def get_column_types(self):
-        return [str(i) for i in self.dataset.dtypes]
+        return [str(i) for i in self.column_types]
     
     # ################# #
     # Data manipulation #
@@ -198,13 +198,16 @@ class MLData:
         # Replace values
         self.dataset.iloc[row] = series
         return -1
-    
-    def remove_row(self, row):
-        if row < 0 or row >= self.dataset.shape[0]:
-            return False
-        self.dataset.drop(self.dataset.index[row], inplace=True, )
-        self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
-        self.test_indices  = [index - 1 if index > row else index for index in self.test_indices  if index != row]
+            
+    def remove_rows(self, rows):
+        for row in rows:
+            if row < 0 or row >= self.dataset.shape[0]:
+                return False
+        self.dataset.drop(self.dataset.index[rows], inplace=True)
+        rows.sort(reverse=True)
+        for row in rows:
+            self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
+            self.test_indices  = [index - 1 if index > row else index for index in self.test_indices  if index != row]
         return True
             
     def add_column(self, new_column, label):
@@ -383,7 +386,7 @@ class MLData:
     def get_numerical_statistics(self, columns):
         column_names = self.dataset.columns[columns]
         
-        try: description = self.dataset[column_names].astype('float64').describe()
+        try: description = self.dataset[column_names].replace(pd.NA, np.nan).astype('float64').describe()
         except: return None
         na_counts = self.dataset[column_names].isna().sum()
         total_count = self.dataset.shape[0]

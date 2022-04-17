@@ -526,19 +526,9 @@ namespace dotNet.Controllers
 
             if (niz.Length == 0)
                 return "Redovi za brisanje nisu izabrani";
-
-            int s, d;
-            int j = niz[0];
-            int p = j - 1;
             
-            foreach(var i in niz)
-            {
-                s = i;
-                d = s - p;
-                j += d - 1;
-                p = s;
-                eksperiment.DeleteRow(j);
-            }
+            eksperiment.DeleteRows(niz);
+            
             // Ukupan broj redova ucitanog fajla
             return eksperiment.GetRowCount().ToString();
         }

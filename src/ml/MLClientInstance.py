@@ -259,16 +259,17 @@ class MLClientInstance(Thread):
                 self.connection.send("OK")
                 print(f"Row {row_index} replaced with values: {new_row}.")
                 
-            elif received == 'DeleteRow':
+            elif received == 'DeleteRows':
                 # Receive row index
-                row = int(self.connection.receive())
-                deleted = network.data.remove_row(row)
+                row_string = self.connection.receive()
+                rows = [int(x) for x in row_string.split(":")]
+                deleted = network.data.remove_rows(rows)
                 if not deleted:
-                    self.report_error(f"ERROR :: Row with index {row} doesn't exist.")
+                    self.report_error("ERROR :: Row doesn't exist.")
                     return
                 
                 self.connection.send("OK")
-                print(f"Row {row} removed from the dataset.")
+                print(f"Rows {rows} removed from the dataset.")
                 
             elif received == 'AddColumn':
                 # Receive column values

@@ -132,10 +132,10 @@ namespace dotNet.MLService {
             }
         }
 
-        public void DeleteRow(int rowIndex) {
+        public void DeleteRows(int[] rows) {
             lock (_lock) {
-                connection.Send(Command.DeleteRow);
-                connection.Send(rowIndex);
+                connection.Send(Command.DeleteRows);
+                connection.Send(EncodeIntArray(rows));
                 CheckStatus();
             }
         }
@@ -485,7 +485,7 @@ namespace dotNet.MLService {
         AddRow,
         AddRowToTest,
         UpdateRow,
-        DeleteRow,
+        DeleteRows,
         AddColumn,
         UpdateColumn,
         RenameColumn,
