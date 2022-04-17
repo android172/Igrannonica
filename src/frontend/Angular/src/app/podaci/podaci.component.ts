@@ -87,6 +87,7 @@ export class PodaciComponent implements OnInit {
   nazivEksperimenta:any;
 
   selectedOutlier:string="";
+  selectedNorm:string="";
 
   public kolone: any[] = [];
   message: any;
@@ -732,6 +733,42 @@ export class PodaciComponent implements OnInit {
       console.log(error.error);
       this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
+  }
+
+  selectNorm(event:any)
+  {
+    this.selectedNorm = event.target.id; 
+
+    if(this.selectedNorm == "absolute-max")
+    {
+      (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Absolute Maximum Scaling";
+    }
+    if(this.selectedNorm == "minmax")
+    {
+      (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Min-Max Scaling";
+    }
+    if(this.selectedNorm == "zscore")
+    {
+      (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Z-score Scaling";
+    }
+  }
+
+  primeniNormalizaciju()
+  {
+    if(this.selectedNorm == "absolute-max" )
+    {
+      this.absoluteMaxScaling();
+    }
+    if(this.selectedNorm == "minmax" )
+    {
+      this.minMaxScaling();
+    }
+    if(this.selectedNorm == "zscore" )
+    {
+      this.zScoreScaling();
+    }
+    this.selectedNorm = ""; 
+    (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Izaberite tip normalizacije"; 
   }
    // OUTLIERS 
 
