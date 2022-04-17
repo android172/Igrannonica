@@ -165,6 +165,7 @@ export class PodaciComponent implements OnInit {
       (response: any) => {
         //console.table(response);
         this.jsonStatistika = JSON.parse(response);
+        console.log(this.jsonStatistika);
         this.ucitajStatistiku();
       }
     )
@@ -202,6 +203,18 @@ export class PodaciComponent implements OnInit {
         // niz.push(this.jsonStatistika[key].MostCommon[0]);
         // niz.push(this.jsonStatistika[key].MostCommon[1]);
         // for (let index = 0; index < this.jsonStatistika[key].Frequencies.length; index++) {
+          //console.log(this.jsonStatistika[key].Frequencies);
+          for(var item in this.jsonStatistika[key].Frequencies)
+          {
+            var pom = this.jsonStatistika[key].Frequencies[item][1];
+            var pomStr = pom.toString();
+            var pomStrSpl = pomStr.split(".");
+            if(pomStrSpl[1].length > 4)
+            {
+              this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(4);
+            }
+            console.log(this.jsonStatistika[key].Frequencies[item][1]);
+          }
           niz.push({
             imeKljucF:"Frequencies",
             Frequencies:this.jsonStatistika[key].Frequencies
@@ -215,6 +228,21 @@ export class PodaciComponent implements OnInit {
       }
       else
       {
+        for(var param in this.jsonStatistika[key])
+        {
+          var num = this.jsonStatistika[key][param];
+          var str = num.toString();
+          if(str.includes("."))
+          {
+            var strPom = str.split(".");
+            if(strPom[1].length > 4)
+            {
+              this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(4);
+            }
+          }
+          //console.log(this.jsonStatistika[key][param]);
+        }
+        //this.jsonStatistika[key]["StdDeviation"] = (Number(this.jsonStatistika[key]["StdDeviation"])).toFixed(4);
         this.statistikaNum.push({
           key:key,
           data:this.jsonStatistika[key]

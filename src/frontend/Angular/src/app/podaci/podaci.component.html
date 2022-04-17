@@ -156,21 +156,6 @@
             ></pagination-controls>
         </div>
 
-        <!--<div id="statistika" style="overflow-y: auto">
-            <div id="statNaslov">Statisticki pokazatelji</div>
-            <div *ngFor="let key of keys; index as i" >
-                <div id="imeKolone">{{key}}</div>
-                <div id="statistikaKolone" *ngFor="let item of values[i] | keyvalue;">
-                    <ul id="ulStat">
-                        <li>
-                            <span>
-                                {{item.key}}: &nbsp; {{item.value}}
-                            </span>
-                        </li>
-                    </ul> 
-                </div>
-            </div>
-        </div>-->
         <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
