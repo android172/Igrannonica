@@ -60,6 +60,10 @@ img{
     background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
 }
 
+#naslov{
+    font-weight: 500;
+    font-size: 17px;
+}
 /****** PORUKA ERROR ****************/
 /*
 #poruka-err{
@@ -117,12 +121,12 @@ img{
 #normalizacija{
     width: 30%;
     min-width: 60px;
-    height: 140px;
+    height: 130px;
 }
 #outliers{
     width: 40%;
     min-width: 60px;
-    height: 140px;
+    height: 130px;
 }
 
 .btn-design3{

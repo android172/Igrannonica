@@ -41,7 +41,7 @@
 
     <div id="box">
         <div id="testniskup" class="p1 placement">
-            <div>Testni skup</div>
+            <div id="naslov">Testni skup</div>
 
             <div ngbDropdown class="d-inline-block">
                 <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi</button>
@@ -82,7 +82,7 @@
             </div>
         </div>
         <div id="nedostajucevrednosti" class="placement">
-            <div>Nedostajuće vrednosti</div>
+            <div id="naslov">Nedostajuće vrednosti</div>
             <div id="select-elements">
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena vrednosti</button>
@@ -120,7 +120,7 @@
             
         </div>
         <div id="enkodiranje" class="p2 placement">
-            <div>Enkodiranje</div>
+            <div id="naslov">Enkodiranje</div>
             <button id="b4" (click)="labelEncoding()">LabelEncode</button> 
             <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
         </div>
@@ -128,7 +128,7 @@
 
     <div id="box2">
         <div id="normalizacija">
-            <div>Normalizacija</div>
+            <div id="naslov">Normalizacija</div>
 
             <div id="norm-box">
                 <div ngbDropdown class="d-inline-block">
@@ -144,7 +144,7 @@
         </div>
 
         <div id="outliers">
-            <div>Izuzeci</div>
+            <div id="naslov">Izuzeci</div>
             <div id="outliers-box">
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
@@ -159,7 +159,7 @@
                     </div>
                 </div>
 
-                <input type="number" id="threshold" placeholder="Prag:">
+                <input type="number" id="threshold" placeholder="Prag:" readonly>
 
                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
             </div>

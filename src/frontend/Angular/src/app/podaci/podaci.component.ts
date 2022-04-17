@@ -89,6 +89,8 @@ export class PodaciComponent implements OnInit {
   selectedOutlier:string="";
   selectedNorm:string="";
 
+  threshold:number = 0; 
+
   public kolone: any[] = [];
   message: any;
 
@@ -779,7 +781,7 @@ export class PodaciComponent implements OnInit {
        this.dodajKomandu("Nije odabrana nijedna kolona!");
        return;
      }
-     this.http.post(url+"/api/Upload/standardDeviation", this.selectedColumns, {responseType: 'text'}).subscribe(
+     this.http.post(url+"/api/Upload/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
          console.log(res);
          this.loadDefaultItemsPerPage();
@@ -797,7 +799,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
       return;
     }
-    this.http.post(url+"/api/Upload/outliersQuantiles", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -815,7 +817,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
       return;
     }
-    this.http.post(url+"/api/Upload/outliersZScore", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -906,30 +908,41 @@ export class PodaciComponent implements OnInit {
     if(this.selectedOutlier == "1")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
+      (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readonly");
     }
     if(this.selectedOutlier == "2")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
+      (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
     }
     if(this.selectedOutlier == "3")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score";
+      (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
     }
     if(this.selectedOutlier == "4")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "IQR";
+      (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
+      (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
     }
     if(this.selectedOutlier == "5")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Isolation Forest";
+      (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
+      (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
     }
     if(this.selectedOutlier == "6")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "One Class SVM";
+      (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
+      (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
     }
     if(this.selectedOutlier == "7")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Local Factor";
+      (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
+      (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
     }
     
   }
@@ -937,14 +950,18 @@ export class PodaciComponent implements OnInit {
   {
     if(this.selectedOutlier == "1")
     {
+      this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
+      console.log(typeof(this.threshold));
       this.removeStandardDeviation();
     }
     if(this.selectedOutlier == "2")
     {
+      this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
       this.removeOutliersQuantiles();
     }
     if(this.selectedOutlier == "3")
     {
+      this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
       this.removeOutliersZScore();
     }
     if(this.selectedOutlier == "4")
