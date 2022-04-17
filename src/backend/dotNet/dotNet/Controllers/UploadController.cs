@@ -122,7 +122,7 @@ namespace dotNet.Controllers
             return Ok("Fajl je upisan.");      
         }
         [HttpPost("fileUpload/{idEksperimenta}")]
-        public IActionResult uploadAnyFile(IFormFile file, int idEksperimenta)
+        public IActionResult UploadAnyFile(IFormFile file, int idEksperimenta)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -146,7 +146,7 @@ namespace dotNet.Controllers
             if (file == null)
                 return BadRequest("Fajl nije unet.");
 
-            if (checkFileType(file.FileName))
+            if (CheckFileType(file.FileName))
             {
                 Console.WriteLine("Unet je nedozvoljen tip fajla.");
                 return BadRequest("Unet nedozvoljen tip fajla.");
@@ -193,7 +193,7 @@ namespace dotNet.Controllers
             }
             return Ok("Fajl je upisan.");
         }
-        private bool checkFileType(string filename)
+        private static bool CheckFileType(string filename)
         {
             string extension = System.IO.Path.GetExtension(filename);
 
@@ -210,6 +210,26 @@ namespace dotNet.Controllers
                 return false;
             }
             if (String.Compare(extension, ".xls", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsm", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsb", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".odf", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".ods", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".odt", true) == 0)
             {
                 return false;
             }
