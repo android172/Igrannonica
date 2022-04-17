@@ -862,6 +862,40 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
   }
+  selectOutliers(event:any)
+  {
+    this.selectedOutlier = event.target.id;
+    
+    if(this.selectedOutlier == "1")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
+    }
+    if(this.selectedOutlier == "2")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
+    }
+    if(this.selectedOutlier == "3")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score";
+    }
+    if(this.selectedOutlier == "4")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "IQR";
+    }
+    if(this.selectedOutlier == "5")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Isolation Forest";
+    }
+    if(this.selectedOutlier == "6")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "One Class SVM";
+    }
+    if(this.selectedOutlier == "7")
+    {
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Local Factor";
+    }
+    
+  }
  
 }
 
