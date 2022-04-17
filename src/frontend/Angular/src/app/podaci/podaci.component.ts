@@ -808,6 +808,24 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("IQR nije izvrseno");
     })
   }
+  removeOutliersIsolationForest()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post(url+"/api/Upload/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Isolation Forest izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Isolaton Forest nije izvrseno");
+    })
+  }
  
 }
 
