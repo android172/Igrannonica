@@ -733,6 +733,26 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
   }
+   // OUTLIERS 
+
+   removeStandardDeviation()
+   {
+     if(this.selectedColumns.length == 0)
+     {
+       this.dodajKomandu("Nije odabrana nijedna kolona!");
+       return;
+     }
+     this.http.post(url+"/api/Upload/standardDeviation", this.selectedColumns, {responseType: 'text'}).subscribe(
+       res => {
+         console.log(res);
+         this.loadDefaultItemsPerPage();
+         this.selectedColumns = [];
+         this.dodajKomandu("Standard Deviation izvrseno");
+     },error=>{
+       console.log(error.error);
+       this.dodajKomandu("Standard Deviation nije izvrseno");
+     })
+   }
  
 }
 
