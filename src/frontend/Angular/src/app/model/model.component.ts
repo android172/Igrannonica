@@ -87,7 +87,7 @@ export class ModelComponent implements OnInit {
     if (token != null)
     {
       this.signalR.startConnection(token);
-      //this.signalR.LossListener();
+      this.signalR.LossListener();
       //console.log(this.signalR.data);
     }
   }
@@ -505,11 +505,6 @@ export class ModelComponent implements OnInit {
     this.chart?.update();
     this.http.get(url+"/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {
-        this.signalR.LossListener();
-      //   setTimeout(() => {
-      //     this.chart?.update();
-      //     console.log(this.chart?.chart);
-      // }, 20);
         let subscription = this.signalR.switchChange.asObservable().subscribe(
           value=>{
             this.chart?.update();

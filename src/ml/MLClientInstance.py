@@ -536,10 +536,10 @@ class MLClientInstance(Thread):
                 if not network.data.columns_are_valid(columns):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
-                # Receive treshold
-                treshold = float(self.connection.receive())
+                # Receive threshold
+                threshold = float(self.connection.receive())
                 
-                if not network.data.standard_deviation_outlier_removal(columns, treshold):
+                if not network.data.standard_deviation_outlier_removal(columns, threshold):
                     self.report_error("ERROR :: Method can only be applied to numerical variables.")
                     return
                 
@@ -553,10 +553,10 @@ class MLClientInstance(Thread):
                 if not network.data.columns_are_valid(columns):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
-                # Receive treshold
-                treshold = float(self.connection.receive())
+                # Receive threshold
+                threshold = float(self.connection.receive())
                 
-                if not network.data.quantile_outlier_removal(columns, treshold):
+                if not network.data.quantile_outlier_removal(columns, threshold):
                     self.report_error("ERROR :: Method can only be applied to numerical variables.")
                     return
                 
@@ -570,10 +570,10 @@ class MLClientInstance(Thread):
                 if not network.data.columns_are_valid(columns):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
-                # Receive treshold
-                treshold = float(self.connection.receive())
+                # Receive threshold
+                threshold = float(self.connection.receive())
                 
-                if not network.data.z_score_outlier_removal(columns, treshold):
+                if not network.data.z_score_outlier_removal(columns, threshold):
                     self.report_error("ERROR :: Method can only be applied to numerical variables.")
                     return
                 

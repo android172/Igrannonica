@@ -304,29 +304,29 @@ namespace dotNet.MLService {
         }
 
         // Outliers
-        public void RemoveOutliersStandardDeviation(int[] columns, float treshold) {
+        public void RemoveOutliersStandardDeviation(int[] columns, float threshold) {
             lock (_lock) {
                 connection.Send(Command.RemoveOutliersStandardDeviation);
                 connection.Send(EncodeIntArray(columns));
-                connection.Send(treshold);
+                connection.Send(threshold);
                 CheckStatus();
             }
         }
 
-        public void RemoveOutliersQuantiles(int[] columns, float treshold) {
+        public void RemoveOutliersQuantiles(int[] columns, float threshold) {
             lock (_lock) {
                 connection.Send(Command.RemoveOutliersQuantiles);
                 connection.Send(EncodeIntArray(columns));
-                connection.Send(treshold);
+                connection.Send(threshold);
                 CheckStatus();
             }
         }
 
-        public void RemoveOutliersZScore(int[] columns, float treshold) {
+        public void RemoveOutliersZScore(int[] columns, float threshold) {
             lock (_lock) {
                 connection.Send(Command.RemoveOutliersZScore);
                 connection.Send(EncodeIntArray(columns));
-                connection.Send(treshold);
+                connection.Send(threshold);
                 CheckStatus();
             }
         }

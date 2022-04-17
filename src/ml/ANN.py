@@ -56,11 +56,13 @@ class ANN:
     def initialize_loaders(self):
         # Filter train data
         train_dataset = self.data.get_train_dataset()
-        self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+        if len(train_dataset) > 0:
+            self.train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
         
         # Filter test data
         test_dataset = self.data.get_test_dataset()
-        self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+        if len(test_dataset) > 0:
+            self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
     
     # #################### #
     # Working with a model #
