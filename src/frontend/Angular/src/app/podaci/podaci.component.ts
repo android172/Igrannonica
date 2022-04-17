@@ -844,6 +844,24 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
   }
+  removeOutliersByLocalFactor()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post(url+"/api/Upload/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Z-score Scaling izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Z-score Scaling nije izvrseno");
+    })
+  }
  
 }
 
