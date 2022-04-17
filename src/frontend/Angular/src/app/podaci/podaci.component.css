@@ -133,6 +133,37 @@ img{
     margin: 20px 0 15px 0;
     justify-content: center;
 }
+/*********** OUTLIERS *******/
+
+.btn-design4{
+    color: white;
+    background-color: rgb(33, 79, 138);
+    width: 100%;
+    height: 35px;
+    justify-content: center;
+}
+
+#outliers-box{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    height: 35px;
+    margin: 20px auto;
+    width: 80%;
+}
+#threshold{
+    height: 35px;
+    background-color: #272741;
+    border-radius: 5px;
+    border: 2px solid rgb(37, 164, 214);
+    width: 100px; 
+    color: white;
+}
+
+.primeni-izuzeci{
+    width: 80px;
+    height: 35px;
+}
 
 /************* SLIDER *****************/ 
 

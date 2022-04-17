@@ -86,6 +86,8 @@ export class PodaciComponent implements OnInit {
   ucitanCsv: boolean = false;
   nazivEksperimenta:any;
 
+  selectedOutlier:string="";
+
   public kolone: any[] = [];
   message: any;
 
@@ -682,7 +684,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
       return;
     }
-    this.http.post("http://localhost:5008/api/Upload/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -701,7 +703,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
       return;
     }
-    this.http.post("http://localhost:5008/api/Upload/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -720,7 +722,7 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
       return;
     }
-    this.http.post("http://localhost:5008/api/Upload/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -731,6 +733,6 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Z-score Scaling nije izvrseno");
     })
   }
-
+ 
 }
 

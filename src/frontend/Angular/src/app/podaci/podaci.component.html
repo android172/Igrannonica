@@ -141,7 +141,25 @@
         </div>
 
         <div id="outliers">
-            <div>Odstupanje - Outliers</div>
+            <div>Izuzeci</div>
+            <div id="outliers-box">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem id="1" (click)="selectOutliers($event)">Standard Deviation</button>
+                      <button ngbDropdownItem id="2" (click)="selectOutliers($event)">Quantiles</button> 
+                      <button ngbDropdownItem id="3" (click)="selectOutliers($event)">Z-Score</button>
+                      <button ngbDropdownItem id="4" (click)="selectOutliers($event)">IQR</button>
+                      <button ngbDropdownItem id="5" (click)="selectOutliers($event)">Isolation Forest</button>
+                      <button ngbDropdownItem id="6" (click)="selectOutliers($event)">One Class SVM</button>
+                      <button ngbDropdownItem id="7" (click)="selectOutliers($event)">Local Factor</button>
+                    </div>
+                </div>
+
+                <input type="number" id="threshold" placeholder="Prag:">
+
+                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
+            </div>
         </div>
     </div>
 
