@@ -753,6 +753,24 @@ export class PodaciComponent implements OnInit {
        this.dodajKomandu("Standard Deviation nije izvrseno");
      })
    }
+   removeOutliersQuantiles()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post(url+"/api/Upload/outliersQuantiles", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Quantiles izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Quantiles nije izvrseno");
+    })
+  }
  
 }
 
