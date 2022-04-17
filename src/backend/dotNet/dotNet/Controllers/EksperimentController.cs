@@ -73,7 +73,15 @@ namespace dotNet.Controllers
                 return Ok("Promenjeno ime");
             return BadRequest("Doslo do greske");
         }
-
+        [Authorize]
+        [HttpDelete("Eksperiment/{id}")]
+        public IActionResult izbrisiEksperiment(int id)
+        {
+            if (db.dbeksperiment.izbrisiEksperiment(id))
+                return Ok("Eksperiment izbrisan");
+            
+            return BadRequest("Eksperiment nije izbrisan");
+        }
 
 
         [Authorize]
