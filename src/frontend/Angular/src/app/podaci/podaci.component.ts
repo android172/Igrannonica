@@ -877,10 +877,10 @@ export class PodaciComponent implements OnInit {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Z-score Scaling izvrseno");
+        this.dodajKomandu("One Class SVM izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Z-score Scaling nije izvrseno");
+      this.dodajKomandu("One Class SVM nije izvrseno");
     })
   }
   removeOutliersByLocalFactor()
@@ -895,10 +895,10 @@ export class PodaciComponent implements OnInit {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Z-score Scaling izvrseno");
+        this.dodajKomandu("Local factor izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Z-score Scaling nije izvrseno");
+      this.dodajKomandu("Local Factor nije izvrseno");
     })
   }
   selectOutliers(event:any)
@@ -982,6 +982,8 @@ export class PodaciComponent implements OnInit {
     }
     this.selectedOutlier = "";
     (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Izbacivanje izuzetaka";
+    (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
+    (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
   }
  
 }

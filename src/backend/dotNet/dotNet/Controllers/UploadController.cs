@@ -792,7 +792,7 @@ namespace dotNet.Controllers
         }
 
         [HttpPost("standardDeviation/{threshold}")]
-        public IActionResult RemoveStandardDeviation(int[] kolone,int threshold)
+        public IActionResult RemoveStandardDeviation(int[] kolone,float threshold)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -819,7 +819,7 @@ namespace dotNet.Controllers
             return Ok("Standard Deviation");
         }
         [HttpPost("outliersQuantiles/{threshold}")]
-        public IActionResult RemoveQuantiles(int[] kolone,int threshold)
+        public IActionResult RemoveQuantiles(int[] kolone,float threshold)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -846,7 +846,7 @@ namespace dotNet.Controllers
             return Ok("Quantiles");
         }
         [HttpPost("outliersZScore/{threshold}")]
-        public IActionResult RemoveZScore(int[] kolone,int threshold)
+        public IActionResult RemoveZScore(int[] kolone,float threshold)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();

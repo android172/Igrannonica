@@ -117,16 +117,16 @@ img{
     align-items: center;
     text-align: center;
     justify-content: center;
+
+    height: 130px;
 }
 #normalizacija{
     width: 30%;
     min-width: 60px;
-    height: 130px;
 }
 #outliers{
     width: 40%;
     min-width: 60px;
-    height: 130px;
 }
 
 .btn-design3{
