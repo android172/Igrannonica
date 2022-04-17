@@ -139,6 +139,7 @@ img{
     color: white;
     background-color: rgb(33, 79, 138);
     width: 100%;
+    min-width: 70px;
     height: 35px;
     justify-content: center;
 }
