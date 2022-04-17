@@ -896,6 +896,39 @@ export class PodaciComponent implements OnInit {
     }
     
   }
+  removeOutliers()
+  {
+    if(this.selectedOutlier == "1")
+    {
+      this.removeStandardDeviation();
+    }
+    if(this.selectedOutlier == "2")
+    {
+      this.removeOutliersQuantiles();
+    }
+    if(this.selectedOutlier == "3")
+    {
+      this.removeOutliersZScore();
+    }
+    if(this.selectedOutlier == "4")
+    {
+      this.removeOutliersIQR();
+    }
+    if(this.selectedOutlier == "5")
+    {
+      this.removeOutliersIsolationForest()
+    }
+    if(this.selectedOutlier == "6")
+    {
+      this.removeOutliersOneClassSVM();
+    }
+    if(this.selectedOutlier == "7")
+    {
+      this.removeOutliersByLocalFactor();
+    }
+    this.selectedOutlier = "";
+    (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Izbacivanje izuzetaka";
+  }
  
 }
 
