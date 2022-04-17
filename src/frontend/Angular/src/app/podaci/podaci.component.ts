@@ -771,6 +771,24 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Quantiles nije izvrseno");
     })
   }
+  removeOutliersZScore()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+    this.http.post(url+"/api/Upload/outliersZScore", this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("ZSore izvrseno");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("ZScore nije izvrseno");
+    })
+  }
  
 }
 
