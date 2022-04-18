@@ -985,6 +985,52 @@ export class PodaciComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
     (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
   }
+
+  deleteAllRowsWithNA()
+  {
+    this.http.post(url+"/api/Upload/deleteAllRowsNA",null,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.dodajKomandu("Uspesno obrisani NA redovi");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("NA redovi nisu obrisani");
+    });
+  }
+
+  deleteAllColumnsWithNA()
+  {
+    this.http.post(url+"/api/Upload/deleteAllColumnsNA",null,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.dodajKomandu("Uspesno obrisane kolone");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Kolone nisu obrisane");
+    });
+  }
+
+  deleteRowsWithNAforSelectedColumns()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      return;
+    }
+
+    this.http.post(url+"/api/Upload/deleteNARowsForColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedColumns = [];
+        this.dodajKomandu("Uspesno obrisani NA redovi");
+    },error=>{
+      console.log(error.error);
+      this.dodajKomandu("Redovi nisu obrisani");
+    });
+  }
  
 }
 

@@ -980,6 +980,82 @@ namespace dotNet.Controllers
 
             return Ok("Local Factor");
         }
+        [HttpPost("deleteAllColumnsNA")]
+        public IActionResult DeleteAllNAColumns()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.DropNAColumns();
+
+            return Ok("Kolone sa NA vrednostima su obrisane");
+        }
+       
+        [HttpPost("deleteAllRowsNA")]
+        public IActionResult DeleteAllNARows()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.DropNAListwise();
+
+            return Ok("Redovi sa NA vrednostima su obrisani");
+        }
+        [HttpPost("deleteNARowsForColumns")]
+        public IActionResult DeleteAllNARowsForColumns(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije uneta nijedna kolona");
+
+            eksperiment.DropNAPairwise(kolone);
+
+            return Ok("Redovi sa NA vrednostima su obrisani za date kolone");
+        }
 
     }
 }

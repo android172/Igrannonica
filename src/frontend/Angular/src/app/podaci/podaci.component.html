@@ -85,20 +85,23 @@
             <div id="naslov">Nedostajuće vrednosti</div>
             <div id="select-elements">
                 <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena vrednosti</button>
+                    <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena NA vrednosti</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
                       <button ngbDropdownItem  (click)="fillWithMean()">Zameni sa mean u koloni</button>
                       <button ngbDropdownItem  (click)="fillWithMedian()">Zameni sa median u koloni</button>
                       <button ngbDropdownItem  (click)="fillWithMode()">Zameni sa mode u koloni</button>
+                     
                     </div>
                 </div>
                 
                 <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje vrednosti</button>
+                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+                      <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
+                      <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
+                      <button ngbDropdownItem (click)="deleteRowsWithNAforSelectedColumns()">Izbaci sve vrste sa NA za izabrane kolone</button>
                       <button ngbDropdownItem (click)="deleteRows()">Izbaci selektovane vrste</button>
                       <button ngbDropdownItem (click)="deleteColumns()">Izbaci selektovane kolone</button>
-                      <button ngbDropdownItem (click)="izborUnosa('Proizvoljno')">Izbaci vrste za izabrane kolone</button>
                     </div>
                 </div>
 
