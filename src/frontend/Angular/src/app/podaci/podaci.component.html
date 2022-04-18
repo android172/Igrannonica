@@ -87,13 +87,23 @@
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena NA vrednosti</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-                      <button ngbDropdownItem  (click)="fillWithMean()">Zameni sa mean u koloni</button>
-                      <button ngbDropdownItem  (click)="fillWithMedian()">Zameni sa median u koloni</button>
-                      <button ngbDropdownItem  (click)="fillWithMode()">Zameni sa mode u koloni</button>
-                     
+                      <button ngbDropdownItem  (click)="fillWithMean()">Zameni NA sa mean u koloni</button>
+                      <button ngbDropdownItem  (click)="fillWithMedian()">Zameni NA sa median u koloni</button>
+                      <button ngbDropdownItem  (click)="fillWithMode()">Zameni NA sa mode u koloni</button>
+                      
+                      <div ngbDropdown class="d-inline-block">
+                        <a class="btn" id="dropdownBasic2" ngbDropdownToggle>Regresija</a>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                          <button ngbDropdownItem  (click)="fillWithMean()">Zameni NA sa mean u koloni</button>
+                          <button ngbDropdownItem  (click)="fillWithMedian()">Zameni NA sa median u koloni</button>
+                          <button ngbDropdownItem  (click)="fillWithMode()">Zameni NA sa mode u koloni</button>
+                          
+                        </div>
+                    </div>
                     </div>
                 </div>
-                
+               
+
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
@@ -131,7 +141,16 @@
 
     <div id="box2">
         <div id="normalizacija">
-            <div id="naslov">Normalizacija</div>
+            <div id="header-help">
+                <div id="naslov">Normalizacija</div>
+                <div id="helper"> 
+                    <span  class="hovertext-left" data-tooltip="- Odabrati željeni tip normalizacije
+                        - Selektovati željene kolone 
+                        - Primenite podešene vrednosti ">
+                    &#63;
+                    </span>
+                </div>
+            </div>
 
             <div id="norm-box">
                 <div ngbDropdown class="d-inline-block">
@@ -309,8 +328,10 @@
 
     <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
     <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
+    <button id="sve-kolone" (click)="selectAllColumns()">Selektuj sve kolone</button>
     <button id="restore-rows" (click)="izbrisiSelektovaneRedove()">Deselektuj redove</button>
     <button id="selektovani-redovi" (click)="getSelectedRows()">Selektovani redovi</button> 
+    <button id="svi-redovi" (click)="selectAllRows()">Selektuj sve redove</button>
     <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>

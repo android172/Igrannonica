@@ -85,6 +85,7 @@ export class PodaciComponent implements OnInit {
   rowsAndPages:number[][] = [];
   ucitanCsv: boolean = false;
   nazivEksperimenta:any;
+  rows:number[] = [];
 
   selectedOutlier:string="";
   selectedNorm:string="";
@@ -261,7 +262,7 @@ export class PodaciComponent implements OnInit {
   {
     if(this.json == undefined)
       return;
-
+      
     var headers = Object.keys(this.json[0]);
     //console.log(Object.values(this.json[0]));
     for(let i=0; i<headers.length; i++)
@@ -534,6 +535,25 @@ export class PodaciComponent implements OnInit {
       this.dodajKomandu("Vrednosti nisu zamenjene");
     })
   }
+  selectAllColumns()
+  {
+     for(var i = 0;i<this.kolone.length;i++)
+     {
+      this.selectedColumns.push(i);
+      this.isSelectedNum(i);
+     }
+     console.log(this.selectedColumns);
+  }
+  selectAllRows()
+  {
+    for(var i = 0;i<this.itemsPerPage;i++)
+     {
+      this.rowsAndPages.push([i,this.page]);
+      this.isSelectedRow(i);
+     }
+     console.log(this.rowsAndPages);
+  }
+
 
   getRow(i:number,p:number)
   {

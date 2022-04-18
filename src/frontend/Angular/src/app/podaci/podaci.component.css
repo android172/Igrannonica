@@ -230,6 +230,9 @@ img{
     margin: 20px auto;
     width: 82%;
 }
+
+/*  DROPDOWN SUB MENU *****/
+
 /*********** OUTLIERS *******/
 
 .btn-design4{
@@ -489,6 +492,20 @@ input#exampleFormControlFile1{
     color: white;
     background-color: rgb(116, 38, 38);
     border: 1px solid rgb(60, 26, 26);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+#svi-redovi{
+    color: white;
+    background-color: rgb(116, 38, 38);
+    border: 1px solid rgb(60, 26, 26);
+    border-radius: 5px;
+    margin-left: 5px;
+}
+#sve-kolone{
+    color: white;
+    background-color: rgb(50, 50, 114);
+    border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
 }
