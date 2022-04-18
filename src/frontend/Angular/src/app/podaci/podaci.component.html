@@ -143,8 +143,34 @@
             </div>
         </div>
 
+        <div id="polje">
+            <div id="header-help">
+                <div id="naslov">Naslov</div>
+                <div id="helper"> 
+                    <span  class="hovertext-left" data-tooltip="Hello,this is the tooltip,
+                                  This is the tooltip ">
+                    &#63;
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
         <div id="outliers">
-            <div id="naslov">Izuzeci</div>
+            <div id="header-help">
+                <div id="naslov">Izuzeci</div>
+                <div id="helper"> 
+                    <span class="hovertext" data-tooltip="Threshold Common Values
+
+                        Standard Deviation: 3
+                        Quantiles: 1.5 x IQR
+                        Z-score: ( -3, +3 ) 
+                        ">
+                        &#63;
+                      </span>
+                </div>
+            </div>
+
             <div id="outliers-box">
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>

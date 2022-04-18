@@ -63,6 +63,7 @@ img{
 #naslov{
     font-weight: 500;
     font-size: 17px;
+    margin: auto;
 }
 /****** PORUKA ERROR ****************/
 /*
@@ -83,13 +84,93 @@ img{
     background: none;
     border: none;
     color: white;
-    width: 68px;
+    width: 69px;
     overflow: visible;
 }
 #table tr:nth-of-type(even) input{
     
     color: #c1cdff;
 
+}
+/*******       HELPER    ********/      
+/* naslov -- helper */
+#header-help{
+    display: flex;
+    justify-content: space-between;
+}
+
+#helper{
+    width: 18px;
+    height: 18px;
+    border-radius:50%;
+    background-color: rgb(51, 38, 91);
+    font-size: 12px;
+    border: 1px solid rgb(53, 53, 128);
+
+    float: right;
+}
+
+/* desni ugao -- helper */
+.hovertext{
+    border-radius: 50%;
+    position: relative;
+    white-space: pre-line;
+    padding: 5px;
+}
+
+.hovertext::before,.hovertext::after {
+    --scale:0;
+    top: -.25rem;
+    left: 50%;
+    transform: translateX(-100%) translateY(-100%) scale(var(--scale));
+    box-sizing: border-box;
+    background-color: #0a1024;
+    transition: 150ms transform;
+    transform-origin: bottom right;
+}
+  .hovertext::before{
+    position: absolute;
+    content: attr(data-tooltip);
+    color: white;
+    padding: .5rem;
+    height: max-content;
+    width: max-content;
+    border-radius: .3rem;
+    text-align: left;
+}
+  .hovertext:hover::before{
+    --scale:1;
+}
+/* levi ugao -- helper */
+.hovertext-left{
+    border-radius: 50%;
+    position: relative;
+    white-space: pre-line;
+    padding: 5px;
+}
+
+.hovertext-left::before,.hovertext::after {
+    --scale:0;
+    top: -.25rem;
+    left: 50%;
+    transform: translateX(-0%) translateY(-100%) scale(var(--scale));
+    box-sizing: border-box;
+    background-color: #0a1024;
+    transition: 150ms transform;
+    transform-origin: bottom left;
+}
+  .hovertext-left::before{
+    position: absolute;
+    content: attr(data-tooltip);
+    color: white;
+    padding: .5rem;
+    height: max-content;
+    width: max-content;
+    border-radius: .3rem;
+    text-align: left;
+}
+  .hovertext-left:hover::before{
+    --scale:1;
 }
 /********* NORMALIZACIJA *******/ 
 
@@ -105,7 +186,7 @@ img{
     align-items: center;
 }
 
-#normalizacija,#outliers {
+#normalizacija,#outliers,#polje {
     background-color: #272741;
     border: 4px solid #5977DF;
     padding: 5px;
@@ -125,8 +206,12 @@ img{
     min-width: 60px;
 }
 #outliers{
-    width: 40%;
+    width: 35%;
     min-width: 60px;
+}
+#polje{
+    width: 29%;
+    min-width: 40px;
 }
 
 .btn-design3{
@@ -161,7 +246,7 @@ img{
     text-align: center;
     height: 35px;
     margin: 20px auto;
-    width: 80%;
+    width: 85%;
 }
 #threshold{
     height: 35px;
