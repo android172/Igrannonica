@@ -91,7 +91,21 @@ namespace dotNet.DBFunkcije
                 }
             }
         }
-
+        public bool izbrisiEksperiment(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from eksperiment where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         public string uzmi_naziv(int id)
         {
             using(MySqlConnection connection = new MySqlConnection(connectionString))

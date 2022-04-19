@@ -127,4 +127,11 @@ export class ModeliComponent implements OnInit {
     }
   }
 
+  handleKeyUp(event: any){
+     if(event.keyCode === 13){
+        this.napraviModel();
+     }
+  }
+
 }
+
