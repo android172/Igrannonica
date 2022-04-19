@@ -180,14 +180,14 @@
 
             <div id="podaci-box">
                 <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Upravljanje podacima</button>
+                    <button class="btn btn-design2" id="select-data" ngbDropdownToggle>Upravljanje podacima</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
-                        <button ngbDropdownItem (click)="deleteRows()">Izbaci selektovane vrste</button>
-                        <button ngbDropdownItem (click)="deleteColumns()">Izbaci selektovane kolone</button>
+                        <button ngbDropdownItem (click)="selectData($event)" id="1">Izbaci selektovane vrste</button>
+                        <button ngbDropdownItem (click)="selectData($event)" id="2">Izbaci selektovane kolone</button>
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
+                <button type="button" class="btn btn-primary primeni-izuzeci" id="btn-data" (click)="primeniNaPodatke()">Primeni</button>
             </div>
 
         </div>

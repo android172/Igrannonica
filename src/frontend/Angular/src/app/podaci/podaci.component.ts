@@ -89,6 +89,7 @@ export class PodaciComponent implements OnInit {
 
   selectedOutlier:string="";
   selectedNorm:string="";
+  selectedData:string = "";
 
   threshold:number = 0; 
 
@@ -1068,6 +1069,33 @@ export class PodaciComponent implements OnInit {
       console.log(error.error);
       this.dodajKomandu("Redovi nisu obrisani");
     });
+  }
+
+  selectData(event:any)
+  {
+    this.selectedData = event.target.id;
+
+    if(this.selectedData == "1")
+    {
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane vrste";
+    }
+    if(this.selectedData == "2")
+    {
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane kolone";
+    }
+  }
+  primeniNaPodatke()
+  {
+    if(this.selectedData == "1")
+    {
+      this.deleteRows();
+    }
+    if(this.selectedData == "2")
+    {
+      this.deleteColumns(); 
+    }
+    (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Upravljanje podacima";
+    this.selectedData = ""; 
   }
  
 }
