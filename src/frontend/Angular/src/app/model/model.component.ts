@@ -15,6 +15,7 @@ import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications'; 
 
 @Component({
   selector: 'app-model',
@@ -70,7 +71,7 @@ export class ModelComponent implements OnInit {
   public izabraneI : number[] = [];
   public pomocni : number[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -81,6 +82,34 @@ export class ModelComponent implements OnInit {
 
   sendMessage():void{
     this.shared.sendUpdate("Update");
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   ngOnInit(): void {
@@ -159,9 +188,11 @@ export class ModelComponent implements OnInit {
           this.flag = true;
           (<HTMLInputElement>document.getElementById("toggle")).checked = true;
         }
+        this.onSuccess("Zahtev uspesno poslat!");
       },
       error=>{
         console.log(error);
+        this.onError("Zahtev nije poslat!");
       }
     )
   }
@@ -334,6 +365,7 @@ export class ModelComponent implements OnInit {
       }
       this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
         res=>{
+          this.onSuccess("Uspesno!");
 
         }, error=>{
           this.ucitajNaziv();
@@ -484,10 +516,11 @@ export class ModelComponent implements OnInit {
     
     this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
       res=>{
-        
+        this.onSuccess("Podesavanja uspesni izmenjena!");
       },err=>{
         console.log(jsonPod);
         console.log(err.error);
+        this.onError("Podesavanja nisu izmenjena!");
       }
     )
   }
@@ -500,16 +533,18 @@ export class ModelComponent implements OnInit {
     var div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML;
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
+      this.onError("Model sa tim nazivom vec postoji");
     }
     this.http.put(url+"/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
-
+          this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{
         this.ucitajNazivModela(this.idModela);
         //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
         }
       }
     )
@@ -534,6 +569,7 @@ export class ModelComponent implements OnInit {
             this.chart?.update();
           }
         )
+        this.onInfo("Trening je zapocet.");
       }
     )
   }
