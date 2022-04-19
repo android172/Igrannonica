@@ -251,8 +251,20 @@ export class PodaciComponent implements OnInit {
                   this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(3);
                 }
               }
-              
             }
+            else
+              {
+                var decimale = strPom[1];
+                for(var i=decimale.length-1; i>=1; i--)
+                {
+                  if(decimale[i] == '0')
+                  {
+                    this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(i);
+                  }
+                  else
+                    break;
+                }
+              }
             //console.log(this.jsonStatistika[key].Frequencies[item][1]);
           }
           niz.push({
@@ -320,10 +332,22 @@ export class PodaciComponent implements OnInit {
                   }
                 }
               }
+              else
+              {
+                var decimale = strPom[1];
+                for(var i=decimale.length-1; i>=1; i--)
+                {
+                  if(decimale[i] == '0')
+                  {
+                    this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(i);
+                  }
+                  else
+                    break;
+                }
+              }
             }
             //console.log(this.jsonStatistika[key][param]);
           }
-          
         }
         //this.jsonStatistika[key]["StdDeviation"] = (Number(this.jsonStatistika[key]["StdDeviation"])).toFixed(4);
         this.statistikaNum.push({
