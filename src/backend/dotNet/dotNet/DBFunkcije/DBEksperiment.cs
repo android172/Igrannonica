@@ -17,7 +17,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where vlasnik=@id";
+                string query = "select * from Eksperiment where vlasnik=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 List<EksperimentDto> result = new List<EksperimentDto>();
@@ -40,7 +40,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where naziv=@naziv and vlasnik=@id";
+                string query = "select * from Eksperiment where naziv=@naziv and vlasnik=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", naziv);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -61,7 +61,7 @@ namespace dotNet.DBFunkcije
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "insert into eksperiment (`naziv`,`vlasnik`) values (@naziv,@vlasnik)";
+                string query = "insert into Eksperiment (`Naziv`,`vlasnik`) values (@naziv,@vlasnik)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
@@ -76,19 +76,16 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update eksperiment set naziv=@naziv where id=@vlasnik";
+                string query = "update Eksperiment set Naziv=@naziv where id=@vlasnik";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
                 connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                if (cmd.ExecuteNonQuery() > 0)
                 {
-                    if (reader.Read())
-                    {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
+                return false;
             }
         }
         public bool izbrisiEksperiment(int id)
@@ -108,9 +105,9 @@ namespace dotNet.DBFunkcije
         }
         public string uzmi_naziv(int id)
         {
-            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where id=@id";
+                string query = "select * from Eksperiment where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -122,7 +119,7 @@ namespace dotNet.DBFunkcije
                         string naziv = reader.GetString("Naziv");
                         return naziv;
                     }
-                return "";
+                    return "";
                 }
             }
         }
@@ -130,7 +127,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where id=@id and csv <> ''";
+                string query = "select * from Eksperiment where id=@id and csv <> ''";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -151,7 +148,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update eksperiment set csv=@naziv where id=@id";
+                string query = "update Eksperiment set csv=@naziv where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", naziv);
                 cmd.Parameters.AddWithValue("@id", id);

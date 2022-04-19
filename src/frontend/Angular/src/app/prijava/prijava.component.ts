@@ -90,4 +90,22 @@ export class PrijavaComponent implements OnInit {
   {
     this.prikaziMeni.meni=true;
   }
+
+  promeniVidljivost()
+  {
+    var password = (<HTMLInputElement>document.getElementById("sifra")); 
+    var eye =  (<HTMLElement>document.getElementById("eye")); 
+
+    if(password.type === "password")
+    {
+      password.setAttribute("type","text");
+      eye.classList.replace("fa-eye","fa-eye-slash");
+    }
+    else
+    {
+      password.setAttribute("type","password");
+      eye.classList.replace("fa-eye-slash","fa-eye");
+    }
+
+  }
 }

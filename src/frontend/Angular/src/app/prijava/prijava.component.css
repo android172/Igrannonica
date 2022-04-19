@@ -170,3 +170,17 @@ input:-webkit-autofill:active {
     -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
     -webkit-transition-delay: 9999s;
 }
+
+span
+{
+    position: absolute;
+    transform: translate(-120%,60%);
+}
+
+#eye{
+    color:rgb(110, 111, 174);
+}
+#eye:hover{
+    color:rgb(127, 128, 192); 
+    text-shadow:  2px 2px 5px #0f0f1b;
+}
