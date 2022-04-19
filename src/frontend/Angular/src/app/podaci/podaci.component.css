@@ -172,13 +172,16 @@ img{
   .hovertext-left:hover::before{
     --scale:1;
 }
+#box{
+    margin-bottom: -10px;
+}
 /********* NORMALIZACIJA *******/ 
 
 #box2{
     display: flex;
     margin-bottom: 10px;
     justify-content: space-between;
-    margin: 25px auto;
+    margin: 0 auto 15px auto;
     width: 100%;
     text-align: center;
     color: #CED9FF;
@@ -720,7 +723,7 @@ th{
 }
 .placement{
     float: left;
-    height: 300px;
+    height: 270px;
 }
 
 #testniskup,#enkodiranje,#nedostajucevrednosti{
@@ -741,7 +744,7 @@ th{
     
 }
 #header1{
-    height: 50px;
+    height: 45px;
     /*float: left;*/
     width: 100%;
     display: flex;
@@ -844,6 +847,40 @@ th{
     display: flex;
 }
 
+#opcije-nv{
+    width: 85%;
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    padding: 30px 0 5px 0;
+}
+#prazni-string{
+    width: 45%;
+    
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+}
+#zamena-nula{
+    width: 48%;
+    display: flex;
+    justify-content: space-between;
+}
+#b1,#b2{
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 100px;
+    line-height: 10px;
+    
+}
+/*
 #prazni-string, #zamena-nula, #nova-kategorija{
     display: flex;
     margin-left: 35px;
@@ -883,7 +920,7 @@ th{
     color: white;
     width: 130px;
     line-height: 10px;
-}
+}*/
 #b1:hover{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
 }
@@ -893,8 +930,34 @@ th{
 
 #b3:hover{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
-}
+} 
 
+#regresija-nv{
+    width: 60%;
+    display: flex;
+    justify-content: left;
+    margin: auto auto auto 45px;
+    padding: 30px 0 5px 0;
+}
+#btn-reg{
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    border: 2px solid rgba(38, 64, 77, 0.8);
+    color: white;
+    width: 70px;
+    line-height: 10px;
+}
+#regresija-input{
+    width: 165px;
+    background-color: #171f37;
+    box-sizing: border-box;
+    border: 2px solid rgb(98, 98, 182);
+    color: white;
+}
 
 /* ENKODIRANJE */ 
 

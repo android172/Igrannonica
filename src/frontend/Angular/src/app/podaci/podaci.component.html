@@ -82,7 +82,17 @@
             </div>
         </div>
         <div id="nedostajucevrednosti" class="placement">
-            <div id="naslov">Nedostajuće vrednosti</div>
+            <div id="header-help">
+                <div id="naslov">Nedostajuće vrednosti</div>
+                <div id="helper"> 
+                    <span  class="hovertext" data-tooltip="Zamena praznih stringova sa NA:
+                          - Za odabrane kategorije (kolone)
+                          Zamena 0 sa NA:
+                          - Za odabrane kolone sa numerickim vrednostima">
+                    &#63;
+                    </span>
+                </div>
+            </div>
             <div id="select-elements">
 
                 <div ngbDropdown class="dropdown" id="zamena-select">
@@ -99,8 +109,8 @@
                                Linearna regresija  &nbsp; &nbsp;&nbsp;  &#10148;
                             </a>
                             <ul ngbDropdownMenu class="dropdown-menu dropdown-submenu">
-                                <div *ngFor="let fieldValue of dajNaziveHeadera()" >
-                                <li ngbDropdownItem> <a role="button" class="dropdown-item">{{fieldValue}}</a></li>   
+                                <div *ngFor="let fieldValue of dajNaziveHeadera(); let i = index" >
+                                <li ngbDropdownItem> <a role="button" class="dropdown-item" (click)="selectForRegression($event,i)">{{fieldValue}}</a></li>   
                                 </div>                      
                             </ul>
                         </li>
@@ -118,20 +128,24 @@
                 </div>
 
             </div>
-           <div id="prazni-string">
-                <div>Zamena praznih stringova sa NA za zeljene kolone:</div>
-                <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
-           </div>
-            
-           <div id="zamena-nula">
-                <div>Zamena 0 sa NA za zeljene kolone:</div>
-                <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
-           </div>
 
-           <div id="nova-kategorija">
-                <div>Dodaj novu kategoriju:</div>
-                <button id="b3">Nova kategorija</button>  
-           </div>
+            <div id="opcije-nv">
+                <div id="prazni-string">
+                   <div>Zamena praznih stringova sa NA:</div>
+                   <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
+               </div>
+            
+                <div id="zamena-nula">
+                        <div>Zamena 0 sa NA:</div>
+                        <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
+                </div>
+            </div>
+            <div id="regresija-nv">
+                <input type="text" id="regresija-input" placeholder="Regresija:" readonly>
+                <button id="btn-reg" (click)="primeniZaRegression()">Primeni</button> 
+            </div>
+
+           
             
         </div>
         <div id="enkodiranje" class="p2 placement">

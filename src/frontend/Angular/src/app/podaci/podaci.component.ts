@@ -117,9 +117,12 @@ export class PodaciComponent implements OnInit {
   nazivEksperimenta:any;
   rows:number[] = [];
 
+  niz2:any[] = [];
+
   selectedOutlier:string="";
   selectedNorm:string="";
   selectedData:string = "";
+  selectedForRegression:number = -1;
 
   threshold:number = 0; 
 
@@ -206,12 +209,11 @@ export class PodaciComponent implements OnInit {
   dajNaziveHeadera()
   {
     var niz = [""];
-    var niz2 = [];
 
     if(this.json == undefined)
       return niz;
 
-    return this.keys;
+    return this.niz2;
   }
 
   dajStatistiku()
@@ -231,6 +233,7 @@ export class PodaciComponent implements OnInit {
       return;
 
     this.keys = Object.keys(this.jsonStatistika);
+    this.niz2 = Object.keys(this.json[0]); /// ovde1
     this.values = Object.values(this.jsonStatistika);  // niz parova key : value
     //console.log(this.keys);
     //console.table(this.values);
@@ -387,7 +390,8 @@ export class PodaciComponent implements OnInit {
       this.onError("Label Encoding nije izvrsen!");
     })
   }
-  
+
+  // selektovanje kolona
   getData(i: number, header:string)
   {
     if(this.selectedColumns.includes(i))
@@ -395,13 +399,27 @@ export class PodaciComponent implements OnInit {
       const index = this.selectedColumns.indexOf(i, 0);
       if (index > -1) {
       this.selectedColumns.splice(index, 1);
-      }    
+      } 
+      
+      if(!this.niz2.includes(header)) // dodatak za regression
+      {
+        this.niz2.splice(i, 0, header);
+      }
      return;
     }
     this.dodajKomandu("Dodata kolona: "+ i);
     this.selectedColumns.push(i);
     console.log(this.selectedColumns);
     this.selectedName = header;
+
+    // dodatak za regression
+    if(this.niz2.includes(header))
+    {
+      const index = this.niz2.indexOf(header, 0);
+      if (index > -1) {
+      this.niz2.splice(index, 1);
+      }    
+    }
   }
 
   isSelected(header:string)
@@ -616,7 +634,6 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.onInfo("Kolone nisu selektovane");
-      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
@@ -797,7 +814,7 @@ export class PodaciComponent implements OnInit {
     this.http.put(url+"/api/Upload/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        //this.loadDefaultItemsPerPage();
+        this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.rowsAndPages = [];
         this.dodajKomandu("Polje izmenjeno");
@@ -896,6 +913,10 @@ export class PodaciComponent implements OnInit {
 
   primeniNormalizaciju()
   {
+    if(this.selectedNorm == "")
+    {
+      this.onInfo("Opcija iz menija nije odabrana.");
+    }
     if(this.selectedNorm == "absolute-max" )
     {
       this.absoluteMaxScaling();
@@ -1115,6 +1136,10 @@ export class PodaciComponent implements OnInit {
   }
   removeOutliers()
   {
+    if(this.selectedOutlier == "")
+    {
+      this.onInfo("Opcija iz menija nije odabrana.");
+    }
     if(this.selectedOutlier == "1")
     {
       this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
@@ -1222,6 +1247,10 @@ export class PodaciComponent implements OnInit {
   }
   primeniNaPodatke()
   {
+    if(this.selectedData == "")
+    {
+      this.onInfo("Opcija iz menija nije odabrana.");
+    }
     if(this.selectedData == "1")
     {
       this.deleteRows();
@@ -1232,6 +1261,46 @@ export class PodaciComponent implements OnInit {
     }
     (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Upravljanje podacima";
     this.selectedData = ""; 
+  }
+
+  selectForRegression(event:any,i:number)
+  {
+    var kolona = event.target.text;
+    this.selectedForRegression = i;
+
+    (<HTMLInputElement>document.getElementById("regresija-input")).value = kolona; 
+  }
+
+  primeniZaRegression()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
+      return;
+    }
+    if(this.selectedForRegression == -1)
+    {
+      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona iz menija.");
+      return;
+    }
+    this.http.post(url+"/api/Upload/linearRegression/" + this.selectedForRegression, this.selectedColumns, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        this.selectedForRegression = -1;
+        this.selectedColumns = [];
+        this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
+        this.onSuccess("Regression - uspesno!");
+        (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
+    },error=>{
+      console.log(error.error);
+      this.selectedForRegression = -1;
+      this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
+      this.onError("Regression - neuspesno!");
+      (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
+    });
   }
  
 }
