@@ -514,7 +514,7 @@ export class ModelComponent implements OnInit {
         "KFoldCV":this.cv
     };
     
-    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
+    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod,{responseType:"text"}).subscribe(
       res=>{
         this.onSuccess("Podesavanja uspesni izmenjena!");
       },err=>{
