@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
-import {NotificationsService} from 'angular2-notifications';
+import {NotificationsService} from 'angular2-notifications'; 
 
 @Component({
   selector: 'app-podaci',
