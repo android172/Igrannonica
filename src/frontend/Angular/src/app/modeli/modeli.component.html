@@ -1,9 +1,10 @@
 <div id="gornji">
-    <input id="imeM" placeholder="Unesite naziv modela">
+    <input id="imeM" placeholder="Unesite naziv modela" (keyup)="handleKeyUp($event)">
     <button id="dodaj" (click)="napraviModel()" (click)="ocisti()">Dodaj model</button>
     <div id="imeE"></div>
     <div id="greska"></div>
 </div>
+
 <div id="divModeli">
     <div id="skrol">
        <div type="button" id="m" *ngFor="let m of modeli"> 
