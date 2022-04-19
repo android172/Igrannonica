@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-podaci',
@@ -31,13 +32,42 @@ export class PodaciComponent implements OnInit {
     )
   }
 
-  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService) { 
+  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
         console.log(this.idEksperimenta);
       }
     )
+  }
+
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   getStat()
@@ -114,6 +144,7 @@ export class PodaciComponent implements OnInit {
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
+          this.onSuccess('Podaci su ucitani!');
       },error =>{
         console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
@@ -121,6 +152,7 @@ export class PodaciComponent implements OnInit {
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
+        this.onError("Podaci nisu ucitani");
 
         if(error.error === "Unet nedozvoljen tip fajla."){
           console.log("Nedozvoljeno");
@@ -160,9 +192,11 @@ export class PodaciComponent implements OnInit {
       const upload$ = this.http.post(url+"/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.dodajKomandu("Ucitan testni skup");
+          this.onSuccess('Testni skup je ucitan!');
       },error =>{
         console.log(error.error);	
         this.dodajKomandu("Fajl nije unet");
+        this.onError("Testni skup nije ucitan!");
         
       });
     }
@@ -254,6 +288,8 @@ export class PodaciComponent implements OnInit {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
         this.page = 1;
+
+        this.onInfo("Broj redova za prikaz: "+this.itemsPerPage);
     })
   }
 
@@ -308,6 +344,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length < 1)
     {
       this.dodajKomandu("OneHotEncoding nije izvršeno");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
 
@@ -318,9 +355,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.dodajKomandu("OneHotEncoding izvršeno");
         //this.loadDefaultItemsPerPage();
+        this.onSuccess('OneHot Encoding izvrsen');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("OneHotEncoding nije izvršeno");
+      this.onError("OneHot Encoding nije izvrsen!");
     })
   }
 
@@ -331,6 +370,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length < 1)
     {
       this.dodajKomandu("LabelEncoding nije izvršeno");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
@@ -340,9 +380,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.dodajKomandu("LabelEncoding izvršeno");
         //this.loadDefaultItemsPerPage();
+        this.onSuccess('Label Encoding izvrsen');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("LabelEncoding nije izvršeno");
+      this.onError("Label Encoding nije izvrsen!");
     })
   }
   
@@ -460,34 +502,49 @@ export class PodaciComponent implements OnInit {
       res => {
         console.log(res);
         this.dodajKomandu("Dodat ratio: "+ ratio);
+        this.onSuccess('Dodat ratio');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Ratio nije dodat");
+      this.onError("Ratio nije unet!");
     })
 
   }
   deleteColumns()
   {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      return;
+    }
     this.http.post(url+"/api/Upload/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Uspesno obrisane kolone");
+        this.onSuccess('Kolone su obrisane');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Kolone nisu obrisane");
+      this.onError('Kolone nisu obrisane');
     })
   }
 
   fillWithMean()
   {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      return;
+    }
     this.http.post(url+"/api/Upload/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Dodate Mean vrednosti");
+        this.onSuccess('Dodate mean vrednosti!');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu dodate");
@@ -495,55 +552,84 @@ export class PodaciComponent implements OnInit {
   }
   fillWithMedian()
   {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      return;
+    }
     this.http.post(url+"/api/Upload/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Dodate median vrednosti");
+        this.onSuccess('Dodate median vrednosti!');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu dodate");
+      this.onError("Vrednosti nisu dodate!");
     })
   }
   fillWithMode()
   {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      return;
+    }
     this.http.post(url+"/api/Upload/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Dodate mode vrednosti");
+        this.onSuccess('Dodate Mode vrednosti!');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu dodate");
+      this.onError("Vrednosti nisu dodate!");
     })
   }
 
   replaceEmptyWithNA()
   {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      return;
+    }
     this.http.post(url+"/api/Upload/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Zamenjene numericke vrendosti");
+        this.dodajKomandu("Zamenjene kategoricke vrendosti");
+        this.onSuccess('Zamenjene kategoricke vrendosti');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu zamenjene");
+      this.onError("Vrednosti nisu zamenjene!");
     })
   }
   replaceZeroWithNA(){
 
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("Nije odabrana nijedna kolona");
+      return;
+    }
     this.http.post(url+"/api/Upload/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Zamenjene prazne numericke vrednosti");
+        this.onSuccess('Zamenjene numericke vrendosti');
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Vrednosti nisu zamenjene");
+      this.onError("Nisu zamenjene numericke vrednosti!");
     })
   }
   selectAllColumns()
@@ -621,10 +707,15 @@ export class PodaciComponent implements OnInit {
 
     this.http.post(url+"/api/Upload/deleteRows",redovi,{responseType: 'text'}).subscribe(
       res => {
-        if(res == "Korisnik nije pronadjen" || res == "Token nije setovan" || res == "Redovi za brisanje nisu izabrani")
+        if(res == "Redovi za brisanje nisu izabrani")
+        {
+          this.onInfo("Redovi za brisanje nisu odabrani.");
+        }
+        else if(res == "Korisnik nije pronadjen" || res == "Token nije setovan")
         {
           this.rowsAndPages = []; // deselekcija redova 
           this.dodajKomandu(res);
+          this.onInfo("");
         }
         else 
         {
@@ -632,9 +723,11 @@ export class PodaciComponent implements OnInit {
           this.loadDefaultItemsPerPage();
           this.rowsAndPages = []; // deselekcija redova 
           this.dodajKomandu("Redovi obrisani");
+          this.onSuccess("Redovi su obrisani");
         }
     },error=>{
       this.dodajKomandu("Brisanje redova nije izvršeno");
+      this.onError("Brisanje nije izvrseno!");
     })
   }
   ucitajNaziv()
@@ -658,11 +751,13 @@ export class PodaciComponent implements OnInit {
     this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta,null, {responseType : "text"}).subscribe(
       res=>{
         console.log(res);
+        this.onSuccess("Naziv eksperimenta uspesno promenjen!");
       }, error=>{
         this.ucitajNaziv();
         if(error.error === "Postoji eksperiment sa tim imenom")
         {
-          alert("Postoji eksperiment sa tim imenom.");
+          //alert("Postoji eksperiment sa tim imenom.");
+          this.onInfo("Postoji eksperiment s tim imenom");
         }
         
       }
@@ -679,11 +774,13 @@ export class PodaciComponent implements OnInit {
     this.http.post(url + "/api/Upload/sacuvajIzmene",null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
+      this.onSuccess("Izmene su sacuvane");
     
       this.dodajKomandu("Sve izmene su sacuvane");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Izmene nisu sacuvane");
+      this.onError("Izmene nisu sacuvane!");
     })
     
   }
@@ -704,10 +801,12 @@ export class PodaciComponent implements OnInit {
         this.selectedColumns = [];
         this.rowsAndPages = [];
         this.dodajKomandu("Polje izmenjeno");
+        this.onSuccess("Dodata vrednost polja: "+ data.value);
     },error=>{
       console.log(error.error);
       this.rowsAndPages = [];
       this.dodajKomandu("Polje nije izmenjeno");
+      this.onError("Vrednost " + data.value + " nije dodata!");
     })
   }
 
@@ -716,6 +815,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -724,9 +824,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Absolute Maximum Scaling izvrseno");
+        this.onSuccess("Absolute Max Scaling izvrseno!");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
+      this.onError("Absolute Max Scaling nije izvrseno!");
     })
   }
 
@@ -735,6 +837,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -743,9 +846,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Min-Max Scaling izvrseno");
+        this.onSuccess("Min-Max Scaling izvrseno!");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Min-Max Scaling nije izvrseno");
+      this.onError("Min-Max Scaling nije izvrseno!");
     })
   }
 
@@ -754,6 +859,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -762,9 +868,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Z-score Scaling izvrseno");
+        this.onSuccess("Z-score Scaling izvrseno!");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Z-score Scaling nije izvrseno");
+      this.onError("Z-score Scaling nije izvrseno!");
     })
   }
 
@@ -810,6 +918,7 @@ export class PodaciComponent implements OnInit {
      if(this.selectedColumns.length == 0)
      {
        this.dodajKomandu("Nije odabrana nijedna kolona!");
+       this.onInfo("Nije odabrana nijedna kolona");
        return;
      }
      this.http.post(url+"/api/Upload/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -818,9 +927,11 @@ export class PodaciComponent implements OnInit {
          this.loadDefaultItemsPerPage();
          this.selectedColumns = [];
          this.dodajKomandu("Standard Deviation izvrseno");
+         this.onSuccess("Standard Deviation izvrseno");
      },error=>{
        console.log(error.error);
        this.dodajKomandu("Standard Deviation nije izvrseno");
+       this.onError("Standard Deviation nije izvrseno");
      })
    }
    removeOutliersQuantiles()
@@ -828,6 +939,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -836,9 +948,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Quantiles izvrseno");
+        this.onSuccess("Quantiles izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Quantiles nije izvrseno");
+      this.onError("Quantiles nije izvrseno");
     })
   }
   removeOutliersZScore()
@@ -846,6 +960,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -854,9 +969,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("ZSore izvrseno");
+        this.onSuccess("Z-Sore izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("ZScore nije izvrseno");
+      this.onError("Z-Score nije izvrseno");
     })
   }
   
@@ -865,6 +982,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersIQR", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -873,9 +991,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("IQR izvrseno");
+        this.onSuccess("IQR izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("IQR nije izvrseno");
+      this.onError("IQR nije izvrseno");
     })
   }
   removeOutliersIsolationForest()
@@ -883,6 +1003,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -891,9 +1012,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Isolation Forest izvrseno");
+        this.onSuccess("Isolation Forest izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Isolaton Forest nije izvrseno");
+      this.onError("Isolation Forest nije izvrseno");
     })
   }
   removeOutliersOneClassSVM()
@@ -901,6 +1024,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersOneClassSVM", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -909,9 +1033,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("One Class SVM izvrseno");
+        this.onSuccess("One Class SVM izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("One Class SVM nije izvrseno");
+      this.onError("One Class SVM nije izvrseno");
     })
   }
   removeOutliersByLocalFactor()
@@ -919,6 +1045,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/Upload/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
@@ -927,9 +1054,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Local factor izvrseno");
+        this.onSuccess("Local factor izvrseno");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Local Factor nije izvrseno");
+      this.onError("Local factor nije izvrseno");
     })
   }
   selectOutliers(event:any)
@@ -1031,10 +1160,12 @@ export class PodaciComponent implements OnInit {
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
-        this.dodajKomandu("Uspesno obrisani NA redovi");
+        this.dodajKomandu("Uspesno obrisani svi NA redovi");
+        this.onSuccess("Uspesno obrisani svi NA redovi");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("NA redovi nisu obrisani");
+      this.onError("NA redovi nisu obrisani");
     });
   }
 
@@ -1045,9 +1176,11 @@ export class PodaciComponent implements OnInit {
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.dodajKomandu("Uspesno obrisane kolone");
+        this.onSuccess("Uspesno obrisane sve kolone sa NA vrednostima");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Kolone nisu obrisane");
+      this.onError("Kolone sa NA vrednostima nisu obrisane!");
     });
   }
 
@@ -1056,6 +1189,7 @@ export class PodaciComponent implements OnInit {
     if(this.selectedColumns.length == 0)
     {
       this.dodajKomandu("Nije odabrana nijedna kolona!");
+      this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
 
@@ -1065,9 +1199,11 @@ export class PodaciComponent implements OnInit {
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.dodajKomandu("Uspesno obrisani NA redovi");
+        this.onSuccess("Uspesno su obrisani svi redovi sa NA vrednostima");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Redovi nisu obrisani");
+      this.onError("Redovi nisu obrisani!");
     });
   }
 
