@@ -223,13 +223,33 @@ export class PodaciComponent implements OnInit {
                   break;
                 }
               }
-              if(pom == false && brojac > 4)
+              // if(pom == true)
+              // {
+              //   this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(0);
+              // }
+              /*else*/ if(pom == false && brojac > 4)
               {
                 this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(brojac);
               }
               else
               {
                 this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(4);
+                var zaokruzenoBroj = this.jsonStatistika[key].Frequencies[item][1];
+                var zaokruzenoStr = zaokruzenoBroj.toString();
+                var zaokruzenoStrSplit = zaokruzenoStr.split(".");
+                var decimale = zaokruzenoStrSplit[1];
+                if(decimale[1] == '0' && decimale[2] == '0' && decimale[3] == '0')
+                {
+                  this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(1);
+                }
+                else if(decimale[2] == '0' && decimale[3] == '0')
+                {
+                  this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(2);
+                }
+                else if(decimale[3] == '0')
+                {
+                  this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(3);
+                }
               }
               
             }
@@ -271,31 +291,33 @@ export class PodaciComponent implements OnInit {
                     break;
                   }
                 }
-                if(pom == false && brojac > 4)
+                // if(pom == true)
+                // {
+                //   this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed();
+                // }
+                /* else*/ if(pom == false && brojac > 4)
                 {
                   this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(brojac);
-                  // var zaokruzenoBroj = this.jsonStatistika[key][param];
-                  // var zaokruzenoStr = zaokruzenoBroj.toString();
-                  // if(zaokruzenoStr.endsWith('0'))
-                  // {
-                  //   this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(brojac-1);
-                  // }
                 }
                 else
                 {
-                  // var br = 4;
-                  // var ind = true;
                   this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(4);
-                  // while(ind==true)
-                  // {
-                  //   var zaokruzenoBroj = this.jsonStatistika[key][param];
-                  //   var zaokruzenoStr = zaokruzenoBroj.toString();
-                  //   if(zaokruzenoStr.endsWith('0'))
-                  //   {
-                  //     br--;
-                  //     this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(br);
-                  //   }
-                  // }
+                  var zaokruzenoBroj = this.jsonStatistika[key][param];
+                  var zaokruzenoStr = zaokruzenoBroj.toString();
+                  var zaokruzenoStrSplit = zaokruzenoStr.split(".");
+                  var decimale = zaokruzenoStrSplit[1];
+                  if(decimale[1] == '0' && decimale[2] == '0' && decimale[3] == '0')
+                  {
+                    this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(1);
+                  }
+                  else if(decimale[2] == '0' && decimale[3] == '0')
+                  {
+                    this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(2);
+                  }
+                  else if(decimale[3] == '0')
+                  {
+                    this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(3);
+                  }
                 }
               }
             }
