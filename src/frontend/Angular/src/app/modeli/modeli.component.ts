@@ -5,6 +5,7 @@ import { Output, EventEmitter } from '@angular/core';
 import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
 import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-modeli',
@@ -21,7 +22,7 @@ export class ModeliComponent implements OnInit {
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.id = params['id'];
@@ -42,6 +43,34 @@ export class ModeliComponent implements OnInit {
         this.ngOnInit();
       }
     )
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   ucitaj(){

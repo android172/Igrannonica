@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-moji-eksperimenti',
@@ -13,7 +14,7 @@ export class MojiEksperimentiComponent implements OnInit {
   eksperimenti : any[] = [];
   json: any;
   id: any;
-  constructor(private http: HttpClient,public router: Router) { }
+  constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
     this.ucitajEksp();
@@ -29,6 +30,34 @@ export class MojiEksperimentiComponent implements OnInit {
           this.eksperimenti = Object.values(this.json);
         }
     );
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   otvoriEksperiment(i: any)

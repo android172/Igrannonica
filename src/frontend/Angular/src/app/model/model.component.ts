@@ -15,6 +15,7 @@ import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications'; 
 
 @Component({
   selector: 'app-model',
@@ -70,7 +71,7 @@ export class ModelComponent implements OnInit {
   public izabraneI : number[] = [];
   public pomocni : number[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -81,6 +82,34 @@ export class ModelComponent implements OnInit {
 
   sendMessage():void{
     this.shared.sendUpdate("Update");
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   ngOnInit(): void {
