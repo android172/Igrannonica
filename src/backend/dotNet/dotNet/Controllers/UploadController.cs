@@ -121,6 +121,121 @@ namespace dotNet.Controllers
             }
             return Ok("Fajl je upisan.");      
         }
+        [HttpPost("fileUpload/{idEksperimenta}")]
+        public IActionResult UploadAnyFile(IFormFile file, int idEksperimenta)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (file == null)
+                return BadRequest("Fajl nije unet.");
+
+            if (CheckFileType(file.FileName))
+            {
+                Console.WriteLine("Unet je nedozvoljen tip fajla.");
+                return BadRequest("Unet nedozvoljen tip fajla.");
+            }
+
+            // kreiranje foldera 
+            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+
+            if (!System.IO.Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // kreiranje foldera sa nazivom eksperimenta
+            string folderEksperiment = folder + "\\" + idEksperimenta;
+
+            if (!System.IO.Directory.Exists(folderEksperiment))
+            {
+                Directory.CreateDirectory(folderEksperiment);
+            }
+
+            // cuvanje fajla - putanja 
+            string fileName = file.FileName;
+            string path = folderEksperiment + "\\" + fileName;
+
+            // citanje fajla 
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            // upis csv-a u bazu 
+            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
+
+            // upis u fajl 
+            System.IO.File.WriteAllBytes(path, bytes);
+
+            eksperiment.LoadDataset(idEksperimenta, fileName);
+
+            if (!fajlNijeSmesten)
+            {
+                Console.WriteLine("Fajl nije upisan u bazu");
+                return BadRequest("Neuspesan upis csv-a u bazu");
+            }
+            return Ok("Fajl je upisan.");
+        }
+        private static bool CheckFileType(string filename)
+        {
+            string extension = System.IO.Path.GetExtension(filename);
+
+            if (String.Compare(extension, ".csv", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".json", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsx", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xls", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsm", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".xlsb", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".odf", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".ods", true) == 0)
+            {
+                return false;
+            }
+            if (String.Compare(extension, ".odt", true) == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         [HttpGet("paging/{page}/{size}")]
         public Paging Proba(int page, int size)
@@ -582,5 +697,388 @@ namespace dotNet.Controllers
 
             return Ok("Izmene sacuvane");
         }
+        [HttpPost("absoluteMaxScaling")]
+        public IActionResult absoluteMaxScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleAbsoluteMax(kolone);
+
+            return Ok("Absolute Max Scaling izvrseno");
+        }
+
+        [HttpPost("minMaxScaling")]
+        public IActionResult minMaxScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleMinMax(kolone);
+
+            return Ok("Min-Max Scaling izvrseno");
+        }
+
+        [HttpPost("zScoreScaling")]
+        public IActionResult zScoreScaling(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.ScaleZScore(kolone);
+
+            return Ok("Z-Score Scaling izvrseno");
+        }
+
+        [HttpPost("standardDeviation/{threshold}")]
+        public IActionResult RemoveStandardDeviation(int[] kolone,float threshold)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersStandardDeviation(kolone, threshold);
+
+            return Ok("Standard Deviation");
+        }
+        [HttpPost("outliersQuantiles/{threshold}")]
+        public IActionResult RemoveQuantiles(int[] kolone,float threshold)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersQuantiles(kolone, threshold);
+
+            return Ok("Quantiles");
+        }
+        [HttpPost("outliersZScore/{threshold}")]
+        public IActionResult RemoveZScore(int[] kolone,float threshold)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersZScore(kolone, threshold);
+
+            return Ok("ZScore izvresno");
+        }
+        [HttpPost("outliersIQR")]
+        public IActionResult RemoveIQR(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersIQR(kolone);
+
+            return Ok("Z-Score Scaling izvrseno");
+        }
+        [HttpPost("outliersIsolationForest")]
+        public IActionResult RemoveIsolationForest(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersIsolationForest(kolone);
+
+            return Ok("Forest Isolation");
+        }
+        [HttpPost("outliersOneClassSVM")]
+        public IActionResult RemoveOneClassSVM(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersOneClassSVM(kolone);
+
+            return Ok("One Class SVM");
+        }
+        [HttpPost("outliersByLocalFactor")]
+        public IActionResult RemoveByLocalFactor(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije odabrana nijedna kolona.");
+
+            eksperiment.RemoveOutliersByLocalFactor(kolone);
+
+            return Ok("Local Factor");
+        }
+        [HttpPost("deleteAllColumnsNA")]
+        public IActionResult DeleteAllNAColumns()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.DropNAColumns();
+
+            return Ok("Kolone sa NA vrednostima su obrisane");
+        }
+       
+        [HttpPost("deleteAllRowsNA")]
+        public IActionResult DeleteAllNARows()
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            eksperiment.DropNAListwise();
+
+            return Ok("Redovi sa NA vrednostima su obrisani");
+        }
+        [HttpPost("deleteNARowsForColumns")]
+        public IActionResult DeleteAllNARowsForColumns(int[] kolone)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            if (kolone == null)
+                return BadRequest("Nije uneta nijedna kolona");
+
+            eksperiment.DropNAPairwise(kolone);
+
+            return Ok("Redovi sa NA vrednostima su obrisani za date kolone");
+        }
+        [HttpPost("linearRegression/{idKolone}")]
+        public IActionResult FillNALinearRegression(int idKolone, int[] niz)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            try
+            {
+                eksperiment.FillNAWithRegression(idKolone, niz);
+            }
+            catch(MLException e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+
+            return Ok("Linearna regresija - uspesno");
+        }
+
     }
 }
