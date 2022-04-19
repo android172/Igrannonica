@@ -211,9 +211,29 @@ export class PodaciComponent implements OnInit {
             var pomStrSpl = pomStr.split(".");
             if(pomStrSpl[1].length > 4)
             {
-              this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(4);
+              var pom:any = true;
+              var broj:any = strPom[1];
+              var brojac:any = 0;
+              for(var i=0; i<broj.length; i++)
+              {
+                if(broj[i] != '0')
+                {
+                  pom = false;
+                  brojac = i + 1;
+                  break;
+                }
+              }
+              if(pom == false && brojac > 4)
+              {
+                this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(brojac);
+              }
+              else
+              {
+                this.jsonStatistika[key].Frequencies[item][1] = (Number(this.jsonStatistika[key].Frequencies[item][1])).toFixed(4);
+              }
+              
             }
-            console.log(this.jsonStatistika[key].Frequencies[item][1]);
+            //console.log(this.jsonStatistika[key].Frequencies[item][1]);
           }
           niz.push({
             imeKljucF:"Frequencies",
@@ -230,17 +250,58 @@ export class PodaciComponent implements OnInit {
       {
         for(var param in this.jsonStatistika[key])
         {
-          var num = this.jsonStatistika[key][param];
-          var str = num.toString();
-          if(str.includes("."))
+          if(param != 'Maximum' && param != 'Minimum')
           {
-            var strPom = str.split(".");
-            if(strPom[1].length > 4)
+            var num = this.jsonStatistika[key][param];
+            var str = num.toString();
+            if(str.includes("."))
             {
-              this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(4);
+              var strPom = str.split(".");
+              if(strPom[1].length > 4)
+              {
+                var pom:any = true;
+                var broj:any = strPom[1];
+                var brojac:any = 0;
+                for(var i=0; i<broj.length; i++)
+                {
+                  if(broj[i] != '0')
+                  {
+                    pom = false;
+                    brojac = i + 1;
+                    break;
+                  }
+                }
+                if(pom == false && brojac > 4)
+                {
+                  this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(brojac);
+                  // var zaokruzenoBroj = this.jsonStatistika[key][param];
+                  // var zaokruzenoStr = zaokruzenoBroj.toString();
+                  // if(zaokruzenoStr.endsWith('0'))
+                  // {
+                  //   this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(brojac-1);
+                  // }
+                }
+                else
+                {
+                  // var br = 4;
+                  // var ind = true;
+                  this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(4);
+                  // while(ind==true)
+                  // {
+                  //   var zaokruzenoBroj = this.jsonStatistika[key][param];
+                  //   var zaokruzenoStr = zaokruzenoBroj.toString();
+                  //   if(zaokruzenoStr.endsWith('0'))
+                  //   {
+                  //     br--;
+                  //     this.jsonStatistika[key][param] = (Number(this.jsonStatistika[key][param])).toFixed(br);
+                  //   }
+                  // }
+                }
+              }
             }
+            //console.log(this.jsonStatistika[key][param]);
           }
-          //console.log(this.jsonStatistika[key][param]);
+          
         }
         //this.jsonStatistika[key]["StdDeviation"] = (Number(this.jsonStatistika[key]["StdDeviation"])).toFixed(4);
         this.statistikaNum.push({
