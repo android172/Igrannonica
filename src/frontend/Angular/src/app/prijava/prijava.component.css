@@ -162,3 +162,16 @@ input:focus,textarea:focus,select:focus{
     position: fixed;
     bottom: 0;
 }
+
+span{
+    position: absolute;
+    transform: translate(-120%,60%);
+}
+
+#eye{
+    color:rgb(110, 111, 174);
+}
+#eye:hover{
+    color:rgb(127, 128, 192); 
+    text-shadow:  2px 2px 5px #0f0f1b;
+}
