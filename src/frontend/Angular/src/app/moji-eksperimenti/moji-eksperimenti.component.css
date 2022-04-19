@@ -1,9 +1,20 @@
 p
 {
-    color:white;
-    font-size: larger;
-    padding-top: 10px;
-    text-align: center;
+  width: 400px;
+  height: 45px;
+  color:white;
+  font-size: larger;
+  padding-top: 12.5px;
+  text-align: center;
+  background: rgba(162, 175, 210, 0.6);
+  border-color: #A2AFD2;
+  border-radius: 10px;
+  border-width: 1px;
+  border-radius: 10px;
+  float: left;
+  margin-top: 15px;
+  margin-bottom: 0px;
+  margin-left: 10px;
 }
 
 #footer
@@ -53,15 +64,8 @@ p
 }
 
 #e{
-    width: 470px;
-    height: 40px;
-    background: rgba(162, 175, 210, 0.6);
-    border-color: #A2AFD2;
-    border-radius: 10px;
-    border-width: 1px;
-    border-radius: 10px;
-    margin-top: 15px;
-    margin-left: 15px;
+    width: 500px;
+    height: 60px;
 }
 
 /* width */
@@ -96,4 +100,12 @@ p
     height: 30px;
     padding-left: 40px;
     padding-top: 25px;
+}
+
+#delete{
+  float: left;
+  margin-top: 15px;
+  width: 60px;
+  height: 45px;
+  margin-left: 15px;
 }

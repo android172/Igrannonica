@@ -35,4 +35,22 @@ export class MojiEksperimentiComponent implements OnInit {
   {
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
+
+  obrisiE(id: number)
+  {
+    if(confirm("Da li ste sigurni da zelite da obrisete ovaj eksperiment?"))
+    {
+      this.http.delete(url+'/api/Eksperiment/Eksperiment/' + id,{responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+          this.ucitajEksp();
+          var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
+        },
+        error=>{
+          console.log(error.error);
+      }
+      
+      )
+    }
+  }
 }

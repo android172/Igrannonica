@@ -64,3 +64,11 @@ input[type=text]{
     margin-left: 150px;
     margin-top: 30px;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #7584AE inset !important;
+    -webkit-text-fill-color: white;
+}
