@@ -54,7 +54,7 @@ namespace dotNet.Controllers
                 return BadRequest("Fajl nije unet.");
 
             // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+            string folder = Path.Combine(Directory.GetCurrentDirectory() , "Files" , korisnik.Id.ToString());
 
             if (!System.IO.Directory.Exists(folder))
             {
@@ -62,7 +62,7 @@ namespace dotNet.Controllers
             }
 
             // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
+            string folderEksperiment = Path.Combine(folder , idEksperimenta.ToString());
 
             if (!System.IO.Directory.Exists(folderEksperiment))
             {
@@ -71,7 +71,7 @@ namespace dotNet.Controllers
 
             // cuvanje fajla - putanja 
             string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
+            string path = Path.Combine(folderEksperiment , fileName);
 
             string[] lines = { };
             List<string> lines2 = new List<string>();
@@ -153,7 +153,7 @@ namespace dotNet.Controllers
             }
 
             // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+            string folder = Path.Combine(Directory.GetCurrentDirectory() ,"Files" , korisnik.Id.ToString());
 
             if (!System.IO.Directory.Exists(folder))
             {
@@ -161,7 +161,7 @@ namespace dotNet.Controllers
             }
 
             // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
+            string folderEksperiment = Path.Combine(folder , idEksperimenta.ToString());
 
             if (!System.IO.Directory.Exists(folderEksperiment))
             {
@@ -170,7 +170,7 @@ namespace dotNet.Controllers
 
             // cuvanje fajla - putanja 
             string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
+            string path = Path.Combine(folderEksperiment, fileName);
 
             // citanje fajla 
             long length = file.Length;
@@ -394,14 +394,14 @@ namespace dotNet.Controllers
                 return BadRequest("Fajl nije unet.");
 
             // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
+            string folder = Path.Combine(Directory.GetCurrentDirectory(), "Files", korisnik.Id.ToString());
 
             if (!System.IO.Directory.Exists(folder))
             {
                 return BadRequest("Folder korisnika ne postoji");
             }
 
-            string folderEksperiment = folder + "\\" + idEksperimenta;
+            string folderEksperiment = Path.Combine(folder, idEksperimenta.ToString());
 
             if (!System.IO.Directory.Exists(folderEksperiment))
             {
