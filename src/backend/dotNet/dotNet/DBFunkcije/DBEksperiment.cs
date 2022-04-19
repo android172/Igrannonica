@@ -72,6 +72,7 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+       
         public bool updateEksperient(int id, string ime)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -81,14 +82,11 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
                 connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                if (cmd.ExecuteNonQuery() > 0)
                 {
-                    if (reader.Read())
-                    {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
+                return false;
             }
         }
         public bool izbrisiEksperiment(int id)
