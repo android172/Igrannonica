@@ -231,8 +231,50 @@ img{
     width: 82%;
 }
 
-/*  DROPDOWN SUB MENU *****/
+/*  DROPDOWN SUBMENU *****/
 
+.dropdown-menu li {
+    position: relative;
+    padding-left: 0;
+    padding-right: 50px;
+    }
+    .dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+    }
+    .dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+    }
+    .dropdown-menu > li:hover > .dropdown-submenu {
+    display: block;
+    }
+    #zamena-select .dropdown-menu li a{
+        text-align: left;
+        font-size: 13px;
+        padding: 1px;
+        font-weight: 500;
+       /* color: rgb(237, 237, 237);*/
+    }
+    #zamena-select .dropdown-menu, #menu1{
+        background-color: rgb(230, 213, 253);
+    }
+/********** SELECT DROPDOWN MENU ***/
+#menu1 button{
+    font-size: 13px;
+    padding: 5px 2px 5px 5px;
+    font-weight: 500;
+}
+/**** PODACI *******/
+
+#podaci-box{
+    margin-top: 20px;
+    width: 90%;
+    display: flex;
+    justify-content: space-between; 
+}
 /*********** OUTLIERS *******/
 
 .btn-design4{
@@ -256,7 +298,8 @@ img{
     height: 35px;
     background-color: #272741;
     border-radius: 5px;
-    border: 2px solid rgb(37, 164, 214);
+    /*border: 2px solid rgb(37, 164, 214); */ 
+    border: 2px solid rgb(121, 121, 121);
     width: 100px; 
     color: white;
 }

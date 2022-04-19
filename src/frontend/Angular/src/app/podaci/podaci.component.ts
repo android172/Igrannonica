@@ -167,7 +167,17 @@ export class PodaciComponent implements OnInit {
     }
 
   }
+  // vrednosti za submenu 
+  dajNaziveHeadera()
+  {
+    var niz = [""];
+    var niz2 = [];
 
+    if(this.json == undefined)
+      return niz;
+
+    return this.keys;
+  }
 
   dajStatistiku()
   {
@@ -262,7 +272,7 @@ export class PodaciComponent implements OnInit {
   {
     if(this.json == undefined)
       return;
-      
+
     var headers = Object.keys(this.json[0]);
     //console.log(Object.values(this.json[0]));
     for(let i=0; i<headers.length; i++)
@@ -929,40 +939,47 @@ export class PodaciComponent implements OnInit {
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readonly");
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
     if(this.selectedOutlier == "2")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
     if(this.selectedOutlier == "3")
     {
-      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score";
+      (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score"; 
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
     if(this.selectedOutlier == "4")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "IQR";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
     if(this.selectedOutlier == "5")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Isolation Forest";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
     if(this.selectedOutlier == "6")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "One Class SVM";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
     if(this.selectedOutlier == "7")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Local Factor";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
     
   }
@@ -1003,7 +1020,8 @@ export class PodaciComponent implements OnInit {
     this.selectedOutlier = "";
     (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Izbacivanje izuzetaka";
     (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
-    (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
+    (<HTMLInputElement>document.getElementById("threshold")).value = "";
+    (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
   }
 
   deleteAllRowsWithNA()
