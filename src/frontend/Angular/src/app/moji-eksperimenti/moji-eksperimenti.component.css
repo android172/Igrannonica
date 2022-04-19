@@ -1,18 +1,18 @@
 p
 {
-  width: 400px;
-  height: 45px;
+  width: 620px;
+  height: 40px;
   color:white;
   font-size: larger;
-  padding-top: 12.5px;
+  padding-top: 10px;
   text-align: center;
-  background: rgba(162, 175, 210, 0.6);
-  border-color: #A2AFD2;
+  background: #6ea2c3;
+  opacity: 0.8;
   border-radius: 10px;
   border-width: 1px;
   border-radius: 10px;
   float: left;
-  margin-top: 15px;
+  margin-top: 10px;
   margin-bottom: 0px;
   margin-left: 10px;
 }
@@ -38,23 +38,23 @@ p
 #divEksperimenti{
 
     position: relative;
-    width: 600px;
+    width: 800px;
     height: 400px;
     background: rgba(32, 35, 66, 0.79);
     border-radius: 3px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     box-sizing: border-box;
     margin: auto;
+    padding-top: 40px;
 }
 
 #skrol{
 
-    width: 510px;
+    width: 720px;
     height: 330px;
     overflow: auto;
     border-color: #6D7B9F;
-    margin-top: 40px;
-    margin-left: 40px;
+    margin: auto;
     border-style: solid;
     border-width: 3px;
     border-radius: 10px;
@@ -64,8 +64,14 @@ p
 }
 
 #e{
-    width: 500px;
-    height: 60px;
+    width: 700px;
+    height: 50px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(180deg, #eb275e 0%, #708AD4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+  border-radius: 100px;
 }
 
 /* width */
@@ -79,16 +85,10 @@ p
     box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
     border-radius: 10px;
   }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #C4C4C4; 
-    border-radius: 10px;
-  }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(164, 157, 157, 1); 
+    background-image: linear-gradient(180deg, #eb275e 0%, #708AD4 99%);
   }
 
   .tekst{
@@ -104,8 +104,17 @@ p
 
 #delete{
   float: left;
-  margin-top: 15px;
-  width: 60px;
-  height: 45px;
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
   margin-left: 15px;
+  border-radius: 5px;
+  background-color: #f0396d;
+  border: none;
+  color: white;
+  opacity: 0.9;
+}
+
+body {
+  background: #444;
 }
