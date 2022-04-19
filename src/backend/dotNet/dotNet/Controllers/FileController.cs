@@ -155,8 +155,15 @@ namespace dotNet.Controllers
 
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
-            eksperiment.LoadDataset(idEksperimenta, fileName);
-
+            try
+            {
+                eksperiment.LoadDataset(idEksperimenta, fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("File nije ucitan u python");
+            }
+            
             // upis csv-a u bazu 
             bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
 

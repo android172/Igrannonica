@@ -112,7 +112,14 @@ namespace dotNet.Controllers
             
             // upis u fajl 
             System.IO.File.WriteAllText(path, sb.ToString());
+            try
+            {
             eksperiment.LoadDataset(idEksperimenta, fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("File nije ucitan u python");
+            }
 
             if(!fajlNijeSmesten)
             {
@@ -184,7 +191,14 @@ namespace dotNet.Controllers
             // upis u fajl 
             System.IO.File.WriteAllBytes(path, bytes);
 
-            eksperiment.LoadDataset(idEksperimenta, fileName);
+            try
+            {
+                eksperiment.LoadDataset(idEksperimenta, fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("File nije ucitan u python");
+            }
 
             if (!fajlNijeSmesten)
             {
@@ -415,7 +429,14 @@ namespace dotNet.Controllers
             fileStream.Read(bytes, 0, (int)file.Length);
 
             //System.IO.File.WriteAllBytes(path, bytes);
-            eksperiment.LoadDatasetTest(bytes, file.FileName);
+            try
+            {
+                eksperiment.LoadDatasetTest(bytes, file.FileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("File nije ucitan u python");
+            }
 
             return Ok("Testni skup ucitan.");
         }
