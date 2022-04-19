@@ -101,12 +101,15 @@ export class ModeliComponent implements OnInit {
         console.log(res);
         this.ucitajModel();
         ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
+        this.onSuccess("Model je uspesno napravljen");
       },
       error=>{
         console.log(error.error);
+        this.onError("Model nije napravljen!");
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
         }
       }
     );
@@ -148,9 +151,11 @@ export class ModeliComponent implements OnInit {
          console.log(res);
             this.ucitajModel();
             var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
+            this.onSuccess("Model je uspesno obrisan");
        },
        error=>{
          console.log(error.error);
+         this.onError("Model nije obrisan!");
        }
      )
     }

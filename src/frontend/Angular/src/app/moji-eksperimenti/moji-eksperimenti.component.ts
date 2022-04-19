@@ -74,9 +74,11 @@ export class MojiEksperimentiComponent implements OnInit {
           console.log(res);
           this.ucitajEksp();
           var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
+          this.onSuccess("Eksperiment je uspesno obrisan");
         },
         error=>{
           console.log(error.error);
+          this.onError("Eksperiment nije obrisan!");
       }
       
       )
