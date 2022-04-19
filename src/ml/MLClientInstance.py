@@ -690,6 +690,21 @@ class MLClientInstance(Thread):
                 
                 print(f"Categorical and Numerical statistics computed for all columns.")
                 
+            # Data Visualization #
+            elif received == 'GetScatterPlot':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                path = os.path.join(os.curdir, 'data', self.experiment_id, 'requested_image.png')
+                network.data.draw_scatter_plot(columns, path)
+                
+                self.connection.send("OK")
+                print(f"Scatter plot for columns {columns} requested.")
+                
             # Model selection #
             elif received == 'SaveModel':
                 # Receive model name

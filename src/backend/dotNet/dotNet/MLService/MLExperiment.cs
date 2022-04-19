@@ -393,6 +393,15 @@ namespace dotNet.MLService {
             }
         }
 
+        // Data visualization
+        public void GetScatterPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.GetScatterPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+
         // /////// //
         // Network //
         // /////// //
@@ -517,6 +526,7 @@ namespace dotNet.MLService {
         NumericalStatistics,
         CategoricalStatistics,
         AllStatistics,
+        GetScatterPlot,
         // Network
         SaveModel,
         LoadModel,

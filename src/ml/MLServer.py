@@ -6,6 +6,7 @@
 #    openpyxl
 #    requests
 #    signalrcore
+#    matplotlib
 
 import socket
 from MLClientInstance import MLClientInstance

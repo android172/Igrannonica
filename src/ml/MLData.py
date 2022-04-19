@@ -16,6 +16,8 @@ from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
 
+import CustomColors
+
 class MLData:
     
     def __init__(self) -> None:
@@ -443,4 +445,63 @@ class MLData:
             ).__dict__
     
         return statistics
+    
+    # ################## #
+    # Data Visualization #
+    # ################## #
+    
+    def _change_style(self, ax, transparent_axis=False, full_box=False):
+        ax.set_facecolor(CustomColors.transparent)
+        
+        top_right_color = CustomColors.transparent
+        if full_box:
+            top_right_color = 'white'
+        
+        ax.spines['bottom'].set_color('white')
+        ax.spines['top'].set_color(top_right_color) 
+        ax.spines['right'].set_color(top_right_color)
+        ax.spines['left'].set_color('white')
+        
+        if transparent_axis:
+            ax.tick_params(
+                left=False,
+                    bottom=False,
+                    labelleft=False,
+                    labelbottom=False
+            )
+        else:
+            ax.tick_params(axis='x', colors='white')
+            ax.tick_params(axis='y', colors='white')
+        
+        ax.yaxis.label.set_color('white')
+        ax.xaxis.label.set_color('white')
+        
+    def _save_fig(self, ax, path):
+        fig = ax.get_figure()
+        fig.savefig(path, dpi=150, bbox_inches = 'tight')
+    
+    def draw_scatter_plot(self, columns, path):
+        if len(columns) == 2:
+            ax = self.dataset.plot.scatter(columns[0], columns[1], c=CustomColors.accent, alpha=0.25)
+            self._change_style(ax)
+            self._save_fig(ax, path)
+        else:
+            axs = pd.plotting.scatter_matrix(
+                self.dataset.iloc[:, columns], 
+                color=CustomColors.accent,
+                density_kwds={'color':CustomColors.accent, 'alpha':0.75},
+                alpha=0.125,
+                diagonal='kde'
+            )
+            
+            style_of_x_lab = 'right' if (len(columns) > 5) else 'center'
+            for axr in axs:
+                for ax in axr:
+                    self._change_style(ax, full_box=True, transparent_axis=True)
+                    ax.yaxis.label.set_rotation(30)
+                    ax.xaxis.label.set_rotation(30)
+                    ax.yaxis.label.set_ha('right')
+                    ax.xaxis.label.set_ha(style_of_x_lab)
+            
+            self._save_fig(axs[0][0], path)
     
