@@ -29,6 +29,7 @@ import { ModelComponent } from './model/model.component';
 import { ModeliComponent } from './modeli/modeli.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgChartsModule } from 'ng2-charts';
+import { ModalModule } from './_modal';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -72,7 +73,8 @@ export const url = "http://localhost:5008";
       }
     }),
     NgbModule,
-    NgChartsModule
+    NgChartsModule,
+    ModalModule
   ],
   providers: [
     CookieService

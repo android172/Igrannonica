@@ -13,6 +13,8 @@ import { ChartOptions } from 'chart.js';
 import { ChartType } from 'chart.js';
 import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { ModalService } from '../_modal';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-model',
@@ -33,6 +35,7 @@ export class ModelComponent implements OnInit {
 
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
+
 
   public kolone: any[] = [];
   message: any;
@@ -67,7 +70,7 @@ export class ModelComponent implements OnInit {
   public izabraneI : number[] = [];
   public pomocni : number[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -125,6 +128,22 @@ export class ModelComponent implements OnInit {
         {
           this.nizCvorova[i] = this.hiddLay[i];
         }
+        if(this.aktFunk.length==0 && this.hiddLay.length ==0)
+        {
+          
+          this.aktFunk[0] = 1;
+          this.aktFunk[1] = 1;
+          this.hiddLay[0] = 2;
+          this.hiddLay[1] = 2;
+          this.nizCvorova[0] = 2;
+          this.nizCvorova[1] = 2;
+         /* this.hiddLay.push(1);
+          this.aktFunk.push(1);
+          this.nizCvorova.push(1);*/
+          this.brHL = 2;
+        }
+        console.log(this.hiddLay);
+        console.log(this.aktFunk);
         this.brojU = this.json1['inputSize'];
         this.brojI = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
@@ -496,10 +515,15 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  treniraj(){
-    this.izmeniPodesavanja();
-    this.uzmiCekirane();
-    console.log("sacuvano");
+  treniraj(broj:number){
+    
+    (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
+    
+    if(broj == 1){
+      this.izmeniPodesavanja();
+      this.uzmiCekirane();
+      console.log("sacuvano");
+    }
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();

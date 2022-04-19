@@ -136,20 +136,43 @@
         </div>
         <div id="grupa1">
 
-            <div id="grupa">
-                <h4> Number of epochs </h4>
-                <input type="text" id="noe" name="noe">
-            </div>
-    
-            <div id="grupa">
-                <h4> Learning rate </h4>
-                <input type="text" id="lr" name="lr">
+            <div id="podesavanja2">
+                <div id="grupa">
+                    <h4> Number of epochs </h4>
+                    <input type="text" id="noe" name="noe">
+                </div>
+        
+                <div id="grupa">
+                    <h4> Learning rate </h4>
+                    <input type="text" id="lr" name="lr">
+                </div>
             </div>
 
+            <div id="boxZT">
+                <button id="pokreniM" (click)="modalService.open('modal-1');">
+                    <img id="playbutton" src="assets/play-button.png">
+                </button>
+                <h4 id="tekstZT">Započni treniranje</h4>
+                <jw-modal id="modal-1">
+                    <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
+                    <p>
+                        <br>
+                        <br>
+                        Da li zelite prvo da sacuvate izmene?
+                        <br>
+                        <br>
+                        <br>
+                        <button id="popupDugme1" (click)="treniraj(1);" (click)="modalService.close('modal-1');">Sacuvaj izmene</button>
+                        <button id="popupDugme2" (click)="treniraj(2);" (click)="modalService.close('modal-1');">Pokreni bez cuvanja</button>
+                    </p>
+                </jw-modal>
+            </div>
+            <!--
             <button id="pokreniM" (click)="treniraj()">
                 <img id="playbutton" src="assets/play-button.png">
             </button>
             <h4 id="tekstZT">Započni treniranje</h4>
+            -->
         </div>
     </div>
 </div>
@@ -164,8 +187,9 @@
                 <button id="minus1" (click)="promeni1(2)" >—</button>
             </div>
             <div id="grupa3">
+                <h4 id="afn">Activation function &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Neurons</h4>
+                
                 <div *ngFor="let  in of hiddLay;let i = index">
-                    
                     <div id="grupaHL">
                         <select id="dd4" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
                             <option id="ddp" value="0">ReLU</option>
