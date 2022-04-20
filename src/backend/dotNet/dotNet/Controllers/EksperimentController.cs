@@ -77,10 +77,20 @@ namespace dotNet.Controllers
         [HttpDelete("Eksperiment/{id}")]
         public IActionResult izbrisiEksperiment(int id)
         {
+            List<ModelDto> lista =  db.dbmodel.modeli(id);
+            foreach (ModelDto model in lista)
+            {
+                if(db.dbmodel.izbrisiPodesavanja(model.Id))
+                {
+                    if(!db.dbmodel.izbrisiModel(model.Id))
+                    {
+                        return BadRequest("Model nije izbrisan");
+                    }
+                }
+            }
             if (db.dbeksperiment.izbrisiEksperiment(id))
-                return Ok("Eksperiment izbrisan");
-            
-            return BadRequest("Eksperiment nije izbrisan");
+                return Ok("Eksperiment obrisan");
+            return BadRequest("Eksperiment nije obrisan");
         }
 
 
