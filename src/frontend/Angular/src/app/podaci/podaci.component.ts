@@ -206,14 +206,23 @@ export class PodaciComponent implements OnInit {
 
   }
   // vrednosti za submenu 
-  dajNaziveHeadera()
+  
+dajNaziveHeadera()
   {
     var niz = [""];
+    var niz3 = [];
 
     if(this.json == undefined)
       return niz;
 
-    return this.niz2;
+    for(var i =0;i<this.niz2.length;i++)
+    {
+      if(this.niz2[i] != "0")
+      {
+        niz3[i] = this.niz2[i];
+      }
+    } 
+    return niz3;
   }
 
   dajStatistiku()
