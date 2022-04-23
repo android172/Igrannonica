@@ -446,7 +446,7 @@ class MLClientInstance(Thread):
                     return
                 
                 if not network.data.replace_na_with_regression(column, input_columns):
-                    self.report_error("ERROR :: Only numerical variables can be used as output.")
+                    self.report_error("ERROR :: Only numerical variables can be used for input and output.")
                     return
                 
                 self.connection.send("OK")
@@ -461,7 +461,9 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
                 
-                network.data.label_encode_columns(columns)
+                if not network.data.label_encode_columns(columns):
+                    self.report_error("ERROR :: Only non float columns can be encoded.")
+                    return
                 
                 self.connection.send("OK")
                 print(f"Columns {columns} were label encoded.")
@@ -474,7 +476,13 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
                 
-                network.data.one_hot_encode_columns(columns)
+                result = network.data.one_hot_encode_columns(columns)
+                if   result == 1:
+                    self.report_error("ERROR :: Only non float columns can be encoded.")
+                    return
+                elif result == 2:
+                    self.report_error("ERROR :: Too many categories for one-hot encoding to handle.")
+                    return
                 
                 self.connection.send("OK")
                 print(f"Columns {columns} were one-hot encoded.")
@@ -641,6 +649,19 @@ class MLClientInstance(Thread):
                 print(f'Outliers removed from columns {columns} using local outlier factor method.')
             
             # Data analysis #
+            elif received == 'ToggleColumnType':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                network.data.toggle_column_data_type(columns)
+                
+                self.connection.send("OK")
+                print(f"Numerical statistics computed for columns {columns}.")
+            
             elif received == 'NumericalStatistics':
                 # Receive columns
                 columns_string = self.connection.receive()
@@ -654,9 +675,9 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Not all columns are numerical.")
                     return
                 
+                self.connection.send("OK")
                 self.connection.send(json.dumps(statistics))
                 
-                self.connection.send("OK")
                 print(f"Numerical statistics computed for columns {columns}.")
                 
             elif received == 'CategoricalStatistics':
@@ -668,23 +689,28 @@ class MLClientInstance(Thread):
                     return
                 
                 statistics = network.data.get_categorical_statistics(columns)
-                self.connection.send(json.dumps(statistics))
                 
                 self.connection.send("OK")
+                self.connection.send(json.dumps(statistics))
+                
                 print(f"Categorical statistics computed for columns {columns}.")
             
             elif received == 'AllStatistics':
                 numerical_columns = []
                 categorical_columns = []
                 for i, column_type in enumerate(network.data.get_column_types()):
-                    if column_type == 'object':
+                    if column_type == 'Categorical':
                         categorical_columns.append(i)
                     else:
                         numerical_columns.append(i)
                 
-                statistics = {k:v for k, v in network.data.get_numerical_statistics(numerical_columns).items()}
-                for k, v in network.data.get_categorical_statistics(categorical_columns).items():
-                    statistics[k] = v
+                statistics = {}
+                if len(numerical_columns) > 0:
+                    for k, v in network.data.get_numerical_statistics(numerical_columns).items():
+                        statistics[k] = v
+                if len(categorical_columns) > 0:
+                    for k, v in network.data.get_categorical_statistics(categorical_columns).items():
+                        statistics[k] = v
                 
                 self.connection.send(json.dumps(statistics))
                 
@@ -790,9 +816,10 @@ class MLClientInstance(Thread):
                 else:
                     train = network.compute_classification_statistics("train")
                     test = network.compute_classification_statistics("test")
+                    
+                self.connection.send("OK")
                 self.connection.send(json.dumps({"test": test, "train": train}))
                 
-                self.connection.send("OK")
                 print("Network statistics requested.")
             
             elif received == 'ChangeSettings':

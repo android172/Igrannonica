@@ -13,6 +13,8 @@ from MLClientInstance import MLClientInstance
 
 from MLConnection import MLConnection
 
+from matplotlib.pyplot import  switch_backend
+
 # Global Constants
 ipAddress, port = "127.0.0.1", 25001
 
@@ -40,5 +42,6 @@ class MLServer:
             print(f"Client connected at: {address}")
         
 if __name__ == "__main__":
+    switch_backend('agg')
     server = MLServer()
     server.start()
