@@ -32,51 +32,60 @@ namespace dotNet.Controllers
         [HttpPost("download/{idEksperimenta}")]
         public ActionResult Download(int idEksperimenta)
         {
-            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-
-            /// TEMP
-            if (token.Equals("") || token.Equals("st")) {
-                string fileName1 = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-
-                string path1 = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName1);
-
-                try { return File(System.IO.File.ReadAllBytes(path1), "application/octet-stream", fileName1); }
-                catch { return NotFound("File not found."); }
-            }
-            /// 
-
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-            var tokenS = jsonToken as JwtSecurityToken;
-            Korisnik korisnik;
-            MLExperiment eksperiment;
-
-            if (tokenS != null)
+            try
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                /// TEMP
+                if (token.Equals("") || token.Equals("st"))
+                {
+                    string fileName1 = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+
+                    string path1 = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName1);
+
+                    try { return File(System.IO.File.ReadAllBytes(path1), "application/octet-stream", fileName1); }
+                    catch { return NotFound("File not found."); }
+                }
+                /// 
+
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                Korisnik korisnik;
+                MLExperiment eksperiment;
+
+                if (tokenS != null)
+                {
+                    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    else
+                        return BadRequest();
+                }
                 else
-                    return BadRequest();
+                    return BadRequest("Korisnik nije ulogovan.");
+
+                string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+
+                string path = System.IO.Path.Combine(
+                    Directory.GetCurrentDirectory(), "Files",
+                    korisnik.Id.ToString(), idEksperimenta.ToString(), fileName
+                    );
+
+                return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
             }
-            else
-                return BadRequest("Korisnik nije ulogovan.");
-
-            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-
-            string path = System.IO.Path.Combine(
-                Directory.GetCurrentDirectory(), "Files", 
-                korisnik.Id.ToString(), idEksperimenta.ToString(), fileName
-                );
-
-            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
-            catch { return NotFound("File not found."); }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
 
         [HttpPost("upload/{idEksperimenta}")]
         public IActionResult Upload(IFormFile file, int idEksperimenta)
         {
+            try
+            {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -169,15 +178,21 @@ namespace dotNet.Controllers
 
             if (!fajlNijeSmesten)
             {
-                Console.WriteLine("Fajl nije upisan u bazu");
                 return BadRequest("Neuspesan upis csv-a u bazu");
             }
             return Ok("Fajl je upisan.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
+        
 
         [HttpPost("update/{idEksperimenta}")]
         public IActionResult Update(IFormFile file, int idEksperimenta)
         {
+            try{
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
             /// TEMP
@@ -272,6 +287,11 @@ namespace dotNet.Controllers
             System.IO.File.WriteAllBytes(path, bytes);
 
             return Ok("Fajl je upisan.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
 
         // Za upisivanje i citanje modela
@@ -279,6 +299,8 @@ namespace dotNet.Controllers
         [HttpPost("downloadModel/{idEksperimenta}")]
         public ActionResult Download(int idEksperimenta, string modelName)
         {
+            try
+            {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
             /// TEMP
@@ -320,14 +342,21 @@ namespace dotNet.Controllers
                 korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", fileName
                 );
 
-            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
-            catch { return NotFound("File not found."); }
+            return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName);
+            
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
 
 
         [HttpPost("uploadModel/{idEksperimenta}")]
         public IActionResult uploadModel(IFormFile file, int idEksperimenta, string modelName)
         {
+            try
+            {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
             /// TEMP
@@ -429,6 +458,11 @@ namespace dotNet.Controllers
             System.IO.File.WriteAllBytes(path, bytes);
 
             return Ok("Fajl je upisan.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
 
     }

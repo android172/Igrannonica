@@ -31,15 +31,21 @@ namespace dotNet.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] KorisnikDto korisnik)
         {
+            try
+            {
             var user = Authenticate(korisnik);
             if (user != null)
             {
                 var token = Generate(user);
                 Korisnik.eksperimenti[token.ToString()] = new MLExperiment(_config, token);
-                //Console.WriteLine(token.ToString());
                 return Ok(token);
             }
             return NotFound("Ne postoji");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
 
         }
 
@@ -68,8 +74,8 @@ namespace dotNet.Controllers
         }
         [HttpPost("register")]
         public IActionResult Register(KorisnikRegister request) {
-            //Pretraziti bazu da li korisnik postoji
-            //Upisati ga u bazu ako ga nema
+            try
+            {
             KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
             
             if(korisnikValid.korisnickoIme && korisnikValid.email)
@@ -94,19 +100,19 @@ namespace dotNet.Controllers
             }
         
             return BadRequest("3"); // username ispravan //Email vec postoji
-        }
-        private void CreatePasswordHash(string password ,out byte[] passwordHash,out byte[] passwordSalt)
-        {
-            using (var hmac= new HMACSHA512())
+            }
+            catch
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return BadRequest("Doslo do greske.");
             }
         }
+
         [Authorize]
         [HttpPost("update")]
         public IActionResult Update(KorisnikUpdate korisnik)
         {
+            try
+            {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -131,6 +137,11 @@ namespace dotNet.Controllers
             if (db.dbkorisnik.updateKorisnika(kor))
                 return Ok(Generate(kor));
             return BadRequest();
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
         }
     }
 }
