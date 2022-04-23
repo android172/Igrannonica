@@ -196,8 +196,8 @@
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design2" id="select-data" ngbDropdownToggle>Upravljanje podacima</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
-                        <button ngbDropdownItem (click)="selectData($event)" id="1">Izbaci selektovane vrste</button>
-                        <button ngbDropdownItem (click)="selectData($event)" id="2">Izbaci selektovane kolone</button>
+                        <button ngbDropdownItem (click)="selectData($event)" id="izbaci-selekt-vrste">Izbaci selektovane vrste</button>
+                        <button ngbDropdownItem (click)="selectData($event)" id="izbaci-selekt-kolone">Izbaci selektovane kolone</button>
                     </div>
                 </div>
 
@@ -225,13 +225,13 @@
                 <div ngbDropdown class="d-inline-block">
                     <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                      <button ngbDropdownItem id="1" (click)="selectOutliers($event)">Standard Deviation</button>
-                      <button ngbDropdownItem id="2" (click)="selectOutliers($event)">Quantiles</button> 
-                      <button ngbDropdownItem id="3" (click)="selectOutliers($event)">Z-Score</button>
-                      <button ngbDropdownItem id="4" (click)="selectOutliers($event)">IQR</button>
-                      <button ngbDropdownItem id="5" (click)="selectOutliers($event)">Isolation Forest</button>
-                      <button ngbDropdownItem id="6" (click)="selectOutliers($event)">One Class SVM</button>
-                      <button ngbDropdownItem id="7" (click)="selectOutliers($event)">Local Factor</button>
+                      <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>
+                      <button ngbDropdownItem id="option-quantiles" (click)="selectOutliers($event)">Quantiles</button> 
+                      <button ngbDropdownItem id="option-zscore" (click)="selectOutliers($event)">Z-Score</button>
+                      <button ngbDropdownItem id="option-iqr" (click)="selectOutliers($event)">IQR</button>
+                      <button ngbDropdownItem id="option-isolation" (click)="selectOutliers($event)">Isolation Forest</button>
+                      <button ngbDropdownItem id="option-svm" (click)="selectOutliers($event)">One Class SVM</button>
+                      <button ngbDropdownItem id="option-lfactor" (click)="selectOutliers($event)">Local Factor</button>
                     </div>
                 </div>
 

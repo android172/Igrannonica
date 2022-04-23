@@ -1229,46 +1229,46 @@ dajNaziveHeadera()
   {
     this.selectedOutlier = event.target.id;
     
-    if(this.selectedOutlier == "1")
+    if(this.selectedOutlier == "option-sd")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readonly");
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
-    if(this.selectedOutlier == "2")
+    if(this.selectedOutlier == "option-quantiles")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
-    if(this.selectedOutlier == "3")
+    if(this.selectedOutlier == "option-zscore")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score"; 
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
     }
-    if(this.selectedOutlier == "4")
+    if(this.selectedOutlier == "option-iqr")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "IQR";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
-    if(this.selectedOutlier == "5")
+    if(this.selectedOutlier == "option-isolation")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Isolation Forest";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
-    if(this.selectedOutlier == "6")
+    if(this.selectedOutlier == "option-svm")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "One Class SVM";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
     }
-    if(this.selectedOutlier == "7")
+    if(this.selectedOutlier == "option-lfactor")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Local Factor";
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
@@ -1283,35 +1283,35 @@ dajNaziveHeadera()
     {
       this.onInfo("Opcija iz menija nije odabrana.");
     }
-    if(this.selectedOutlier == "1")
+    if(this.selectedOutlier == "option-sd")
     {
       this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
       console.log(typeof(this.threshold));
       this.removeStandardDeviation();
     }
-    if(this.selectedOutlier == "2")
+    if(this.selectedOutlier == "option-quantiles")
     {
       this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
       this.removeOutliersQuantiles();
     }
-    if(this.selectedOutlier == "3")
+    if(this.selectedOutlier == "option-zscore")
     {
       this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
       this.removeOutliersZScore();
     }
-    if(this.selectedOutlier == "4")
+    if(this.selectedOutlier == "option-iqr")
     {
       this.removeOutliersIQR();
     }
-    if(this.selectedOutlier == "5")
+    if(this.selectedOutlier == "option-isolation")
     {
       this.removeOutliersIsolationForest()
     }
-    if(this.selectedOutlier == "6")
+    if(this.selectedOutlier == "option-svm")
     {
       this.removeOutliersOneClassSVM();
     }
-    if(this.selectedOutlier == "7")
+    if(this.selectedOutlier == "option-lfactor")
     {
       this.removeOutliersByLocalFactor();
     }
@@ -1379,11 +1379,11 @@ dajNaziveHeadera()
   {
     this.selectedData = event.target.id;
 
-    if(this.selectedData == "1")
+    if(this.selectedData == "izbaci-selekt-vrste")
     {
       (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane vrste";
     }
-    if(this.selectedData == "2")
+    if(this.selectedData == "izbaci-selekt-kolone")
     {
       (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane kolone";
     }
@@ -1394,11 +1394,11 @@ dajNaziveHeadera()
     {
       this.onInfo("Opcija iz menija nije odabrana.");
     }
-    if(this.selectedData == "1")
+    if(this.selectedData == "izbaci-selekt-vrste")
     {
       this.deleteRows();
     }
-    if(this.selectedData == "2")
+    if(this.selectedData == "izbaci-selekt-kolone")
     {
       this.deleteColumns(); 
     }
