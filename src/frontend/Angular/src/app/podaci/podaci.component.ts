@@ -211,6 +211,7 @@ dajNaziveHeadera()
   {
     var niz = [""];
     var niz3 = [];
+    var j = 0;
 
     if(this.json == undefined)
       return niz;
@@ -219,7 +220,7 @@ dajNaziveHeadera()
     {
       if(this.niz2[i] != "0")
       {
-        niz3[i] = this.niz2[i];
+        niz3[j++] = this.niz2[i];
       }
     } 
     return niz3;
@@ -547,7 +548,7 @@ dajNaziveHeadera()
       
       if(!this.niz2.includes(header)) // dodatak za regression
       {
-        this.niz2.splice(i, 0, header);
+        this.niz2[i] = header;
       }
      return;
     }
@@ -559,10 +560,8 @@ dajNaziveHeadera()
     // dodatak za regression
     if(this.niz2.includes(header))
     {
-      const index = this.niz2.indexOf(header, 0);
-      if (index > -1) {
-      this.niz2.splice(index, 1);
-      }    
+      this.niz2[i] = "0";
+      console.log(this.niz2);  
     }
   }
 
