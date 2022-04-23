@@ -187,6 +187,24 @@ class MLClientInstance(Thread):
                 self.connection.send("OK")
                 print("Random train-test split preformed.")
             
+            # Version Controll #
+            
+            elif received == 'Undo':
+                if not network.data.undo_change():
+                    self.report_error("ERROR :: Can't go further back.")
+                    return
+                
+                self.connection.send("OK")
+                print("Last change was undone.")
+            
+            elif received == 'Redo':
+                if not network.data.redo_change():
+                    self.report_error("ERROR :: Can't go further forward.")
+                    return
+                
+                self.connection.send("OK")
+                print("Last change was redone.")
+            
             # Data access #
             
             elif received == 'GetRows':
@@ -221,6 +239,12 @@ class MLClientInstance(Thread):
                 # Receive row values
                 row_string = self.connection.receive()
                 new_row = json.loads(row_string)["Data"]
+                
+                if len(new_row) != network.data.dataset.shape[1]:
+                    self.report_error(f"ERROR :: Wrong number of inputs given; " +
+                                      f"Namely {len(new_row)} instead of {network.data.dataset.shape[1]}.")
+                    return
+                
                 return_code = network.data.add_row(new_row)
                 if return_code >= 0:
                     self.report_error(f"ERROR :: Invalid type for column {i} given.")

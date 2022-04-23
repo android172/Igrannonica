@@ -141,34 +141,37 @@ namespace dotNet.Controllers {
                 // Load data
                 experiment.LoadDataset(1, "test_data.csv");
 
-                experiment.GetScatterPlot(new int[] { 4, 6, 10 });
+                //experiment.GetScatterPlot(new int[] { 4, 6, 10 });
 
-                return "Done";
-
-                // Get statistics
-                var statistics = experiment.ColumnStatistics();
-                Console.WriteLine(statistics);
+                //return "Done";
 
                 // Add row and column
-                experiment.AddRow(new[] { "1", "1123", "hiThere", "144", "France", "Female", "44", "1", "9",
-                                      "1", "1", "1", "12412.1", "0"});
+                experiment.AddRow(new[] { "1", "1123", "0", "1", "44", "1", "999",
+                                      "1", "1", "1", "12412.1", "0", "1"});
+
                 int rowCounts = experiment.GetRowCount();
                 Console.WriteLine(rowCounts);
-                //var column = new string[rowCounts];
-                //for (int i = 0; i < column.Length; i++)
-                //    column[i] = "2";
-                //experiment.AddColumn("IDK", column);
+                var column = new string[rowCounts];
+                for (int i = 0; i < column.Length; i++)
+                    column[i] = "2";
+                experiment.AddColumn("IDK", column);
+
+                experiment.Undo();
 
                 // Normalize rows
                 experiment.ScaleZScore(new int[] { 3, 12 });
 
-
-                // Get rows
-                var rows = experiment.GetRows(new[] { 0, 1, 2, 3, 5, 6 });
-                Console.WriteLine(rows);
-
                 // Encode categorical values
-                experiment.OneHotEncoding(new int[] { 4, 5, 13 });
+                experiment.OneHotEncoding(new int[] { 5, 8 });
+
+                experiment.Undo();
+
+                experiment.Redo();
+
+                var x = experiment.GetRows(new int[] { 0, 1, 2, 3, 4, 5 });
+                Console.WriteLine(x);
+
+                return "Done";
 
                 // Save dataset
                 //experiment.SaveDataset();

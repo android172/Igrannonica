@@ -1,21 +1,20 @@
 import random
-import pandas as pd
+from collections import deque
 
+import pandas as pd
 import numpy as np
+from torch import tensor
+
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
-
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.linear_model import LinearRegression
-from scipy import stats
 from sklearn.svm import OneClassSVM
+from scipy import stats
 
-from torch import tensor
 from StatisticsCategorical import StatisticsCategorical
-
 from StatisticsNumerical import StatisticsNumerical
-
 import CustomColors
 
 class MLData:
@@ -28,6 +27,9 @@ class MLData:
         self.test_indices   = None
         self.column_types   = None
         self.column_data_ty = None
+        
+        self.past_states = deque(maxlen=5)
+        self.future_states = deque(maxlen=5)
     
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
@@ -43,11 +45,13 @@ class MLData:
         self._load_dataset(dataset)
     
     def _load_dataset(self, dataset):
+        self.clear_change_history()
+        
         self.dataset = dataset
         self.train_indices = [i for i in range(self.dataset.shape[0])]
         self.test_indices = []
         
-        self.column_types = self.dataset.dtypes
+        self.column_types = [str(x) for x in self.dataset.dtypes]
         
         self.column_data_ty = []
         for type in self.column_types:
@@ -66,6 +70,7 @@ class MLData:
         self._load_test_dataset(dataset_test)
         
     def _load_test_dataset(self, dataset_test):
+        self.save_change()
         train_length = self.dataset.shape[0]
         self.dataset = pd.concat([self.dataset, dataset_test])
         self.train_indices = [i for i in range(train_length)]
@@ -80,6 +85,29 @@ class MLData:
         
     def save_to_excel(self, path):
         self.dataset.to_excel(path, index=False)
+        
+    # Manage versions
+    def save_change(self):
+        self.past_states.append(self.dataset.copy(deep=True))
+        self.future_states.clear()
+    
+    def undo_change(self):
+        if len(self.past_states) == 0:
+            return False
+        self.future_states.append(self.dataset)
+        self.dataset = self.past_states.pop()
+        return True
+    
+    def redo_change(self):
+        if len(self.future_states) == 0:
+            return False
+        self.past_states.append(self.dataset)
+        self.dataset = self.future_states.pop()
+        return True
+    
+    def clear_change_history(self):
+        self.past_states.clear()
+        self.future_states.clear()
         
     # Select columns
     def select_input_columns(self, columns):
@@ -164,6 +192,7 @@ class MLData:
         except:
             return 3
         
+        self.save_change()
         self.dataset.iloc[row, column] = value
         return 0
 
@@ -178,7 +207,9 @@ class MLData:
                     series[i] = float(series[i])
             except:
                 return i
+            
         # import values
+        self.save_change()
         self.dataset.loc[self.dataset.shape[0]] = series
         
         if test == False:
@@ -200,6 +231,7 @@ class MLData:
                     series[i] = float(series[i])
             except:
                 return i
+        self.save_change()
         # Replace values
         self.dataset.iloc[row] = series
         return -1
@@ -208,7 +240,10 @@ class MLData:
         for row in rows:
             if row < 0 or row >= self.dataset.shape[0]:
                 return False
+            
+        self.save_change()
         self.dataset.drop(self.dataset.index[rows], inplace=True)
+        
         rows.sort(reverse=True)
         for row in rows:
             self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
@@ -216,6 +251,8 @@ class MLData:
         return True
             
     def add_column(self, new_column, label):
+        self.save_change()
+        
         series = pd.Series(new_column, name=label)
         self.dataset = self.dataset.join(series)
         
@@ -224,6 +261,8 @@ class MLData:
         self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def update_column(self, column, new_column=None, new_label=None):
+        self.save_change()
+        
         if new_label is not None:
             self.dataset.rename(columns={self.dataset.columns[column]:new_label}, inplace=True)
         if new_column is not None:
@@ -234,21 +273,26 @@ class MLData:
         self.column_data_ty[column] = 'Numerical' if (type == 'int64' or type == 'float64') else 'Categorical'
         
     def remove_column(self, column):
+        self.save_change()
         self.dataset.drop(self.dataset.columns[column], axis=1, inplace=True)
         self.column_types.pop(column)
         self.column_data_ty.pop(column)
             
     # Handeling NA values
     def replace_value_with_na(self, columns, value):
+        self.save_change()
         self.dataset.iloc[:, columns] = self.dataset.iloc[:, columns].replace(value, pd.NA)
     
     def drop_na_listwise(self):
+        self.save_change()
         self.dataset.dropna(inplace=True)
     
     def drop_na_columns(self):
+        self.save_change()
         self.dataset.dropna(axis=1, inplace=True)
 
     def drop_na_pairwise(self, columns):
+        self.save_change()
         subset = self.dataset.columns[columns]
         self.dataset.dropna(subset=subset, inplace=True)
         
@@ -256,6 +300,7 @@ class MLData:
     def replace_na_with_mean(self, columns):
         try: means = self.dataset.iloc[:, columns].replace(pd.NA, np.nan).astype('float64').mean()
         except: return False
+        self.save_change()
         self.dataset.fillna(means, inplace=True)
         self.dataset.iloc[:, columns] = self.dataset.iloc[:, columns].astype('float64')
         return True
@@ -263,6 +308,7 @@ class MLData:
     def replace_na_with_median(self, columns):
         try: medians = self.dataset.iloc[:, columns].replace(pd.NA, np.nan).astype('float64').median()
         except: return False
+        self.save_change()
         self.dataset.fillna(medians, inplace=True)
         for i in columns:
             if self.column_types[i] == 'int64':
@@ -272,6 +318,7 @@ class MLData:
         return True
     
     def replace_na_with_mode(self, columns):
+        self.save_change()
         modes = self.dataset.iloc[:, columns].astype(str).replace("<NA>", pd.NA).mode().iloc[0]
         self.dataset.fillna(modes, inplace=True)
         for i in columns:
@@ -291,6 +338,8 @@ class MLData:
             output = self.dataset[not_na_rows].iloc[:, column].astype('float64')
         except: return False
         
+        self.save_change()
+        
         regression = LinearRegression().fit(inputs, output)
         predictions = regression.predict(self.dataset[na_rows].iloc[:, input_columns])
         self.dataset.loc[na_rows, self.dataset.columns[column]] = predictions
@@ -306,8 +355,10 @@ class MLData:
         for column in columns:
             if self.column_types[column] == 'float64':
                 return False
-            
-        self.dataset.iloc[:, columns] = OrdinalEncoder().fit_transform(self.dataset.iloc[:, columns])
+        
+        self.save_change()
+        
+        self.dataset.iloc[:, columns] = OrdinalEncoder().fit_transform(self.dataset.iloc[:, columns]).astype('int64')
         for column in columns:
             self.column_types[column] = 'int64'
             
@@ -320,8 +371,10 @@ class MLData:
             if self.dataset.iloc[:, column].nunique() > 64:
                 return 2
             
+        self.save_change()
+            
         encoder = OneHotEncoder()
-        result = encoder.fit_transform(self.dataset.iloc[:, columns]).toarray()
+        result = encoder.fit_transform(self.dataset.iloc[:, columns]).astype('int64').toarray()
         new_columns = [self.dataset.columns[columns[i]] + str(group) 
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
@@ -337,54 +390,72 @@ class MLData:
     
     # Normalization
     def maximum_absolute_scaling(self, columns):
+        scaled_values = {}
         for ci in columns:
             column = self.dataset.iloc[:, ci]
-            try: self.dataset.iloc[:, ci] = column / column.abs().max()
+            try: scaled_values[ci] = column / column.abs().max()
             except: return ci
+        
+        self.save_change()
+        for ci, values in scaled_values.items():
+            self.dataset.iloc[:, ci] = values
         
         for col in columns:
             self.column_types[col] = 'float64'
-            self.column_data_ty = 'Numerical'
+            self.column_data_ty[col] = 'Numerical'
         return -1
     
     def min_max_scaling(self, columns):
+        scaled_values = {}
         for ci in columns:
             column = self.dataset.iloc[:, ci]
-            try: self.dataset.iloc[:, ci] = (column - column.min()) / (column.max() - column.min())
+            try: scaled_values[ci] = (column - column.min()) / (column.max() - column.min())
             except: return ci
+        
+        self.save_change()
+        for ci, values in scaled_values.items():
+            self.dataset.iloc[:, ci] = values
         
         for col in columns:
             self.column_types[col] = 'float64'
-            self.column_data_ty = 'Numerical'
+            self.column_data_ty[col] = 'Numerical'
         return -1
     
     def z_score_scaling(self, columns):
+        scaled_values = {}
         for ci in columns:
             column = self.dataset.iloc[:, ci]
-            try: self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()
+            try: scaled_values[ci] = (column - column.mean()) / column.std()
             except: return ci
+        
+        self.save_change()
+        for ci, values in scaled_values.items():
+            self.dataset.iloc[:, ci] = values
         
         for col in columns:
             self.column_types[col] = 'float64'
-            self.column_data_ty = 'Numerical'
+            self.column_data_ty[col] = 'Numerical'
         return -1
         
     # Outlier detection    
     def standard_deviation_outlier_removal(self, columns, treshold):
         try: sub_df = self.dataset.iloc[:, columns].astype('float64')
         except: return False
+        self.save_change()
         self.dataset = self.dataset[(np.abs(sub_df - sub_df.mean()) < treshold * sub_df.std()).all(axis=1)]
         return True
     
     def quantile_outlier_removal(self, columns, treshold):
         try: sub_df = self.dataset.iloc[:, columns].astype('float64')
         except: return False
+        self.save_change()
         self.dataset = self.dataset[((sub_df > sub_df.quantile(treshold)) & (sub_df < sub_df.quantile(1 - treshold))).all(axis=1)]
         return True
     
     def z_score_outlier_removal(self, columns, treshold):
         try: sub_df = self.dataset.iloc[:, columns].astype('float64')
         except: return False
+        self.save_change()
         self.dataset = self.dataset[(np.abs(stats.zscore(sub_df)) < treshold).all(axis=1)]
         return True
         
@@ -392,6 +463,7 @@ class MLData:
         try: sub_df = self.dataset.iloc[:, columns].astype('float64')
         except: return False
         
+        self.save_change()
         q1 = sub_df.quantile(0.25)
         q3 = sub_df.quantile(0.75)
         iqr = 1.5 * (q3 - q1)
@@ -399,28 +471,25 @@ class MLData:
         return True
     
     def isolation_forest_outlier_removal(self, columns):
-        try:
-            rows = IsolationForest().fit_predict(self.dataset.iloc[:, columns])
-            self.dataset = self.dataset[np.where(rows == 1, True, False)]
-            return True
-        except:
-            return False
+        try: rows = IsolationForest().fit_predict(self.dataset.iloc[:, columns])
+        except: return False
+        self.save_change()
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+        return True
         
     def one_class_svm_outlier_removal(self, columns):
-        try:
-            rows = OneClassSVM().fit_predict(self.dataset.iloc[:, columns])
-            self.dataset = self.dataset[np.where(rows == 1, True, False)]
-            return True
-        except:
-            return False
+        try: rows = OneClassSVM().fit_predict(self.dataset.iloc[:, columns])
+        except: return False
+        self.save_change()
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+        return True
     
     def local_outlier_factor_outlier_removal(self, columns):
-        try:
-            rows = LocalOutlierFactor().fit_predict(self.dataset.iloc[:, columns])
-            self.dataset = self.dataset[np.where(rows == 1, True, False)]
-            return True
-        except:
-            return False
+        try: rows = LocalOutlierFactor().fit_predict(self.dataset.iloc[:, columns])
+        except: return False
+        self.save_change()
+        self.dataset = self.dataset[np.where(rows == 1, True, False)]
+        return True
             
     # ######## #
     # Analysis #
