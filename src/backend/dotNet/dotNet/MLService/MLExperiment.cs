@@ -367,6 +367,16 @@ namespace dotNet.MLService {
         // Data analysis //
         // ///////////// //
 
+
+        // Change column type
+        public void ToggleColumnsType(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.ToggleColumnType);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+
         // Get column statistics
         public string NumericalStatistics(int[] columns) {
             lock (_lock) {
@@ -390,6 +400,15 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.AllStatistics);
                 return connection.Receive();
+            }
+        }
+
+        // Data visualization
+        public void GetScatterPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.GetScatterPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
@@ -514,9 +533,11 @@ namespace dotNet.MLService {
         RemoveOutliersOneClassSVM,
         RemoveOutliersByLocalFactor,
         // Data analysis
+        ToggleColumnType,
         NumericalStatistics,
         CategoricalStatistics,
         AllStatistics,
+        GetScatterPlot,
         // Network
         SaveModel,
         LoadModel,

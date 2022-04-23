@@ -141,6 +141,10 @@ namespace dotNet.Controllers {
                 // Load data
                 experiment.LoadDataset(1, "test_data.csv");
 
+                experiment.GetScatterPlot(new int[] { 4, 6, 10 });
+
+                return "Done";
+
                 // Get statistics
                 var statistics = experiment.ColumnStatistics();
                 Console.WriteLine(statistics);

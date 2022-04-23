@@ -16,6 +16,8 @@ from StatisticsCategorical import StatisticsCategorical
 
 from StatisticsNumerical import StatisticsNumerical
 
+import CustomColors
+
 class MLData:
     
     def __init__(self) -> None:
@@ -25,6 +27,7 @@ class MLData:
         self.train_indices  = None
         self.test_indices   = None
         self.column_types   = None
+        self.column_data_ty = None
     
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
@@ -43,10 +46,12 @@ class MLData:
         self.dataset = dataset
         self.train_indices = [i for i in range(self.dataset.shape[0])]
         self.test_indices = []
-        self._update_column_types()
-    
-    def _update_column_types(self):
+        
         self.column_types = self.dataset.dtypes
+        
+        self.column_data_ty = []
+        for type in self.column_types:
+            self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def load_test_from_csv(self, pathOrBuffer):
         dataset_test = pd.read_csv(pathOrBuffer)
@@ -138,7 +143,7 @@ class MLData:
         return self.dataset.shape[0]
     
     def get_column_types(self):
-        return [str(i) for i in self.column_types]
+        return self.column_data_ty
     
     # ################# #
     # Data manipulation #
@@ -213,18 +218,25 @@ class MLData:
     def add_column(self, new_column, label):
         series = pd.Series(new_column, name=label)
         self.dataset = self.dataset.join(series)
-        self._update_column_types()
+        
+        new_column_type = series.dtype
+        self.column_types.append(new_column_type)
+        self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def update_column(self, column, new_column=None, new_label=None):
         if new_label is not None:
             self.dataset.rename(columns={self.dataset.columns[column]:new_label}, inplace=True)
         if new_column is not None:
             self.dataset.iloc[:, column] = new_column
-        self._update_column_types()
+            
+        new_column_type = self.dataset.dtypes[column]
+        self.column_types[column] = new_column_type
+        self.column_data_ty[column] = 'Numerical' if (type == 'int64' or type == 'float64') else 'Categorical'
         
     def remove_column(self, column):
         self.dataset.drop(self.dataset.columns[column], axis=1, inplace=True)
-        self._update_column_types()
+        self.column_types.pop(column)
+        self.column_data_ty.pop(column)
             
     # Handeling NA values
     def replace_value_with_na(self, columns, value):
@@ -270,12 +282,13 @@ class MLData:
         
     def replace_na_with_regression(self, column, input_columns):
         if self.dataset.iloc[:, input_columns].isna().any().any() == True:
-            return
+            return False
         
         na_rows = self.dataset.iloc[:, column].isna()
         not_na_rows = [not x for x in na_rows]
-        inputs = self.dataset[not_na_rows].iloc[:, input_columns]
-        try: output = self.dataset[not_na_rows].iloc[:, column].astype('float64')
+        try: 
+            inputs = self.dataset[not_na_rows].iloc[:, input_columns].astype('float64')
+            output = self.dataset[not_na_rows].iloc[:, column].astype('float64')
         except: return False
         
         regression = LinearRegression().fit(inputs, output)
@@ -290,17 +303,37 @@ class MLData:
         
     # Value encoding
     def label_encode_columns(self, columns):
+        for column in columns:
+            if self.column_types[column] == 'float64':
+                return False
+            
         self.dataset.iloc[:, columns] = OrdinalEncoder().fit_transform(self.dataset.iloc[:, columns])
-        self._update_column_types()
+        for column in columns:
+            self.column_types[column] = 'int64'
+            
+        return True
     
     def one_hot_encode_columns(self, columns):
+        for column in columns:
+            if self.column_types[column] == 'float64':
+                return 1
+            if self.dataset.iloc[:, column].nunique() > 64:
+                return 2
+            
         encoder = OneHotEncoder()
         result = encoder.fit_transform(self.dataset.iloc[:, columns]).toarray()
         new_columns = [self.dataset.columns[columns[i]] + str(group) 
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
-        self._update_column_types()
+        
+        for col in columns:
+            self.column_types.pop(col)
+            self.column_data_ty.pop(col)
+        for col in new_columns:
+            self.column_types.append('int64')
+            self.column_data_ty.append('Categorical')
+        return 0
     
     # Normalization
     def maximum_absolute_scaling(self, columns):
@@ -308,7 +341,10 @@ class MLData:
             column = self.dataset.iloc[:, ci]
             try: self.dataset.iloc[:, ci] = column / column.abs().max()
             except: return ci
-        self._update_column_types()
+        
+        for col in columns:
+            self.column_types[col] = 'float64'
+            self.column_data_ty = 'Numerical'
         return -1
     
     def min_max_scaling(self, columns):
@@ -316,7 +352,10 @@ class MLData:
             column = self.dataset.iloc[:, ci]
             try: self.dataset.iloc[:, ci] = (column - column.min()) / (column.max() - column.min())
             except: return ci
-        self._update_column_types()
+        
+        for col in columns:
+            self.column_types[col] = 'float64'
+            self.column_data_ty = 'Numerical'
         return -1
     
     def z_score_scaling(self, columns):
@@ -324,7 +363,10 @@ class MLData:
             column = self.dataset.iloc[:, ci]
             try: self.dataset.iloc[:, ci] = (column - column.mean()) / column.std()
             except: return ci
-        self._update_column_types()
+        
+        for col in columns:
+            self.column_types[col] = 'float64'
+            self.column_data_ty = 'Numerical'
         return -1
         
     # Outlier detection    
@@ -383,6 +425,13 @@ class MLData:
     # ######## #
     # Analysis #
     # ######## #
+    # Toggle Numerical/Categorical
+    def toggle_column_data_type(self, columns):
+        for col in columns:
+            col_prev_type = self.column_data_ty[col]
+            self.column_data_ty[col] = 'Numerical' if col_prev_type == 'Categorical' else 'Categorical'
+    
+    # Column statistics
     def get_numerical_statistics(self, columns):
         column_names = self.dataset.columns[columns]
         
@@ -443,4 +492,63 @@ class MLData:
             ).__dict__
     
         return statistics
+    
+    # ################## #
+    # Data Visualization #
+    # ################## #
+    
+    def _change_style(self, ax, transparent_axis=False, full_box=False):
+        ax.set_facecolor(CustomColors.transparent)
+        
+        top_right_color = CustomColors.transparent
+        if full_box:
+            top_right_color = 'white'
+        
+        ax.spines['bottom'].set_color('white')
+        ax.spines['top'].set_color(top_right_color) 
+        ax.spines['right'].set_color(top_right_color)
+        ax.spines['left'].set_color('white')
+        
+        if transparent_axis:
+            ax.tick_params(
+                left=False,
+                    bottom=False,
+                    labelleft=False,
+                    labelbottom=False
+            )
+        else:
+            ax.tick_params(axis='x', colors='white')
+            ax.tick_params(axis='y', colors='white')
+        
+        ax.yaxis.label.set_color('white')
+        ax.xaxis.label.set_color('white')
+        
+    def _save_fig(self, ax, path):
+        fig = ax.get_figure()
+        fig.savefig(path, dpi=150, bbox_inches = 'tight', transparent=True)
+    
+    def draw_scatter_plot(self, columns, path):
+        if len(columns) == 2:
+            ax = self.dataset.plot.scatter(columns[0], columns[1], c=CustomColors.accent, alpha=0.25)
+            self._change_style(ax)
+            self._save_fig(ax, path)
+        else:
+            axs = pd.plotting.scatter_matrix(
+                self.dataset.iloc[:, columns], 
+                color=CustomColors.accent,
+                density_kwds={'color':CustomColors.accent, 'alpha':0.75},
+                alpha=0.125,
+                diagonal='kde'
+            )
+            
+            style_of_x_lab = 'right' if (len(columns) > 5) else 'center'
+            for axr in axs:
+                for ax in axr:
+                    self._change_style(ax, full_box=True, transparent_axis=True)
+                    ax.yaxis.label.set_rotation(30)
+                    ax.xaxis.label.set_rotation(30)
+                    ax.yaxis.label.set_ha('right')
+                    ax.xaxis.label.set_ha(style_of_x_lab)
+            
+            self._save_fig(axs[0][0], path)
     
