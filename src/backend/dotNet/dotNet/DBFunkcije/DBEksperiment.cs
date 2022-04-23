@@ -160,5 +160,61 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+        public bool dodajSnapshot(int id, string naziv,string csv)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "insert into Snapshot(`ideksperimenta`,`Ime`,`csv`) values (@id,@ime,@csv);";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", naziv);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@csv", csv);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public List<Snapshot> listaSnapshota(int id)
+        {
+            List<Snapshot> lista = new List<Snapshot>();
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where ideksperimenta=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv")));
+                    }
+                }
+            }
+            return lista;
+        }
+
+        public Snapshot dajSnapshot(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv"));
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

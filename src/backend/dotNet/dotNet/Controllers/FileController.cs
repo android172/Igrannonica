@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using dotNet.Models;
 using dotNet.MLService;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace dotNet.Controllers
 {
@@ -464,6 +465,59 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
+        [Authorize]
+        [HttpPost("CreateSnapshot")]
+        public IActionResult creirajSnapshot(int id, string naziv)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                if (eksperiment.IsDataLoaded(id))
+                    return BadRequest("Nije unet dataset.");
+                if (!db.dbeksperiment.dodajSnapshot(id, naziv, "test.csv"))
+                    return BadRequest("Nije unet file.");
+                eksperiment.SaveDataset();
+                return Ok("Napravljen Snapshot");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
 
+        [Authorize]
+        [HttpGet("Snapshots")]
+        public IActionResult dajlistuSnapshota(int id)
+        {
+            try
+            {
+                List<Snapshot> lista = db.dbeksperiment.listaSnapshota(id);
+                return Ok(lista);
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Snapshot")]
+        public IActionResult dajSnapshot(int id)
+        {
+            try
+            {
+                int id1 = db.dbmodel.dajSnapshot(id);
+                return Ok(db.dbeksperiment.dajSnapshot(id1));
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske!");
+            }
+        }
     }
 }

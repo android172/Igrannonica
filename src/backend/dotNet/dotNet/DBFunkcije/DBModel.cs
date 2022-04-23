@@ -89,7 +89,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into model (`naziv`,`idEksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
+                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`) values (@ime,@id,0,now(),now())";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", ime);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -134,6 +134,24 @@ namespace dotNet.DBFunkcije
                     return true;
                 }
                 return false;
+            }
+        }
+        public int dajSnapshot(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader read = cmd.ExecuteReader())
+                {
+                    if (read.Read())
+                    {
+                        return read.GetInt32("snapshot");
+                    }
+                    return -1;
+                }
             }
         }
         public ANNSettings podesavanja(int id)
