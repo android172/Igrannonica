@@ -141,9 +141,9 @@ namespace dotNet.Controllers {
                 // Load data
                 experiment.LoadDataset(1, "test_data.csv");
 
-                //experiment.GetScatterPlot(new int[] { 4, 6, 10 });
+                experiment.DrawScatterPlot(new int[] { 4, 6, 10 });
 
-                //return "Done";
+                return "Done";
 
                 // Add row and column
                 experiment.AddRow(new[] { "1", "1123", "0", "1", "44", "1", "999",

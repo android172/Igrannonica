@@ -741,7 +741,7 @@ class MLClientInstance(Thread):
                 print(f"Categorical and Numerical statistics computed for all columns.")
                 
             # Data Visualization #
-            elif received == 'GetScatterPlot':
+            elif received == 'DrawScatterPlot':
                 # Receive columns
                 columns_string = self.connection.receive()
                 columns = [int(x) for x in columns_string.split(":")]
@@ -749,8 +749,21 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
                 
-                path = os.path.join(os.curdir, 'data', self.experiment_id, 'requested_image.png')
-                network.data.draw_scatter_plot(columns, path)
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                network.data.draw_scatter_plot(columns, file_path)
+                
+                files = {'file' : (file_name, open(file_path, 'rb'))}
+                
+                response = requests.post(
+                    f"http://localhost:5008/api/file/update/{experiment_id}", 
+                    headers={"Authorization" : f"Bearer {self.token}"}, 
+                    files=files
+                )
+                
+                if response.status_code != 200:
+                    self.report_error(f"ERROR :: Couldn't upload image; Error code {response.status_code}")
+                    return
                 
                 self.connection.send("OK")
                 print(f"Scatter plot for columns {columns} requested.")

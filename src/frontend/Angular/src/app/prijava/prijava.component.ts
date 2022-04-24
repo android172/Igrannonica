@@ -64,6 +64,7 @@ export class PrijavaComponent implements OnInit {
       this.http.post(url+'/api/Auth',{"KorisnickoIme":korisnickoIme,"Sifra":sifra},{responseType: 'text'}).subscribe(
         token=>{
           localStorage.setItem("token",token); 
+          console.log(token)
           this.router.navigate(['/']);  
         },error =>{
           console.log(error.error);
