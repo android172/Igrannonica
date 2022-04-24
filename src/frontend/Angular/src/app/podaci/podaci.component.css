@@ -611,6 +611,7 @@ th{
     position: sticky;
     top: -12px;
     background-color: #272741;
+    cursor: pointer;
 }
 .tr-button{
     transition: box-shadow .2s;
