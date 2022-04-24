@@ -75,6 +75,24 @@ namespace dotNet.MLService {
             }
         }
 
+        // //////////////////// //
+        // Data version control //
+        // //////////////////// //
+
+        public void Undo() {
+            lock (_lock) {
+                connection.Send(Command.Undo);
+                CheckStatus();
+            }
+        }
+
+        public void Redo() {
+            lock (_lock) {
+                connection.Send(Command.Redo);
+                CheckStatus();
+            }
+        }
+
         // /////////// //
         // Data access //
         // /////////// //
@@ -496,6 +514,9 @@ namespace dotNet.MLService {
         SelectInputs,
         SelectOutputs,
         RandomTrainTestSplit,
+        // Data version control
+        Undo,
+        Redo,
         // Data access
         GetRows,
         GetRowCount,

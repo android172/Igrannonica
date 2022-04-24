@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-novi-eksperiment',
@@ -10,9 +11,37 @@ import { url } from '../app.module';
 })
 export class NoviEksperimentComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router:Router) {}
+  constructor(private http: HttpClient, private router:Router,private service: NotificationsService) {}
 
   ngOnInit(): void {
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   napraviEksperiment(){
@@ -31,5 +60,10 @@ export class NoviEksperimentComponent implements OnInit {
         alert(error.error); 
       }
     );
+  }
+  handleKeyUp(event: any){
+    if(event.keyCode === 13){
+       this.napraviEksperiment();
+    }
   }
 }

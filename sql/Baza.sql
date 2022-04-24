@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `Baza`.`model` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `naziv` VARCHAR(256) NULL,
   `idEksperimenta` INT UNSIGNED NOT NULL,
+  `snapshot` INT UNSIGNED NOT NULL,
   `napravljen` DATETIME NOT NULL,
   `obnovljen` DATETIME NULL,
   PRIMARY KEY (`id`),
@@ -98,6 +99,16 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `Baza`.`Snapshot`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Snapshot` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ideksperimenta` VARCHAR(256) NOT NULL,
+  `Ime` VARCHAR(256) NOT NULL,
+  `csv` VARCHAR(256) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

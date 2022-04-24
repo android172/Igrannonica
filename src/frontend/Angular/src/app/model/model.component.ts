@@ -13,6 +13,9 @@ import { ChartOptions } from 'chart.js';
 import { ChartType } from 'chart.js';
 import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { ModalService } from '../_modal';
+import {Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications'; 
 
 @Component({
   selector: 'app-model',
@@ -33,6 +36,7 @@ export class ModelComponent implements OnInit {
 
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
+
 
   public kolone: any[] = [];
   message: any;
@@ -67,7 +71,7 @@ export class ModelComponent implements OnInit {
   public izabraneI : number[] = [];
   public pomocni : number[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -78,6 +82,34 @@ export class ModelComponent implements OnInit {
 
   sendMessage():void{
     this.shared.sendUpdate("Update");
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   ngOnInit(): void {
@@ -125,6 +157,22 @@ export class ModelComponent implements OnInit {
         {
           this.nizCvorova[i] = this.hiddLay[i];
         }
+        if(this.aktFunk.length==0 && this.hiddLay.length ==0)
+        {
+          
+          this.aktFunk[0] = 1;
+          this.aktFunk[1] = 1;
+          this.hiddLay[0] = 2;
+          this.hiddLay[1] = 2;
+          this.nizCvorova[0] = 2;
+          this.nizCvorova[1] = 2;
+         /* this.hiddLay.push(1);
+          this.aktFunk.push(1);
+          this.nizCvorova.push(1);*/
+          this.brHL = 2;
+        }
+        console.log(this.hiddLay);
+        console.log(this.aktFunk);
         this.brojU = this.json1['inputSize'];
         this.brojI = this.json1['outputSize'];
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
@@ -140,9 +188,11 @@ export class ModelComponent implements OnInit {
           this.flag = true;
           (<HTMLInputElement>document.getElementById("toggle")).checked = true;
         }
+        this.onSuccess("Zahtev uspesno poslat!");
       },
       error=>{
         console.log(error);
+        this.onError("Zahtev nije poslat!");
       }
     )
   }
@@ -315,6 +365,7 @@ export class ModelComponent implements OnInit {
       }
       this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
         res=>{
+          this.onSuccess("Uspesno!");
 
         }, error=>{
           this.ucitajNaziv();
@@ -463,12 +514,13 @@ export class ModelComponent implements OnInit {
         "KFoldCV":this.cv
     };
     
-    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
+    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod,{responseType:"text"}).subscribe(
       res=>{
-        
+        this.onSuccess("Podesavanja uspesni izmenjena!");
       },err=>{
         console.log(jsonPod);
         console.log(err.error);
+        this.onError("Podesavanja nisu izmenjena!");
       }
     )
   }
@@ -481,25 +533,32 @@ export class ModelComponent implements OnInit {
     var div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML;
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
+      this.onError("Model sa tim nazivom vec postoji");
     }
     this.http.put(url+"/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
-
+          this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{
         this.ucitajNazivModela(this.idModela);
         //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
         }
       }
     )
   }
 
-  treniraj(){
-    this.izmeniPodesavanja();
-    this.uzmiCekirane();
-    console.log("sacuvano");
+  treniraj(broj:number){
+    
+    (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
+    
+    if(broj == 1){
+      this.izmeniPodesavanja();
+      this.uzmiCekirane();
+      console.log("sacuvano");
+    }
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
@@ -510,6 +569,7 @@ export class ModelComponent implements OnInit {
             this.chart?.update();
           }
         )
+        this.onInfo("Trening je zapocet.");
       }
     )
   }

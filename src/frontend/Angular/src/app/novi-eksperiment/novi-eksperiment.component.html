@@ -4,7 +4,7 @@
 
             <div id="podaci">Naziv eksperimenta:</div>
             <div id="polje">
-            <input  id="ime" type="text" name="ime">
+            <input  id="ime" type="text" name="ime" (keyup)="handleKeyUp($event)">
             <div id="greska" style="color: red;"></div>
             </div>  
 

@@ -4,7 +4,7 @@
 
     <div id="header1">
 
-        <input type="file" class="file-input" accept=".csv" (change)="onFileSelected($event)" #fileUpload>
+        <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
 
         <div class="file-upload okvir2">
 
@@ -41,19 +41,19 @@
 
     <div id="box">
         <div id="testniskup" class="p1 placement">
-            <div>Testni skup</div>
+            <div id="naslov">Testni skup</div>
 
             <div ngbDropdown class="d-inline-block">
                 <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi</button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Unos željenih vrednosti</button>
                   <button ngbDropdownItem id="ucitajTestniSkup" (click)="izborUnosa('Testni skup')">Učitaj testni skup</button>
-                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Proizvoljan unos vrednosti</button>
                 </div>
             </div>
 
             <div id="testniskup-comp">
 
-                <div id="unos-fajla" class="visible-testniskup"> 
+                <div id="unos-fajla" class="invisible-testniskup"> 
                     <form id="forma-test">
                         <div class="form-group">       
                             <label id="label-input" for="exampleFormControlFile1">
@@ -66,14 +66,14 @@
                 </div>
 
 
-                <div id="proizvoljan-unos" class="invisible-unos">
+                <div id="proizvoljan-unos" class="visible-unos">
                     <div id="slider">
-                        <div style="margin: auto; color: #c1cdff; position: relative; top: -25px;">Uneti vrednost iz intervala [0,1]</div>
+                        <div style="margin: auto; color: #c1cdff; position: relative; top: -30px;">Uneti vrednost iz intervala [0,1]</div>
                         <div id="current-value">50%</div>
                         
                         <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio">
                     </div>
-                    <br><br><br>
+                    <br><br>
                     <div id="div-ratio">
                         <input type="number" min="0" max="1" step="0.01" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
                         <button id="btn-ratio" (click)="setRatio()">Primeni</button>
@@ -82,47 +82,163 @@
             </div>
         </div>
         <div id="nedostajucevrednosti" class="placement">
-            <div>Nedostajuće vrednosti</div>
-            <div id="select-elements">
-                <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-design2" id="dropdownBasic2" ngbDropdownToggle>Zamena vrednosti</button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-                      <button ngbDropdownItem  (click)="fillWithMean()">Zameni sa mean u koloni</button>
-                      <button ngbDropdownItem  (click)="fillWithMedian()">Zameni sa median u koloni</button>
-                      <button ngbDropdownItem  (click)="fillWithMode()">Zameni sa mode u koloni</button>
-                    </div>
+            <div id="header-help">
+                <div id="naslov">Nedostajuće vrednosti</div>
+                <div id="helper"> 
+                    <span  class="hovertext" data-tooltip="Zamena praznih stringova sa NA:
+                          - Za odabrane kategorije (kolone)
+                          Zamena 0 sa NA:
+                          - Za odabrane kolone sa numerickim vrednostima">
+                    &#63;
+                    </span>
                 </div>
-                
+            </div>
+            <div id="select-elements">
+
+                <div ngbDropdown class="dropdown" id="zamena-select">
+                    <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                      Zamena NA vrendosti
+                    </button>
+                    <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMean()">Zameni NA sa mean u koloni</a></li>
+                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMedian()">Zameni NA sa median u koloni</a> </li>
+                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMode()">Zameni NA sa mode u koloni</a> </li>
+                        <div class="dropdown-divider"></div>
+                        <li ngbDropdown>
+                            <a class="dropdown-item" id="sub-menu1">
+                               Linearna regresija  &nbsp; &nbsp;&nbsp;  &#10148;
+                            </a>
+                            <ul ngbDropdownMenu class="dropdown-menu dropdown-submenu">
+                                <div *ngFor="let fieldValue of dajNaziveHeadera(); let i = index" >
+                                <li ngbDropdownItem> <a role="button" class="dropdown-item" (click)="selectForRegression($event,i)">{{fieldValue}}</a></li>   
+                                </div>                      
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+               
+
                 <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje vrednosti</button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-                      <button ngbDropdownItem (click)="deleteRows()">Izbaci selektovane vrste</button>
-                      <button ngbDropdownItem (click)="deleteColumns()">Izbaci selektovane kolone</button>
-                      <button ngbDropdownItem (click)="izborUnosa('Proizvoljno')">Izbaci vrste za izabrane kolone</button>
+                    <button class="btn btn-design2" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
+                      <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
+                      <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
+                      <button ngbDropdownItem (click)="deleteRowsWithNAforSelectedColumns()">Izbaci sve vrste sa NA za izabrane kolone</button>
                     </div>
                 </div>
 
             </div>
-           <div id="prazni-string">
-                <div>Zamena praznih stringova sa NA za zeljene kolone:</div>
-                <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
-           </div>
-            
-           <div id="zamena-nula">
-                <div>Zamena 0 sa NA za zeljene kolone:</div>
-                <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
-           </div>
 
-           <div id="nova-kategorija">
-                <div>Dodaj novu kategoriju:</div>
-                <button id="b3">Nova kategorija</button>  
-           </div>
+            <div id="opcije-nv">
+                <div id="prazni-string">
+                   <div>Zamena praznih stringova sa NA:</div>
+                   <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
+               </div>
+            
+                <div id="zamena-nula">
+                        <div>Zamena 0 sa NA:</div>
+                        <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
+                </div>
+            </div>
+            <div id="regresija-nv">
+                <input type="text" id="regresija-input" placeholder="Regresija:" readonly>
+                <button id="btn-reg" (click)="primeniZaRegression()">Primeni</button> 
+            </div>
+
+           
             
         </div>
         <div id="enkodiranje" class="p2 placement">
-            <div>Enkodiranje</div>
+            <div id="naslov">Enkodiranje</div>
             <button id="b4" (click)="labelEncoding()">LabelEncode</button> 
             <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
+        </div>
+    </div>
+
+    <div id="box2">
+        <div id="normalizacija">
+            <div id="header-help">
+                <div id="naslov">Normalizacija</div>
+                <div id="helper"> 
+                    <span  class="hovertext-left" data-tooltip="- Odabrati željeni tip normalizacije
+                        - Selektovati željene kolone 
+                        - Primenite podešene vrednosti ">
+                    &#63;
+                    </span>
+                </div>
+            </div>
+
+            <div id="norm-box">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design3" id="norm-btn" ngbDropdownToggle>Izaberite tip normalizacije</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem id="absolute-max" (click)="selectNorm($event)">Absolute Maximum Scaling</button>
+                      <button ngbDropdownItem id="minmax" (click)="selectNorm($event)">Min-Max Scaling</button> 
+                      <button ngbDropdownItem id="zscore" (click)="selectNorm($event)">Z-score Scaling</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
+            </div>
+        </div>
+
+        <div id="polje">
+            <div id="header-help">
+                <div id="naslov">Podaci</div>
+                <div id="helper"> 
+                    <span  class="hovertext-left" data-tooltip="Funkcije za upravljanje
+                                  podacima tabele">
+                    &#63;
+                    </span>
+                </div>
+            </div>
+
+            <div id="podaci-box">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design2" id="select-data" ngbDropdownToggle>Upravljanje podacima</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
+                        <button ngbDropdownItem (click)="selectData($event)" id="izbaci-selekt-vrste">Izbaci selektovane vrste</button>
+                        <button ngbDropdownItem (click)="selectData($event)" id="izbaci-selekt-kolone">Izbaci selektovane kolone</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary primeni-izuzeci" id="btn-data" (click)="primeniNaPodatke()">Primeni</button>
+            </div>
+
+        </div>
+
+        <div id="outliers">
+            <div id="header-help">
+                <div id="naslov">Netipične vrednosti</div>
+                <div id="helper"> 
+                    <span class="hovertext" data-tooltip="Uobičajene vrednosti praga:
+
+                        Standard Deviation: 2
+                        Quantiles: ( 0.1, 0.25 )
+                        Z-score: ( -3, +3 ) 
+                        ">
+                        &#63;
+                      </span>
+                </div>
+            </div>
+
+            <div id="outliers-box">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>
+                      <button ngbDropdownItem id="option-quantiles" (click)="selectOutliers($event)">Quantiles</button> 
+                      <button ngbDropdownItem id="option-zscore" (click)="selectOutliers($event)">Z-Score</button>
+                      <button ngbDropdownItem id="option-iqr" (click)="selectOutliers($event)">IQR</button>
+                      <button ngbDropdownItem id="option-isolation" (click)="selectOutliers($event)">Isolation Forest</button>
+                      <button ngbDropdownItem id="option-svm" (click)="selectOutliers($event)">One Class SVM</button>
+                      <button ngbDropdownItem id="option-lfactor" (click)="selectOutliers($event)">Local Factor</button>
+                    </div>
+                </div>
+
+                <input type="number" id="threshold" placeholder="Prag:" readonly>
+
+                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
+            </div>
         </div>
     </div>
 
@@ -156,21 +272,6 @@
             ></pagination-controls>
         </div>
 
-        <!--<div id="statistika" style="overflow-y: auto">
-            <div id="statNaslov">Statisticki pokazatelji</div>
-            <div *ngFor="let key of keys; index as i" >
-                <div id="imeKolone">{{key}}</div>
-                <div id="statistikaKolone" *ngFor="let item of values[i] | keyvalue;">
-                    <ul id="ulStat">
-                        <li>
-                            <span>
-                                {{item.key}}: &nbsp; {{item.value}}
-                            </span>
-                        </li>
-                    </ul> 
-                </div>
-            </div>
-        </div>-->
         <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
@@ -240,11 +341,13 @@
 
     <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
     <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
+    <button id="sve-kolone" (click)="selectAllColumns()">Selektuj sve kolone</button>
     <button id="restore-rows" (click)="izbrisiSelektovaneRedove()">Deselektuj redove</button>
     <button id="selektovani-redovi" (click)="getSelectedRows()">Selektovani redovi</button> 
+    <button id="svi-redovi" (click)="selectAllRows()">Selektuj sve redove</button>
     <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>
     </div>
-
+    <simple-notifications></simple-notifications>
 </div>

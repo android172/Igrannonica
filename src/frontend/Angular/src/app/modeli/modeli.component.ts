@@ -5,6 +5,7 @@ import { Output, EventEmitter } from '@angular/core';
 import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
 import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-modeli',
@@ -21,7 +22,7 @@ export class ModeliComponent implements OnInit {
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService) { 
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.id = params['id'];
@@ -42,6 +43,34 @@ export class ModeliComponent implements OnInit {
         this.ngOnInit();
       }
     )
+  }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
   }
 
   ucitaj(){
@@ -72,12 +101,15 @@ export class ModeliComponent implements OnInit {
         console.log(res);
         this.ucitajModel();
         ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
+        this.onSuccess("Model je uspesno napravljen");
       },
       error=>{
         console.log(error.error);
+        this.onError("Model nije napravljen!");
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
         }
       }
     );
@@ -119,12 +151,22 @@ export class ModeliComponent implements OnInit {
          console.log(res);
             this.ucitajModel();
             var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
+            this.onSuccess("Model je uspesno obrisan");
        },
        error=>{
          console.log(error.error);
+         this.onError("Model nije obrisan!");
        }
      )
     }
   }
 
+  handleKeyUp(event: any){
+     if(event.keyCode === 13){
+      this.napraviModel();
+      this.ocisti();
+     }
+  }
+
 }
+
