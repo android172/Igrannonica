@@ -60,6 +60,8 @@ export class ModelComponent implements OnInit {
   public flag: boolean = true;
   cv: number = 0;
 
+  buttonDisable : boolean = true;
+
   selectedLF: number = 0;
   selectedO: number = 0;
   selectedRM: number = 0;
@@ -175,6 +177,14 @@ export class ModelComponent implements OnInit {
         console.log(this.aktFunk);
         this.brojU = this.json1['inputSize'];
         this.brojI = this.json1['outputSize'];
+        if(this.brojU == 0 || this.brojI == 0)
+        {
+          this.buttonDisable = true;
+        }
+        else
+        {
+          this.buttonDisable = false;
+        }
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
         this.crossV = this.json1['kFoldCV'];
@@ -250,6 +260,10 @@ export class ModelComponent implements OnInit {
            // console.log(element);
             this.kolone.splice(index,1);
             this.brojU++;
+            if(this.brojU > 0 && this.brojI > 0)
+            {
+              this.buttonDisable = false;
+            }
             console.log(this.brojU);
           }
         });
@@ -276,6 +290,10 @@ export class ModelComponent implements OnInit {
         {
           this.kolone.splice(i, 0, nizK[i].value);
           this.brojU--;
+          if(this.brojU)
+          {
+            this.buttonDisable = true;
+          }
         }
       }
     }
@@ -306,6 +324,10 @@ export class ModelComponent implements OnInit {
           if(element === nizK[i].value){
            this.kolone2.splice(index,1);
             this.brojI++;
+            if(this.brojI > 0 && this.brojU > 0)
+            {
+              this.buttonDisable = false;
+            }
             return;
           }
         });
@@ -330,6 +352,10 @@ export class ModelComponent implements OnInit {
         {
           this.kolone2.splice(i, 0, nizK[i].value);
           this.brojI--;
+          if(this.brojI == 0)
+          {
+            this.buttonDisable = true;
+          }
           return;
         }
       }
@@ -692,6 +718,23 @@ export class ModelComponent implements OnInit {
     else{
       this.flag = true;
       (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+    }
+  }
+
+  promeniK(){
+    
+    var str = (<HTMLInputElement>document.getElementById("crossV")).value;
+
+    if(Number(str) > 20)
+    {
+       (<HTMLInputElement>document.getElementById("crossV")).value = "20";
+     /*  (<HTMLInputElement>document.getElementById("crossV")).value = "2";*/
+    }
+    else
+    if(Number(str) < 2)
+    {
+      (<HTMLInputElement>document.getElementById("crossV")).value = "2";
+      /*(<HTMLInputElement>document.getElementById("crossV")).value = "";*/
     }
   }
 }

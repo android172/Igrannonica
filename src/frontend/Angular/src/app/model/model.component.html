@@ -64,7 +64,7 @@
                         <h4> Loss function </h4>
                         <select name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
-                            <option id="ddp" value="1">MSELoss</option>
+                            <option id="ddp" value="1">L2 loss</option>
                             <option id="ddp" value="2">Cross-entropy loss</option>
                         </select>
                     </div>
@@ -91,7 +91,7 @@
                             <span class="slider round"></span>
                           </label>
                           <div *ngIf="flag; else onemoguceno">
-                            <input id="crossV" min="2" max="20" [defaultValue]="crossV">
+                            <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
                         </div>
                         <ng-template #onemoguceno>
                             <input id="crossVd" disabled>
@@ -122,12 +122,12 @@
             
                     <div id="grupaP">
                         <h4> Regularization rate </h4>
-                        <input type="text" id="rr" name="rr">
+                        <input type="number" id="rr" name="rr">
                     </div>
             
                     <div id="grupaP">
                         <h4> Batch size </h4>
-                            <input type="text" id="bs" name="bs">
+                            <input type="number" id="bs" name="bs">
                     </div>
 
                 </div>
@@ -139,17 +139,23 @@
             <div id="podesavanja2">
                 <div id="grupa">
                     <h4> Number of epochs </h4>
-                    <input type="text" id="noe" name="noe">
+                    <input type="number" id="noe" name="noe">
                 </div>
         
                 <div id="grupa">
                     <h4> Learning rate </h4>
-                    <input type="text" id="lr" name="lr">
+                    <input type="number" id="lr" name="lr">
                 </div>
             </div>
 
             <div id="boxZT">
-                <a class="play-btn" (click)="modalService.open('modal-1');" type="button"></a>
+                <div *ngIf="!buttonDisable; else onesposobi">
+                    <a class="play-btn" (click)="modalService.open('modal-1');" type="button"></a>
+                </div>
+                <ng-template #onesposobi>
+                    <a class="play-btn-disable"></a>
+                  </ng-template>
+                
                 <!--
                 <button id="pokreniM" (click)="modalService.open('modal-1');">
                     <img id="playbutton" src="assets/play-button.png">
