@@ -1084,3 +1084,62 @@ th{
     float: right;
     color: #CED9FF;;
 }
+
+/*  Tooltip levo/desno */ 
+
+
+.hovertext::before,.hovertext::after {
+    --scale:0;
+    top: -.25rem;
+    left: 50%;
+    transform: translateX(-100%) translateY(-100%) scale(var(--scale));
+    box-sizing: border-box;
+    background-color: #0a1024;
+    transition: 150ms transform;
+    transform-origin: bottom right;
+}
+  .hovertext::before{
+    position: absolute;
+    content: attr(data-tooltip);
+    color: white;
+    padding: .5rem;
+    height: max-content;
+    width: max-content;
+    border-radius: .3rem;
+    text-align: left;
+}
+  .hovertext:hover::before{
+    --scale:1;
+}
+
+.hovertext-left{
+    border-radius: 50%;
+    position: relative;
+    white-space: pre-line;
+    padding: 5px;
+}
+
+.hovertext-left::before,.hovertext::after {
+    --scale:0;
+    top: -.25rem;
+    left: 50%;
+    transform: translateX(-0%) translateY(-100%) scale(var(--scale));
+    box-sizing: border-box;
+    background-color: #0a1024;
+    transition: 150ms transform;
+    transform-origin: bottom left;
+}
+  .hovertext-left::before{
+    position: absolute;
+    content: attr(data-tooltip);
+    color: white;
+    padding: .5rem;
+    height: max-content;
+    width: max-content;
+    border-radius: .3rem;
+    text-align: left;
+}
+  .hovertext-left:hover::before{
+    --scale:1;
+}
+/* */ 
