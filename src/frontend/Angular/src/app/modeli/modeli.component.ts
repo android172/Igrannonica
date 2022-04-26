@@ -96,7 +96,7 @@ export class ModeliComponent implements OnInit {
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
     }
-    this.http.post(url+"/api/Eksperiment/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.ucitajModel();
@@ -118,7 +118,7 @@ export class ModeliComponent implements OnInit {
   ucitajModel()
   {
     this.ActivateAddEdit=true;
-    this.http.get(url+'/api/Eksperiment/Modeli/' + this.id).subscribe(
+    this.http.get(url+'/api/Model/Modeli/' + this.id).subscribe(
         res=>{
           console.log(res);
           this.json = res;
@@ -146,7 +146,7 @@ export class ModeliComponent implements OnInit {
   {
     if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
     {
-      this.http.delete(url+'/api/Eksperiment/Modeli/' + i,{responseType: 'text'}).subscribe(
+      this.http.delete(url+'/api/Model/Modeli/' + i,{responseType: 'text'}).subscribe(
        res=>{
          console.log(res);
             this.ucitajModel();

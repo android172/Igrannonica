@@ -210,7 +210,7 @@ export class ModelComponent implements OnInit {
 
   ucitajNazivModela(id : any){
 
-  this.http.get(url+"/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
+  this.http.get(url+"/api/Model/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.nazivModela = res;
@@ -561,7 +561,7 @@ export class ModelComponent implements OnInit {
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
       this.onError("Model sa tim nazivom vec postoji");
     }
-    this.http.put(url+"/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+    this.http.put(url+"/api/Model/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
           this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{
@@ -588,7 +588,7 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
-    this.http.get(url+"/api/Eksperiment/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
+    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
       res => {
         let subscription = this.signalR.switchChange.asObservable().subscribe(
           value=>{
