@@ -1,25 +1,47 @@
+#body1{
+  min-height: 650px;
+}
+
+#naslov{
+  padding-left: 70px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #C4C4C4;
+  font-size: large;
+  border-bottom: 3.5px solid #5977df;
+}
+
+
+#naslov1{
+  padding-left: 250px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #C4C4C4;
+  font-size: large;
+  border-bottom: 3.5px solid #5977df;
+}
+
 p
 {
     color:white;
     font-size: large;
-    padding-top: 23px;
+    padding-top: 15px;
     text-align: center;
     float: left;
     width: 300px;
-    height: 70px;
-    margin-top: 10px;
+    height: 50px;
+    background-color: #C4C4C4;
+    border-radius: 15px;
     margin-left: 20px;
-    border: 3px solid rgb(37, 164, 214) ;
-    background-color: #272741;
-    border-radius: 10px;
-    border-radius: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
 }
 
   p:hover{
-
-  background:linear-gradient(162.06deg, #12a8dfc6 -16.65%, #52c4eeeb 97.46%);
-  border: 3px solid #272741;
-  color: #272741;
+  background:linear-gradient(162.06deg,#f45e82 -16.65%, #f47894 97.46%);
+  color: #C4C4C4;
+  transform: scale(1.04);
  }
  
 
@@ -29,38 +51,46 @@ p
 }
 
 #divModeli{
-
     position: relative;
-    width: 1290px;
-    height: 400px;
-    margin: auto;
+    width: 450px;
+    height: 540px;
+    float: left;
+}
+
+#info{
+  float: left;
+  border: 3px solid rgba(89, 119, 223, 1);
+  width: 900px;
+  height: 500px;
+  margin-top: 20px;
+  border-radius: 10px;
 }
 
 #skrol{
-
-    width: 1290px;
-    height: 400px;
+    width: 350px;
+    height: 500px;
     overflow: auto;
-    border: 4px solid rgba(89, 119, 223, 1);
-    margin: auto;
+    border: 3.5px solid rgba(89, 119, 223, 1);
+    margin-left: 40px;
     border-radius: 10px;
     color: #fff;
     font-family: 'Roboto';
     font-style: normal;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     background-color: #272741;
+    margin-top: 20px;
 }
 
 #m{
-  width: 410px;
-   height: 80px;
+  width: 300px;
+   height: 50px;
    float:left;
-   margin-top: 5px;
+   margin-bottom: 10px;
 }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 15px;
+    width: 10px;
     margin-right: 10px;
   }
   
@@ -78,7 +108,7 @@ p
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background-image: linear-gradient(180deg, #eb275e 0%, #708AD4 99%);
+    background-image: linear-gradient(180deg, #F45E82 0%, #f5aabb 99%);
   }
 
   #divB{
@@ -271,7 +301,7 @@ input:-webkit-autofill:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-image: linear-gradient(180deg, #eb275e 0%, #708AD4 99%);
+  background-image: linear-gradient(180deg, #F45E82 0%, #f5aabb 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
 }
