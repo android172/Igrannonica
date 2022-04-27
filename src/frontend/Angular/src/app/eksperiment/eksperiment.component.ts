@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { url } from '../app.module';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-eksperiment',
@@ -14,9 +16,20 @@ export class EksperimentComponent implements OnInit {
   modeli: boolean = false;
   eventsSubject: Subject<number> = new Subject<number>();
 
-  constructor(private http: HttpClient) { }
+  idEksperimenta: any;
+  nazivEksperimenta:any;
+
+  constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) { 
+    this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.idEksperimenta = params['id'];
+        console.log(this.idEksperimenta);
+      }
+    )
+  }
 
   ngOnInit(): void {
+    this.ucitajNaziv();
   }
 
   ngDoCheck()
@@ -59,6 +72,20 @@ export class EksperimentComponent implements OnInit {
     /*(<HTMLAnchorElement>document.getElementById("podaci")).className = "";
     (<HTMLAnchorElement>document.getElementById("model")).className = "";
     (<HTMLAnchorElement>document.getElementById("modeli")).className = "active";*/
+  }
+
+  ucitajNaziv()
+  {
+    this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+          this.nazivEksperimenta = res;
+          var div = (<HTMLDivElement>document.getElementById("naziveksperimenta")).innerHTML = this.nazivEksperimenta;
+          console.log(this.nazivEksperimenta);
+        },error=>{
+          console.log(error.error);
+        }
+    );
   }
 
 
