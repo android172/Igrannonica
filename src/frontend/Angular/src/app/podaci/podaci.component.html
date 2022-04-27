@@ -1,9 +1,9 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">
 <div id="body1">
 
 
-    <div id="header1">
+    <div class="row align-items-center justify-content-between p-2">
 
+        <div class="col-md-2">
         <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
 
         <div class="file-upload okvir2">
@@ -15,30 +15,39 @@
             <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span><span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span></span>
             </div>
         </div>
-
-
-        <div id="brojRedovaTabelePoruka" style="color: white;">
-            <div id="odabir-redova">Broj redova za prikaz:</div>
-            <span>
-                <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
-                    <option value="5">5</option>
-                    <option selected value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </span>
         </div>
+
+        <div class="col-md-9 d-flex justify-content-between okvir">
 
         <div id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
             <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
         </div>
         
+        </div>
+    </div>
+    <div class="row align-items-center justify-content-between p-3">
+        <div class="col-md-9 okvir">
+            <div id="brojRedovaTabelePoruka" style="color: white;">
+                <div id="odabir-redova">Broj redova za prikaz:</div>
+                <span>
+                    <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
+                        <option value="5">5</option>
+                        <option selected value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3">
+
+        </div>
     </div>
 
 
-    <div id="box">
+    <!-- <div id="box">
         <div id="testniskup" class="p1 placement">
             <div id="naslov">Testni skup</div>
 
@@ -239,11 +248,11 @@
                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
             </div>
         </div>
-    </div>
+    </div> -->
 
-    <div id="tabela-statistika">
-        <div page>
-            <div id="table">
+    <div class="row align-items-center justify-content-between p-1" id="tabela-podesavanja">
+        <div page class="col-md-9 justify-content-center">
+            <div class="okvir" id="table">
                 <table>
                     <tr class="head-table">
                         <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
@@ -264,14 +273,20 @@
             </div>
 
             <pagination-controls *ngIf="this.json != undefined"
-            class="pagi"
+            class="pagi ms-10"
             (pageChange)="gty(page = $event)"
             ngDefaultControl
             [(ngModel)]="this.page"
             ></pagination-controls>
         </div>
 
-        <div id="statistika" style="overflow-y: auto">
+        <div class="col-md-3 align-items-center">
+            <div class="p-2 okvir">
+
+            </div>
+        </div>
+
+        <!-- <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -335,7 +350,7 @@
                 </div>
             </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
