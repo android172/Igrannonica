@@ -259,6 +259,7 @@
     <div class="row d-flex align-items-center justify-content-between p-1" id="tabela-podesavanja">
         <div page class="col-md-9">
             <div class="okvir" id="table">
+                <div class="naslov">Učitani podaci</div>
                 <table>
                     <tr class="head-table">
                         <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
@@ -290,7 +291,7 @@
 
         <div class="col-md-3 justify-content-center align-items-center">
             <div class="p-2 okvir visinaPodesavanja">
-                <div id="naslovPodesavanja">Manipulacija podacima</div>
+                <div class="naslov">Manipulacija podacima</div>
             </div>
         </div>
 
@@ -376,7 +377,7 @@
     <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
         <div class="col-md-9">
             <div class="okvir visinaPodesavanja">
-                <div id="naslovPodesavanja">Vizuelizacija podataka</div>
+                <div class="naslov">Vizuelizacija podataka</div>
             </div>
 
         </div>

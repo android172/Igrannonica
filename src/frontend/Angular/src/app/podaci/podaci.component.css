@@ -556,7 +556,7 @@ input#exampleFormControlFile1{
     color: white;
     /* width: 960px; */
     overflow: scroll;
-    height: 550px;
+    height: 600px;
   
 }
 #table::-webkit-scrollbar{
@@ -574,6 +574,7 @@ input#exampleFormControlFile1{
     background-color: #38395f;
     
 }
+
 
 #table th{
     color: #a7baff;
@@ -1097,14 +1098,16 @@ th{
 
 .visinaPodesavanja
 {
-    height: 550px;
+    height: 600px;
     margin-top: -35px;
 }
 
-#naslovPodesavanja
+.naslov
 {
     display: flex;
     justify-content: center;
     color: white;
     font-size: 17px;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
