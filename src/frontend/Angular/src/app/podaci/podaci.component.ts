@@ -129,6 +129,8 @@ export class PodaciComponent implements OnInit {
   public kolone: any[] = [];
   message: any;
 
+  selektovanGrafik: string = "";
+
   onFileSelected(event:any) 
   {
     const file:File = event.target.files[0];
@@ -1447,5 +1449,19 @@ dajNaziveHeadera()
     });
   }
  
+  promena(event:any){
+
+    if(this.selektovanGrafik != ""){
+      (<HTMLButtonElement>document.getElementById(this.selektovanGrafik)).style.color="white";
+      this.selektovanGrafik = event.target.id;
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+    }
+    else{
+      this.selektovanGrafik = event.target.id;
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+    }
+  
+  }
+
 }
 

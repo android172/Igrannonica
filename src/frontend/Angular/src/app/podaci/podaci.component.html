@@ -30,8 +30,8 @@
         
         </div>
     </div>
-    <div class="row align-items-center justify-content-between p-0">
-        <div class="col-md-9 p-3">
+    <div class="row d-flex align-items-center justify-content-between p-1 pb-3">
+        <div class="col-md-9">
         <div class="okvir">
             <div id="brojRedovaTabelePoruka" style="color: white;">
                 <div id="odabir-redova">Broj redova za prikaz:</div>
@@ -48,9 +48,35 @@
         </div>
         </div>
         <div class="col-md-3">
+            <div class="okvir visinaIstorije row m-0 p-2">
 
+           
+                <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> 
+         
+
+                <div class="col-sm-5 ">        
+                    <button id="undoRedoDugme"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
+                </div>   
+            </div>
         </div>
     </div>
+
+    <!--
+    <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
+        <div class="col-md-9">
+            <div class="okvir visinaPodesavanja">
+                <div class="naslov">Vizuelizacija podataka</div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="okvir visinaPodesavanja">
+                
+            </div>
+        </div>
+    </div>-->
 
 
     <!-- <div id="box">
@@ -376,15 +402,21 @@
 
     <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
         <div class="col-md-9">
-            <div class="okvir visinaPodesavanja">
+            <div class="okvir visinaVizuelizacije">
                 <div class="naslov">Vizuelizacija podataka</div>
             </div>
 
         </div>
 
-        <div class="col-md-3">
-            <div class="okvir visinaPodesavanja">
-                
+        <div class="col-md-3 ">
+            <div class="okvir visinaVizuelizacije ">
+                <div class="naslov pb-5">Nacin prikaza podataka</div>
+                    <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
+                <div class="row p-2 pt-3"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="barplot" type="button" class="btn btn-secondary dugmiciG" style="border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Barplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="frequencyplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Frequencyplot</button> </div> </div>
             </div>
         </div>
     </div>
