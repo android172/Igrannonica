@@ -12,12 +12,16 @@
                 Učitaj podatke
             </button>
             <div id="okvir1">
-            <span style="color:white; margin-left: 10px; text-align: center;">{{fileName || "Podaci nisu učitani."}} <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span><span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span></span>
+            <span style="color:white; margin-left: 10px; text-align: center;">
+                {{fileName || "Podaci nisu učitani."}}
+                <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span>
+                <span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span>
+            </span>
             </div>
         </div>
         </div>
 
-        <div class="col-md-9 d-flex justify-content-between okvir">
+        <div class="col-md-9 okvir">
 
         <div id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
@@ -354,8 +358,8 @@
             </div>
         </div> -->
     </div>
-
-    <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
+    
+    <!-- <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
     <button id="selektovane-kolone" (click)="ispisiSelektovaneKolone()">Selektovane kolone</button>
     <button id="sve-kolone" (click)="selectAllColumns()">Selektuj sve kolone</button>
     <button id="restore-rows" (click)="izbrisiSelektovaneRedove()">Deselektuj redove</button>
@@ -364,6 +368,6 @@
     <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>
-    </div>
+    </div> -->
     <simple-notifications></simple-notifications>
 </div>

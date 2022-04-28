@@ -761,14 +761,15 @@ th{
     text-align: right;
     color: white;
     border-radius: 10px;
-    /* position: absolute; */
+    position: relative;
     align-items: center;
     z-index: 2;
     height: 40px;
     line-height: 35px;
-    min-width: 270px;
+    max-width: 180px;
     align-items: center;
-    left: 127px;
+    left: 125px;
+    
     /* position: absolute; */
 }
 
