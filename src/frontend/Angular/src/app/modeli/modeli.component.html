@@ -9,8 +9,10 @@
     <div id="divModeli">
         <div id="skrol">
         <div id=naslov>Lista istreniranih modela</div>
-        <div type="button" id="m" *ngFor="let m of modeli"> 
-            <p (click)="send(m.id)">  {{ m.name }} </p>
+        <div id="sk">
+            <div type="button" id="m" *ngFor="let m of modeli"> 
+                <div id="p" (click)="send(m.id)"><div id="name">{{ m.name }}</div><div id="date">{{m.createdDate}}</div></div>
+            </div>
         </div>
         </div>
     </div>

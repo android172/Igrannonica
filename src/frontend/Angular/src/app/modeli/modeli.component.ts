@@ -18,6 +18,8 @@ export class ModeliComponent implements OnInit {
   json: any;
   modeli : any[] = [];
   id: any;
+  date: String ='';
+  nizD: any[] = [];
   ActivateAddEdit: boolean = false;
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
@@ -123,11 +125,32 @@ export class ModeliComponent implements OnInit {
           console.log(res);
           this.json = res;
           this.modeli = Object.values(this.json);
+          this.formatirajDatum();
         },
         error=>{
           console.log(error.error);
         }
     );
+  }
+
+  formatirajDatum()
+  {
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      this.date=this.modeli[i].createdDate.split('T')[0];
+      this.nizD=this.date.split('-');
+      this.swap(this.nizD);
+      this.modeli[i].createdDate=this.nizD.join('.');
+      console.log(this.modeli[i].createdDate);
+    }
+  }
+
+  swap(niz: any[])
+  {
+     var x=niz[2];
+     var y=niz[0];
+     niz[0]=x;
+     niz[2]=y+'.';
   }
 
   ucitajImeE(){
