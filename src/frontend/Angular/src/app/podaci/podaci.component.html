@@ -251,7 +251,7 @@
     </div> -->
 
     <div class="row d-flex align-items-center justify-content-between p-1" id="tabela-podesavanja">
-        <div page class="col-md-9 justify-content-center">
+        <div page class="col-md-9">
             <div class="okvir" id="table">
                 <table>
                     <tr class="head-table">
@@ -273,7 +273,7 @@
             </div>
 
             <pagination-controls *ngIf="this.json != undefined"
-            class="pagi ms-10"
+            class="pagi text-center"
             (pageChange)="gty(page = $event)"
             ngDefaultControl
             [(ngModel)]="this.page"

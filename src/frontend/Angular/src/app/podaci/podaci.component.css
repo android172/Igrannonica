@@ -41,8 +41,15 @@ img{
 .pagi
 {
     color: rgb(184, 195, 255);
-    /* position: relative; */
     font-size: larger;
+    position: relative;
+    left: -3%;
+    /* font-family: */
+}
+
+ul .ngx-pagination
+{
+    padding-left: 0;
 }
 
 #brojRedovaTabelePoruka{
@@ -1084,7 +1091,6 @@ th{
     border: 3.5px solid #5977DF;
     border-radius: 10px;
     padding: 10px;
-    background-color: ;
 }
 
 .visinaPodesavanja
