@@ -272,12 +272,14 @@
                 </table>
             </div>
 
+            <div id="pagingControls">
             <pagination-controls *ngIf="this.json != undefined"
             class="pagi text-center"
             (pageChange)="gty(page = $event)"
             ngDefaultControl
             [(ngModel)]="this.page"
             ></pagination-controls>
+            </div>
         </div>
 
         <div class="col-md-3 justify-content-center align-items-center">

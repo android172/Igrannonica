@@ -145,6 +145,7 @@ export class PodaciComponent implements OnInit {
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
+          (<HTMLDivElement>document.getElementById("pagingControls")).style.color = "white";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
           this.onSuccess('Podaci su ucitani!');
