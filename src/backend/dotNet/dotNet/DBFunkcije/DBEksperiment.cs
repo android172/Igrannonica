@@ -178,6 +178,26 @@ namespace dotNet.DBFunkcije
             }
         }
 
+        public int proveriSnapshot(int id, string ime)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where ideksperimenta=@id and Ime=@ime";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@ime",ime);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return reader.GetInt32("id");
+                    }
+                }
+                return -1;
+            }
+        }
+
         public List<Snapshot> listaSnapshota(int id)
         {
             List<Snapshot> lista = new List<Snapshot>();

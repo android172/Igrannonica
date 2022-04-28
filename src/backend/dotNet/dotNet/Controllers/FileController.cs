@@ -364,7 +364,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("CreateSnapshot")]
-        public IActionResult creirajSnapshot(int id, string naziv)
+        public IActionResult kreirajSnapshot(int id, string naziv)
         {
             try
             {
@@ -376,10 +376,13 @@ namespace dotNet.Controllers
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
                 if (eksperiment.IsDataLoaded(id))
                     return BadRequest("Nije unet dataset.");
-                if (!db.dbeksperiment.dodajSnapshot(id, naziv, "test.csv"))
-                    return BadRequest("Nije unet file.");
-                eksperiment.SaveDataset();
-                return Ok("Napravljen Snapshot");
+                if (db.dbeksperiment.proveriSnapshot(id, naziv) == -1)
+                    if (!db.dbeksperiment.dodajSnapshot(id, naziv, "test.csv"))
+                        return BadRequest("Nije unet file.");
+                    else
+                        return BadRequest("Postoji verzija sa tim imenom.");
+                //eksperiment.SaveDataset();
+                return Ok("Napravljen Snapshot.");
             }
             catch
             {

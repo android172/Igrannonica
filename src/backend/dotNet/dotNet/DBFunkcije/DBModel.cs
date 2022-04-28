@@ -33,6 +33,7 @@ namespace dotNet.DBFunkcije
                         ex.Name = reader.GetString("Naziv");
                         ex.CreatedDate = reader.GetDateTime("napravljen");
                         ex.UpdatedDate = reader.GetDateTime("obnovljen");
+                        ex.Opis = reader.GetString("Opis");
                         result.Add(ex);
                     }
                 }
@@ -89,7 +90,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`) values (@ime,@id,0,now(),now())";
+                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`,`opis`) values (@ime,@id,0,now(),now(),'')";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", ime);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -119,6 +120,21 @@ namespace dotNet.DBFunkcije
                     }
                     return false;
                 }
+            }
+        }
+
+        public bool promeniOpisModela(string opis, int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set `opis`=@ime ,`obnovljen`=now() where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", opis);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if(cmd.ExecuteNonQuery()>=0);
+                        return true;
+                    return false;
             }
         }
         public bool izbrisiModel(int id)
@@ -431,7 +447,10 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
-
+        public List<string> DajSveIzlazneKolone(int id)
+        {
+            return null; 
+        }
         public string KoloneToString(int[] niz)
         {
             string str = "";
@@ -442,6 +461,38 @@ namespace dotNet.DBFunkcije
                     str += ",";
             }
             return str;
+        }
+
+        public ModelDetaljnije detaljnije(int id)
+        {
+            Console.WriteLine(id.ToString());
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model m left join podesavanja p on m.id=p.id left join snapshot s on m.snapshot=s.id where m.id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {   
+                        ModelDetaljnije model = new ModelDetaljnije();
+                        model.Id = reader.GetInt32("id");
+                        model.Name = reader.GetString("naziv");
+                        model.CreatedDate = reader.GetDateTime("napravljen");
+                        model.UpdatedDate = reader.GetDateTime("obnovljen");
+                        model.Snapshot = reader.GetString("Ime");
+                        model.Opis = reader.GetString("Opis");
+                        model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                        model.Epohe = reader.GetInt32("numberOfEpochs");
+                        model.Optimizacija = reader.GetString("Optimizer");
+                        model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
+                        model.ProblemType = reader.GetString("ProblemType");
+                        return model;
+                    }
+                }
+                return null;
+            }
         }
 
     }

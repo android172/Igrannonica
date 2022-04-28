@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS `Baza`.`model` (
   `snapshot` INT UNSIGNED NOT NULL,
   `napravljen` DATETIME NOT NULL,
   `obnovljen` DATETIME NULL,
+  `opis` VARCHAR(512) NULL,
+  `loss` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `eksperiment_idx` (`idEksperimenta` ASC) VISIBLE,
   CONSTRAINT `eksperiment`

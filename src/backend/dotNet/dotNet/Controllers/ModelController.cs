@@ -58,7 +58,7 @@ namespace dotNet.Controllers
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString(), db.dbmodel.proveriModel(ime, id).ToString());
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-                    return Ok("Napravljen model");
+                    return Ok(db.dbmodel.proveriModel(ime,id));
                 }
                 return BadRequest("Doslo do greske");
             }
@@ -88,6 +88,23 @@ namespace dotNet.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPut("Modeli/Opis")]
+        public IActionResult updateOpisModela(int id, string opis)
+        {
+            try
+            {
+                if (db.dbmodel.promeniOpisModela(opis, id))
+                {
+                    return Ok("Opis promenjen");
+                }
+                return BadRequest("Opis nije promenjen");
+            }
+            catch 
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
         [Authorize]
         [HttpDelete("Modeli/{id}")]
         public IActionResult izbrisiModel(int id)
@@ -126,6 +143,20 @@ namespace dotNet.Controllers
             catch
             {
                 return BadRequest("Doslo do greske");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Model")]
+        public IActionResult ModelDetaljnije(int id)
+        {
+            try
+            {
+                return Ok(db.dbmodel.detaljnije(id));
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
             }
         }
 
