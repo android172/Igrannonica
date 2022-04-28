@@ -297,8 +297,46 @@
                         <button class="accordion-button collapsed dugmeCollapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTestniSkup" aria-expanded="false" aria-controls="collapseTestniSkup">
                             Testni skup
                         </button>
-                        <div class="collapse" id="collapseTestniSkup" style="color: white;">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                        <div class="collapse" id="collapseTestniSkup">
+                            <div ngbDropdown class="d-inline-block" style="width: 100%;">
+                                <div class="pom">
+                                    <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
+                                </div>
+                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Unos željenih vrednosti</button>
+                                  <button ngbDropdownItem id="ucitajTestniSkup" (click)="izborUnosa('Testni skup')">Učitaj testni skup</button>
+                                </div>
+                            </div>
+                
+                            <div id="testniskup-comp">
+                
+                                <div id="unos-fajla" class="invisible-testniskup"> 
+                                    <form id="forma-test">
+                                        <div class="form-group">       
+                                            <label id="label-input" for="exampleFormControlFile1">
+                                                <img src="assets/uploadfile.png"> 
+                                                &nbsp; Ucitaj podatke</label>                 
+                                            <input type="file" class="form-control-file" accept=".csv" id="exampleFormControlFile1" (change)="onFileSelectedTest($event)">
+                                            <span style="color:white;  text-align: center; font-size: 14px;">{{fileNameTest || "Podaci nisu učitani."}} </span>
+                                        </div>
+                                      </form>
+                                </div>
+                
+                
+                                <div id="proizvoljan-unos" class="visible-unos">
+                                    <div id="slider">
+                                        <div style="margin: auto; color: #c1cdff; position: relative; top: -30px;">Uneti vrednost iz intervala [0,1]</div>
+                                        <div id="current-value">50%</div>
+                                        
+                                        <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio">
+                                    </div>
+                                    <br><br>
+                                    <div id="div-ratio">
+                                        <input type="number" min="0" max="1" step="0.01" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
+                                        <button id="btn-ratio" (click)="setRatio()">Primeni</button>
+                                    </div>   
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

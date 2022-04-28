@@ -431,14 +431,18 @@ input#exampleFormControlFile1{
 /*  */
 
 .btn-design{
-    
     color: white;
     background-color: rgb(33, 79, 138);
-    width: 120px;
-    height: 35px;
+    /* width: 120px; */
+    /* height: 35px; */
     margin: 10px 0 15px 0;
-    justify-content: center;
-
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* justify-content: center; */
+    box-shadow: none;
+    width: 65%;
+    overflow-wrap: break-word;
+    font-size: 100%;
 }
 .btn-design2{
     height: 35px;
@@ -1133,3 +1137,10 @@ th{
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }
 
+.pom
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
