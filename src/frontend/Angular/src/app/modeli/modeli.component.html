@@ -1,20 +1,28 @@
-<div id="gornji">
-    <input id="imeM" placeholder="Unesite naziv modela" (keyup)="handleKeyUp($event)">
-    <button id="dodaj" (click)="napraviModel()" (click)="ocisti()">Dodaj model</button>
-    <div id="imeE"></div>
-    <div id="greska"></div>
-</div>
-
-<div id="divModeli">
-    <div id="skrol">
-       <div type="button" id="m" *ngFor="let m of modeli"> 
-           <p (click)="send(m.id)">  {{ m.name }} </p><div id="divB">
-            <button (click)="obrisiModel(m.id)" class="noselect"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span>
-                       
-           </button></div>
-       </div>
+<div id="body1">
+    <div id="gornji">
+        <input id="imeM" placeholder="Unesite naziv modela" (keyup)="handleKeyUp($event)">
+        <button id="dodaj" (click)="napraviModel()" (click)="ocisti()">Dodaj model</button>
+        <div id="imeE"></div>
+        <div id="greska"></div>
     </div>
-</div>
 
-<br>
-<simple-notifications></simple-notifications>
+    <div id="divModeli">
+        <div id="skrol">
+        <div id=naslov>Lista istreniranih modela</div>
+        <div id="sk">
+            <div type="button" id="m" *ngFor="let m of modeli"> 
+                <div id="p" (click)="send(m.id)"><div id="name">{{ m.name }}</div><div id="date">{{m.createdDate}}</div></div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div id="info">
+        <div id="naslov1">Informacije i podesavanja o izabranom modelu</div>
+    </div>
+    <br>
+    <simple-notifications></simple-notifications>
+</div>
+<!--<button (click)="obrisiModel(m.id)" class="noselect"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span>
+                       
+</button>-->
+<!--"send(m.id)" prelazak na tab za treniranje-->
