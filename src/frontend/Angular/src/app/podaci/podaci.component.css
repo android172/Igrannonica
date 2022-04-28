@@ -266,8 +266,8 @@ ul .ngx-pagination
 }
 
 #outliers-box{
-    display: flex;
-    justify-content: space-between;
+    display: block;
+    justify-content: center;
     text-align: center;
     height: 35px;
     margin: 20px auto;
@@ -281,11 +281,19 @@ ul .ngx-pagination
     border: 2px solid rgb(121, 121, 121);
     width: 100px; 
     color: white;
+    margin-bottom: 20px;
+}
+
+#outlier-btn
+{
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .primeni-izuzeci{
-    width: 80px;
+    width: 65%;
     height: 35px;
+    margin-bottom: 20px;
 }
 
 /************* SLIDER *****************/ 

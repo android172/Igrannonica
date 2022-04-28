@@ -348,6 +348,31 @@
                             <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
                         </div>
                     </div>
+                    <div class="podesavanje">
+                        <button class="accordion-button collapsed dugmeCollapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOutlieri" aria-expanded="false" aria-controls="collapseOutlieri">
+                            Netipične vrednosti
+                        </button>
+                        <div class="collapse" id="collapseOutlieri">
+                            <div id="outliers-box">
+                                <div ngbDropdown class="d-inline-block">
+                                    <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                      <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>
+                                      <button ngbDropdownItem id="option-quantiles" (click)="selectOutliers($event)">Quantiles</button> 
+                                      <button ngbDropdownItem id="option-zscore" (click)="selectOutliers($event)">Z-Score</button>
+                                      <button ngbDropdownItem id="option-iqr" (click)="selectOutliers($event)">IQR</button>
+                                      <button ngbDropdownItem id="option-isolation" (click)="selectOutliers($event)">Isolation Forest</button>
+                                      <button ngbDropdownItem id="option-svm" (click)="selectOutliers($event)">One Class SVM</button>
+                                      <button ngbDropdownItem id="option-lfactor" (click)="selectOutliers($event)">Local Factor</button>
+                                    </div>
+                                </div>
+                
+                                <input type="number" id="threshold" placeholder="Prag:" readonly><br>
+                
+                                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
