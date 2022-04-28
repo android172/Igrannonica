@@ -1084,4 +1084,19 @@ th{
     border: 3.5px solid #5977DF;
     border-radius: 10px;
     padding: 10px;
+    background-color: ;
+}
+
+.visinaPodesavanja
+{
+    height: 550px;
+    margin-top: -35px;
+}
+
+#naslovPodesavanja
+{
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 17px;
 }
