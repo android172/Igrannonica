@@ -102,7 +102,7 @@ ul .ngx-pagination
 /* naslov -- helper */
 #header-help{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 #helper{
@@ -110,10 +110,14 @@ ul .ngx-pagination
     height: 18px;
     border-radius:50%;
     background-color: rgb(51, 38, 91);
+    color: rgb(162, 169, 255);
     font-size: 12px;
-    border: 1px solid rgb(53, 53, 128);
-
+    /* border: 1px solid rgb(53, 53, 128); */
+    border: 1px solid rgb(162, 169, 255);
+    z-index: 10;
     float: right;
+    margin-top: 15px;
+    margin-right: 15px;
 }
 
 /* desni ugao -- helper */
@@ -270,7 +274,7 @@ ul .ngx-pagination
     justify-content: center;
     text-align: center;
     height: 35px;
-    margin: 20px auto;
+    margin: auto;
     width: 85%;
 }
 #threshold{
