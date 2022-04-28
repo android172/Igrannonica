@@ -206,12 +206,17 @@ ul .ngx-pagination
     justify-content: center;
 }
 #norm-box{
-    display: flex;
+    display: block;
     text-align: center;
     justify-content: space-between;
-    height: 35px;
+    /* height: 35px; */
     margin: 20px auto;
     width: 82%;
+}
+
+#norm-btn
+{
+    margin-bottom: 20px;
 }
 
 /*  DROPDOWN SUBMENU *****/
@@ -273,7 +278,7 @@ ul .ngx-pagination
     display: block;
     justify-content: center;
     text-align: center;
-    height: 35px;
+    /* height: 35px; */
     margin: auto;
     width: 85%;
 }
@@ -292,6 +297,7 @@ ul .ngx-pagination
 {
     margin-bottom: 20px;
     font-size: 14px;
+    width: 40%;
 }
 
 .primeni-izuzeci{

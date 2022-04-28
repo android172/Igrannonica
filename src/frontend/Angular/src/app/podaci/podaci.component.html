@@ -378,10 +378,27 @@
                                       <button ngbDropdownItem id="option-lfactor" (click)="selectOutliers($event)">Local Factor</button>
                                     </div>
                                 </div>
-                
                                 <input type="number" id="threshold" placeholder="Prag:" readonly><br>
                 
                                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podesavanje">
+                        <button class="accordion-button collapsed dugmeCollapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNormalizacija" aria-expanded="false" aria-controls="collapseNormalizacija">
+                            Normalizacija
+                        </button>
+                        <div class="collapse" id="collapseNormalizacija" style="color: white;">
+                            <div id="norm-box">
+                                <div ngbDropdown class="d-inline-block">
+                                    <button class="btn btn-design3" id="norm-btn" ngbDropdownToggle>Izaberite tip normalizacije</button>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                      <button ngbDropdownItem id="absolute-max" (click)="selectNorm($event)">Absolute Maximum Scaling</button>
+                                      <button ngbDropdownItem id="minmax" (click)="selectNorm($event)">Min-Max Scaling</button> 
+                                      <button ngbDropdownItem id="zscore" (click)="selectNorm($event)">Z-score Scaling</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
                             </div>
                         </div>
                     </div>
