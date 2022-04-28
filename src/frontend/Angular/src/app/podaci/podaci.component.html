@@ -1,9 +1,9 @@
 <div id="body1">
 
 
-    <div class="row align-items-center justify-content-between p-2">
+    <div class="row align-items-center justify-content-between p-3">
 
-        <div class="col-md-2">
+        <div class="col-md-2 p-0">
         <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
 
         <div class="file-upload okvir2">
@@ -30,8 +30,9 @@
         
         </div>
     </div>
-    <div class="row align-items-center justify-content-between p-3">
-        <div class="col-md-9 okvir">
+    <div class="row align-items-center justify-content-between p-0">
+        <div class="col-md-9 p-3">
+        <div class="okvir">
             <div id="brojRedovaTabelePoruka" style="color: white;">
                 <div id="odabir-redova">Broj redova za prikaz:</div>
                 <span>
@@ -44,6 +45,7 @@
                     </select>
                 </span>
             </div>
+        </div>
         </div>
         <div class="col-md-3">
 
@@ -369,5 +371,22 @@
     <div id="tracker">
         <p *ngIf="this.track != undefined"> {{this.track}}</p>
     </div> -->
+
+
+    <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
+        <div class="col-md-9">
+            <div class="okvir visinaPodesavanja">
+                <div id="naslovPodesavanja">Vizuelizacija podataka</div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="okvir visinaPodesavanja">
+                
+            </div>
+        </div>
+    </div>
+
     <simple-notifications></simple-notifications>
 </div>
