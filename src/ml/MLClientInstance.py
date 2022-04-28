@@ -749,24 +749,154 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Illegal columns given.")
                     return
                 
+                # Create graph
                 file_name = 'requested_image.png'
                 file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
                 network.data.draw_scatter_plot(columns, file_path)
                 
-                files = {'file' : (file_name, open(file_path, 'rb'))}
-                
-                response = requests.post(
-                    f"http://localhost:5008/api/file/update/{experiment_id}", 
-                    headers={"Authorization" : f"Bearer {self.token}"}, 
-                    files=files
-                )
-                
-                if response.status_code != 200:
-                    self.report_error(f"ERROR :: Couldn't upload image; Error code {response.status_code}")
-                    return
+                # Upload graph
+                self.upload_image(file_name, file_path)
                 
                 self.connection.send("OK")
                 print(f"Scatter plot for columns {columns} requested.")
+            
+            elif received == 'DrawBoxPlot':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_box_plot(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Box plot for columns {columns} requested.")
+            
+            elif received == 'DrawViolinPlot':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_violin_plot(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Violin plot for columns {columns} requested.")
+            
+            elif received == 'DrawBarPlot':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_bar_plot(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Bar plot for columns {columns} requested.")
+            
+            elif received == 'DrawHistogram':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_histogram(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Histogram for columns {columns} requested.")
+            
+            elif received == 'DrawHexbin':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_hexbin(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Hexbin for columns {columns} requested.")
+                
+            elif received == 'DrawDensityPlot':
+                # Receive columns
+                columns_string = self.connection.receive()
+                columns = [int(x) for x in columns_string.split(":")]
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_density_plot(columns, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Density plot for columns {columns} requested.")
                 
             # Model selection #
             elif received == 'SaveModel':
@@ -888,3 +1018,16 @@ class MLClientInstance(Thread):
     def report_error(self, message):
         print(message)
         self.connection.send(message)
+        
+    def upload_image(self, file_name, file_path):
+        files = {'file' : (file_name, open(file_path, 'rb'))}
+                
+        response = requests.post(
+            f"http://localhost:5008/api/file/update/{self.experiment_id}", 
+            headers={"Authorization" : f"Bearer {self.token}"}, 
+            files=files
+        )
+        
+        if response.status_code != 200:
+            self.report_error(f"ERROR :: Couldn't upload image; Error code {response.status_code}")
+            return
