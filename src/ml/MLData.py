@@ -4,6 +4,7 @@ from collections import deque
 import pandas as pd
 import numpy as np
 from torch import tensor
+import matplotlib.pyplot as plt
 
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
@@ -596,6 +597,7 @@ class MLData:
         fig = ax.get_figure()
         fig.savefig(path, dpi=150, bbox_inches = 'tight', transparent=True)
     
+    
     def draw_scatter_plot(self, columns, path):
         if len(columns) == 2:
             ax = self.dataset.plot.scatter(columns[0], columns[1], c=CustomColors.accent, alpha=0.25)
@@ -621,3 +623,169 @@ class MLData:
             
             self._save_fig(axs[0][0], path)
     
+    def draw_box_plot(self, columns, path):
+        if len(columns) == 1:
+            ax = self.dataset.boxplot(
+                column = self.dataset.columns[columns[0]],
+                color  = CustomColors.accent,
+                sym    = CustomColors.accent,
+                grid   = False,
+                vert   = False,
+                widths = 0.3
+            )
+        elif len(columns) == 2 and self.column_data_ty[columns[1]] == "Categorical":
+            ax = self.dataset.boxplot(
+                column = self.dataset.columns[columns[0]],
+                by     = self.dataset.columns[columns[1]],
+                color  = CustomColors.accent,
+                sym    = CustomColors.accent
+            )
+            ax.get_figure().gca().set_title("")
+            ax.get_figure().suptitle('')
+        else:
+            return False
+        self._change_style(ax)
+        self._save_fig(ax, path)
+        return True
+
+    def draw_violin_plot(self, columns, path):
+        _, ax = plt.subplots()
+        if len(columns) == 1:
+            violin_parts = ax.violinplot(dataset=[self.dataset.iloc[:, columns[0]]], vert=False)
+        elif len(columns) == 2 and self.column_data_ty[columns[1]] == "Categorical":
+            col = self.dataset.columns[columns[0]]
+            by  = self.dataset.columns[columns[1]]
+            
+            categories = self.dataset[by].unique()
+            categories.sort()
+            splits = []
+            for cat in categories:
+                splits.append(self.dataset[self.dataset[by] == cat][col])
+                
+            violin_parts = ax.violinplot(dataset=splits)
+            
+            ax.yaxis.grid(True)
+        else:
+            return False
+
+        ax.set_xlabel(self.dataset.columns[columns[0]])
+
+        for partname in ('cbars','cmins','cmaxes'):
+            violin_parts[partname].set_edgecolor(CustomColors.accent)
+
+        for vp in violin_parts['bodies']:
+            vp.set_facecolor(CustomColors.accent)
+            vp.set_alpha(0.5)
+        
+        self._change_style(ax)
+        self._save_fig(ax, path)
+        return True
+    
+    def draw_bar_plot(self, columns, path):
+        if self.column_data_ty[columns[0]] != 'Categorical':
+            return False
+        
+        col = self.dataset.columns[columns[0]]
+        
+        if len(columns) == 1:
+            ax = self.dataset.value_counts(col, sort=True).plot.bar(color = CustomColors.accent)
+        elif len(columns) == 2 and self.column_data_ty[columns[1]] == "Categorical":
+            
+            by = self.dataset.columns[columns[1]]
+            
+            x = self.dataset[col].unique()
+            x.sort()
+            y = self.dataset[by].unique()
+            y.sort()
+            
+            ci = 0
+            colors = []
+            
+            ndf = {}
+            for yi in y:
+                # Column height calculation
+                row = []
+                for xi in x:
+                    row.append(
+                        self.dataset[
+                            (self.dataset[col] == xi) & 
+                            (self.dataset[by]  == yi)
+                        ]
+                        .count()
+                        .values[0]
+                    )
+                ndf[yi]=row
+                
+                # Colum color calculation
+                ca = hex(0x80 + ci*0x5) # color alpha
+                if ca[0] == '-': ca = ca[1:]
+                if len(ca) < 4 : ca = f"0{ca[-1]}"
+                
+                colors.append(f"{CustomColors.accent}{ca[-2:]}")
+                
+                # Iteration
+                if ci > 0:
+                    ci = -ci
+                else:
+                    ci = -ci + 1
+            
+            ax = pd.DataFrame(ndf, x).plot.bar(color=colors)    
+        else:
+            return False
+        
+        self._change_style(ax)
+        self._save_fig(ax, path)
+        return True
+
+    def draw_histogram(self, columns, path):
+        if len(columns) > 4:
+            return False
+        
+        axs = self.dataset.hist(
+            self.dataset.columns[columns], 
+            grid  = False, 
+            color = CustomColors.accent
+        )
+
+        for axr in axs:
+            for ax in axr:
+                self._change_style(ax)
+                ax.title.set_color('white')
+        self._save_fig(axs[0][0], path)
+        
+        return True
+
+    def draw_hexbin(self, columns, path):
+        if len(columns) != 2:
+            return False
+        
+        fig, ax = plt.subplots()
+        s = ax.hexbin(
+            x=self.dataset.columns[columns[0]],
+            y=self.dataset.columns[columns[1]],
+            cmap="viridis", 
+            gridsize=15, 
+            data=self.dataset
+        )
+        
+        # Add colorbar
+        color_bar = fig.colorbar(s)
+        color_bar.ax.yaxis.set_tick_params(color="white")
+        color_bar.outline.set_edgecolor("white")
+        color_bar.ax.set_yticklabels(color_bar.get_ticks(), color="white")
+        
+        self._change_style(ax)
+        self._save_fig(ax, path)
+        
+        return True
+    
+    def draw_density_plot(self, columns, path):
+        if len(columns) > 6:
+            return False
+        
+        ax = self.dataset.iloc[:, columns].plot.kde(color = CustomColors.accent)
+        
+        self._change_style(ax)
+        self._save_fig(ax, path)
+        
+        return True

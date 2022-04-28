@@ -430,6 +430,50 @@ namespace dotNet.MLService {
             }
         }
 
+        public void DrawBoxPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawBoxPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+        public void DrawViolinPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawViolinPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+        public void DrawBarPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawBarPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+        public void DrawHistogram(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawHistogram);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+        public void DrawHexbin(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawHexbin);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+
+        public void DrawDensityPlot(int[] columns) {
+            lock (_lock) {
+                connection.Send(Command.DrawDensityPlot);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
+            }
+        }
+
         // /////// //
         // Network //
         // /////// //
@@ -559,6 +603,12 @@ namespace dotNet.MLService {
         CategoricalStatistics,
         AllStatistics,
         DrawScatterPlot,
+        DrawBoxPlot,
+        DrawViolinPlot,
+        DrawBarPlot,
+        DrawHistogram,
+        DrawHexbin,
+        DrawDensityPlot,
         // Network
         SaveModel,
         LoadModel,
