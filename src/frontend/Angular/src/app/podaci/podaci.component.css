@@ -1146,3 +1146,25 @@ th{
     justify-content: center;
     align-items: center;
 }
+
+#manipulacijaPodacima::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    /*margin-right: 10px;*/
+  }
+  
+#manipulacijaPodacima::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+
+  /* Track */
+#manipulacijaPodacima::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+#manipulacijaPodacima::-webkit-scrollbar-thumb {
+    background: #6070a7;
+    border-radius: 10px;
+  }
