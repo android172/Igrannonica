@@ -938,7 +938,7 @@ th{
 /* ENKODIRANJE */ 
 
 #b4, #b5{
-    margin: 50px auto auto auto;
+    margin: 20px auto auto auto;
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
     height: 40px;
     padding: 5px;
@@ -948,7 +948,8 @@ th{
     border-radius: 10px;
     border: 2px solid rgba(44, 75, 90, 0.8);
     color: white;
-    width: 180px;
+    width: 60%;
+    display: block;
 }
 
 #b4:hover{
@@ -1120,7 +1121,8 @@ th{
 .podesavanje
 {
     margin-top: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    width: 100%;
 }
 .dugmeCollapse
 {

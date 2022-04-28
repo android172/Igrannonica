@@ -339,6 +339,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="podesavanje">
+                        <button class="accordion-button collapsed dugmeCollapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnkodiranje" aria-expanded="false" aria-controls="collapseEnkodiranje">
+                            Enkodiranje
+                        </button>
+                        <div class="collapse" id="collapseEnkodiranje">
+                            <button id="b4" (click)="labelEncoding()">LabelEncode</button> 
+                            <button id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
