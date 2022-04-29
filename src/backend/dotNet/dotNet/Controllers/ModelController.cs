@@ -192,5 +192,19 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske");
             }
         }
+        [HttpPost("PostaviSnapshot")]
+        public IActionResult postaviSnapshot(int model, int snapshot)
+        {
+            try
+            {
+                if(db.dbmodel.PostaviSnapshot(model, snapshot))
+                    return Ok(snapshot);
+                return BadRequest("Nije sacuvan.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
     }
 }

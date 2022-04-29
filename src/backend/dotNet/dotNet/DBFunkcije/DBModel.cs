@@ -494,6 +494,22 @@ namespace dotNet.DBFunkcije
                 return null;
             }
         }
+        public bool PostaviSnapshot(int model, int snapshot)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set snapshot=@snapshot where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@snapshot", snapshot);
+                cmd.Parameters.AddWithValue("@id", model);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
     }
 }
