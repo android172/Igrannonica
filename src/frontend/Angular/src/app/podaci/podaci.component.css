@@ -1225,3 +1225,15 @@ th{
     padding-top: 15px;
 }
 
+.naslov
+{
+    width: 100%;
+}
+
+.tekstNaslova
+{
+    width: 60%;
+    display: block;
+    justify-content: center;
+    text-align: center;
+}
