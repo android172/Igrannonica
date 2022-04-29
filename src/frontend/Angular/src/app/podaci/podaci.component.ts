@@ -88,7 +88,7 @@ export class PodaciComponent implements OnInit {
   }
 
   isArray(val:any): boolean { return val instanceof Array }
-
+  
   fileName = '';
   fileNameTest = '';
   json: any;
@@ -128,6 +128,9 @@ export class PodaciComponent implements OnInit {
 
   public kolone: any[] = [];
   message: any;
+
+  indikator:boolean = true; // tabela sa podacima
+  nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
   onFileSelected(event:any) 
   {
@@ -235,6 +238,8 @@ dajNaziveHeadera()
         this.jsonStatistika = JSON.parse(response);
         console.log(this.jsonStatistika);
         this.ucitajStatistiku();
+        
+        this.tabelaStatistika();
       }
     )
   }
@@ -425,7 +430,7 @@ dajNaziveHeadera()
         });
       }
     }
-    //console.log(this.statistikaNum);
+    console.log(this.statistikaNum);
     //console.log(this.statistikaCat);
   }
 
@@ -1445,6 +1450,64 @@ dajNaziveHeadera()
       this.onError("Regression - neuspesno!");
       (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     });
+  }
+
+  tabelaStatistika()
+  { 
+    var broj = Object.keys(this.statistikaNum[0].data).length;
+    var kljucevi = Object.keys(this.statistikaNum[0].data);
+    var brojJ= this.statistikaNum.length;
+    
+    for(var i = 0; i<broj;i++)
+    {
+      var nizHead:string[] = [];
+      nizHead.push(kljucevi[i]);
+      for(var j = 0; j<brojJ;j++)
+      {
+        
+        nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+      }
+      this.nizRedovaStatistika.push(nizHead);
+    }
+    //console.log(this.nizRedovaStatistika);
+  }
+
+  prikaziUcitanePodatke(event:any)
+  {
+    this.indikator = true;
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("statPodaci-naslov"));
+
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "10px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+    
+  }
+
+  prikaziStatistickePodatke(event:any)
+  {
+    this.indikator = false; 
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "10px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+  }
+
+  dajNaziveKolonaStatistikeNum()
+  {
+    var kljucevi:string[] = [" "];
+
+    for(let pom of this.statistikaNum)
+    {
+      kljucevi.push(pom.key);
+    }
+    return kljucevi;
+
   }
  
 }

@@ -90,8 +90,9 @@ ul .ngx-pagination
     background: none;
     border: none;
     color: white;
-    width: 70px;
-    overflow: visible;
+    width: 75px;
+    min-height: 22px;
+    resize:both;
 }
 #table tr:nth-of-type(even) input{
     
@@ -555,26 +556,43 @@ input#exampleFormControlFile1{
     border-radius: 10px;
     color: white;
     /* width: 960px; */
-    overflow: scroll;
     height: 600px;
   
 }
-#table::-webkit-scrollbar{
-    width: 10px;
-    
-}
-#table::-webkit-scrollbar-track{
-    background-color: #272741;
-    
-}
-#table::-webkit-scrollbar-corner{
-    background-color: #272741;
-}
-#table::-webkit-scrollbar-thumb{
-    background-color: #38395f;
+#skrol{
+    overflow: scroll;
+    height: 540px;
     
 }
 
+/*        SCROLL BAR            */ 
+#skrol::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    /*margin-right: 10px;*/
+  }
+  
+#skrol::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+
+  /* Track */
+#skrol::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+#skrol::-webkit-scrollbar-thumb {
+    background: #505e8c;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+#skrol::-webkit-scrollbar-thumb:hover {
+    background: #59689b;
+  }
+/*   ************   */ 
 
 #table th{
     color: #a7baff;
@@ -1111,3 +1129,64 @@ th{
     padding-top: 5px;
     padding-bottom: 10px;
 }
+
+/*           TABELA STATISTIKA          */ 
+
+.td-tabela-stat{
+    text-align: right;
+    border-right: 5px solid #32324c;
+}
+
+.accordion-button:after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+#numericka-tabela tr:nth-of-type(even){
+    background-color: #343457;
+    color: #c1cdff;
+
+}
+
+#numericka-tabela tr:hover:nth-child(even)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela tr:hover:nth-child(odd)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela{
+    margin-top: -25px;
+}
+
+#ucitaniPodaci-naslov,#statPodaci-naslov{
+    cursor: pointer;
+    padding: 3px;
+}
+
+ #numericka-tabela td{
+    padding: 10px 9px 10px 40px;
+}
+
+#numericka-tabela th{
+    text-align: left;
+    padding: 10px 40px 10px 5px;
+    
+}
+
+#numericka-tabela #head-table th{
+    width: 200px;
+ }
+
+ 
+#numericka-tabela .trbodyy td{
+    width: 200px;
+}
+
+
+#numericka-tabela td:first-child{
+    text-align: left;
+    padding: 10px 25px 10px 5px;
+
+}
+
