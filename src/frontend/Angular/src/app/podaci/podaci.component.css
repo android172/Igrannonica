@@ -118,6 +118,7 @@ ul .ngx-pagination
     float: right;
     margin-top: 15px;
     margin-right: 15px;
+    cursor: help;
 }
 
 /* desni ugao -- helper */
