@@ -51,9 +51,13 @@
             <div class="okvir visinaIstorije row m-0 p-2">
 
            
-                <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> 
-         
-
+               <!-- <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> -->
+               <div class="col-sm-7">
+                    <!-- Button trigger modal -->
+                    <button type="button" id="dugmeIstorija" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">
+                        Pogledaj istoriju
+                    </button>
+               </div>
                 <div class="col-sm-5 ">        
                     <button id="undoRedoDugme"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
                     <button id="undoRedoDugme"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
@@ -420,6 +424,33 @@
             </div>
         </div>
     </div>
+
+
+  
+  <!-- Modal -->
+  <div  class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #484864; color:#CED9FF;" >
+        <div class="modal-header">
+          <h3 class="modal-title" id="exampleModalLabel">Istorija akcija</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div *ngFor="let k of nizKomandi" >
+                <span id="vreme" data-toggle="tooltip">{{k}}</span>
+                <br>
+                <br>
+            </div>
+        </div>
+        <!--
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    -->
+      </div>
+    </div>
+  </div>
 
     <simple-notifications></simple-notifications>
 </div>

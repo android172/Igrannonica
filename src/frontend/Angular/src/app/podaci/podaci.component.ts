@@ -4,6 +4,7 @@ import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-podaci',
@@ -99,6 +100,7 @@ export class PodaciComponent implements OnInit {
   totalItems: number = 0;
   idEksperimenta: any;
   selectedColumns: number[] = [];
+  nizKomandi : string[] = [];
   track: string = "> ";
   statistika: any;
   numerickaS: any;
@@ -586,6 +588,7 @@ dajNaziveHeadera()
   dodajKomandu(str: string)
   {
       this.track = this.track + str + " > ";
+      this.nizKomandi.push(str);
   }
   izbrisiSelektovaneKolone()
   {
@@ -938,8 +941,8 @@ dajNaziveHeadera()
     res => {
       console.log(res);
       this.onSuccess("Izmene su sacuvane");
-    
-      this.dodajKomandu("Sve izmene su sacuvane");
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Sve izmene su sacuvane ");
     },error=>{
       console.log(error.error);
       this.dodajKomandu("Izmene nisu sacuvane");
