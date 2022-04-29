@@ -857,19 +857,21 @@ th{
 #prazni-string{
     /* width: 90%; */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     margin-bottom: 20px;
 }
 #zamena-nula{
     /* width: 90%; */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 20px;
+    align-items: center;
 }
 #b1,#b2{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
-    height: 30px;
+    height: 35px;
     padding: 5px;
     /* align-items: center; */
     box-sizing: border-box;
@@ -877,9 +879,8 @@ th{
     border-radius: 10px;
     border: 2px solid rgba(44, 75, 90, 0.8);
     color: white;
-    /* width: 100px; */
+    width: 30%;
     line-height: 10px;
-    
 }
 /*
 #prazni-string, #zamena-nula, #nova-kategorija{
@@ -1198,4 +1199,13 @@ th{
 .dugmeNA
 {
     margin-bottom: 20px;
+}
+
+.imeAkcije
+{
+    text-align: center;
+    color: white;
+    width: 40%;
+    margin-right: 10px;
+    margin-top: 3px;
 }
