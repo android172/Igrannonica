@@ -1480,7 +1480,7 @@ dajNaziveHeadera()
 
 
     element.style.backgroundColor = "#5e6091";
-    element.style.borderRadius = "10px";
+    element.style.borderRadius = "5px";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
     
@@ -1493,7 +1493,7 @@ dajNaziveHeadera()
     var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
 
     element.style.backgroundColor = "#5e6091";
-    element.style.borderRadius = "10px";
+    element.style.borderRadius = "5px";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
   }
