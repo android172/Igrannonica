@@ -418,7 +418,7 @@
                         <div class="collapse" id="collapseNedVr">
                             <div id="select-elements">
                                 <div id="pomocniDiv">
-                                <div ngbDropdown class="dropdown" id="zamena-select">
+                                <div ngbDropdown class="dropdown" class="zamena-select">
                                     <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle dugmeNA" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
                                       Zamena NA vrendosti
                                     </button>
@@ -426,8 +426,8 @@
                                         <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMean()">Zameni NA sa mean u koloni</a></li>
                                         <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMedian()">Zameni NA sa median u koloni</a> </li>
                                         <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMode()">Zameni NA sa mode u koloni</a> </li>
-                                        <div class="dropdown-divider"></div>
-                                        <li ngbDropdown>
+                                        <!-- <div class="dropdown-divider"></div> -->
+                                        <!-- <li ngbDropdown>
                                             <a class="dropdown-item" id="sub-menu1">
                                                Linearna regresija  &nbsp; &nbsp;&nbsp;  &#10148;
                                             </a>
@@ -436,7 +436,17 @@
                                                 <li ngbDropdownItem> <a role="button" class="dropdown-item" (click)="selectForRegression($event,i)">{{fieldValue}}</a></li>   
                                                 </div>                      
                                             </ul>
-                                        </li>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                                <div ngbDropdown class="dropdown"  class="zamena-select">
+                                    <button ngbDropdownToggle class="btn btn-design2 dugmeNA" type="button" id="dropdownLinReg">
+                                        Linearna regresija
+                                    </button>
+                                    <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
+                                        <div *ngFor="let fieldValue of dajNaziveHeadera(); let i = index" >
+                                        <li ngbDropdownItem> <a role="button" class="dropdown-item" (click)="selectForRegression($event,i)">{{fieldValue}}</a></li>   
+                                        </div>                      
                                     </ul>
                                 </div>
                                 <div id="regresija-nv">

@@ -239,14 +239,14 @@ ul .ngx-pagination
     .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
     }
-    #zamena-select .dropdown-menu li a{
+    .zamena-select .dropdown-menu li a{
         text-align: left;
         font-size: 13px;
         padding: 1px;
         font-weight: 500;
        /* color: rgb(237, 237, 237);*/
     }
-    #zamena-select .dropdown-menu, #menu1{
+    .zamena-select .dropdown-menu, #menu1{
         background-color: rgb(230, 213, 253);
     }
 /********** SELECT DROPDOWN MENU ***/
