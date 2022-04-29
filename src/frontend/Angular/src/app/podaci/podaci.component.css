@@ -53,7 +53,7 @@ ul .ngx-pagination
 }
 
 #brojRedovaTabelePoruka{
-    position: relative;
+   /* position: relative;*/
     /*left: 5%;*/
     width: 15%;
     color: #CED9FF;
@@ -523,6 +523,7 @@ input#exampleFormControlFile1{
     border: 1px solid rgb(60, 26, 26);
     border-radius: 5px;
     margin-left: 5px;
+    width: 140px;
 }
 #sve-kolone{
     color: white;
@@ -530,6 +531,7 @@ input#exampleFormControlFile1{
     border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
+    width: 140px;
 }
 /****** SELEKTOVANJE REDOVA *****/
 .selectedRow{
@@ -1128,6 +1130,30 @@ th{
     /*float: right;*/
 }
 
+#undoRedoDugmeIstorija{
+    height: 28px;
+    width: 28px;
+    /* border-radius: 5px; */
+    background-color: transparent;
+    border: none;
+    /* border: 1px solid #a7baff;
+     margin-left: 10px;
+    margin-top: 2px; 
+    float: right; */
+}
+
+#undoRedoDugmeIstorija:hover{
+    height: 28px;
+    width: 28px;
+     border-radius: 28px; 
+    background-color: #ced9ff43;
+    border: none;
+    /* border: 1px solid #a7baff;
+     margin-left: 10px;
+    margin-top: 2px; 
+    float: right; */
+}
+
 #poslednjiIstorija{
    /* margin-top: 20px;*/
     background-color: #15151f;
@@ -1175,3 +1201,12 @@ th{
     margin-top: -37px;
 }
 
+#kantica{
+
+    width: 20px;
+    height: 20px;
+    padding: 0px;
+    /* border-radius: 5px; */
+    background-color: transparent;
+    border: none;
+}
