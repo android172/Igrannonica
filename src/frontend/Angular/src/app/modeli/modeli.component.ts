@@ -16,10 +16,13 @@ import {NotificationsService} from 'angular2-notifications';
 export class ModeliComponent implements OnInit {
   @Output() PosaljiModel = new EventEmitter<number>();
   json: any;
+  json1: any;
   modeli : any[] = [];
   id: any;
+  trenId: any;
   date: String ='';
   nizD: any[] = [];
+  selektovanModel: string = '';
   ActivateAddEdit: boolean = false;
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
@@ -141,7 +144,6 @@ export class ModeliComponent implements OnInit {
       this.nizD=this.date.split('-');
       this.swap(this.nizD);
       this.modeli[i].createdDate=this.nizD.join('.');
-      console.log(this.modeli[i].createdDate);
     }
   }
 
@@ -189,6 +191,60 @@ export class ModeliComponent implements OnInit {
       this.napraviModel();
       this.ocisti();
      }
+  }
+
+  prikaziPod(id: any)
+  {
+    this.http.get(url+"/api/Eksperiment/Podesavanja/"+id).subscribe(
+      res=>{
+        console.log(res);
+        this.json1=res;
+        /*if(this.json1["annType"]==1)
+          (<HTMLDivElement>document.getElementById("n")).innerHTML="Classification";
+        else
+          (<HTMLDivElement>document.getElementById("n")).innerHTML="Regression";*/
+      },
+      error=>{
+        console.log(error);
+        this.onError("Neuspesno!");
+      }
+    )
+  }
+
+  uzmiId(id: any){
+    this.prikaziInfo(id);
+  }
+
+  prikaziInfo(id: any)
+  {
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      if(this.modeli[i].id==id)
+      {
+        (<HTMLDivElement>document.getElementById("n")).innerHTML=this.modeli[i].name;
+        (<HTMLDivElement>document.getElementById("d")).innerHTML=this.modeli[i].createdDate;
+        (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.modeli[i].opis;
+      }
+    }
+    
+  }
+
+  promeni(event:any){
+
+    if(this.selektovanModel != ""){
+      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
+      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
+      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
+      this.selektovanModel = event.target.id;
+      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
+      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
+    }
+    else{
+      this.selektovanModel = event.target.id;
+      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
+      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
+    }
+
   }
 
 }
