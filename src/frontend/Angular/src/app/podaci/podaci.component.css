@@ -406,7 +406,7 @@ ul .ngx-pagination
 .btn-design2{
     height: 35px;
     width: 10%;
-    margin: 0 15px;
+    /* margin: 0 15px; */
     color: white;
     background-color: rgb(33, 79, 138);
     justify-content: center;
@@ -845,6 +845,9 @@ th{
 #pomocniDiv
 {
     display: block;
+    justify-content: center;
+    margin-left: 50%;
+    margin-right: 50%;
 }
 
 #opcije-nv{
@@ -957,7 +960,7 @@ th{
     border: 2px solid rgba(44, 75, 90, 0.8);
 }
 #regresija-input{
-    width: 165px;
+    width: 40%;
     background-color: #171f37;
     box-sizing: border-box;
     border: 2px solid rgb(98, 98, 182);
@@ -1212,3 +1215,4 @@ th{
     margin-right: 10px;
     margin-top: 3px;
 }
+
