@@ -944,15 +944,17 @@ th{
 }
 #btn-reg{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
-    height: 30px;
+    height: 35px;
     padding: 5px;
     align-items: center;
     box-sizing: border-box;
     text-align: center;
     border: 2px solid rgba(38, 64, 77, 0.8);
     color: white;
-    width: 70px;
+    width: 30%;
     line-height: 10px;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
 }
 #regresija-input{
     width: 165px;
@@ -960,6 +962,7 @@ th{
     box-sizing: border-box;
     border: 2px solid rgb(98, 98, 182);
     color: white;
+    margin-right: 10px;
 }
 
 /* ENKODIRANJE */ 
