@@ -86,9 +86,9 @@
   background-color: #272741;
 }
 
-#n,#d,#opis{
+#n,#d,#opis,#snap,#ann,#opt,#eph{
   color: #eee;
-  height: 30px;
+  height: 50px;
   width: 500px;
 }
 
