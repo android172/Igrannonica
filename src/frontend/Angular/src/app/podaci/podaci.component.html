@@ -295,12 +295,12 @@
                                     
                                     <table id="numericka-tabela">
                                         <tr class="head-table">
-                                            <th *ngFor="let naslov of dajNaziveKolonaStatistikeNum();">
+                                            <th style="width:200px" *ngFor="let naslov of dajNaziveKolonaStatistikeNum();">
                                                 {{naslov}}
                                             </th>
                                         </tr>
                                         <tr class="trbodyy" *ngFor="let red of this.nizRedovaStatistika">
-                                            <td class="td-tabela-stat" *ngFor="let fieldValue of red;"  >
+                                            <td style="width:200px" class="td-tabela-stat" *ngFor="let fieldValue of red;"  >
                                                 {{fieldValue}}
                                             </td>
                                         </tr>
@@ -319,7 +319,7 @@
                               </h2>
                               <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body" style=" background-color:#272741 ;">
-                                    <table id="numericka-tabela">
+                                    <table id="kategoricka-tabela">
                                         <tr class="head-table">
                                             <th *ngFor="let naslov of statistikaCat;  let j = index" class="tr-button">
                                                 {{naslov.key}}

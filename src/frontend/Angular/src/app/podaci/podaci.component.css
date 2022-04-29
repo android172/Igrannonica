@@ -1174,12 +1174,12 @@ th{
     
 }
 
-#numericka-tabela #head-table th{
+#numericka-tabela .head-table th{
     width: 200px;
  }
 
  
-#numericka-tabela .trbodyy td{
+#numericka-tabela tr .trbodyy td{
     width: 200px;
 }
 
@@ -1190,3 +1190,22 @@ th{
 
 }
 
+#numericka-tabela tr td:first-child{
+    font-weight: bolder;
+    /*background-color: #32324c;*/
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#numericka-tabela .head-table th{
+    cursor: default;
+}
+/* NASLOV TABELE STATISTIKA I PODACI */
+#ucitaniPodaci-naslov:hover{
+     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52);  
+     border-radius: 5px;
+}
+#statPodaci-naslov:hover{
+    box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52); 
+     border-radius: 5px;
+}

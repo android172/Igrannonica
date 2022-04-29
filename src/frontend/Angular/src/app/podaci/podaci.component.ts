@@ -1471,12 +1471,34 @@ dajNaziveHeadera()
     }
     //console.log(this.nizRedovaStatistika);
   }
+  tabelaStatistikaCat()
+  {
+    var broj = Object.keys(this.statistikaCat[0].data).length;
+    var kljucevi = Object.keys(this.statistikaCat[0].data);
+    var brojJ= this.statistikaCat.length;
+
+    //for(var k =0;k<)
+
+    for(var i = 0; i<broj;i++)
+    {
+      var nizHead:string[] = [];
+      nizHead.push(kljucevi[i]);
+      for(var j = 0; j<brojJ;j++)
+      {
+        
+        nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+      }
+      this.nizRedovaStatistika.push(nizHead);
+    }
+    //console.log(this.nizRedovaStatistika);
+  }
 
   prikaziUcitanePodatke(event:any)
   {
     this.indikator = true;
     var element = (<HTMLSpanElement>document.getElementById(event.target.id));
     var disableElement = (<HTMLSpanElement>document.getElementById("statPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
 
 
     element.style.backgroundColor = "#5e6091";
@@ -1491,6 +1513,7 @@ dajNaziveHeadera()
     this.indikator = false; 
     var element = (<HTMLSpanElement>document.getElementById(event.target.id));
     var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
 
     element.style.backgroundColor = "#5e6091";
     element.style.borderRadius = "5px";
