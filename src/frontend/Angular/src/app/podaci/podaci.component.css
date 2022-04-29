@@ -837,40 +837,47 @@ th{
 }*/
 
 #select-elements{
-    margin: 20px auto auto 30px;
+    margin-top: 20px;
     display: flex;
+    justify-content: center;
+}
+
+#pomocniDiv
+{
+    display: block;
 }
 
 #opcije-nv{
-    width: 85%;
-    display: flex;
-    justify-content: space-between;
+    /* width: 100%; */
+    display: block;
+    justify-content: center;
     margin: auto;
-    padding: 30px 0 5px 0;
+    padding: 5px 0 5px 0;
 }
 #prazni-string{
-    width: 45%;
-    
+    /* width: 90%; */
     display: flex;
     justify-content: space-between;
-    text-align: left;
+    text-align: center;
+    margin-bottom: 20px;
 }
 #zamena-nula{
-    width: 48%;
+    /* width: 90%; */
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 #b1,#b2{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
     height: 30px;
     padding: 5px;
-    align-items: center;
+    /* align-items: center; */
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
     border: 2px solid rgba(44, 75, 90, 0.8);
     color: white;
-    width: 100px;
+    /* width: 100px; */
     line-height: 10px;
     
 }
@@ -927,11 +934,12 @@ th{
 } 
 
 #regresija-nv{
-    width: 60%;
+    /* width: 60%; */
     display: flex;
-    justify-content: left;
-    margin: auto auto auto 45px;
-    padding: 30px 0 5px 0;
+    justify-content: center;
+    margin-bottom: 20px;
+    /* margin: auto auto auto 45px;
+    padding: 30px 0 5px 0; */
 }
 #btn-reg{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
@@ -1186,3 +1194,8 @@ th{
     background: #6070a7;
     border-radius: 10px;
   }
+
+.dugmeNA
+{
+    margin-bottom: 20px;
+}

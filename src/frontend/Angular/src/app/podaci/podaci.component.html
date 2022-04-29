@@ -411,6 +411,65 @@
                             </div>
                         </div>
                     </div>
+                    <div class="podesavanje">
+                        <button class="accordion-button collapsed dugmeCollapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNedVr" aria-expanded="false" aria-controls="collapseNedVr">
+                            Nedostajuće vrednosti
+                        </button>
+                        <div class="collapse" id="collapseNedVr">
+                            <div id="select-elements">
+                                <div id="pomocniDiv">
+                                <div ngbDropdown class="dropdown" id="zamena-select">
+                                    <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle dugmeNA" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                                      Zamena NA vrendosti
+                                    </button>
+                                    <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMean()">Zameni NA sa mean u koloni</a></li>
+                                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMedian()">Zameni NA sa median u koloni</a> </li>
+                                        <li ngbDropdownItem><a role="button" class="dropdown-item" (click)="fillWithMode()">Zameni NA sa mode u koloni</a> </li>
+                                        <div class="dropdown-divider"></div>
+                                        <li ngbDropdown>
+                                            <a class="dropdown-item" id="sub-menu1">
+                                               Linearna regresija  &nbsp; &nbsp;&nbsp;  &#10148;
+                                            </a>
+                                            <ul ngbDropdownMenu class="dropdown-menu dropdown-submenu">
+                                                <div *ngFor="let fieldValue of dajNaziveHeadera(); let i = index" >
+                                                <li ngbDropdownItem> <a role="button" class="dropdown-item" (click)="selectForRegression($event,i)">{{fieldValue}}</a></li>   
+                                                </div>                      
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div id="regresija-nv">
+                                    <input type="text" id="regresija-input" placeholder="Regresija:" readonly>
+                                    <button id="btn-reg" (click)="primeniZaRegression()">Primeni</button> 
+                                </div>
+                               
+                
+                                <div ngbDropdown class="d-inline-block">
+                                    <button class="btn btn-design2 dugmeNA" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
+                                      <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
+                                      <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
+                                      <button ngbDropdownItem (click)="deleteRowsWithNAforSelectedColumns()">Izbaci sve vrste sa NA za izabrane kolone</button>
+                                    </div>
+                                </div>
+                                </div>
+                
+                            </div>
+                
+                            <div id="opcije-nv">
+                                <div id="prazni-string">
+                                   <div style="color: white;">Zamena praznih stringova sa NA:</div>
+                                   <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
+                               </div>
+                            
+                                <div id="zamena-nula">
+                                    <div style="color: white;">Zamena 0 sa NA:</div>
+                                    <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
