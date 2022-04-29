@@ -418,6 +418,25 @@
                         <div class="collapse" id="collapseNedVr">
                             <div id="select-elements">
                                 <div id="pomocniDiv">
+                                    <div id="opcije-nv">
+                                        <div id="prazni-string">
+                                           <div class="imeAkcije">Zamena praznih stringova sa NA:</div>
+                                           <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
+                                       </div>
+                                    
+                                        <div id="zamena-nula">
+                                            <div class="imeAkcije">Zamena 0 sa NA:</div>
+                                            <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
+                                        </div>
+                                    </div>
+                                    <div ngbDropdown class="d-inline-block">
+                                        <button class="btn btn-design2 dugmeNA" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
+                                          <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
+                                          <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
+                                          <button ngbDropdownItem (click)="deleteRowsWithNAforSelectedColumns()">Izbaci sve vrste sa NA za izabrane kolone</button>
+                                        </div>
+                                    </div>
                                 <div ngbDropdown class="dropdown" class="zamena-select">
                                     <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle dugmeNA" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
                                       Zamena NA vrendosti
@@ -439,7 +458,7 @@
                                         </li> -->
                                     </ul>
                                 </div>
-                                <div ngbDropdown class="dropdown"  class="zamena-select">
+                                <div ngbDropdown class="dropdown" class="zamena-select">
                                     <button ngbDropdownToggle class="btn btn-design2 dugmeNA" type="button" id="dropdownLinReg">
                                         Linearna regresija
                                     </button>
@@ -453,29 +472,6 @@
                                     <input type="text" id="regresija-input" placeholder="Regresija:" readonly>
                                     <button id="btn-reg" (click)="primeniZaRegression()">Primeni</button> 
                                 </div>
-                               
-                
-                                <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-design2 dugmeNA" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
-                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic3" id="menu1">
-                                      <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
-                                      <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
-                                      <button ngbDropdownItem (click)="deleteRowsWithNAforSelectedColumns()">Izbaci sve vrste sa NA za izabrane kolone</button>
-                                    </div>
-                                </div>
-                                </div>
-                
-                            </div>
-                
-                            <div id="opcije-nv">
-                                <div id="prazni-string">
-                                   <div class="imeAkcije">Zamena praznih stringova sa NA:</div>
-                                   <button id="b1" (click)="replaceEmptyWithNA()">Primeni</button> 
-                               </div>
-                            
-                                <div id="zamena-nula">
-                                    <div class="imeAkcije">Zamena 0 sa NA:</div>
-                                    <button id="b2" (click)="replaceZeroWithNA()">Primeni</button> 
                                 </div>
                             </div>
                         </div>
