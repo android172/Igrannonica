@@ -86,10 +86,17 @@
   background-color: #272741;
 }
 
-#n,#d,#opis,#snap,#ann,#opt,#eph{
+#snap,#ann,#opt,#eph{
+  color: #eee;
+  height: 30px;
+  width: 200px;
+}
+
+#n,#d,#opis{
   color: #eee;
   height: 50px;
   width: 500px;
+  position: relative;
 }
 
 #skrol{
@@ -335,4 +342,50 @@ input:-webkit-autofill:active {
   background-image: linear-gradient(180deg, #F45E82 0%, #f5aabb 99%);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
   border-radius: 100px;
+}
+
+#osnovneI
+{
+  padding: 10px;
+  width: 250px;
+  border-radius: 10px;
+  height: 300px;
+  margin-left: 30px;
+  float: left;
+}
+
+#nm
+{
+  color: #f0859e;
+}
+
+#n,#d
+{
+  height: 30px;
+  width: 220px;
+  font-size: large;
+  color: #eee;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+#opis
+{
+  width: 220px;
+  height: 100px;
+  color: #eee;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+#pod{
+  padding-top: 10px;
+  float: left;
+  width: 200px;
+  height: 200px;
+  border-left: 1px solid #f3a5c1;
+  padding-left: 20px;
 }
