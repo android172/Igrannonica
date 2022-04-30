@@ -1289,4 +1289,15 @@ th{
 {
     border: none;
     font-size: 14px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 35px;
+    padding: 5px;
+    /* align-items: center; */
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
+    color: white;
+    width: 35%;
+    line-height: 10px;
 }
