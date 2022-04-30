@@ -390,6 +390,12 @@ ul .ngx-pagination
     margin-left: 15%;
     font-size: 14px;
 }
+
+#btn-ratio:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
+}
+
 #input-ratio{
     accent-color: rgb(101, 72, 115);
 }
@@ -978,6 +984,12 @@ th{
     line-height: 10px;
     border-radius: 10px;
 }
+
+#btn-reg:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
+}
+
 #regresija-input{
     width: 40%;
     background-color: #171f37;
@@ -1232,6 +1244,7 @@ th{
     background-color: rgb(101, 72, 115);
 }
 
+
 .imeAkcije
 {
     text-align: center;
@@ -1300,4 +1313,9 @@ th{
     color: white;
     width: 35%;
     line-height: 10px;
+}
+
+.btn-primary:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
 }
