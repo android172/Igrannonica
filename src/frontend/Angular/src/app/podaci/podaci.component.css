@@ -354,6 +354,7 @@ ul .ngx-pagination
     line-height: 30px;
     justify-content: center;
     background-color: #006ce8;
+    color: white;
     border: 2px solid rgb(247, 247, 255);
     border-top-left-radius: 10%;
     border-top-right-radius: 10%;
@@ -363,20 +364,33 @@ ul .ngx-pagination
 
 #div-ratio{
     display: flex;
-    justify-content: space-between;
-    width: 60%;
+    justify-content: center;
+    width: 100%;
     margin: auto;
+    margin-top: 8px;
 }
 
 #btn-ratio{
-    background-color: #6264b8;
+    /* background-color: #6264b8;
     border: 2px solid rgb(77, 77, 97);
     color: rgb(255, 255, 255);
-    border-radius: 7px;
+    border-radius: 7px; */
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 35px;
+    padding: 5px;
+    /* align-items: center; */
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid rgba(44, 75, 90, 0.8);
+    color: white;
+    width: 30%;
+    line-height: 10px;
+    margin-left: 15%;
 }
-#input-ratio{
-    margin-top: 10px;
-}
+/* #input-ratio{
+    margin-top: -10px;
+} */
 /*************** TESTNI SKUP *********************/ 
 
 #testniskup-comp{
@@ -384,12 +398,14 @@ ul .ngx-pagination
     align-items: center;
     text-align: center;
     justify-content: center;
+
 }
 
 #proizvoljan-unos{
     text-align: center;
     justify-content: center;
-
+    position: relative;
+    top: -20px;
 }
 
 .visible-testniskup{
@@ -731,7 +747,8 @@ th{
 }
 #vrednost-ratio{
     background-color: #f9fbff;
-    border-radius: 7px;
+    border-radius: 10px;
+    width: 30%;
 }
 #nedostajucevrednosti{
     width: 45.5%;
@@ -1238,3 +1255,7 @@ th{
     text-align: center;
 }
 
+#dropdownBasic1
+{
+    margin-top: 20px;
+}
