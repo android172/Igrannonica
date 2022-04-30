@@ -354,9 +354,9 @@ ul .ngx-pagination
     text-align: center;
     line-height: 30px;
     justify-content: center;
-    background-color: #006ce8;
-    color: white;
-    border: 2px solid rgb(247, 247, 255);
+    background-color: rgb(83, 50, 100);
+    color: rgb(232, 209, 243);
+    border: 2px solid rgb(170, 132, 189);
     border-top-left-radius: 10%;
     border-top-right-radius: 10%;
     border-bottom-left-radius: 40%;
@@ -391,7 +391,7 @@ ul .ngx-pagination
     font-size: 14px;
 }
 #input-ratio{
-    accent-color: #006ce8;
+    accent-color: rgb(101, 72, 115);
 }
 /*************** TESTNI SKUP *********************/ 
 
