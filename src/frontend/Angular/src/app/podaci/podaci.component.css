@@ -383,7 +383,7 @@ ul .ngx-pagination
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid rgba(66, 106, 208, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
     width: 30%;
     line-height: 10px;
@@ -900,7 +900,7 @@ th{
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid rgba(66, 106, 208, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
     width: 30%;
     line-height: 10px;
@@ -972,7 +972,7 @@ th{
     align-items: center;
     box-sizing: border-box;
     text-align: center;
-    border: 2px solid rgba(66, 106, 208, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
     width: 30%;
     line-height: 10px;
@@ -998,7 +998,7 @@ th{
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid rgba(66, 106, 208, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
     width: 60%;
     display: block;
@@ -1282,4 +1282,10 @@ th{
 #dropdownLinReg
 {
     font-size: 15px;
+}
+
+.btn-primary
+{
+    border: none;
+    font-size: 14px;
 }
