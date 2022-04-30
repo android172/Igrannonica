@@ -310,16 +310,16 @@ ul .ngx-pagination
 /************* SLIDER *****************/ 
 
 #slider{
-    width: 220px;
+    width: 100%;
     justify-content: center;
     margin: -40px auto;
 
 }
 #slider input[type="range"]{
-    width: 220px;
+    width: 80%;
     height: 10px;
     outline: none;
-
+    color: #006ce8;
 }
 #slider input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance: none;
@@ -328,7 +328,7 @@ ul .ngx-pagination
     cursor: pointer;
     border-radius: 5px;
 }
-/*
+/* 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input[type='range'] {
       overflow: hidden;
@@ -343,7 +343,7 @@ ul .ngx-pagination
       cursor: pointer;
     }
 
-}*/
+} */
 #current-value{
     font-size: 15px;
     position: relative;
@@ -388,9 +388,9 @@ ul .ngx-pagination
     line-height: 10px;
     margin-left: 15%;
 }
-/* #input-ratio{
-    margin-top: -10px;
-} */
+#input-ratio{
+    accent-color: #006ce8;
+}
 /*************** TESTNI SKUP *********************/ 
 
 #testniskup-comp{
