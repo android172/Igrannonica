@@ -240,6 +240,7 @@ dajNaziveHeadera()
         this.ucitajStatistiku();
         
         this.tabelaStatistika();
+        this.tabelaStatistikaCat();
       }
     )
   }
@@ -1476,8 +1477,14 @@ dajNaziveHeadera()
     var broj = Object.keys(this.statistikaCat[0].data).length;
     var kljucevi = Object.keys(this.statistikaCat[0].data);
     var brojJ= this.statistikaCat.length;
+    var traziMax:number[] = [];
 
-    //for(var k =0;k<)
+    //console.log(this.statistikaCat[0].data[broj-1]['Frequencies']);
+    for(var i = 0;i<brojJ;i++)
+    {
+      traziMax.push((this.statistikaCat[0].data[broj-1]['Frequencies']).length);
+    }
+    broj += Math.max(...traziMax);
 
     for(var i = 0; i<broj;i++)
     {
