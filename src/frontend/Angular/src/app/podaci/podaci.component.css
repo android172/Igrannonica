@@ -778,7 +778,9 @@ th{
     background-color: #f9fbff;
     border-radius: 10px;
     width: 30%;
+    border: none;
 }
+
 #nedostajucevrednosti{
     width: 45.5%;
     
@@ -1284,7 +1286,7 @@ th{
 .imeAkcije
 {
     text-align: center;
-    color: white;
+    color: rgb(216, 221, 251);
     width: 40%;
     margin-right: 10px;
     margin-top: 3px;
