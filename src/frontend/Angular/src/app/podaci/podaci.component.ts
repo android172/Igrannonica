@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
 import { DatePipe } from '@angular/common';
+import { Observable, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-podaci',
@@ -119,6 +120,9 @@ export class PodaciComponent implements OnInit {
   ucitanCsv: boolean = false;
   nazivEksperimenta:any;
   rows:number[] = [];
+
+  imageName : any;
+  scatterplotImage : any;
 
   niz2:any[] = [];
 
@@ -999,9 +1003,9 @@ dajNaziveHeadera()
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
     },error=>{
       console.log(error.error);
-      let dateTime = new Date();
+     /* let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Izmene nisu sacuvane");
-      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");*/
       this.onError("Izmene nisu sacuvane!");
     })
     
@@ -1552,5 +1556,69 @@ dajNaziveHeadera()
   
   }
 
+  getScatterplot(){
+
+    this.http.post(url+"/api/Graph/scatterplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  preuzmiSliku(){
+
+    this.http.get(url+"/api/File/GetImage?idEksperimenta=" + this.idEksperimenta,{responseType:"blob"}).subscribe(
+      (res : any)=> {
+        var blob = new Blob([res], {
+            type: 'image/png'
+        });
+        console.log(blob);
+        this.convertToBase64(blob);
+    },
+    error=>{
+      
+    }
+    );
+  }
+
+  convertToBase64(file: Blob){
+
+    const observable = new Observable((subscriber : Subscriber<any>) => {
+
+      this.readFile(file, subscriber);
+    });
+    observable.subscribe((d)=>{
+     // console.log(d);
+     this.scatterplotImage = d;
+    })
+  }
+
+  readFile(file: Blob, subscriber:Subscriber<any>){
+
+    const filereader = new FileReader();
+
+    filereader.readAsDataURL(file);
+
+    filereader.onload=()=>{
+
+      subscriber.next(filereader.result);
+      subscriber.complete();
+    };
+    filereader.onerror=(error)=>{
+
+      subscriber.error(error);
+      subscriber.complete();
+    };
+  }
+
+  ucitajGrafik(){
+
+   this.getScatterplot();
+  // this.preuzmiSliku();
+  }
 }
 

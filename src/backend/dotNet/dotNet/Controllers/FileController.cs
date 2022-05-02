@@ -129,7 +129,7 @@ namespace dotNet.Controllers
         }
         
         [Authorize]
-        [HttpPost("GetImage")]
+        [HttpGet("GetImage")]
         public IActionResult GetImage(int idEksperimenta)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
@@ -148,7 +148,7 @@ namespace dotNet.Controllers
                 idEksperimenta.ToString(),
                 fileName
             );
-
+            Console.WriteLine(fileName + " " +  filePath);
             return DownloadFile(fileName, filePath, "image/png") ;
         }
 

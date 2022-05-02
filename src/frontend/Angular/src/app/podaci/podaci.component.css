@@ -1176,11 +1176,12 @@ th{
     margin-top: 10px;
 }
 
+/*
 .dugmiciG:hover{
 
     color: rgba(39, 39, 65);
 }
-
+*/
 .dugmiciG:active{
 
     color: rgba(39, 39, 65);
@@ -1210,3 +1211,9 @@ th{
     background-color: transparent;
     border: none;
 }
+
+.img-fluid
+{
+    width: 100%;
+    height: 100%;
+} 

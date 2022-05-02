@@ -414,6 +414,7 @@
         <div class="col-md-9">
             <div class="okvir visinaVizuelizacije">
                 <div class="naslov">Vizuelizacija podataka</div>
+                <div id="grafik"  style="width: 70%; height: 95%; margin: auto;" *ngIf="scatterplotImage"><img [src]="scatterplotImage" class="img-fluid " alt="Responsive image"></div>
             </div>
 
         </div>
@@ -422,7 +423,7 @@
             <div class="okvir visinaVizuelizacije ">
                 <div class="naslov pb-5">Nacin prikaza podataka</div>
                     <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
-                <div class="row p-2 pt-3"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
+                <div class="row p-2 pt-3"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik()" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="barplot" type="button" class="btn btn-secondary dugmiciG" style="border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Barplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
