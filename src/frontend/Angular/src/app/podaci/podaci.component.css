@@ -205,7 +205,14 @@ ul .ngx-pagination
     min-width: 233px;
     height: 35px;
     justify-content: center;
+    box-shadow: none;
 }
+
+.btn-design3:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
+
 #norm-box{
     display: block;
     text-align: center;
@@ -248,11 +255,11 @@ ul .ngx-pagination
         font-weight: 500;
        /* color: rgb(237, 237, 237);*/
     }
-    .zamena-select .dropdown-menu, #menu1{
+    .zamena-select .dropdown-menu, .menu1{
         background-color: rgb(230, 213, 253);
     }
 /********** SELECT DROPDOWN MENU ***/
-#menu1 button{
+.menu1 button{
     font-size: 13px;
     padding: 5px 2px 5px 5px;
     font-weight: 500;
@@ -274,6 +281,12 @@ ul .ngx-pagination
     min-width: 190px;
     height: 35px;
     justify-content: center;
+    box-shadow: none;
+}
+
+.btn-design4:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
 }
 
 #outliers-box{
@@ -487,6 +500,12 @@ input#exampleFormControlFile1{
     overflow-wrap: break-word;
     font-size: 100%;
 }
+
+.btn-design:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
+
 .btn-design2{
     height: 35px;
     width: 235px;
@@ -1252,8 +1271,13 @@ th{
 {
     margin-bottom: 20px;
     background-color: rgb(101, 72, 115);
+    box-shadow: none;
 }
 
+.dugmeNA:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
 
 .imeAkcije
 {
