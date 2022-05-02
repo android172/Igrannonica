@@ -306,6 +306,8 @@ ul .ngx-pagination
     width: 100px; 
     color: white;
     margin-bottom: 20px;
+    cursor: default;
+    pointer-events: none;
 }
 
 #outlier-btn
