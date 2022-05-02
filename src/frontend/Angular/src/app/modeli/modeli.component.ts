@@ -17,6 +17,7 @@ export class ModeliComponent implements OnInit {
   @Output() PosaljiModel = new EventEmitter<number>();
   json: any;
   json1: any;
+  jsonMetrika: any;
   modeli : any[] = [];
   id: any;
   trenId: any;
@@ -26,6 +27,7 @@ export class ModeliComponent implements OnInit {
   ActivateAddEdit: boolean = false;
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
+  izabranId: any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -129,6 +131,7 @@ export class ModeliComponent implements OnInit {
           this.json = res;
           this.modeli = Object.values(this.json);
           this.formatirajDatum();
+          this.promeni(this.modeli[0].id);
         },
         error=>{
           console.log(error.error);
@@ -236,6 +239,7 @@ export class ModeliComponent implements OnInit {
   }
 
   uzmiId(id: any){
+    this.izabranId=id;
     this.prikaziInfo(id);
   }
 
@@ -260,7 +264,6 @@ export class ModeliComponent implements OnInit {
       (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
       (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
       (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
-      (<HTMLDivElement>document.getElementById(this.selektovanModel))
       this.selektovanModel = event.target.id;
       (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
       (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
@@ -271,6 +274,17 @@ export class ModeliComponent implements OnInit {
       (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
     }
 
+  }
+
+  Izmeni()
+  {
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      if(this.modeli[i].id==this.izabranId)
+      {
+        (<HTMLDivElement>document.getElementById("bodyc")).innerHTML=this.modeli[i].opis;
+      }
+    }
   }
 
 }
