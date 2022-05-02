@@ -37,7 +37,7 @@ namespace dotNet.Controllers
         }
 
         [HttpPost("download/{idEksperimenta}")]
-        public ActionResult Download(int idEksperimenta)
+        public ActionResult Download(int idEksperimenta, string versionName)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
@@ -48,7 +48,7 @@ namespace dotNet.Controllers
                 string path1 = System.IO.Path.Combine(
                     Directory.GetCurrentDirectory(), 
                     "Files", "1", 
-                    idEksperimenta.ToString(), fileName1
+                    idEksperimenta.ToString(), versionName
                 );
 
                 return DownloadFile(fileName1, path1);
@@ -76,14 +76,14 @@ namespace dotNet.Controllers
             string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
             string path = System.IO.Path.Combine(
                 Directory.GetCurrentDirectory(), "Files",
-                korisnik.Id.ToString(), idEksperimenta.ToString(), fileName
+                korisnik.Id.ToString(), idEksperimenta.ToString(), versionName
                 );
 
             return DownloadFile(fileName, path);
         }
 
         [HttpPost("downloadModel/{idEksperimenta}")]
-        public ActionResult Download(int idEksperimenta, string modelName)
+        public ActionResult DownloadModel(int idEksperimenta, string modelName)
         {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
@@ -154,7 +154,7 @@ namespace dotNet.Controllers
 
 
         // Upload
-        private void UploadFile(IFormFile file, string fileDir)
+        private void UploadFile(IFormFile file, string fileDir, string fileName)
         {
             if (!Directory.Exists(fileDir))
                 Directory.CreateDirectory(fileDir);
@@ -163,7 +163,6 @@ namespace dotNet.Controllers
             using var fileStream = file.OpenReadStream();
             byte[] bytes = new byte[length];
             fileStream.Read(bytes, 0, (int)file.Length);
-            string fileName = file.FileName;
             string path = Path.Combine(fileDir, fileName);
 
             System.IO.File.WriteAllBytes(path, bytes);
@@ -204,17 +203,21 @@ namespace dotNet.Controllers
                     idEksperimenta.ToString()
                 );
 
-                // upis u fajl 
-                UploadFile(file, folderEksperiment);
+                // upis u fajl
+                string fileExtension = file.FileName.Split(".")[^1];
+                string fileName = $"SIROVI PODACI.{fileExtension}";
+                UploadFile(file, folderEksperiment, fileName);
 
                 // Ucitaj fajl na ml serveru
-                try { eksperiment.LoadDataset(idEksperimenta, file.FileName); }
+                try { eksperiment.LoadDataset(idEksperimenta, fileName); }
                 catch (MLException) { return BadRequest("File nije ucitan u python."); }
             
                 // upis csv-a u bazu 
                 bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, file.FileName);
                 if (!fajlNijeSmesten)
-                    return BadRequest("Neuspesan upis csv-a u bazu");
+                    return BadRequest("Neuspesan upis fajl-a u bazu");
+
+                db.dbeksperiment.dodajSnapshot(idEksperimenta, "SIROVI PODACI", fileName);
 
                 return Ok("Fajl je upisan.");
             }
@@ -244,7 +247,7 @@ namespace dotNet.Controllers
                     );
 
                     // ucitavanje fajla 
-                    UploadFile(file, folderEksperiment1);
+                    UploadFile(file, folderEksperiment1, file.FileName);
 
                     return Ok("Fajl je upisan.");
                 }
@@ -280,7 +283,7 @@ namespace dotNet.Controllers
                 );
 
                 // ucitavanje fajla 
-                UploadFile(file, folderEksperiment);
+                UploadFile(file, folderEksperiment, file.FileName);
 
                 return Ok("Fajl je upisan.");
             }
@@ -291,7 +294,7 @@ namespace dotNet.Controllers
         }
 
         [HttpPost("uploadModel/{idEksperimenta}")]
-        public IActionResult uploadModel(IFormFile file, int idEksperimenta, string modelName)
+        public IActionResult UploadModel(IFormFile file, int idEksperimenta, string modelName)
         {
             try
             {
@@ -307,7 +310,7 @@ namespace dotNet.Controllers
                     );
 
                     // upis u fajl
-                    UploadFile(file, folderModeli1);
+                    UploadFile(file, folderModeli1, file.FileName);
 
                     return Ok("Fajl je upisan.");
                 }
@@ -344,7 +347,7 @@ namespace dotNet.Controllers
                 );
 
                 // Upis u fajl
-                UploadFile(file, folderModeli);
+                UploadFile(file, folderModeli, file.FileName);
 
                 return Ok("Fajl je upisan.");
             }
@@ -363,25 +366,31 @@ namespace dotNet.Controllers
 
 
         [Authorize]
-        [HttpPost("CreateSnapshot")]
-        public IActionResult kreirajSnapshot(int id, string naziv)
+        [HttpPost("SaveSnapshot")]
+        public IActionResult SacuvajSnapshot(int idEksperimenta, string naziv)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
+
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (eksperiment.IsDataLoaded(id))
+                if (eksperiment.IsDataLoaded(idEksperimenta))
                     return BadRequest("Nije unet dataset.");
-                if (db.dbeksperiment.proveriSnapshot(id, naziv) == -1)
-                    if (!db.dbeksperiment.dodajSnapshot(id, naziv, "test.csv"))
+
+                if (db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv) == -1)
+                {
+                    string extension = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta).Split(".")[^1];
+                    if (!db.dbeksperiment.dodajSnapshot(idEksperimenta, naziv, $"{naziv}.{extension}"))
                         return BadRequest("Nije unet file.");
-                    else
-                        return BadRequest("Postoji verzija sa tim imenom.");
-                //eksperiment.SaveDataset();
+                }
+                else
+                    return BadRequest("Postoji verzija sa tim imenom.");
+
+                eksperiment.SaveDataset(naziv);
                 return Ok("Napravljen Snapshot.");
             }
             catch

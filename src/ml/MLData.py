@@ -24,13 +24,15 @@ class MLData:
         self.dataset        = None
         self.input_columns  = None
         self.output_columns = None
-        self.train_indices  = None
-        self.test_indices   = None
         self.column_types   = None
         self.column_data_ty = None
         
+        self.test_col = '_IsATestPoint'
+        
         self.past_states = deque(maxlen=5)
         self.future_states = deque(maxlen=5)
+        
+        self.dataset_versions = {}
     
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
@@ -49,8 +51,10 @@ class MLData:
         self.clear_change_history()
         
         self.dataset = dataset
-        self.train_indices = [i for i in range(self.dataset.shape[0])]
-        self.test_indices = []
+        
+        if self.test_col not in self.dataset.columns:
+            series = pd.Series([0 for _ in range(self.dataset.shape[0])], name=self.test_col)
+            self.dataset = self.dataset.join(series)
         
         self.column_types = [str(x) for x in self.dataset.dtypes]
         
@@ -72,10 +76,11 @@ class MLData:
         
     def _load_test_dataset(self, dataset_test):
         self.save_change()
-        train_length = self.dataset.shape[0]
+        
+        series = pd.Series([1 for _ in range(dataset_test.shape[0])], name=self.test_col)
+        dataset_test = dataset_test.join(series)
+        
         self.dataset = pd.concat([self.dataset, dataset_test])
-        self.train_indices = [i for i in range(train_length)]
-        self.test_indices = [i for i in range(train_length, self.dataset.shape[0])]
         
     # Save changes
     def save_to_csv(self, path):
@@ -110,17 +115,35 @@ class MLData:
         self.past_states.clear()
         self.future_states.clear()
         
+    def contains_dataset_version(self, versionName):
+        dataset_version = self.dataset_versions.get(versionName, None)
+        if dataset_version is None:
+            return False
+        return True
+        
+    def load_dataset_version(self, versionName):
+        dataset_version = self.dataset_versions.get(versionName, None)
+        if dataset_version is None:
+            return False
+        self._load_dataset(dataset_version.copy(deep=True))
+        return True
+
+    def save_dataset_version(self, versionName):
+        self.dataset_versions[versionName] = self.dataset.copy(deep=True)
+        
     # Select columns
-    def select_input_columns(self, columns):
-        column_types = [str(i) for i in self.dataset.dtypes]
+    def select_input_columns(self, columns, version = None):
+        data_types = self.dataset.dtypes if version is None else self.dataset_versions[version].dtypes
+        column_types = [str(i) for i in data_types]
         for ci in columns:
             if column_types[ci] != 'int64' and column_types[ci] != 'float64':
                 return False
         self.input_columns = columns
         return True
     
-    def select_output_columns(self, columns):
-        column_types = [str(i) for i in self.dataset.dtypes]
+    def select_output_columns(self, columns, version = None):
+        data_types = self.dataset.dtypes if version is None else self.dataset_versions[version].dtypes
+        column_types = [str(i) for i in data_types]
         for ci in columns:
             if column_types[ci] != 'int64' and column_types[ci] != 'float64':
                 return False
@@ -129,21 +152,27 @@ class MLData:
     
     # Train test splits
     def random_train_test_split(self, ratio):
+        self.save_change()
+        
         dataset_length = self.dataset.shape[0]
         split_point = int(dataset_length * (1.0 - ratio))
         
         # Initialize index lists
         index_list = [i for i in range(dataset_length)]
         random.shuffle(index_list)
-        self.train_indices = index_list[:split_point]
-        self.test_indices  = index_list[split_point:]
+        train_indices = index_list[:split_point]
+        test_indices  = index_list[split_point:]
+        
+        self.dataset.loc[train_indices, self.test_col] = 0
+        self.dataset.loc[test_indices,  self.test_col] = 1
 
     # ########### #
     # Data access #
     # ########### #
     
-    def columns_are_valid(self, columns):
-        length = self.dataset.shape[1]
+    def columns_are_valid(self, columns, version = None):
+        length = self.dataset.shape[1] if version is None else self.dataset_versions[version].shape[1]
+        length -= 1 # Remove test column
         for column in columns:
             if column < 0 or column >= length:
                 return False
@@ -151,28 +180,31 @@ class MLData:
     
     def get_train_dataset(self):
         train_data = []
-        for i in self.train_indices:
-            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
-            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+        for col in self.dataset[self.dataset[self.test_col] == 0].values:
+            x = tensor(col[self.input_columns]).float()
+            y = tensor(col[self.output_columns]).float()
             train_data.append((x, y))
         return train_data
     
     def get_test_dataset(self):
         test_data = []
-        for i in self.test_indices:
-            x = tensor(self.dataset.iloc[i, self.input_columns]).float()
-            y = tensor(self.dataset.iloc[i, self.output_columns]).float()
+        for col in self.dataset[self.dataset[self.test_col] == 1].values:
+            x = tensor(col[self.input_columns]).float()
+            y = tensor(col[self.output_columns]).float()
             test_data.append((x, y))
         return test_data
     
     def get_rows(self, rows):
-        return self.dataset.iloc[rows]
+        return self.dataset.iloc[rows, :-1]
     
     def get_row_count(self):
         return self.dataset.shape[0]
+
+    def get_column_count(self):
+        return self.dataset.shape[1] - 1
     
     def get_column_types(self):
-        return self.column_data_ty
+        return self.column_data_ty[:-1]
     
     # ################# #
     # Data manipulation #
@@ -199,6 +231,7 @@ class MLData:
 
     def add_row(self, new_row, test=False):
         # Convert row values to proper types
+        new_row.append(0 if test==False else 1)
         series = pd.Series(new_row, index=self.dataset.columns)
         for i in range(len(new_row)):
             try:
@@ -212,16 +245,12 @@ class MLData:
         # import values
         self.save_change()
         self.dataset.loc[self.dataset.shape[0]] = series
-        
-        if test == False:
-            self.train_indices.append(self.dataset.shape[0])
-        else:
-            self.test_indices.append(self.dataset.shape[0])
         return -1
     
     def update_row(self, row, new_row):
         if row < 0 or row >= self.dataset.shape[0]:
             return -2
+        new_row.append(self.dataset.loc[row, self.test_col])
         # Convert row values to proper types
         series = pd.Series(new_row, index=self.dataset.columns)
         for i in range(len(new_row)):
@@ -244,22 +273,17 @@ class MLData:
             
         self.save_change()
         self.dataset.drop(self.dataset.index[rows], inplace=True)
-        
-        rows.sort(reverse=True)
-        for row in rows:
-            self.train_indices = [index - 1 if index > row else index for index in self.train_indices if index != row]
-            self.test_indices  = [index - 1 if index > row else index for index in self.test_indices  if index != row]
         return True
             
     def add_column(self, new_column, label):
         self.save_change()
         
-        series = pd.Series(new_column, name=label)
-        self.dataset = self.dataset.join(series)
+        series = pd.Series(new_column)
+        self.dataset = self.dataset.insert(self.dataset.shape[1] - 1, label, series)
         
         new_column_type = series.dtype
-        self.column_types.append(new_column_type)
-        self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
+        self.column_types.insert(-1, new_column_type)
+        self.column_data_ty.insert(-1, 'Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def update_column(self, column, new_column=None, new_label=None):
         self.save_change()
@@ -380,13 +404,14 @@ class MLData:
                     for i in range(len(columns)) for group in encoder.categories_[i]]
         self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
         self.dataset[new_columns] = result
+        self.dataset = self.dataset[[col for col in self.dataset if col != self.test_col] + [self.test_col]]
         
         for col in columns:
             self.column_types.pop(col)
             self.column_data_ty.pop(col)
         for col in new_columns:
-            self.column_types.append('int64')
-            self.column_data_ty.append('Categorical')
+            self.column_types.insert(-1, 'int64')
+            self.column_data_ty.insert(-1, 'Categorical')
         return 0
     
     # Normalization

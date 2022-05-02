@@ -47,17 +47,22 @@ class MLClientInstance(Thread):
                 self.experiment_id = experiment_id
                 # Receive dataset name
                 file_name = self.connection.receive()
+                
+                if network.data.load_dataset_version(file_name):
+                    self.connection.send("OK")
+                    print("Dataset loaded.")
+                    return
+                
                 file_dir = os.path.join(os.curdir, 'data', experiment_id)
                 file_path = os.path.join(file_dir, file_name)
                 
-                # Clean of previous datasets
-                if os.path.exists(file_dir):
-                    rmtree(file_dir)
-                os.makedirs(file_dir)
+                if not os.path.exists(file_dir):
+                    os.makedirs(file_dir)
                 
                 response = requests.post(
                     f"http://localhost:5008/api/file/download/{experiment_id}", 
-                    headers={"Authorization" : f"Bearer {self.token}"}
+                    headers={"Authorization" : f"Bearer {self.token}"},
+                    params={"versionName" : file_name}
                 )
                 
                 if response.status_code != 200:
@@ -78,6 +83,8 @@ class MLClientInstance(Thread):
                 else:
                     self.report_error(f"ERROR :: File type with extension .{extension} is not supported.")
                     return
+                
+                network.data.save_dataset_version(file_name)
                 
                 self.connection.send("OK")
                 print("Dataset loaded.")
@@ -103,20 +110,15 @@ class MLClientInstance(Thread):
                 print("Test Dataset loaded.")
                 
             elif received == 'SaveDataset':
+                # Receive dataset name
+                file_name = self.connection.receive()
+                
                 experiment_id = self.experiment_id
                 file_dir = os.path.join(os.curdir, 'data', experiment_id)
+                file_path = os.path.join(file_dir, file_name)
                 
                 if not os.path.exists(file_dir):
-                    self.report_error("ERROR :: File does not exist.")
-                    return
-                
-                dir_files = os.listdir(file_dir)
-                if len(dir_files) == 0:
-                    self.report_error("ERROR :: File does not exist.")
-                    return
-                
-                file_name = dir_files[0]
-                file_path = os.path.join(file_dir, file_name)
+                    os.makedirs(file_dir)
                 
                 extension = file_name.split(".")[-1]
                 if   extension == 'csv':
@@ -143,6 +145,8 @@ class MLClientInstance(Thread):
                     self.report_error(f"ERROR :: Couldn't update the file; Error code {response.status_code}")
                     return
                 
+                network.data.save_dataset_version(file_name)
+                
                 self.connection.send("OK")
                 print("Changes saved.")
             
@@ -150,11 +154,11 @@ class MLClientInstance(Thread):
                 # Receive inputs
                 inputs_string = self.connection.receive()
                 inputs = [int(x) for x in inputs_string.split(":")]
-                if not network.data.columns_are_valid(inputs):
+                if not network.data.columns_are_valid(inputs, network.dataset_version):
                     self.report_error("ERROR :: Illegal columns selected.")
                     return
                 
-                if not network.data.select_input_columns(inputs):
+                if not network.data.select_input_columns(inputs, network.dataset_version):
                     self.report_error("ERROR :: All input columns need to be numerical or encoded.")
                     return
                 
@@ -165,11 +169,11 @@ class MLClientInstance(Thread):
                 # Receive outputs
                 outputs_string = self.connection.receive()
                 outputs = [int(x) for x in outputs_string.split(":")]
-                if not network.data.columns_are_valid(outputs):
+                if not network.data.columns_are_valid(outputs, network.dataset_version):
                     self.report_error("ERROR :: Illegal columns selected.")
                     return
                 
-                if not network.data.select_output_columns(outputs):
+                if not network.data.select_output_columns(outputs, network.dataset_version):
                     self.report_error("ERROR :: All output columns need to be numerical or encoded.")
                     return
                 
@@ -240,9 +244,9 @@ class MLClientInstance(Thread):
                 row_string = self.connection.receive()
                 new_row = json.loads(row_string)["Data"]
                 
-                if len(new_row) != network.data.dataset.shape[1]:
+                if len(new_row) != network.data.get_column_count():
                     self.report_error(f"ERROR :: Wrong number of inputs given; " +
-                                      f"Namely {len(new_row)} instead of {network.data.dataset.shape[1]}.")
+                                      f"Namely {len(new_row)} instead of {network.data.get_column_count()}.")
                     return
                 
                 return_code = network.data.add_row(new_row)
@@ -257,6 +261,12 @@ class MLClientInstance(Thread):
                 # Receive row values
                 row_string = self.connection.receive()
                 new_row = json.loads(row_string)["Data"]
+                
+                if len(new_row) != network.data.get_column_count():
+                    self.report_error(f"ERROR :: Wrong number of inputs given; " +
+                                      f"Namely {len(new_row)} instead of {network.data.get_column_count()}.")
+                    return
+                
                 return_code = network.data.add_row(new_row, True)
                 if return_code >= 0:
                     self.report_error(f"ERROR :: Invalid type for column {i} given.")
@@ -271,6 +281,11 @@ class MLClientInstance(Thread):
                 # Receive row values
                 row_string = self.connection.receive()
                 new_row = json.loads(row_string)["Data"]
+                
+                if len(new_row) != network.data.get_column_count():
+                    self.report_error(f"ERROR :: Wrong number of inputs given; " +
+                                      f"Namely {len(new_row)} instead of {network.data.get_column_count()}.")
+                    return
                 
                 return_code = network.data.update_row(row_index, new_row)
                 if return_code >= 0:
@@ -977,17 +992,7 @@ class MLClientInstance(Thread):
                     self.report_error("ERROR :: Test dataset not selected.")
                     return
                 
-                if network.isRegression:
-                    train = network.compute_regression_statistics("train")
-                    test = network.compute_regression_statistics("test")
-                else:
-                    train = network.compute_classification_statistics("train")
-                    test = network.compute_classification_statistics("test")
-                    
-                self.connection.send("OK")
-                self.connection.send(json.dumps({"test": test, "train": train}))
-                
-                print("Network statistics requested.")
+                Thread(target = lambda : self.compute_metrics(network)).start()
             
             elif received == 'ChangeSettings':
                 # Receive settings to change to
@@ -996,6 +1001,58 @@ class MLClientInstance(Thread):
                 network.load_settings(annSettings)
                 
                 print("ANN settings changed.")
+
+            elif received == 'SelectTraningData':
+                # Receive data version
+                version_name = self.connection.receive()
+                
+                if not network.data.contains_dataset_version(version_name):
+                    file_name = version_name
+                    file_dir = os.path.join(os.curdir, 'data', experiment_id)
+                    file_path = os.path.join(file_dir, file_name)
+                    
+                    if not os.path.exists(file_dir):
+                        os.makedirs(file_dir)
+                    
+                    response = requests.post(
+                        f"http://localhost:5008/api/file/download/{experiment_id}", 
+                        headers={"Authorization" : f"Bearer {self.token}"},
+                        params={"versionName" : file_name}
+                    )
+                    
+                    if response.status_code != 200:
+                        self.report_error("ERROR :: Couldn't download requested dataset from server; " +
+                                        f"Error code {response.status_code}.")
+                        return
+                        
+                    with open(file_path, "wb") as file:
+                        Thread(target = lambda : file.write(response.content)).start()
+                       
+                    current_ds = network.data.dataset
+                    current_ct = network.data.column_types
+                    current_dt = network.data.column_data_ty
+                        
+                    extension = file_name.split(".")[-1]
+                    if   extension == 'csv':
+                        network.data.load_from_csv(BytesIO(response.content))
+                    elif extension == 'json':
+                        network.data.load_from_json(BytesIO(response.content))
+                    elif extension in ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']:
+                        network.data.load_from_excel(BytesIO(response.content))
+                    else:
+                        self.report_error(f"ERROR :: File type with extension .{extension} is not supported.")
+                        return
+                    
+                    network.data.save_dataset_version(file_name)
+                    
+                    network.data.dataset        = current_ds
+                    network.data.column_types   = current_ct
+                    network.data.column_data_ty = current_dt
+                
+                network.data_version = version_name
+                
+                self.connection.send("OK")
+                print("Traning datset selected.")
                 
             elif received == 'Start':
                 # Initialize random data if no dataset is selected
@@ -1011,12 +1068,39 @@ class MLClientInstance(Thread):
     def train(self, network):
         sr_connection = SignalRConnection(self.token)
         sr_connection.set_method("SendLoss")
+        
+        # Setup dataset version
+        if network.dataset_version is not None:
+            if not network.data.load_dataset_version(network.dataset_version):
+                sr_connection.send_string("ERROR :: Selected dataset not recognized.")
+                return
+        
         for loss in network.train():
             sr_connection.send_string(json.dumps(loss))
+            
         print("Traning complete.")
+    
+    def compute_metrics(self, network):
+        # Setup dataset version
+        if network.dataset_version is not None:
+            if not network.data.load_dataset_version(network.dataset_version):
+                self.report_error("ERROR :: Selected dataset not recognized.")
+                return
+        
+        if network.isRegression:
+            train = network.compute_regression_statistics("train")
+            test = network.compute_regression_statistics("test")
+        else:
+            train = network.compute_classification_statistics("train")
+            test = network.compute_classification_statistics("test")
+            
+        self.connection.send("OK")
+        self.connection.send(json.dumps({"test": test, "train": train}))
+
+        print("Network statistics requested.")
         
     def report_error(self, message):
-        print(message)
+        print(message, flush=True)
         self.connection.send(message)
         
     def upload_image(self, file_name, file_path):
