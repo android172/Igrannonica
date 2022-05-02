@@ -298,12 +298,22 @@
                             Testni skup
                         </button>
                         <div class="collapse" id="collapseTestniSkup">
+                            <div id="header-help">
+                                <div id="helper"> 
+                                    <span  class="hovertext" data-tooltip=" Metoda 'Odabir željene vrednosti':
+                                        - Pomeriti slider za odabir udela testnog skupa
+                                         ili uneti željenu vrednost preko input polja
+                                        - Primenite podešene vrednosti">
+                                    &#63;
+                                    </span>
+                                </div>
+                            </div>
                             <div ngbDropdown class="d-inline-block" style="width: 100%;">
                                 <div class="pom">
                                     <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
                                 </div>
                                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Unos željenih vrednosti</button>
+                                  <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Odabir željene vrednosti</button>
                                   <button ngbDropdownItem id="ucitajTestniSkup" (click)="izborUnosa('Testni skup')">Učitaj testni skup</button>
                                 </div>
                             </div>
