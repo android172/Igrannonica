@@ -241,5 +241,47 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske");
             }
         }
+
+        [Authorize]
+        [HttpPost("Undo")]
+        public IActionResult undoAction()
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Neka greska");
+                eksperiment.Undo();
+                return Ok("undo uradjen");
+            }
+            catch
+            {
+                return BadRequest("undo nije uradjen");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("Redo")]
+        public IActionResult redoAction()
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Neka greska");
+                eksperiment.Redo();
+                return Ok("redo uradjen");
+            }
+            catch
+            {
+                return BadRequest("redo nije uradjen");
+            }
+        }
     }
 }

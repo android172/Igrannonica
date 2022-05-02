@@ -123,6 +123,8 @@ export class PodaciComponent implements OnInit {
 
   imageName : any;
   scatterplotImage : any;
+  brojacUndoRedo : number = 0;
+  brojacAkcija : number = 0;
 
   niz2:any[] = [];
 
@@ -713,7 +715,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
        // this.dodajKomandu("Uspesno obrisane kolone");
         this.onSuccess('Kolone su obrisane');
@@ -1049,7 +1053,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling izvrseno");
@@ -1073,7 +1079,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling izvršeno");
@@ -1097,7 +1105,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling izvršeno");
@@ -1162,7 +1172,9 @@ dajNaziveHeadera()
      this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
          console.log(res);
-         this.loadDefaultItemsPerPage();
+         //this.loadDefaultItemsPerPage();
+         this.gty(this.page);
+         this.brojacAkcija++;
          this.selectedColumns = [];
          let dateTime = new Date();
          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation izvršeno");
@@ -1185,7 +1197,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles izvršeno");
@@ -1208,7 +1222,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Z-Sore izvršeno");
@@ -1232,7 +1248,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersIQR", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR izvršeno");
@@ -1255,7 +1273,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest izvršeno");
@@ -1278,7 +1298,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersOneClassSVM", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM izvršeno");
@@ -1301,7 +1323,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor izvršeno");
@@ -1432,7 +1456,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA",null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisane kolone sa NA vrednostima");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1619,6 +1645,60 @@ dajNaziveHeadera()
 
    this.getScatterplot();
   // this.preuzmiSliku();
+  }
+
+  tryUndoAction(){
+
+    if(this.brojacUndoRedo < 5 && this.brojacAkcija > 0)
+    {
+      this.undo();
+      this.brojacUndoRedo++;
+      this.brojacAkcija--;
+    }
+    else{
+      console.log("Ne moze unazad");
+    }
+  }
+
+  undo(){
+
+    this.http.post(url+"/api/Eksperiment/Undo",null,{responseType:"text"}).subscribe(
+      res => {
+        console.log(res);
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+      },
+      error =>{
+        console.log(error.error);
+      }
+      );
+  }
+
+  tryRedoAction(){
+
+    if(this.brojacUndoRedo > 0)
+    {
+      this.redo();
+      this.brojacUndoRedo--;
+      this.brojacAkcija++;
+    }
+    else{
+      console.log("Ne moze unapred");
+    }
+  }
+
+  redo(){
+
+    this.http.post(url+"/api/Eksperiment/Redo",null,{responseType:"text"}).subscribe(
+      res => {
+        console.log(res);
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+      },
+      error =>{
+        console.log(error.error);
+      }
+      );
   }
 }
 

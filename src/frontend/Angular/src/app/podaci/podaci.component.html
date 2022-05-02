@@ -65,13 +65,12 @@
                     </button>
                </div>
                 <div class="col-sm-5 ">        
-                    <button id="undoRedoDugme"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
+                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
                 </div>   
             </div>
         </div>
     </div>
-
     <!--
     <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
         <div class="col-md-9">
@@ -206,6 +205,7 @@
     </div>
 
     <div id="box2">
+    
         <div id="normalizacija">
             <div id="header-help">
                 <div id="naslov">Normalizacija</div>
@@ -230,7 +230,7 @@
                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
             </div>
         </div>
-
+    
         <div id="polje">
             <div id="header-help">
                 <div id="naslov">Podaci</div>
