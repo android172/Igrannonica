@@ -1002,7 +1002,6 @@ th{
 /* ENKODIRANJE */ 
 
 #b4, #b5{
-    margin: 15px auto auto auto;
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
     height: 40px;
     padding: 5px;
@@ -1020,6 +1019,17 @@ th{
 {
     margin-bottom: 10px;
 } */
+
+#b4
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#b5
+{
+    margin: 15px auto auto auto;
+}
 
 #b4:hover{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
