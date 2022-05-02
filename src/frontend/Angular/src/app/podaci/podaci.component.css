@@ -419,7 +419,7 @@ ul .ngx-pagination
     align-items: center;
     text-align: center;
     justify-content: center;
-
+    height: 150px;
 }
 
 #proizvoljan-unos{
@@ -431,6 +431,8 @@ ul .ngx-pagination
 
 .visible-testniskup{
     visibility: visible;
+    /* height: 0px;
+    transition: height 2s; */
 }
 .visible-unos{
   visibility: visible;
@@ -455,17 +457,17 @@ input#exampleFormControlFile1{
  }
  #label-input{
      width: 145px;
-     background-color: rgb(46, 132, 189);
+     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
      color: rgb(255, 255, 255);
      height: 35px;
      align-items: center;
-     font-size: 15px;
+     font-size: 14px;
      display: flex;
      justify-content: center;
      margin: 20px auto 10px auto;
      box-sizing: border-box;
      border-radius: 10px;
-     border: 2px solid rgba(44, 75, 90, 0.8);
+     /* border: 2px solid rgba(44, 75, 90, 0.8); */
      cursor: pointer;
      -webkit-transition-duration: 0.2s;
      transition-duration: 0.2s;
@@ -475,7 +477,7 @@ input#exampleFormControlFile1{
  }
  #label-input:hover, #label-input:active{
      background-color: rgb(39, 91, 139);
-     box-shadow:0 0 15px rgba(0, 0, 0, 0.5);
+     box-shadow:0 0 15px rgba(108, 79, 157, 0.693);
      -webkit-transform: scale(1.1);
      transform: scale(1.1);
  }
@@ -1229,7 +1231,7 @@ th{
     /* border-color: #4761c0;
     border: 2px solid rgb(66, 86, 164); */
     border-radius: 10px;
-    color: rgb(205, 212, 252);
+    color: rgb(216, 221, 251);
     box-shadow: none;
 }
 
@@ -1307,7 +1309,7 @@ th{
     display: block;
     justify-content: center;
     text-align: center;
-    color: rgb(205, 212, 252);
+    color: rgb(216, 221, 251);
 }
 
 #dropdownBasic1
