@@ -44,9 +44,10 @@ namespace dotNet.MLService {
             }
         }
 
-        public void SaveDataset() {
+        public void SaveDataset(string fileName) {
             lock (_lock) {
                 connection.Send(Command.SaveDataset);
+                connection.Send(fileName);
                 CheckStatus();
             }
         }
@@ -519,6 +520,14 @@ namespace dotNet.MLService {
             }
         }
 
+        public void SelectTraningData(string datasetVersion) {
+            lock (_lock) {
+                connection.Send(Command.SelectTraningData);
+                connection.Send(datasetVersion);
+                CheckStatus();
+            }
+        }
+
         public void Start() {
             lock (_lock) {
                 connection.Send(Command.Start);
@@ -615,6 +624,7 @@ namespace dotNet.MLService {
         LoadEpoch,
         ComputeMetrics,
         ChangeSettings,
+        SelectTraningData,
         Start
     }
 }

@@ -361,7 +361,7 @@ namespace dotNet.Controllers
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-                eksperiment.SaveDataset();
+                //eksperiment.SaveDataset();
                 return Ok("Izmene sacuvane");
             }
             catch
