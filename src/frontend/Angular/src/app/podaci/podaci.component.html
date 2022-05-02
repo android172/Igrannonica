@@ -439,8 +439,8 @@
     <div class="modal-dialog">
       <div class="modal-content" style="background-color: #484864; color:#CED9FF;" >
         <div class="modal-header d-flex align-items-center justify-content-between">
-          <button id="undoRedoDugmeIstorija"><i class="fa fa-undo" style="font-size:14px;color:#CED9FF;"></i></button>  
-          <button id="undoRedoDugmeIstorija"><i class='fa fa-redo' style="font-size:14px;color:#CED9FF;"></i></button> 
+          <button id="undoRedoDugmeIstorija" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:14px;color:#CED9FF;"></i></button>  
+          <button id="undoRedoDugmeIstorija" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:14px;color:#CED9FF;"></i></button> 
           <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px;" (click)="obrisiIstoriju()"><i class="fas fa-trash" style="font-size:16px;color:#CED9FF;"></i></button>
           <h3 class="modal-title pt-2 mb-2 mt-0 m-5 p-5 pt-0 pb-0" id="exampleModalLabel">Istorija akcija</h3>
           <!-- <h4><button type="button" id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button></h4> -->
@@ -458,10 +458,10 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
         </div>
-    -->
-      </div>
+        -->
     </div>
   </div>
+</div>
 
     <simple-notifications></simple-notifications>
 </div>

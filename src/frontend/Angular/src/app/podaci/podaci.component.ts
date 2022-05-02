@@ -125,6 +125,8 @@ export class PodaciComponent implements OnInit {
   scatterplotImage : any;
   brojacUndoRedo : number = 0;
   brojacAkcija : number = 0;
+  nizKomandiUndoRedo : string[] = [];
+  nizKomandiUndoRedoTooltip : string[] = [];
 
   niz2:any[] = [];
 
@@ -1667,6 +1669,7 @@ dajNaziveHeadera()
         console.log(res);
        // this.loadDefaultItemsPerPage();
         this.gty(this.page);
+        this.obrisiKomandu();
       },
       error =>{
         console.log(error.error);
@@ -1694,11 +1697,28 @@ dajNaziveHeadera()
         console.log(res);
        // this.loadDefaultItemsPerPage();
         this.gty(this.page);
+        this.vratiKomandu();
       },
       error =>{
         console.log(error.error);
       }
       );
+  }
+
+  obrisiKomandu(){
+
+    this.nizKomandiUndoRedo.push(this.nizKomandi[this.nizKomandi.length - 1]);
+    this.nizKomandiUndoRedoTooltip.push(this.nizKomandi[this.nizKomandiTooltip.length - 1]);
+    this.nizKomandi.pop();
+    this.nizKomandiTooltip.pop();
+  }
+
+  vratiKomandu(){
+
+    this.nizKomandi.push(this.nizKomandiUndoRedo[this.nizKomandiUndoRedo.length - 1]);
+    this.nizKomandiTooltip.push(this.nizKomandiUndoRedoTooltip[this.nizKomandiUndoRedoTooltip.length - 1]);
+    this.nizKomandiUndoRedo.pop();
+    this.nizKomandiUndoRedoTooltip.pop();
   }
 }
 
