@@ -913,6 +913,29 @@ class MLClientInstance(Thread):
                 self.connection.send("OK")
                 print(f"Density plot for columns {columns} requested.")
                 
+            elif received == 'DrawPiePlot':
+                # Receive columns
+                column = int(self.connection.receive())
+                if not network.data.columns_are_valid(columns):
+                    self.report_error("ERROR :: Illegal columns given.")
+                    return
+                
+                # Create graph
+                file_name = 'requested_image.png'
+                file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
+                accepted = network.data.draw_pie_plot(column, file_path)
+                
+                if not accepted:
+                    self.report_error("ERROR :: Input column must be categorical.")
+                    return
+                
+                # Upload graph
+                self.upload_image(file_name, file_path)
+                
+                self.connection.send("OK")
+                print(f"Pie plot for columns {columns} requested.")
+                        
+                
             # Model selection #
             elif received == 'SaveModel':
                 # Receive model name

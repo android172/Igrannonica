@@ -622,6 +622,29 @@ class MLData:
         fig = ax.get_figure()
         fig.savefig(path, dpi=150, bbox_inches = 'tight', transparent=True)
     
+    def _generate_colors(self, n):
+        color = CustomColors.accent
+        colors = [color]
+        for i in range(1, n):
+            r = int(color[1:3], 16) - i * 10
+            g = int(color[3:5], 16) + i * 1
+            b = int(color[5:7], 16) + i * 2
+            
+            r = min(255, max(0, r))
+            g = min(255, max(0, g))
+            b = min(255, max(0, b))
+            
+            r = hex(r).replace('0x', '')
+            g = hex(g).replace('0x', '')
+            b = hex(b).replace('0x', '')
+            
+            if len(r) == 1: r = '0' + r
+            if len(g) == 1: g = '0' + g
+            if len(b) == 1: b = '0' + b
+            
+            color = f"#{r}{g}{b}"
+            colors.append(color)
+        return colors
     
     def draw_scatter_plot(self, columns, path):
         if len(columns) == 2:
@@ -723,9 +746,6 @@ class MLData:
             y = self.dataset[by].unique()
             y.sort()
             
-            ci = 0
-            colors = []
-            
             ndf = {}
             for yi in y:
                 # Column height calculation
@@ -741,18 +761,7 @@ class MLData:
                     )
                 ndf[yi]=row
                 
-                # Colum color calculation
-                ca = hex(0x80 + ci*0x5) # color alpha
-                if ca[0] == '-': ca = ca[1:]
-                if len(ca) < 4 : ca = f"0{ca[-1]}"
-                
-                colors.append(f"{CustomColors.accent}{ca[-2:]}")
-                
-                # Iteration
-                if ci > 0:
-                    ci = -ci
-                else:
-                    ci = -ci + 1
+            colors = self._generate_colors(len(y))
             
             ax = pd.DataFrame(ndf, x).plot.bar(color=colors)    
         else:
@@ -814,3 +823,29 @@ class MLData:
         self._save_fig(ax, path)
         
         return True
+
+    def draw_pie_plot(self, column, path):
+        
+        if self.column_data_ty[column] != 'Categorical':
+            return False
+        
+        _, ax = plt.subplots()
+        data = self.dataset[column].value_counts()
+        
+        colors = self._generate_colors(len(data))
+
+        wedges, _, _ = ax.pie(data,
+                              autopct=lambda pct: "{:.1f}%".format(pct),
+                              textprops=dict(color="white"),
+                              colors=colors
+                              )
+
+        ax.legend(wedges, data.index,
+                loc="center left",
+                bbox_to_anchor=(1, 0, 0.5, 1))
+
+        self._change_style(ax)
+        self._save_fig(ax)
+        
+        return True
+        

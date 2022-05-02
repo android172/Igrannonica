@@ -475,6 +475,14 @@ namespace dotNet.MLService {
             }
         }
 
+        public void DrawPiePlot(int column) {
+            lock (_lock) {
+                connection.Send(Command.DrawPiePlot);
+                connection.Send(column);
+                CheckStatus();
+            }
+        }
+
         // /////// //
         // Network //
         // /////// //
@@ -618,6 +626,7 @@ namespace dotNet.MLService {
         DrawHistogram,
         DrawHexbin,
         DrawDensityPlot,
+        DrawPiePlot,
         // Network
         SaveModel,
         LoadModel,
