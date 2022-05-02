@@ -46,6 +46,8 @@ class ANN:
         self.regularization_rate   = 0.0
         self.weights_history = {}
         
+        self.dataset_version = None
+        
     # Load data
     def initialize_random_data(self):
         train_dataset = [(x, random.randint(0, 1)) for x in torch.randn(512, self.input_size)]
