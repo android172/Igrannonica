@@ -172,15 +172,17 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                 {
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
-                    if (!eksperiment.IsDataLoaded(model.Vlasnik))
+                    /*if (!eksperiment.IsDataLoaded(model.Vlasnik))
                     {
                         string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
                         eksperiment.LoadDataset(model.Vlasnik, csv);
-                    }
+                    }*/
                     List<List<int>> kolone = db.dbmodel.Kolone(id);
                     eksperiment.LoadInputs(kolone[0].ToArray());
                     eksperiment.LoadOutputs(kolone[1].ToArray());
                     ANNSettings podesavanja = db.dbmodel.podesavanja(id);
+                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
+                    eksperiment.SelectTraningData(snapshot.csv);
                     eksperiment.ApplySettings(podesavanja);
                     eksperiment.Start();
                     return Ok("Pocelo treniranje");

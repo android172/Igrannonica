@@ -2,10 +2,10 @@
 {
     public class Snapshot
     {
-        int id { get; set; }
-        int ideksperimenta { get; set; }
-        string Ime { get; set; }
-        string csv { get; set; }
+        public int id { get; set; }
+        public int ideksperimenta { get; set; }
+        public string Ime { get; set; }
+        public string csv { get; set; }
         public Snapshot(int id, int eksperiment, string ime, string csv)
         {
             this.id = id;

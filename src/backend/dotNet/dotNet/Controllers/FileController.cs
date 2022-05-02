@@ -357,16 +357,46 @@ namespace dotNet.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
+        [Authorize]
+        [HttpGet("ProveriSnapshot")]
+        public IActionResult proveriSnapshot(int idEksperimenta, string naziv)
+        {
+            try
+            {
+                return Ok(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
         [Authorize]
         [HttpPost("SaveSnapshot")]
+        public IActionResult sacuvajSnapshot(int idEksperimenta,int idSnapshota)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                if (!eksperiment.IsDataLoaded(idEksperimenta))
+                    return BadRequest("Nije unet dataset.");
+                Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
+                eksperiment.SaveDataset(snapshot.csv);
+                return Ok("Sacuvan Snapshot.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("SaveAsSnapshot")]
         public IActionResult SacuvajSnapshot(int idEksperimenta, string naziv)
         {
             try
@@ -378,7 +408,7 @@ namespace dotNet.Controllers
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (eksperiment.IsDataLoaded(idEksperimenta))
+                if (!eksperiment.IsDataLoaded(idEksperimenta))
                     return BadRequest("Nije unet dataset.");
 
                 if (db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv) == -1)
@@ -389,8 +419,8 @@ namespace dotNet.Controllers
                 }
                 else
                     return BadRequest("Postoji verzija sa tim imenom.");
-
-                eksperiment.SaveDataset(naziv);
+                Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
+                eksperiment.SaveDataset(snapshot.csv);
                 return Ok("Napravljen Snapshot.");
             }
             catch
