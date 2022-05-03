@@ -156,7 +156,6 @@ export class ModeliComponent implements OnInit {
   ucitajImeE(){
     this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.id,{responseType: 'text'}).subscribe(
         res=>{
-          var div = (<HTMLDivElement>document.getElementById("imeE")).innerHTML = res;
           this.ucitajModel();
         },
         error=>{

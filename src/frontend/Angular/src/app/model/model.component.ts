@@ -115,7 +115,6 @@ export class ModelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ucitajNaziv();
     this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     let token = tokenGetter()
     if (token != null)
@@ -220,20 +219,6 @@ export class ModelComponent implements OnInit {
         console.log(error);
       }
     )
-  }
-
-  ucitajNaziv()
-  {
-    this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
-        res=>{
-          console.log(res);
-          this.nazivEksperimenta = res;
-          var div = (<HTMLInputElement>document.getElementById("nazivE")).value = this.nazivEksperimenta;
-          console.log(this.nazivEksperimenta);
-        },error=>{
-          console.log(error.error);
-        }
-    );
   }
 
   funkcija(){
@@ -367,12 +352,6 @@ export class ModelComponent implements OnInit {
   submit(){
     this.izmeniPodesavanja();
     this.uzmiCekirane();
-    var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
-    if(!(nazivEks === this.nazivEksperimenta))
-    {
-       this.proveriE();
-       this.sendMessage();
-    }
     var nazivMod = (<HTMLInputElement>document.getElementById("nazivM")).value;
     if(!(nazivMod === this.nazivModela))
     {
@@ -380,27 +359,6 @@ export class ModelComponent implements OnInit {
        this.sendMessage();
     }
 
-  }
-
-  proveriE(){
-
-      var nazivE = (<HTMLInputElement>document.getElementById("nazivE")).value;
-      var div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML;
-      if(div === "*Eksperiment sa tim nazivom vec postoji"){
-        div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "";
-      }
-      this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
-        res=>{
-          this.onSuccess("Uspesno!");
-
-        }, error=>{
-          this.ucitajNaziv();
-          if(error.error === "Postoji eksperiment sa tim imenom")
-          {
-             var div1 = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
-          }
-        }
-      )
   }
 
   selectLF(event: any){
@@ -555,13 +513,13 @@ export class ModelComponent implements OnInit {
   
   proveriM(){
 
-    var nazivE = (<HTMLInputElement>document.getElementById("nazivM")).value;
+    var nazivM = (<HTMLInputElement>document.getElementById("nazivM")).value;
     var div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML;
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
       this.onError("Model sa tim nazivom vec postoji");
     }
-    this.http.put(url+"/api/Model/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+    this.http.put(url+"/api/Model/Modeli?ime=" + nazivM + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
           this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{

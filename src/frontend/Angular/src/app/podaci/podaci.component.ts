@@ -4,6 +4,9 @@ import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
+import { DatePipe } from '@angular/common';
+import { Observable, Subscriber } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-podaci',
@@ -88,7 +91,7 @@ export class PodaciComponent implements OnInit {
   }
 
   isArray(val:any): boolean { return val instanceof Array }
-
+  
   fileName = '';
   fileNameTest = '';
   json: any;
@@ -99,6 +102,8 @@ export class PodaciComponent implements OnInit {
   totalItems: number = 0;
   idEksperimenta: any;
   selectedColumns: number[] = [];
+  nizKomandi : string[] = [];
+  nizKomandiTooltip : string[] = [];
   track: string = "> ";
   statistika: any;
   numerickaS: any;
@@ -117,6 +122,13 @@ export class PodaciComponent implements OnInit {
   nazivEksperimenta:any;
   rows:number[] = [];
 
+  imageName : any;
+  scatterplotImage : any;
+  brojacUndoRedo : number = 0;
+  brojacAkcija : number = 0;
+  nizKomandiUndoRedo : string[] = [];
+  nizKomandiUndoRedoTooltip : string[] = [];
+
   niz2:any[] = [];
 
   selectedOutlier:string="";
@@ -128,6 +140,10 @@ export class PodaciComponent implements OnInit {
 
   public kolone: any[] = [];
   message: any;
+
+  selektovanGrafik: string = "";
+  indikator:boolean = true; // tabela sa podacima
+  nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
   onFileSelected(event:any) 
   {
@@ -145,6 +161,7 @@ export class PodaciComponent implements OnInit {
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
+          (<HTMLDivElement>document.getElementById("pagingControls")).style.color = "white";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
           this.onSuccess('Podaci su ucitani!');
@@ -194,11 +211,15 @@ export class PodaciComponent implements OnInit {
 
       const upload$ = this.http.post(url+"/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
-          this.dodajKomandu("Ucitan testni skup");
+          let dateTime = new Date();
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Ucitan testni skup ");
+          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.onSuccess('Testni skup je ucitan!');
       },error =>{
         console.log(error.error);	
-        this.dodajKomandu("Fajl nije unet");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Fajl nije ucitan ");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onError("Testni skup nije ucitan!");
         
       });
@@ -234,6 +255,9 @@ dajNaziveHeadera()
         this.jsonStatistika = JSON.parse(response);
         console.log(this.jsonStatistika);
         this.ucitajStatistiku();
+        
+        this.tabelaStatistika();
+        this.tabelaStatistikaCat();
       }
     )
   }
@@ -424,7 +448,7 @@ dajNaziveHeadera()
         });
       }
     }
-    //console.log(this.statistikaNum);
+    console.log(this.statistikaNum);
     //console.log(this.statistikaCat);
   }
 
@@ -487,11 +511,15 @@ dajNaziveHeadera()
 
   oneHotEncoding()
   { 
-    this.dodajKomandu("OneHotEncoding");
-
+    /*
+    let dateTime = new Date();
+    this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEnconding");
+    this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+*/
     if(this.selectedColumns.length < 1)
     {
-      this.dodajKomandu("OneHotEncoding nije izvršeno");
+
+     // this.dodajKomandu("OneHotEncoding nije izvršeno");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
@@ -501,23 +529,27 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
         this.loadDefaultItemsPerPage();
-        this.dodajKomandu("OneHotEncoding izvršeno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
         this.onSuccess('OneHot Encoding izvrsen');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("OneHotEncoding nije izvršeno");
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding nije izvršeno");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.onError("OneHot Encoding nije izvrsen!");
     })
   }
 
   labelEncoding()
   { 
-    this.dodajKomandu("LabelEncoding");
+    //this.dodajKomandu("LabelEncoding");
     
     if(this.selectedColumns.length < 1)
     {
-      this.dodajKomandu("LabelEncoding nije izvršeno");
+      //this.dodajKomandu("LabelEncoding nije izvršeno");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
@@ -526,12 +558,16 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
         this.loadDefaultItemsPerPage();
-        this.dodajKomandu("LabelEncoding izvršeno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
         this.onSuccess('Label Encoding izvrsen');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("LabelEncoding nije izvršeno");
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding nije izvršeno");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.onError("Label Encoding nije izvrsen!");
     })
   }
@@ -552,7 +588,7 @@ dajNaziveHeadera()
       }
      return;
     }
-    this.dodajKomandu("Dodata kolona: "+ i);
+    //this.dodajKomandu("Dodata kolona: "+ i);
     this.selectedColumns.push(i);
     console.log(this.selectedColumns);
     this.selectedName = header;
@@ -583,17 +619,21 @@ dajNaziveHeadera()
   dodajKomandu(str: string)
   {
       this.track = this.track + str + " > ";
+      this.nizKomandi.push(str);
   }
   izbrisiSelektovaneKolone()
   {
     this.selectedColumns = [];
 
-    this.dodajKomandu("Nema selektovanih kolona");
+    //this.dodajKomandu("Nema selektovanih kolona");
   }
   obrisiIstoriju()
   {
-    this.track = "> ";
+    /*this.track = "> ";*/
+    this.nizKomandi = [];
+    this.nizKomandiTooltip = [];
   }
+  /*
   ispisiSelektovaneKolone()
   {
     if(this.selectedColumns.length == 0)
@@ -604,18 +644,22 @@ dajNaziveHeadera()
       if(this.selectedColumns[i] != undefined)
         this.dodajKomandu("Kolona " + this.selectedColumns[i]);
     }
-  }
+  }*/
   izborUnosa(str:string)
   {
     if(str === "Testni skup")
     {
       (<HTMLDivElement>document.getElementById("unos-fajla")).className = "visible-testniskup";  
-      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";  
+      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "80px";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
     }
     if(str === "Proizvoljno")
     {
       (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "visible-unos";   
-      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";  
+      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "150px";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
     }
   }
 
@@ -655,18 +699,20 @@ dajNaziveHeadera()
 
     if(Number.isNaN(ratio))
     {
-      this.dodajKomandu("Nije unet ratio");
-      console.log("Uneta vrednost: "+ratio);
+     // this.dodajKomandu("Nije unet ratio");
+      console.log("Uneta vrednost: "+ ratio);
       return;
     }
     this.http.post(url+"/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.dodajKomandu("Dodat ratio: "+ ratio);
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Dodat ratio: "+ ratio);
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess('Dodat ratio');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Ratio nije dodat");
+     // this.dodajKomandu("Ratio nije dodat");
       this.onError("Ratio nije unet!");
     })
 
@@ -681,13 +727,15 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Uspesno obrisane kolone");
+       // this.dodajKomandu("Uspesno obrisane kolone");
         this.onSuccess('Kolone su obrisane');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Kolone nisu obrisane");
+    //  this.dodajKomandu("Kolone nisu obrisane");
       this.onError('Kolone nisu obrisane');
     })
   }
@@ -704,11 +752,13 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Dodate Mean vrednosti");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate Mean vrednosti");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess('Dodate mean vrednosti!');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Vrednosti nisu dodate");
+     // this.dodajKomandu("Vrednosti nisu dodate");
     })
   }
   fillWithMedian()
@@ -723,11 +773,13 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Dodate median vrednosti");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate median vrednosti");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess('Dodate median vrednosti!');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Vrednosti nisu dodate");
+    //  this.dodajKomandu("Vrednosti nisu dodate");
       this.onError("Vrednosti nisu dodate!");
     })
   }
@@ -743,11 +795,13 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Dodate mode vrednosti");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate mode vrednosti");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess('Dodate Mode vrednosti!');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Vrednosti nisu dodate");
+     // this.dodajKomandu("Vrednosti nisu dodate");
       this.onError("Vrednosti nisu dodate!");
     })
   }
@@ -764,11 +818,13 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Zamenjene kategoricke vrendosti");
-        this.onSuccess('Zamenjene kategoricke vrendosti');
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene kategoricke vrednosti");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+        this.onSuccess('Zamenjene kategoricke vrednosti');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Vrednosti nisu zamenjene");
+      //this.dodajKomandu("Vrednosti nisu zamenjene");
       this.onError("Vrednosti nisu zamenjene!");
     })
   }
@@ -784,31 +840,51 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Zamenjene prazne numericke vrednosti");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene prazne numeričke vrednosti");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess('Zamenjene numericke vrendosti');
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Vrednosti nisu zamenjene");
+      //this.dodajKomandu("Vrednosti nisu zamenjene");
       this.onError("Nisu zamenjene numericke vrednosti!");
     })
   }
-  selectAllColumns()
+  selectAllColumns(event:any)
   {
-     for(var i = 0;i<this.kolone.length;i++)
-     {
-      this.selectedColumns.push(i);
-      this.isSelectedNum(i);
-     }
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve kolone")
+    { 
+      for(var i = 0;i<this.kolone.length;i++)
+      {
+        this.selectedColumns.push(i);
+        this.isSelectedNum(i);
+      }
      console.log(this.selectedColumns);
+     (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj kolone";
+    }
+    else{
+
+        this.izbrisiSelektovaneKolone();
+        (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve kolone";
+    }
   }
-  selectAllRows()
+  selectAllRows(event:any)
   {
-    for(var i = 0;i<this.itemsPerPage;i++)
-     {
-      this.rowsAndPages.push([i,this.page]);
-      this.isSelectedRow(i);
-     }
-     console.log(this.rowsAndPages);
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve redove")
+    {
+      for(var i = 0;i<this.itemsPerPage;i++)
+      {
+        this.rowsAndPages.push([i,this.page]);
+        this.isSelectedRow(i);
+      }
+      console.log(this.rowsAndPages);
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj redove";
+    }
+    else{
+
+      this.izbrisiSelektovaneRedove();
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve redove";
+  }
   }
 
 
@@ -822,7 +898,7 @@ dajNaziveHeadera()
         return;
       }
     }
-    this.dodajKomandu("Izabran red "+ i + " sa strane "+ p);
+    //this.dodajKomandu("Izabran red "+ i + " sa strane "+ p);
     this.rowsAndPages.push([i,p]);
     //console.log(this.rowsAndPages);
   }
@@ -836,7 +912,7 @@ dajNaziveHeadera()
     });
     return temp;
   }
-
+/*
   getSelectedRows()
   {
     if(this.rowsAndPages.length == 0)
@@ -847,11 +923,12 @@ dajNaziveHeadera()
       this.dodajKomandu("Red: " + this.rowsAndPages[i][0] + " Strana: " + this.rowsAndPages[i][1]);
     }
   }
+*/
   izbrisiSelektovaneRedove()
   {
     this.rowsAndPages = [];
 
-    this.dodajKomandu("Redovi deselektovani");
+    //this.dodajKomandu("Redovi deselektovani");
   }
 
   deleteRows()
@@ -874,7 +951,9 @@ dajNaziveHeadera()
         else if(res == "Korisnik nije pronadjen" || res == "Token nije setovan")
         {
           this.rowsAndPages = []; // deselekcija redova 
-          this.dodajKomandu(res);
+          let dateTime = new Date();
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " " + res);
+          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.onInfo("");
         }
         else 
@@ -882,11 +961,11 @@ dajNaziveHeadera()
           this.totalItems = (parseInt)(res);
           this.loadDefaultItemsPerPage();
           this.rowsAndPages = []; // deselekcija redova 
-          this.dodajKomandu("Redovi obrisani");
+         // this.dodajKomandu("Redovi obrisani");
           this.onSuccess("Redovi su obrisani");
         }
     },error=>{
-      this.dodajKomandu("Brisanje redova nije izvršeno");
+     // this.dodajKomandu("Brisanje redova nije izvršeno");
       this.onError("Brisanje nije izvrseno!");
     })
   }
@@ -935,11 +1014,14 @@ dajNaziveHeadera()
     res => {
       console.log(res);
       this.onSuccess("Izmene su sacuvane");
-    
-      this.dodajKomandu("Sve izmene su sacuvane");
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Sve izmene su sacuvane ");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Izmene nisu sacuvane");
+     /* let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Izmene nisu sacuvane");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");*/
       this.onError("Izmene nisu sacuvane!");
     })
     
@@ -960,12 +1042,14 @@ dajNaziveHeadera()
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.rowsAndPages = [];
-        this.dodajKomandu("Polje izmenjeno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Polje izmenjeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Dodata vrednost polja: "+ data.value);
     },error=>{
       console.log(error.error);
       this.rowsAndPages = [];
-      this.dodajKomandu("Polje nije izmenjeno");
+      //this.dodajKomandu("Polje nije izmenjeno");
       this.onError("Vrednost " + data.value + " nije dodata!");
     })
   }
@@ -974,20 +1058,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+     // this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Absolute Maximum Scaling izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling izvrseno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Absolute Max Scaling izvrseno!");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
+      //this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
       this.onError("Absolute Max Scaling nije izvrseno!");
     })
   }
@@ -996,20 +1084,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Min-Max Scaling izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Min-Max Scaling izvrseno!");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Min-Max Scaling nije izvrseno");
+     // this.dodajKomandu("Min-Max Scaling nije izvrseno");
       this.onError("Min-Max Scaling nije izvrseno!");
     })
   }
@@ -1018,20 +1110,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Z-score Scaling izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Z-score Scaling izvrseno!");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Z-score Scaling nije izvrseno");
+     // this.dodajKomandu("Z-score Scaling nije izvrseno");
       this.onError("Z-score Scaling nije izvrseno!");
     })
   }
@@ -1081,20 +1177,24 @@ dajNaziveHeadera()
    {
      if(this.selectedColumns.length == 0)
      {
-       this.dodajKomandu("Nije odabrana nijedna kolona!");
+       //this.dodajKomandu("Nije odabrana nijedna kolona!");
        this.onInfo("Nije odabrana nijedna kolona");
        return;
      }
      this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
          console.log(res);
-         this.loadDefaultItemsPerPage();
+         //this.loadDefaultItemsPerPage();
+         this.gty(this.page);
+         this.brojacAkcija++;
          this.selectedColumns = [];
-         this.dodajKomandu("Standard Deviation izvrseno");
+         let dateTime = new Date();
+         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation izvršeno");
+         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
          this.onSuccess("Standard Deviation izvrseno");
      },error=>{
        console.log(error.error);
-       this.dodajKomandu("Standard Deviation nije izvrseno");
+       //this.dodajKomandu("Standard Deviation nije izvrseno");
        this.onError("Standard Deviation nije izvrseno");
      })
    }
@@ -1102,20 +1202,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+     // this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Quantiles izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Quantiles izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Quantiles nije izvrseno");
+      //this.dodajKomandu("Quantiles nije izvrseno");
       this.onError("Quantiles nije izvrseno");
     })
   }
@@ -1123,20 +1227,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+     // this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("ZSore izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Z-Sore izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Z-Sore izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("ZScore nije izvrseno");
+     // this.dodajKomandu("ZScore nije izvrseno");
       this.onError("Z-Score nije izvrseno");
     })
   }
@@ -1145,20 +1253,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersIQR", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("IQR izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("IQR izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("IQR nije izvrseno");
+     // this.dodajKomandu("IQR nije izvrseno");
       this.onError("IQR nije izvrseno");
     })
   }
@@ -1166,20 +1278,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Isolation Forest izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Isolation Forest izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Isolaton Forest nije izvrseno");
+     // this.dodajKomandu("Isolaton Forest nije izvrseno");
       this.onError("Isolation Forest nije izvrseno");
     })
   }
@@ -1187,20 +1303,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersOneClassSVM", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("One Class SVM izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("One Class SVM izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("One Class SVM nije izvrseno");
+     // this.dodajKomandu("One Class SVM nije izvrseno");
       this.onError("One Class SVM nije izvrseno");
     })
   }
@@ -1208,20 +1328,24 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     this.http.post(url+"/api/DataManipulation/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
-        this.dodajKomandu("Local factor izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Local factor izvrseno");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Local Factor nije izvrseno");
+     // this.dodajKomandu("Local Factor nije izvrseno");
       this.onError("Local factor nije izvrseno");
     })
   }
@@ -1233,19 +1357,28 @@ dajNaziveHeadera()
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readonly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-quantiles")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-zscore")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score"; 
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-iqr")
     {
@@ -1253,6 +1386,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-isolation")
     {
@@ -1260,6 +1396,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-svm")
     {
@@ -1267,6 +1406,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-lfactor")
     {
@@ -1274,6 +1416,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     
   }
@@ -1328,11 +1473,13 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
-        this.dodajKomandu("Uspesno obrisani svi NA redovi");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani svi NA redovi");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Uspesno obrisani svi NA redovi");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("NA redovi nisu obrisani");
+     // this.dodajKomandu("NA redovi nisu obrisani");
       this.onError("NA redovi nisu obrisani");
     });
   }
@@ -1342,12 +1489,16 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA",null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
-        this.dodajKomandu("Uspesno obrisane kolone");
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisane kolone sa NA vrednostima");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Uspesno obrisane sve kolone sa NA vrednostima");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Kolone nisu obrisane");
+      //this.dodajKomandu("Kolone nisu obrisane");
       this.onError("Kolone sa NA vrednostima nisu obrisane!");
     });
   }
@@ -1356,7 +1507,7 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
@@ -1366,11 +1517,13 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
-        this.dodajKomandu("Uspesno obrisani NA redovi");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani NA redovi");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Uspesno su obrisani svi redovi sa NA vrednostima");
     },error=>{
       console.log(error.error);
-      this.dodajKomandu("Redovi nisu obrisani");
+      //this.dodajKomandu("Redovi nisu obrisani");
       this.onError("Redovi nisu obrisani!");
     });
   }
@@ -1418,13 +1571,13 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
     if(this.selectedForRegression == -1)
     {
-      this.dodajKomandu("Nije odabrana nijedna kolona!");
+      //this.dodajKomandu("Nije odabrana nijedna kolona!");
       this.onInfo("Nije odabrana nijedna kolona iz menija.");
       return;
     }
@@ -1434,17 +1587,272 @@ dajNaziveHeadera()
         this.loadDefaultItemsPerPage();
         this.selectedForRegression = -1;
         this.selectedColumns = [];
-        this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamena vrednosti NA sa vrednostima dobijenih regresijom izvršeno");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onSuccess("Regression - uspesno!");
         (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     },error=>{
       console.log(error.error);
       this.selectedForRegression = -1;
-      this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
+     // this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
       this.onError("Regression - neuspesno!");
       (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     });
   }
+
+  tabelaStatistika()
+  { 
+    var broj = Object.keys(this.statistikaNum[0].data).length;
+    var kljucevi = Object.keys(this.statistikaNum[0].data);
+    var brojJ= this.statistikaNum.length;
+    
+    for(var i = 0; i<broj;i++)
+    {
+      var nizHead:string[] = [];
+      nizHead.push(kljucevi[i]);
+      for(var j = 0; j<brojJ;j++)
+      {
+        
+        nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+      }
+      this.nizRedovaStatistika.push(nizHead);
+    }
+    //console.log(this.nizRedovaStatistika);
+  }
+  tabelaStatistikaCat()
+  {
+    // var broj = Object.keys(this.statistikaCat[0].data).length;
+    // var kljucevi = Object.keys(this.statistikaCat[0].data);
+    // var brojJ= this.statistikaCat.length;
+    // var traziMax:number[] = [];
+
+    // //console.log(this.statistikaCat[0].data[broj-1]['Frequencies']);
+    // for(var i = 0;i<brojJ;i++)
+    // {
+    //   traziMax.push((this.statistikaCat[0].data[broj-1]['Frequencies']).length);
+    // }
+    // broj += Math.max(...traziMax);
+
+    // for(var i = 0; i<broj;i++)
+    // {
+    //   var nizHead:string[] = [];
+    //   nizHead.push(kljucevi[i]);
+    //   for(var j = 0; j<brojJ;j++)
+    //   {
+        
+    //     nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+    //   }
+    //   this.nizRedovaStatistika.push(nizHead);
+    // }
+    //console.log(this.nizRedovaStatistika);
+  }
+
+  prikaziUcitanePodatke(event:any)
+  {
+    this.indikator = true;
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("statPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
+
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "5px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+    
+  }
+
+  prikaziStatistickePodatke(event:any)
+  {
+    this.indikator = false; 
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "5px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+  }
+
+  dajNaziveKolonaStatistikeNum()
+  {
+    var kljucevi:string[] = [" "];
+
+    for(let pom of this.statistikaNum)
+    {
+      kljucevi.push(pom.key);
+    }
+    return kljucevi;
+
+  }
+
+  preuzmiDataset()
+  {
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
+      res => {
+
+        var blob = new Blob([res], {type: 'text/csv' })
+        saveAs(blob, "dataset_"+this.fileName);
+
+        this.onSuccess("Podaci tabele preuzeti!");
+    },error=>{
+      console.log(error.error);
+      this.onError("Podaci nisu preuzeti!");
+    });
+  }
+
  
+  promena(event:any){
+
+    if(this.selektovanGrafik != ""){
+      (<HTMLButtonElement>document.getElementById(this.selektovanGrafik)).style.color="white";
+      this.selektovanGrafik = event.target.id;
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+    }
+    else{
+      this.selektovanGrafik = event.target.id;
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+    }
+  
+  }
+
+  getScatterplot(){
+
+    this.http.post(url+"/api/Graph/scatterplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  preuzmiSliku(){
+
+    this.http.get(url+"/api/File/GetImage?idEksperimenta=" + this.idEksperimenta,{responseType:"blob"}).subscribe(
+      (res : any)=> {
+        var blob = new Blob([res], {
+            type: 'image/png'
+        });
+        console.log(blob);
+        this.convertToBase64(blob);
+    },
+    error=>{
+      
+    }
+    );
+  }
+
+  convertToBase64(file: Blob){
+
+    const observable = new Observable((subscriber : Subscriber<any>) => {
+
+      this.readFile(file, subscriber);
+    });
+    observable.subscribe((d)=>{
+     // console.log(d);
+     this.scatterplotImage = d;
+    })
+  }
+
+  readFile(file: Blob, subscriber:Subscriber<any>){
+
+    const filereader = new FileReader();
+
+    filereader.readAsDataURL(file);
+
+    filereader.onload=()=>{
+
+      subscriber.next(filereader.result);
+      subscriber.complete();
+    };
+    filereader.onerror=(error)=>{
+
+      subscriber.error(error);
+      subscriber.complete();
+    };
+  }
+
+  ucitajGrafik(){
+
+   this.getScatterplot();
+  // this.preuzmiSliku();
+  }
+
+  tryUndoAction(){
+
+    if(this.brojacUndoRedo < 5 && this.brojacAkcija > 0)
+    {
+      this.undo();
+      this.brojacUndoRedo++;
+      this.brojacAkcija--;
+    }
+    else{
+      console.log("Ne moze unazad");
+    }
+  }
+
+  undo(){
+
+    this.http.post(url+"/api/Eksperiment/Undo",null,{responseType:"text"}).subscribe(
+      res => {
+        console.log(res);
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.obrisiKomandu();
+      },
+      error =>{
+        console.log(error.error);
+      }
+      );
+  }
+
+  tryRedoAction(){
+
+    if(this.brojacUndoRedo > 0)
+    {
+      this.redo();
+      this.brojacUndoRedo--;
+      this.brojacAkcija++;
+    }
+    else{
+      console.log("Ne moze unapred");
+    }
+  }
+
+  redo(){
+
+    this.http.post(url+"/api/Eksperiment/Redo",null,{responseType:"text"}).subscribe(
+      res => {
+        console.log(res);
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.vratiKomandu();
+      },
+      error =>{
+        console.log(error.error);
+      }
+      );
+  }
+
+  obrisiKomandu(){
+
+    this.nizKomandiUndoRedo.push(this.nizKomandi[this.nizKomandi.length - 1]);
+    this.nizKomandiUndoRedoTooltip.push(this.nizKomandi[this.nizKomandiTooltip.length - 1]);
+    this.nizKomandi.pop();
+    this.nizKomandiTooltip.pop();
+  }
+
+  vratiKomandu(){
+
+    this.nizKomandi.push(this.nizKomandiUndoRedo[this.nizKomandiUndoRedo.length - 1]);
+    this.nizKomandiTooltip.push(this.nizKomandiUndoRedoTooltip[this.nizKomandiUndoRedoTooltip.length - 1]);
+    this.nizKomandiUndoRedo.pop();
+    this.nizKomandiUndoRedoTooltip.pop();
+  }
 }
 

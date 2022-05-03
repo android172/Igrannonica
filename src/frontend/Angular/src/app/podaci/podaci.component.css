@@ -41,13 +41,19 @@ img{
 .pagi
 {
     color: rgb(184, 195, 255);
-    position: relative;
-    left: 240px;
     font-size: larger;
+    position: relative;
+    left: -3%;
+    /* font-family: */
+}
+
+ul .ngx-pagination
+{
+    padding-left: 0;
 }
 
 #brojRedovaTabelePoruka{
-    position: relative;
+   /* position: relative;*/
     /*left: 5%;*/
     width: 15%;
     color: #CED9FF;
@@ -84,8 +90,9 @@ img{
     background: none;
     border: none;
     color: white;
-    width: 69px;
-    overflow: visible;
+    width: 75px;
+    min-height: 22px;
+    resize:both;
 }
 #table tr:nth-of-type(even) input{
     
@@ -96,7 +103,7 @@ img{
 /* naslov -- helper */
 #header-help{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 #helper{
@@ -104,10 +111,15 @@ img{
     height: 18px;
     border-radius:50%;
     background-color: rgb(51, 38, 91);
+    color: rgb(162, 169, 255);
     font-size: 12px;
-    border: 1px solid rgb(53, 53, 128);
-
+    /* border: 1px solid rgb(53, 53, 128); */
+    border: 1px solid rgb(162, 169, 255);
+    z-index: 10;
     float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    cursor: help;
 }
 
 /* desni ugao -- helper */
@@ -189,19 +201,34 @@ img{
 
 .btn-design3{
     color: white;
-    background-color: rgb(33, 79, 138);
-    width: 100%;
-    min-width: 233px;
+    background-color: rgb(101, 72, 115);
+    width: 220px;
     height: 35px;
     justify-content: center;
+    box-shadow: none;
 }
+
+.btn-design3:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
+
 #norm-box{
-    display: flex;
+    display: block;
     text-align: center;
     justify-content: space-between;
-    height: 35px;
-    margin: 20px auto;
-    width: 82%;
+    /* height: 35px; */
+    /* margin-top: 50px; */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    /* width: 82%; */
+}
+
+#norm-btn
+{
+    margin-bottom: 20px;
+    font-size: 15px;
 }
 
 /*  DROPDOWN SUBMENU *****/
@@ -224,18 +251,18 @@ img{
     .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
     }
-    #zamena-select .dropdown-menu li a{
+    .zamena-select .dropdown-menu li a{
         text-align: left;
         font-size: 13px;
         padding: 1px;
         font-weight: 500;
        /* color: rgb(237, 237, 237);*/
     }
-    #zamena-select .dropdown-menu, #menu1{
+    .zamena-select .dropdown-menu, .menu1{
         background-color: rgb(230, 213, 253);
     }
 /********** SELECT DROPDOWN MENU ***/
-#menu1 button{
+.menu1 button{
     font-size: 13px;
     padding: 5px 2px 5px 5px;
     font-weight: 500;
@@ -252,20 +279,27 @@ img{
 
 .btn-design4{
     color: white;
-    background-color: rgb(33, 79, 138);
+    background-color: rgb(101, 72, 115);
     width: 100%;
-    min-width: 190px;
     height: 35px;
     justify-content: center;
+    box-shadow: none;
+    width: 220px;
+    margin: 0 auto;
+}
+
+.btn-design4:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
 }
 
 #outliers-box{
-    display: flex;
-    justify-content: space-between;
+    display: block;
+    justify-content: center;
     text-align: center;
-    height: 35px;
-    margin: 20px auto;
-    width: 85%;
+    /* height: 35px; */
+    margin: auto;
+    width: 100%;
 }
 #threshold{
     height: 35px;
@@ -275,26 +309,37 @@ img{
     border: 2px solid rgb(121, 121, 121);
     width: 100px; 
     color: white;
+    margin-bottom: 20px;
+    cursor: default;
+    pointer-events: none;
+}
+
+#outlier-btn
+{
+    margin-bottom: 20px;
+    font-size: 15px;
+    margin-top: 10px;
 }
 
 .primeni-izuzeci{
-    width: 80px;
+    width: 65%;
     height: 35px;
+    margin-bottom: 20px;
 }
 
 /************* SLIDER *****************/ 
 
 #slider{
-    width: 220px;
+    width: 100%;
     justify-content: center;
     margin: -40px auto;
 
 }
 #slider input[type="range"]{
-    width: 220px;
+    width: 80%;
     height: 10px;
     outline: none;
-
+    color: #006ce8;
 }
 #slider input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance: none;
@@ -303,7 +348,7 @@ img{
     cursor: pointer;
     border-radius: 5px;
 }
-/*
+/* 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input[type='range'] {
       overflow: hidden;
@@ -318,7 +363,7 @@ img{
       cursor: pointer;
     }
 
-}*/
+} */
 #current-value{
     font-size: 15px;
     position: relative;
@@ -328,8 +373,9 @@ img{
     text-align: center;
     line-height: 30px;
     justify-content: center;
-    background-color: #006ce8;
-    border: 2px solid rgb(247, 247, 255);
+    background-color: rgb(83, 50, 100);
+    color: rgb(232, 209, 243);
+    border: 2px solid rgb(170, 132, 189);
     border-top-left-radius: 10%;
     border-top-right-radius: 10%;
     border-bottom-left-radius: 40%;
@@ -338,19 +384,39 @@ img{
 
 #div-ratio{
     display: flex;
-    justify-content: space-between;
-    width: 60%;
+    justify-content: center;
+    width: 100%;
     margin: auto;
+    margin-top: 8px;
 }
 
 #btn-ratio{
-    background-color: #6264b8;
+    /* background-color: #6264b8;
     border: 2px solid rgb(77, 77, 97);
     color: rgb(255, 255, 255);
-    border-radius: 7px;
+    border-radius: 7px; */
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 35px;
+    padding: 5px;
+    /* align-items: center; */
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
+    color: white;
+    width: 30%;
+    line-height: 10px;
+    margin-left: 15%;
+    font-size: 14px;
 }
+
+#btn-ratio:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
+}
+
 #input-ratio{
-    margin-top: 10px;
+    accent-color: rgb(101, 72, 115);
 }
 /*************** TESTNI SKUP *********************/ 
 
@@ -359,16 +425,20 @@ img{
     align-items: center;
     text-align: center;
     justify-content: center;
+    height: 150px;
 }
 
 #proizvoljan-unos{
     text-align: center;
     justify-content: center;
-
+    position: relative;
+    top: -20px;
 }
 
 .visible-testniskup{
     visibility: visible;
+    /* height: 0px;
+    transition: height 2s; */
 }
 .visible-unos{
   visibility: visible;
@@ -381,10 +451,10 @@ img{
 }
 .btn-design2{
     height: 35px;
-    width: 10%;
-    margin: 0 15px;
+    /* width: 10%; */
+    /* margin: 0 15px; */
     color: white;
-    background-color: rgb(33, 79, 138);
+    background-color: rgb(101, 72, 115);
     justify-content: center;
 }
 
@@ -393,17 +463,17 @@ input#exampleFormControlFile1{
  }
  #label-input{
      width: 145px;
-     background-color: rgb(46, 132, 189);
+     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
      color: rgb(255, 255, 255);
      height: 35px;
      align-items: center;
-     font-size: 15px;
+     font-size: 14px;
      display: flex;
      justify-content: center;
      margin: 20px auto 10px auto;
      box-sizing: border-box;
      border-radius: 10px;
-     border: 2px solid rgba(44, 75, 90, 0.8);
+     /* border: 2px solid rgba(44, 75, 90, 0.8); */
      cursor: pointer;
      -webkit-transition-duration: 0.2s;
      transition-duration: 0.2s;
@@ -413,7 +483,7 @@ input#exampleFormControlFile1{
  }
  #label-input:hover, #label-input:active{
      background-color: rgb(39, 91, 139);
-     box-shadow:0 0 15px rgba(0, 0, 0, 0.5);
+     box-shadow:0 0 15px rgba(108, 79, 157, 0.693);
      -webkit-transform: scale(1.1);
      transform: scale(1.1);
  }
@@ -425,21 +495,30 @@ input#exampleFormControlFile1{
 /*  */
 
 .btn-design{
-    
     color: white;
-    background-color: rgb(33, 79, 138);
-    width: 120px;
-    height: 35px;
-    margin: 10px 0 15px 0;
-    justify-content: center;
-
+    background-color: rgb(101, 72, 115);
+    /* width: 120px; */
+    /* height: 35px; */
+    margin: 10px 30px 15px 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* justify-content: center; */
+    box-shadow: none;
+    overflow-wrap: break-word;
+    font-size: 100%;
 }
+
+.btn-design:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
+
 .btn-design2{
     height: 35px;
-    width: 235px;
+    width: 220px;
     margin: 0 15px;
     color: white;
-    background-color: rgb(33, 79, 138);
+    /* background-color: rgb(33, 79, 138); */
     justify-content: center;
 }
 
@@ -517,6 +596,7 @@ input#exampleFormControlFile1{
     border: 1px solid rgb(60, 26, 26);
     border-radius: 5px;
     margin-left: 5px;
+    width: 140px;
 }
 #sve-kolone{
     color: white;
@@ -524,6 +604,7 @@ input#exampleFormControlFile1{
     border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
+    width: 140px;
 }
 /****** SELEKTOVANJE REDOVA *****/
 .selectedRow{
@@ -532,42 +613,60 @@ input#exampleFormControlFile1{
 
 
 /* ---------------------   TABELA  ----------------------  */ 
-#tabela-statistika{
-    display: flex;
+#tabela-podesavanja{
+    /* display: flex; */
     margin-bottom: 10px;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 #table
 {
-    margin-top: 10px;
+    margin-top: 5px;
     background-color: #272741;
-    border: 4px solid #5977DF;
+    border: 3px solid #5977DF;
     padding: 10px;
     box-sizing: border-box;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     color: white;
-    width: 960px;
-    overflow: scroll;
-    height: 550px;
+    /* width: 960px; */
+    height: 600px;
   
 }
-#table::-webkit-scrollbar{
-    width: 10px;
+#skrol{
+    overflow: scroll;
+    height: 540px;
     
 }
-#table::-webkit-scrollbar-track{
+
+/*        SCROLL BAR            */ 
+#skrol::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    /*margin-right: 10px;*/
+  }
+  
+#skrol::-webkit-scrollbar-corner{
     background-color: #272741;
-    
 }
-#table::-webkit-scrollbar-corner{
-    background-color: #272741;
-}
-#table::-webkit-scrollbar-thumb{
-    background-color: #38395f;
-    
-}
+
+  /* Track */
+#skrol::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+#skrol::-webkit-scrollbar-thumb {
+    background: #505e8c;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+#skrol::-webkit-scrollbar-thumb:hover {
+    background: #59689b;
+  }
+/*   ************   */ 
 
 #table th{
     color: #a7baff;
@@ -667,14 +766,7 @@ th{
 #naziveksperimenta:hover{
     box-shadow: 0px 0px 10px 5px rgba(33, 18, 255, 0.2); 
 }
-#desnielement{
-    width: 350px;
-    display: flex;
-    position: relative;
-    justify-content: space-between;
-    margin: 1px 0;
-    float: right;
-}
+
 #box{
     margin: 10px auto;
     width: 100%;
@@ -708,19 +800,21 @@ th{
 }
 #vrednost-ratio{
     background-color: #f9fbff;
-    border-radius: 7px;
+    border-radius: 10px;
+    width: 30%;
+    border: none;
 }
+
 #nedostajucevrednosti{
     width: 45.5%;
     
 }
 #header1{
-    height: 45px;
     /*float: left;*/
     width: 100%;
-    display: flex;
+    /* display: flex;
     position: relative;
-    justify-content: space-between;
+    justify-content: space-between; */
 }
 
 #sacuvajizmene{
@@ -733,6 +827,7 @@ th{
     box-sizing: border-box;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
+    float: right;
 }
 #sacuvajizmene:hover{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
@@ -762,19 +857,20 @@ th{
     text-align: right;
     color: white;
     border-radius: 10px;
-    position: absolute;
+    position: relative;
     align-items: center;
     z-index: 2;
     height: 40px;
     line-height: 35px;
-    min-width: 170px;
+    max-width: 180px;
     align-items: center;
-    left: 127px;
-    position: absolute;
+    left: 125px;
+    
+    /* position: absolute; */
 }
 
 .okvir2{
-    margin: 1px 0;
+    margin: 0;
 }
 
 /* TESTNI SKUP - KOMPONENTE */
@@ -814,42 +910,53 @@ th{
 }*/
 
 #select-elements{
-    margin: 20px auto auto 30px;
+    margin-top: 5px;
     display: flex;
+    justify-content: center;
+}
+
+#pomocniDiv
+{
+    display: block;
+    justify-content: center;
+    margin-left: 50%;
+    margin-right: 50%;
 }
 
 #opcije-nv{
-    width: 85%;
-    display: flex;
-    justify-content: space-between;
+    /* width: 100%; */
+    display: block;
+    justify-content: center;
     margin: auto;
-    padding: 30px 0 5px 0;
+    padding: 5px 0 5px 0;
 }
 #prazni-string{
-    width: 45%;
-    
+    /* width: 90%; */
     display: flex;
-    justify-content: space-between;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
 }
 #zamena-nula{
-    width: 48%;
+    /* width: 90%; */
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
 }
 #b1,#b2{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
-    height: 30px;
+    height: 35px;
     padding: 5px;
-    align-items: center;
+    /* align-items: center; */
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid rgba(44, 75, 90, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
-    width: 100px;
+    width: 30%;
     line-height: 10px;
-    
 }
 /*
 #prazni-string, #zamena-nula, #nova-kategorija{
@@ -904,36 +1011,44 @@ th{
 } 
 
 #regresija-nv{
-    width: 60%;
+    /* width: 60%; */
     display: flex;
-    justify-content: left;
-    margin: auto auto auto 45px;
-    padding: 30px 0 5px 0;
+    justify-content: center;
+    margin-bottom: 15px;
+    /* margin: auto auto auto 45px;
+    padding: 30px 0 5px 0; */
 }
 #btn-reg{
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
-    height: 30px;
+    height: 35px;
     padding: 5px;
     align-items: center;
     box-sizing: border-box;
     text-align: center;
-    border: 2px solid rgba(38, 64, 77, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
-    width: 70px;
+    width: 30%;
     line-height: 10px;
+    border-radius: 10px;
 }
+
+#btn-reg:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
+}
+
 #regresija-input{
-    width: 165px;
+    width: 40%;
     background-color: #171f37;
     box-sizing: border-box;
     border: 2px solid rgb(98, 98, 182);
     color: white;
+    margin-right: 10px;
 }
 
 /* ENKODIRANJE */ 
 
 #b4, #b5{
-    margin: 50px auto auto auto;
     background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
     height: 40px;
     padding: 5px;
@@ -941,9 +1056,27 @@ th{
     box-sizing: border-box;
     text-align: center;
     border-radius: 10px;
-    border: 2px solid rgba(44, 75, 90, 0.8);
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
     color: white;
-    width: 180px;
+    width: 60%;
+    display: block;
+    max-width: 200px;
+}
+
+/* #b5
+{
+    margin-bottom: 10px;
+} */
+
+#b4
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#b5
+{
+    margin: 15px auto auto auto;
 }
 
 #b4:hover{
@@ -1085,4 +1218,353 @@ th{
 }
   .hovertext-left:hover::before{
     --scale:1;
+}
+
+.okvir
+{
+    border: 3px solid #5977DF;
+    border-radius: 10px;
+    padding: 10px;
+    background: rgba(39, 39, 65);
+}
+
+.visinaPodesavanja
+{
+    height: 600px;
+    margin-top: -37px;
+}
+
+.naslov
+{
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 17px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+/*---------------------PODESAVANJA-----------------------*/
+.podesavanje
+{
+    margin-top: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+.dugmeCollapse
+{
+    width: 100%;
+    background-color: #3e3e6e;
+    /* border-color: #4761c0;
+    border: 2px solid rgb(66, 86, 164); */
+    border-radius: 10px;
+    color: rgb(216, 221, 251);
+    box-shadow: none;
+/*           TABELA STATISTIKA          */ 
+}
+
+.td-tabela-stat{
+    text-align: right;
+    border-right: 5px solid #32324c;
+}
+
+.accordion-button:after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+.pom
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+#manipulacijaPodacima::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    /*margin-right: 10px;*/
+  }
+  
+#manipulacijaPodacima::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+
+  /* Track */
+#manipulacijaPodacima::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+#manipulacijaPodacima::-webkit-scrollbar-thumb {
+    background: #6070a7;
+    border-radius: 10px;
+  }
+
+.dugme
+{
+    margin-bottom: 20px;
+    background-color: rgb(101, 72, 115);
+    box-shadow: none;
+    font-size: 15px;
+}
+
+.dugme:focus
+{
+    box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
+}
+
+.imeAkcije
+{
+    text-align: center;
+    color: rgb(216, 221, 251);
+    width: 40%;
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.okvirZaNA
+{
+    border: 3px solid #5977DF;
+    border-radius: 10px;
+    background: rgba(39, 39, 65);
+    padding-top: 15px;
+}
+
+.naslov
+{
+    width: 100%;
+}
+
+.tekstNaslova
+{
+    width: 70%;
+    display: block;
+    justify-content: center;
+    text-align: center;
+    color: rgb(216, 221, 251);
+}
+
+#dropdownBasic1
+{
+    /* margin-top: 20px; */
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+#dropdownBasic3
+{
+    font-size: 15px;
+    margin-left: 7%;
+}
+
+#dropdownMenuButton
+{
+    font-size: 15px;
+}
+
+#dropdownLinReg
+{
+    font-size: 15px;
+}
+
+.btn-primary
+{
+    border: none;
+    font-size: 14px;
+    background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+    height: 35px;
+    padding: 5px;
+    /* align-items: center; */
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 10px;
+    /* border: 2px solid rgba(66, 106, 208, 0.8); */
+    color: white;
+    width: 35%;
+    line-height: 10px;
+}
+
+.btn-primary:hover
+{
+    background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#enkodiranjeHolder
+{
+    margin-top: 10px;
+}
+
+.visinaIstorije{
+
+    height: 67px;
+}
+
+#undoRedoDugme{
+    height: 40px;
+    width: 40px;
+    border-radius: 10px;
+    background-color: #272741;
+    border: 1px solid #a7baff;
+   margin-left: 10px;
+   margin-top: 2px;
+    /*float: right;*/
+}
+
+#undoRedoDugmeIstorija{
+    height: 28px;
+    width: 28px;
+    /* border-radius: 5px; */
+    background-color: transparent;
+    border: none;
+    /* border: 1px solid #a7baff;
+     margin-left: 10px;
+    margin-top: 2px; 
+    float: right; */
+}
+
+#undoRedoDugmeIstorija:hover{
+    height: 28px;
+    width: 28px;
+     border-radius: 28px; 
+    background-color: #ced9ff43;
+    border: none;
+    /* border: 1px solid #a7baff;
+     margin-left: 10px;
+    margin-top: 2px; 
+    float: right; */
+}
+
+#poslednjiIstorija{
+   /* margin-top: 20px;*/
+    background-color: #15151f;
+    border: 4px solid #5977DF;
+    padding: 5px;
+    box-sizing: border-box;
+   /* box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);*/
+    border-radius: 10px;
+    color: rgb(180, 180, 180);
+    margin-bottom: 5px;
+}
+
+#ist{
+
+    margin-bottom: 5px;
+}
+
+.dugmiciG{
+    width: 50%;
+    margin-top: 10px;
+}
+
+/*
+.dugmiciG:hover{
+
+    color: rgba(39, 39, 65);
+}
+*/
+.dugmiciG:active{
+
+    color: rgba(39, 39, 65);
+}
+
+#dugmeIstorija{
+    width: 100%;
+    margin-top: 2px;
+    color: white;
+}
+
+#dugmeIstorija:hover{
+    color: rgba(39, 39, 65);
+}
+
+.visinaVizuelizacije{
+    height: 550px;
+    margin-top: -37px;
+}
+
+#kantica{
+
+    width: 20px;
+    height: 20px;
+    padding: 0px;
+    /* border-radius: 5px; */
+    background-color: transparent;
+    border: none;
+}
+
+.img-fluid
+{
+    width: 100%;
+    height: 100%;
+} 
+#numericka-tabela tr:nth-of-type(even){
+    background-color: #343457;
+    color: #c1cdff;
+
+}
+
+#numericka-tabela tr:hover:nth-child(even)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela tr:hover:nth-child(odd)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela{
+    margin-top: -25px;
+}
+
+#ucitaniPodaci-naslov,#statPodaci-naslov{
+    cursor: pointer;
+    padding: 3px;
+}
+
+ #numericka-tabela td{
+    padding: 10px 9px 10px 40px;
+}
+
+#numericka-tabela th{
+    text-align: left;
+    padding: 10px 40px 10px 5px;
+    
+}
+
+#numericka-tabela .head-table th{
+    width: 200px;
+ }
+
+ 
+#numericka-tabela tr .trbodyy td{
+    width: 200px;
+}
+
+
+#numericka-tabela td:first-child{
+    text-align: left;
+    padding: 10px 25px 10px 5px;
+
+}
+
+#numericka-tabela tr td:first-child{
+    font-weight: bolder;
+    /*background-color: #32324c;*/
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#numericka-tabela .head-table th{
+    cursor: default;
+}
+/* NASLOV TABELE STATISTIKA I PODACI */
+#ucitaniPodaci-naslov:hover{
+     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52);  
+     border-radius: 5px;
+}
+#statPodaci-naslov:hover{
+    box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52); 
+     border-radius: 5px;
 }
