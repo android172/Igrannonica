@@ -310,7 +310,7 @@
                             </div>
                             <div ngbDropdown class="d-inline-block" style="width: 100%;">
                                 <div class="pom">
-                                    <button class="btn btn-design2 dugme" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
+                                    <button class="btn btn-design2 dugme" id="additionalSpace" ngbDropdownToggle>Izaberi metodu unosa</button>
                                 </div>
                                 <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                   <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Odabir željene vrednosti</button>
@@ -386,8 +386,10 @@
                                 </div>
                             </div>
                             <div id="outliers-box">
-                                <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-design4 dugme" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                                <div ngbDropdown class="d-inline-block" style="width: 100%;">
+                                    <div class="pom">
+                                        <button class="btn btn-design2 dugme" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                                    </div>
                                     <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                       <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>
                                       <button ngbDropdownItem id="option-quantiles" (click)="selectOutliers($event)">Quantiles</button> 
@@ -419,8 +421,10 @@
                                 </div>
                             </div>
                             <div id="norm-box">
-                                <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-design3" id="norm-btn" ngbDropdownToggle>Izaberite tip normalizacije</button>
+                                <div ngbDropdown class="d-inline-block" style="width: 100%;">
+                                    <div class="pom">
+                                        <button class="btn btn-design2 dugme" id="norm-btn" ngbDropdownToggle>Izaberite tip normalizacije</button>
+                                    </div>
                                     <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                       <button ngbDropdownItem id="absolute-max" (click)="selectNorm($event)">Absolute Maximum Scaling</button>
                                       <button ngbDropdownItem id="minmax" (click)="selectNorm($event)">Min-Max Scaling</button> 

@@ -218,7 +218,6 @@ ul .ngx-pagination
     justify-content: space-between;
     /* height: 35px; */
     /* margin-top: 50px; */
-    padding-top: 15px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px;
@@ -1282,6 +1281,7 @@ th{
     margin-bottom: 20px;
     background-color: rgb(101, 72, 115);
     box-shadow: none;
+    font-size: 15px;
 }
 
 .dugme:focus
@@ -1367,4 +1367,9 @@ th{
 #enkodiranjeHolder
 {
     margin-top: 10px;
+}
+
+#additionalSpace
+{
+    margin-bottom: 10px;
 }
