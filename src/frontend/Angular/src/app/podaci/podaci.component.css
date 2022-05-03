@@ -201,8 +201,7 @@ ul .ngx-pagination
 .btn-design3{
     color: white;
     background-color: rgb(101, 72, 115);
-    width: 100%;
-    min-width: 233px;
+    width: 220px;
     height: 35px;
     justify-content: center;
     box-shadow: none;
@@ -218,8 +217,12 @@ ul .ngx-pagination
     text-align: center;
     justify-content: space-between;
     /* height: 35px; */
-    margin: 20px auto;
-    width: 82%;
+    /* margin-top: 50px; */
+    padding-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    /* width: 82%; */
 }
 
 #norm-btn
@@ -278,10 +281,11 @@ ul .ngx-pagination
     color: white;
     background-color: rgb(101, 72, 115);
     width: 100%;
-    min-width: 190px;
     height: 35px;
     justify-content: center;
     box-shadow: none;
+    width: 220px;
+    margin: 0 auto;
 }
 
 .btn-design4:focus
@@ -295,7 +299,7 @@ ul .ngx-pagination
     text-align: center;
     /* height: 35px; */
     margin: auto;
-    width: 85%;
+    width: 100%;
 }
 #threshold{
     height: 35px;
@@ -314,7 +318,7 @@ ul .ngx-pagination
 {
     margin-bottom: 20px;
     font-size: 15px;
-    width: 40%;
+    margin-top: 10px;
 }
 
 .primeni-izuzeci{
@@ -495,12 +499,11 @@ input#exampleFormControlFile1{
     background-color: rgb(101, 72, 115);
     /* width: 120px; */
     /* height: 35px; */
-    margin: 10px 0 15px 0;
+    margin: 10px 30px 15px 30px;
     padding-top: 5px;
     padding-bottom: 5px;
     /* justify-content: center; */
     box-shadow: none;
-    width: 65%;
     overflow-wrap: break-word;
     font-size: 100%;
 }
@@ -512,10 +515,10 @@ input#exampleFormControlFile1{
 
 .btn-design2{
     height: 35px;
-    width: 235px;
+    width: 220px;
     margin: 0 15px;
     color: white;
-    background-color: rgb(33, 79, 138);
+    /* background-color: rgb(33, 79, 138); */
     justify-content: center;
 }
 
@@ -888,7 +891,7 @@ th{
 }*/
 
 #select-elements{
-    /* margin-top: 20px; */
+    margin-top: 5px;
     display: flex;
     justify-content: center;
 }
@@ -1249,6 +1252,7 @@ th{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 15px;
 }
 
 #manipulacijaPodacima::-webkit-scrollbar {
@@ -1273,14 +1277,14 @@ th{
     border-radius: 10px;
   }
 
-.dugmeNA
+.dugme
 {
     margin-bottom: 20px;
     background-color: rgb(101, 72, 115);
     box-shadow: none;
 }
 
-.dugmeNA:focus
+.dugme:focus
 {
     box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
 }
@@ -1358,4 +1362,9 @@ th{
 .btn-primary:hover
 {
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
+}
+
+#enkodiranjeHolder
+{
+    margin-top: 10px;
 }

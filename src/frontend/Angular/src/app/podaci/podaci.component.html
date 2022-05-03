@@ -310,7 +310,7 @@
                             </div>
                             <div ngbDropdown class="d-inline-block" style="width: 100%;">
                                 <div class="pom">
-                                    <button class="btn btn-design" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
+                                    <button class="btn btn-design2 dugme" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
                                 </div>
                                 <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                   <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Odabir željene vrednosti</button>
@@ -362,8 +362,10 @@
                                     </span>
                                 </div>
                             </div>
-                            <button class="btn btn-primary" id="b4" (click)="labelEncoding()">LabelEncode</button> 
-                            <button class="btn btn-primary" id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
+                            <div id="enkodiranjeHolder">
+                                <button class="btn btn-primary" id="b4" (click)="labelEncoding()">LabelEncode</button> 
+                                <button class="btn btn-primary" id="b5" (click)="oneHotEncoding()">One-hotEncode</button> 
+                            </div>
                         </div>
                     </div>
                     <div class="podesavanje">
@@ -385,7 +387,7 @@
                             </div>
                             <div id="outliers-box">
                                 <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-design4" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                                    <button class="btn btn-design4 dugme" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
                                     <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                       <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>
                                       <button ngbDropdownItem id="option-quantiles" (click)="selectOutliers($event)">Quantiles</button> 
@@ -395,7 +397,7 @@
                                       <button ngbDropdownItem id="option-svm" (click)="selectOutliers($event)">One Class SVM</button>
                                       <button ngbDropdownItem id="option-lfactor" (click)="selectOutliers($event)">Local Factor</button>
                                     </div>
-                                </div>
+                                </div><br>
                                 <input type="number" id="threshold" placeholder="Prag:" readonly><br>
                 
                                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="removeOutliers()">Primeni</button>
@@ -424,7 +426,7 @@
                                       <button ngbDropdownItem id="minmax" (click)="selectNorm($event)">Min-Max Scaling</button> 
                                       <button ngbDropdownItem id="zscore" (click)="selectNorm($event)">Z-score Scaling</button>
                                     </div>
-                                </div>
+                                </div><br>
                                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
                             </div>
                         </div>
@@ -459,7 +461,7 @@
                                         </div>
                                     </div>
                                     <div ngbDropdown class="d-inline-block">
-                                        <button class="btn btn-design2 dugmeNA" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
+                                        <button class="btn btn-design2 dugme" id="dropdownBasic3" ngbDropdownToggle>Brisanje NA vrednosti</button>
                                         <div ngbDropdownMenu aria-labelledby="dropdownBasic3" class="menu1">
                                           <button ngbDropdownItem (click)="deleteAllRowsWithNA()">Izbaci sve vrste sa NA vrednostima</button>
                                           <button ngbDropdownItem (click)="deleteAllColumnsWithNA()">Izbaci sve kolone sa NA vrednostima</button>
@@ -468,7 +470,7 @@
                                     </div>
                                 <div class="okvirZaNA">
                                 <div ngbDropdown class="dropdown" class="zamena-select">
-                                    <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle dugmeNA" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                                    <button ngbDropdownToggle class="btn btn-design2 dropdown-toggle dugme" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
                                       Zamena NA vrendosti
                                     </button>
                                     <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -489,7 +491,7 @@
                                     </ul>
                                 </div>
                                 <div ngbDropdown class="dropdown" class="zamena-select">
-                                    <button ngbDropdownToggle class="btn btn-design2 dugmeNA" type="button" id="dropdownLinReg">
+                                    <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdownLinReg">
                                         Linearna regresija
                                     </button>
                                     <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
