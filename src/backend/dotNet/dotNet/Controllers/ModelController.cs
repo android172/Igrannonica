@@ -41,7 +41,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("Modeli")]
-        public IActionResult napraviModel(string ime, int id)
+        public IActionResult napraviModel(string ime, int id, string opis)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace dotNet.Controllers
                 {
                     return BadRequest("Vec postoji model sa tim imenom");
                 }
-                if (db.dbmodel.dodajModel(ime, id))
+                if (db.dbmodel.dodajModel(ime, id, opis))
                 {
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString(), db.dbmodel.proveriModel(ime, id).ToString());
                     if (!Directory.Exists(path))

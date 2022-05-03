@@ -284,6 +284,37 @@ export class ModelComponent implements OnInit {
     }
   }
 
+  napraviModel()
+  {
+    console.log(this.idEksperimenta);
+    var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
+    var opis = (<HTMLInputElement>document.getElementById("opisM")).value;
+    var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
+    if(ime === ""){
+      ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="*Polje ne sme biti prazno";
+      return;
+    }
+    if(div === "*Model sa tim nazivom vec postoji"){
+      div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
+    }
+    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.idEksperimenta + "&opis=" + opis,null,{responseType: 'text'}).subscribe(
+      res=>{
+        console.log(res);
+        ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
+        this.onSuccess("Model je uspesno napravljen");
+      },
+      error=>{
+        console.log(error.error);
+        this.onError("Model nije napravljen!");
+        if(error.error === "Vec postoji model sa tim imenom")
+        {
+           var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
+        }
+      }
+    );
+  }
+
   funkcija2(){
     let nizK = <any>document.getElementsByName("izl"); 
     var ind2;
@@ -694,5 +725,11 @@ export class ModelComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("crossV")).value = "2";
       /*(<HTMLInputElement>document.getElementById("crossV")).value = "";*/
     }
+  }
+
+  kreirajModel()
+  {
+    this.napraviModel();
+    //this.submit();
   }
 }
