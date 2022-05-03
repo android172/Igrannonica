@@ -90,8 +90,9 @@ ul .ngx-pagination
     background: none;
     border: none;
     color: white;
-    width: 70px;
-    overflow: visible;
+    width: 75px;
+    min-height: 22px;
+    resize:both;
 }
 #table tr:nth-of-type(even) input{
     
@@ -629,26 +630,43 @@ input#exampleFormControlFile1{
     border-radius: 10px;
     color: white;
     /* width: 960px; */
-    overflow: scroll;
     height: 600px;
   
 }
-#table::-webkit-scrollbar{
-    width: 10px;
-    
-}
-#table::-webkit-scrollbar-track{
-    background-color: #272741;
-    
-}
-#table::-webkit-scrollbar-corner{
-    background-color: #272741;
-}
-#table::-webkit-scrollbar-thumb{
-    background-color: #38395f;
+#skrol{
+    overflow: scroll;
+    height: 540px;
     
 }
 
+/*        SCROLL BAR            */ 
+#skrol::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    /*margin-right: 10px;*/
+  }
+  
+#skrol::-webkit-scrollbar-corner{
+    background-color: #272741;
+}
+
+  /* Track */
+#skrol::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(196, 196, 196, 0.52); 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+#skrol::-webkit-scrollbar-thumb {
+    background: #505e8c;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+#skrol::-webkit-scrollbar-thumb:hover {
+    background: #59689b;
+  }
+/*   ************   */ 
 
 #table th{
     color: #a7baff;
@@ -1242,6 +1260,12 @@ th{
     border-radius: 10px;
     color: rgb(216, 221, 251);
     box-shadow: none;
+/*           TABELA STATISTIKA          */ 
+}
+
+.td-tabela-stat{
+    text-align: right;
+    border-right: 5px solid #32324c;
 }
 
 .accordion-button:after {
@@ -1479,3 +1503,71 @@ th{
     width: 100%;
     height: 100%;
 } 
+#numericka-tabela tr:nth-of-type(even){
+    background-color: #343457;
+    color: #c1cdff;
+
+}
+
+#numericka-tabela tr:hover:nth-child(even)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela tr:hover:nth-child(odd)
+{
+    background-color: #603753e2;
+}
+#numericka-tabela{
+    margin-top: -25px;
+}
+
+#ucitaniPodaci-naslov,#statPodaci-naslov{
+    cursor: pointer;
+    padding: 3px;
+}
+
+ #numericka-tabela td{
+    padding: 10px 9px 10px 40px;
+}
+
+#numericka-tabela th{
+    text-align: left;
+    padding: 10px 40px 10px 5px;
+    
+}
+
+#numericka-tabela .head-table th{
+    width: 200px;
+ }
+
+ 
+#numericka-tabela tr .trbodyy td{
+    width: 200px;
+}
+
+
+#numericka-tabela td:first-child{
+    text-align: left;
+    padding: 10px 25px 10px 5px;
+
+}
+
+#numericka-tabela tr td:first-child{
+    font-weight: bolder;
+    /*background-color: #32324c;*/
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#numericka-tabela .head-table th{
+    cursor: default;
+}
+/* NASLOV TABELE STATISTIKA I PODACI */
+#ucitaniPodaci-naslov:hover{
+     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52);  
+     border-radius: 5px;
+}
+#statPodaci-naslov:hover{
+    box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52); 
+     border-radius: 5px;
+}

@@ -295,24 +295,83 @@
     <div class="row d-flex align-items-center justify-content-between p-1" id="tabela-podesavanja">
         <div page class="col-md-9">
             <div class="okvir" id="table">
-                <div class="naslov">Učitani podaci</div>
-                <table>
-                    <tr class="head-table">
-                        <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
-                            {{header}}
-                        </th>
-                    </tr>
-                    <tr class="trbody" *ngFor="let red of json | paginate
-                    : {
-                        itemsPerPage: itemsPerPage,
-                        currentPage: page,
-                        totalItems: totalItems
-                    };  index as i" (click)="getRow(i,this.page)">
-                        <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)" [class.selectedRow]="isSelectedRow(i)">
-                            <input type="text" value="{{fieldValue}}" id="input-data" (change)="izmeniPolje(i,j,this.page,$event.target)">
-                        </td>
-                    </tr>
-                </table>
+                <div class="naslov">
+                        <span id="ucitaniPodaci-naslov" style=" background-color: #5e6091; border-radius: 5px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>     
+                          <span style="position: absolute; left:63%;"><button style="background-color: #232449; color: white;" id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi csv</button></span>
+                </div>
+                <div id="skrol" class="col-md-12">
+                    <table *ngIf="this.indikator; else statistika">
+                        <tr class="head-table">
+                            <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
+                                {{header}}
+                            </th>
+                        </tr>
+                        <tr class="trbody" *ngFor="let red of json | paginate
+                        : {
+                            itemsPerPage: itemsPerPage,
+                            currentPage: page,
+                            totalItems: totalItems
+                        };  index as i" (click)="getRow(i,this.page)">
+                            <td *ngFor="let fieldValue of dajRed(i); let j = index" [class.selectedCol]="isSelectedNum(j)" [class.selectedRow]="isSelectedRow(i)">
+                                <input type="text" value="{{fieldValue}}" id="input-data" (change)="izmeniPolje(i,j,this.page,$event.target)">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <ng-template #statistika>
+                     
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                            <div class="accordion-item" style="background-color: #272741; border:none; position: sticky; left: 0; display: grid; " >
+                              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                <button class="accordion-button" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                    <span style=" position:sticky; left:20px; display: inline-block;">Statistika numeričkih veličina</span>
+                                </button>
+                              </h2>
+                              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                <div class="accordion-body" style=" background-color:#272741 ;">
+                                    
+                                    <table id="numericka-tabela">
+                                        <tr class="head-table">
+                                            <th style="width:200px" *ngFor="let naslov of dajNaziveKolonaStatistikeNum();">
+                                                {{naslov}}
+                                            </th>
+                                        </tr>
+                                        <tr class="trbodyy" *ngFor="let red of this.nizRedovaStatistika">
+                                            <td style="width:200px" class="td-tabela-stat" *ngFor="let fieldValue of red;"  >
+                                                {{fieldValue}}
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="accordion-item" style="background-color: #272741; border:none; position: sticky; left: 0; display: grid; ">
+                              <h2 class="accordion-header" id="panelsStayOpen-headingThree" >
+                                <button class="accordion-button collapsed" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree" >
+                                    <span style=" position:sticky; left:20px; display: inline-block;">Statistika kategoričkih veličina</span>
+                                </button>
+                              </h2>
+                              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                                <div class="accordion-body" style=" background-color:#272741 ;">
+                                    <table id="kategoricka-tabela">
+                                        <tr class="head-table">
+                                            <th *ngFor="let naslov of statistikaCat;  let j = index" class="tr-button">
+                                                {{naslov.key}}
+                                            </th>
+                                        </tr>
+                                        
+                                    </table>
+                                 </div>
+                              </div>
+                            </div>
+                            
+                          </div>
+                </ng-template>
+
+                </div>
             </div>
 
             <div id="pagingControls">
@@ -553,7 +612,7 @@
             </div>
         </div>
 
-        <!-- <div id="statistika" style="overflow-y: auto">
+         <!-- <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -617,7 +676,7 @@
                 </div>
             </div>
             </div>
-        </div> -->
+        </div>  -->
     </div>
     
     <!-- <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>

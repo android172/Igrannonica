@@ -6,6 +6,7 @@ import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
 import { DatePipe } from '@angular/common';
 import { Observable, Subscriber } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-podaci',
@@ -90,7 +91,7 @@ export class PodaciComponent implements OnInit {
   }
 
   isArray(val:any): boolean { return val instanceof Array }
-
+  
   fileName = '';
   fileNameTest = '';
   json: any;
@@ -141,6 +142,8 @@ export class PodaciComponent implements OnInit {
   message: any;
 
   selektovanGrafik: string = "";
+  indikator:boolean = true; // tabela sa podacima
+  nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
   onFileSelected(event:any) 
   {
@@ -252,6 +255,9 @@ dajNaziveHeadera()
         this.jsonStatistika = JSON.parse(response);
         console.log(this.jsonStatistika);
         this.ucitajStatistiku();
+        
+        this.tabelaStatistika();
+        this.tabelaStatistikaCat();
       }
     )
   }
@@ -442,7 +448,7 @@ dajNaziveHeadera()
         });
       }
     }
-    //console.log(this.statistikaNum);
+    console.log(this.statistikaNum);
     //console.log(this.statistikaCat);
   }
 
@@ -1594,6 +1600,109 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     });
   }
+
+  tabelaStatistika()
+  { 
+    var broj = Object.keys(this.statistikaNum[0].data).length;
+    var kljucevi = Object.keys(this.statistikaNum[0].data);
+    var brojJ= this.statistikaNum.length;
+    
+    for(var i = 0; i<broj;i++)
+    {
+      var nizHead:string[] = [];
+      nizHead.push(kljucevi[i]);
+      for(var j = 0; j<brojJ;j++)
+      {
+        
+        nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+      }
+      this.nizRedovaStatistika.push(nizHead);
+    }
+    //console.log(this.nizRedovaStatistika);
+  }
+  tabelaStatistikaCat()
+  {
+    // var broj = Object.keys(this.statistikaCat[0].data).length;
+    // var kljucevi = Object.keys(this.statistikaCat[0].data);
+    // var brojJ= this.statistikaCat.length;
+    // var traziMax:number[] = [];
+
+    // //console.log(this.statistikaCat[0].data[broj-1]['Frequencies']);
+    // for(var i = 0;i<brojJ;i++)
+    // {
+    //   traziMax.push((this.statistikaCat[0].data[broj-1]['Frequencies']).length);
+    // }
+    // broj += Math.max(...traziMax);
+
+    // for(var i = 0; i<broj;i++)
+    // {
+    //   var nizHead:string[] = [];
+    //   nizHead.push(kljucevi[i]);
+    //   for(var j = 0; j<brojJ;j++)
+    //   {
+        
+    //     nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+    //   }
+    //   this.nizRedovaStatistika.push(nizHead);
+    // }
+    //console.log(this.nizRedovaStatistika);
+  }
+
+  prikaziUcitanePodatke(event:any)
+  {
+    this.indikator = true;
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("statPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
+
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "5px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+    
+  }
+
+  prikaziStatistickePodatke(event:any)
+  {
+    this.indikator = false; 
+    var element = (<HTMLSpanElement>document.getElementById(event.target.id));
+    var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
+    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
+
+    element.style.backgroundColor = "#5e6091";
+    element.style.borderRadius = "5px";
+    disableElement.style.backgroundColor = "";
+    disableElement.style.border = "";
+  }
+
+  dajNaziveKolonaStatistikeNum()
+  {
+    var kljucevi:string[] = [" "];
+
+    for(let pom of this.statistikaNum)
+    {
+      kljucevi.push(pom.key);
+    }
+    return kljucevi;
+
+  }
+
+  preuzmiDataset()
+  {
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
+      res => {
+
+        var blob = new Blob([res], {type: 'text/csv' })
+        saveAs(blob, "dataset_"+this.fileName);
+
+        this.onSuccess("Podaci tabele preuzeti!");
+    },error=>{
+      console.log(error.error);
+      this.onError("Podaci nisu preuzeti!");
+    });
+  }
+
  
   promena(event:any){
 
