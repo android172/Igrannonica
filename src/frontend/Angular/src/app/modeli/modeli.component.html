@@ -2,7 +2,6 @@
     <div id="gornji">
         <input id="imeM" placeholder="Unesite naziv modela" (keyup)="handleKeyUp($event)">
         <button id="dodaj" (click)="napraviModel()" (click)="ocisti()">Dodaj model</button>
-        <div id="imeE"></div>
         <div id="greska"></div>
     </div>
 
@@ -23,7 +22,7 @@
             <div id="n"></div>
             <div id="nm">Datum kreiranja modela</div>
             <div id="d"></div>
-            <div id="nmo">Opis modela</div><i (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal" class='fas fa-pencil-alt' style='font-size:15px;cursor: pointer;'></i>
+            <div id="nmo">Opis modela</div><i (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" class='fas fa-pencil-alt' style='font-size:15px;cursor: pointer;'></i>
             <div id="opis"></div>
         </div>
         <div id="pod">
@@ -40,7 +39,7 @@
 
         </div>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content" style="background-color:#5563a4;">
             <div class="modal-header" style="border: none;">
