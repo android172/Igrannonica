@@ -611,12 +611,16 @@ dajNaziveHeadera()
     if(str === "Testni skup")
     {
       (<HTMLDivElement>document.getElementById("unos-fajla")).className = "visible-testniskup";  
-      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";  
+      (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "80px";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
     }
     if(str === "Proizvoljno")
     {
       (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "visible-unos";   
-      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";  
+      (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "150px";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
     }
   }
 
@@ -1234,19 +1238,28 @@ dajNaziveHeadera()
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Standard Deviation";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readonly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-quantiles")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Quantiles";
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-zscore")
     {
       (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Z-Score"; 
       (<HTMLInputElement>document.getElementById("threshold")).removeAttribute("readOnly");
-      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(37, 164, 214)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(158, 158, 255)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "0 0 15px rgba(108, 79, 157, 0.893)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "auto";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "auto";
     }
     if(this.selectedOutlier == "option-iqr")
     {
@@ -1254,6 +1267,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-isolation")
     {
@@ -1261,6 +1277,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-svm")
     {
@@ -1268,6 +1287,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     if(this.selectedOutlier == "option-lfactor")
     {
@@ -1275,6 +1297,9 @@ dajNaziveHeadera()
       (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
       (<HTMLInputElement>document.getElementById("threshold")).value = ""; 
       (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+      (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+      (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+      (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
     }
     
   }

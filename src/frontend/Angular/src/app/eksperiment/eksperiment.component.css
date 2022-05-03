@@ -82,7 +82,7 @@
 }
 #naziveksperimenta:hover{
     /* box-shadow: 0px 0px 10px 5px rgba(33, 18, 255, 0.2);  */
-    cursor: context-menu;
+    cursor: default;
 }
 #desnielement{
     width: 350px;
