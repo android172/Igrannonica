@@ -405,7 +405,7 @@
                             </div>
                             <div ngbDropdown class="d-inline-block" style="width: 100%;">
                                 <div class="pom">
-                                    <button class="btn btn-design2 dugme" id="additionalSpace" ngbDropdownToggle>Izaberi metodu unosa</button>
+                                    <button class="btn btn-design2 dugme" id="dropdownBasic1" ngbDropdownToggle>Izaberi metodu unosa</button>
                                 </div>
                                 <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                   <button ngbDropdownItem id="proizvoljanUnosVrednosti" (click)="izborUnosa('Proizvoljno')">Odabir željene vrednosti</button>
@@ -483,7 +483,7 @@
                             <div id="outliers-box">
                                 <div ngbDropdown class="d-inline-block" style="width: 100%;">
                                     <div class="pom">
-                                        <button class="btn btn-design2 dugme" ngbDropdownToggle>Izbacivanje izuzetaka</button>
+                                        <button class="btn btn-design2 dugme" id="outlier-btn" ngbDropdownToggle>Izbacivanje izuzetaka</button>
                                     </div>
                                     <div ngbDropdownMenu class="menu1" aria-labelledby="dropdownBasic1">
                                       <button ngbDropdownItem id="option-sd" (click)="selectOutliers($event)">Standard Deviation</button>

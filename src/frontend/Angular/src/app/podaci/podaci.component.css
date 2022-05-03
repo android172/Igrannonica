@@ -1351,6 +1351,7 @@ th{
 {
     /* margin-top: 20px; */
     font-size: 15px;
+    margin-bottom: 10px;
 }
 
 #dropdownBasic3
@@ -1396,10 +1397,6 @@ th{
     margin-top: 10px;
 }
 
-#additionalSpace
-{
-    margin-bottom: 10px;
-}
 .visinaIstorije{
 
     height: 67px;
