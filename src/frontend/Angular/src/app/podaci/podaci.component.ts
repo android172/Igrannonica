@@ -1751,6 +1751,84 @@ dajNaziveHeadera()
     )
   }
 
+  getBoxplot(){
+
+    this.http.post(url+"/api/Graph/boxplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  getViolinplot(){
+
+    this.http.post(url+"/api/Graph/violinplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  getBarplot(){
+
+    this.http.post(url+"/api/Graph/barplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  getHistogram(){
+
+    this.http.post(url+"/api/Graph/histogram",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  getHexbin(){
+
+    this.http.post(url+"/api/Graph/hexbin",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  getDensityplot(){
+
+    this.http.post(url+"/api/Graph/densityplot",this.selectedColumns,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        this.preuzmiSliku();
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
+  }
+
   preuzmiSliku(){
 
     this.http.get(url+"/api/File/GetImage?idEksperimenta=" + this.idEksperimenta,{responseType:"blob"}).subscribe(
@@ -1797,10 +1875,36 @@ dajNaziveHeadera()
     };
   }
 
-  ucitajGrafik(){
+  ucitajGrafik(event : any){
 
-   this.getScatterplot();
-  // this.preuzmiSliku();
+    //this.ngOnInit();
+    if(event.target.id === "scatterplot")
+    {
+      this.getScatterplot();
+    }
+    else if(event.target.id === "boxplot")
+    {
+      this.getBoxplot();
+    }
+    else if(event.target.id === "violinplot")
+    {
+      this.getViolinplot();
+    }
+    else if(event.target.id === "barplot")
+    {
+      this.getBarplot();
+    }
+    else if(event.target.id === "histogram")
+    {
+      this.getHistogram();
+    }
+    else if(event.target.id === "hexbin")
+    {
+      this.getHexbin();
+    }
+    else{
+      this.getDensityplot();
+    }
   }
 
   tryUndoAction(){

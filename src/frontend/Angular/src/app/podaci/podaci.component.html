@@ -702,13 +702,15 @@
 
         <div class="col-md-3 ">
             <div class="okvir visinaVizuelizacije ">
-                <div class="naslov pb-5">Nacin prikaza podataka</div>
+                <div class="naslov pb-4">Nacin prikaza podataka</div>
                     <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
-                <div class="row p-2 pt-3"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik()" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
-                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
-                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="barplot" type="button" class="btn btn-secondary dugmiciG" style="border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Barplot</button> </div> </div>
-                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
-                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="frequencyplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Frequencyplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="violinplot" type="button" class="btn btn-secondary dugmiciG" style="border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Violinplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="barplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Barplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="hexbin" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Hexbin</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="densityplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Densityplot</button> </div> </div>
             </div>
         </div>
     </div>
