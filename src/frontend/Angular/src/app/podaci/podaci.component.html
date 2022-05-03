@@ -65,8 +65,8 @@
                     </button>
                </div>
                 <div class="col-sm-5 ">        
-                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
+                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
                 </div>   
             </div>
         </div>
