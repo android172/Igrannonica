@@ -4,6 +4,7 @@ import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-podaci',
@@ -1474,29 +1475,29 @@ dajNaziveHeadera()
   }
   tabelaStatistikaCat()
   {
-    var broj = Object.keys(this.statistikaCat[0].data).length;
-    var kljucevi = Object.keys(this.statistikaCat[0].data);
-    var brojJ= this.statistikaCat.length;
-    var traziMax:number[] = [];
+    // var broj = Object.keys(this.statistikaCat[0].data).length;
+    // var kljucevi = Object.keys(this.statistikaCat[0].data);
+    // var brojJ= this.statistikaCat.length;
+    // var traziMax:number[] = [];
 
-    //console.log(this.statistikaCat[0].data[broj-1]['Frequencies']);
-    for(var i = 0;i<brojJ;i++)
-    {
-      traziMax.push((this.statistikaCat[0].data[broj-1]['Frequencies']).length);
-    }
-    broj += Math.max(...traziMax);
+    // //console.log(this.statistikaCat[0].data[broj-1]['Frequencies']);
+    // for(var i = 0;i<brojJ;i++)
+    // {
+    //   traziMax.push((this.statistikaCat[0].data[broj-1]['Frequencies']).length);
+    // }
+    // broj += Math.max(...traziMax);
 
-    for(var i = 0; i<broj;i++)
-    {
-      var nizHead:string[] = [];
-      nizHead.push(kljucevi[i]);
-      for(var j = 0; j<brojJ;j++)
-      {
+    // for(var i = 0; i<broj;i++)
+    // {
+    //   var nizHead:string[] = [];
+    //   nizHead.push(kljucevi[i]);
+    //   for(var j = 0; j<brojJ;j++)
+    //   {
         
-        nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
-      }
-      this.nizRedovaStatistika.push(nizHead);
-    }
+    //     nizHead.push(this.statistikaNum[j].data[kljucevi[i]]);
+    //   }
+    //   this.nizRedovaStatistika.push(nizHead);
+    // }
     //console.log(this.nizRedovaStatistika);
   }
 
@@ -1539,6 +1540,22 @@ dajNaziveHeadera()
     return kljucevi;
 
   }
+
+  preuzmiDataset()
+  {
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
+      res => {
+
+        var blob = new Blob([res], {type: 'text/csv' })
+        saveAs(blob, "dataset_"+this.fileName);
+
+        this.onSuccess("Podaci tabele preuzeti!");
+    },error=>{
+      console.log(error.error);
+      this.onError("Podaci nisu preuzeti!");
+    });
+  }
+
  
 }
 

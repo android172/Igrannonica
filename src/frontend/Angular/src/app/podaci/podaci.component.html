@@ -260,7 +260,8 @@
         <div page class="col-md-9">
             <div class="okvir" id="table">
                 <div class="naslov">
-                        <span id="ucitaniPodaci-naslov" style=" background-color: #5e6091; border-radius: 5px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>
+                        <span id="ucitaniPodaci-naslov" style=" background-color: #5e6091; border-radius: 5px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>     
+                          <span style="position: absolute; left:63%;"><button style="background-color: #232449; color: white;" id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi csv</button></span>
                 </div>
                 <div id="skrol" class="col-md-12">
                     <table *ngIf="this.indikator; else statistika">
@@ -353,7 +354,7 @@
             </div>
         </div>
 
-         <div id="statistika" style="overflow-y: auto">
+         <!-- <div id="statistika" style="overflow-y: auto">
             <div id="statNaslov">Statisticki pokazatelji</div>
             <div [ngClass] = " ucitanCsv ? 'numcatVisible' : 'numcatHidden'" data-bs-toggle="collapse" data-bs-target="#numericke" aria-expanded="false" aria-controls="collapseExample"><div class="strelica">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
@@ -417,7 +418,7 @@
                 </div>
             </div>
             </div>
-        </div> 
+        </div>  -->
     </div>
     
     <!-- <button id="restore-columns" (click)="izbrisiSelektovaneKolone()">Deselektuj kolone</button>
