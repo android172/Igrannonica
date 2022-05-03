@@ -31,6 +31,7 @@ namespace dotNet.DBFunkcije
                         ModelDto ex = new ModelDto();
                         ex.Id = reader.GetInt32("id");
                         ex.Name = reader.GetString("Naziv");
+                        ex.Snap = reader.GetInt32("snapshot");
                         ex.CreatedDate = reader.GetDateTime("napravljen");
                         ex.UpdatedDate = reader.GetDateTime("obnovljen");
                         ex.Opis = reader.GetString("Opis");
