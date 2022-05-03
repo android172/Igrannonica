@@ -14,9 +14,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.svm import OneClassSVM
 from scipy import stats
 
-from StatisticsCategorical import StatisticsCategorical
-from StatisticsNumerical import StatisticsNumerical
-import CustomColors
+from Models.StatisticsCategorical import StatisticsCategorical
+from Models.StatisticsNumerical import StatisticsNumerical
+from Utils import CustomColors
 
 class MLData:
     

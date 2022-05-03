@@ -12,8 +12,8 @@ from sklearn import metrics
 from sklearn.model_selection import KFold
 
 from MLData import MLData
-from StatisticsClassification import StatisticsClassification
-from StatisticsRegression import StatisticsRegression
+from Models.StatisticsClassification import StatisticsClassification
+from Models.StatisticsRegression import StatisticsRegression
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
