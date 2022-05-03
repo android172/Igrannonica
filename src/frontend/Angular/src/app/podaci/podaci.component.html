@@ -30,27 +30,62 @@
         
         </div>
     </div>
-    <div class="row align-items-center justify-content-between p-0">
-        <div class="col-md-9 p-3">
-        <div class="okvir">
-            <div id="brojRedovaTabelePoruka" style="color: white;">
-                <div id="odabir-redova">Broj redova za prikaz:</div>
-                <span>
-                    <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
-                        <option value="5">5</option>
-                        <option selected value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </span>
+    <div class="row d-flex align-items-center justify-content-between p-1 pb-3">
+        <div class="col-md-9 ">
+            <div class="okvir d-flex justify-content-left ">
+                
+                <div id="brojRedovaTabelePoruka" style="color: white;">
+                    <div id="odabir-redova">Broj redova za prikaz:</div>
+                    <span>
+                        <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
+                            <option value="5">5</option>
+                            <option selected value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button id="sve-kolone" (click)="selectAllColumns($event)">Selektuj sve kolone</button>
+                    <button id="svi-redovi" (click)="selectAllRows($event)">Selektuj sve redove</button>
+                <!--  <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>-->
+                </div>
             </div>
         </div>
-        </div>
         <div class="col-md-3">
+            <div class="okvir visinaIstorije row m-0 p-2">
 
+           
+               <!-- <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> -->
+               <div class="col-sm-7">
+                    <!-- Button trigger modal -->
+                    <button type="button" id="dugmeIstorija" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">
+                        Pogledaj istoriju
+                    </button>
+               </div>
+                <div class="col-sm-5 ">        
+                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:22px;color:#CED9FF;"></i></button> 
+                </div>   
+            </div>
         </div>
     </div>
+    <!--
+    <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
+        <div class="col-md-9">
+            <div class="okvir visinaPodesavanja">
+                <div class="naslov">Vizuelizacija podataka</div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="okvir visinaPodesavanja">
+                
+            </div>
+        </div>
+    </div>-->
 
 
     <!-- <div id="box">
@@ -170,6 +205,7 @@
     </div>
 
     <div id="box2">
+    
         <div id="normalizacija">
             <div id="header-help">
                 <div id="naslov">Normalizacija</div>
@@ -194,7 +230,7 @@
                 <button type="button" class="btn btn-primary primeni-izuzeci" (click)="primeniNormalizaciju()">Primeni</button>
             </div>
         </div>
-
+    
         <div id="polje">
             <div id="header-help">
                 <div id="naslov">Podaci</div>
@@ -598,18 +634,56 @@
 
     <div class="row d-flex align-items-center justify-content-between p-1 pt-4" >
         <div class="col-md-9">
-            <div class="okvir visinaPodesavanja">
+            <div class="okvir visinaVizuelizacije">
                 <div class="naslov">Vizuelizacija podataka</div>
+                <div id="grafik"  style="width: 70%; height: 95%; margin: auto;" *ngIf="scatterplotImage"><img [src]="scatterplotImage" class="img-fluid " alt="Responsive image"></div>
             </div>
 
         </div>
 
-        <div class="col-md-3">
-            <div class="okvir visinaPodesavanja">
-                
+        <div class="col-md-3 ">
+            <div class="okvir visinaVizuelizacije ">
+                <div class="naslov pb-5">Nacin prikaza podataka</div>
+                    <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
+                <div class="row p-2 pt-3"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik()" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="barplot" type="button" class="btn btn-secondary dugmiciG" style="border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Barplot</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
+                <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" id="frequencyplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Frequencyplot</button> </div> </div>
             </div>
         </div>
     </div>
+
+
+  
+  <!-- Modal -->
+  <div  class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #484864; color:#CED9FF;" >
+        <div class="modal-header d-flex align-items-center justify-content-between">
+          <button id="undoRedoDugmeIstorija" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:14px;color:#CED9FF;"></i></button>  
+          <button id="undoRedoDugmeIstorija" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:14px;color:#CED9FF;"></i></button> 
+          <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px;" (click)="obrisiIstoriju()"><i class="fas fa-trash" style="font-size:16px;color:#CED9FF;"></i></button>
+          <h3 class="modal-title pt-2 mb-2 mt-0 m-5 p-5 pt-0 pb-0" id="exampleModalLabel">Istorija akcija</h3>
+          <!-- <h4><button type="button" id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button></h4> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div *ngFor="let k of nizKomandi.slice().reverse(); let i = index" >
+                <span id="vreme" data-toggle="tooltip" title="{{ nizKomandiTooltip[nizKomandiTooltip.length - i - 1] }}">{{k}}</span>
+                <br>
+                <br>
+            </div>
+        </div>
+        <!--
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+        -->
+    </div>
+  </div>
+</div>
 
     <simple-notifications></simple-notifications>
 </div>
