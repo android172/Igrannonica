@@ -528,7 +528,9 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         this.selectedColumns = [];
-        this.loadDefaultItemsPerPage();
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -557,7 +559,9 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         this.selectedColumns = [];
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -750,7 +754,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate Mean vrednosti");
@@ -816,7 +822,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene kategoricke vrednosti");
@@ -838,7 +846,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+       // this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene prazne numeričke vrednosti");
@@ -959,7 +969,9 @@ dajNaziveHeadera()
         else 
         {
           this.totalItems = (parseInt)(res);
-          this.loadDefaultItemsPerPage();
+          //this.loadDefaultItemsPerPage();
+          this.gty(this.page);
+          this.brojacAkcija++;
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
           this.onSuccess("Redovi su obrisani");
@@ -1039,7 +1051,9 @@ dajNaziveHeadera()
     this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         this.rowsAndPages = [];
         let dateTime = new Date();
@@ -1472,7 +1486,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteAllRowsNA",null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani svi NA redovi");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1515,7 +1531,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani NA redovi");
@@ -1584,7 +1602,9 @@ dajNaziveHeadera()
     this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
-        this.loadDefaultItemsPerPage();
+        //this.loadDefaultItemsPerPage();
+        this.gty(this.page);
+        this.brojacAkcija++;
         this.selectedForRegression = -1;
         this.selectedColumns = [];
         let dateTime = new Date();
