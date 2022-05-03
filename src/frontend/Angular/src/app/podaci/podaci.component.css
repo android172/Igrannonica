@@ -1040,6 +1040,7 @@ th{
     color: white;
     width: 60%;
     display: block;
+    max-width: 200px;
 }
 
 /* #b5
