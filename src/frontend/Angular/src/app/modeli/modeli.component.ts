@@ -131,7 +131,6 @@ export class ModeliComponent implements OnInit {
           this.json = res;
           this.modeli = Object.values(this.json);
           this.formatirajDatum();
-          this.promeni(this.modeli[0].id);
         },
         error=>{
           console.log(error.error);
@@ -285,6 +284,26 @@ export class ModeliComponent implements OnInit {
         (<HTMLDivElement>document.getElementById("bodyc")).innerHTML=this.modeli[i].opis;
       }
     }
+  }
+
+  izmeniOpis()
+  {
+    var a = (<HTMLDivElement>document.getElementById("bodyc")).innerHTML;
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      if(this.modeli[i].id==this.izabranId)
+      {
+        this.http.put(url+"/api/Model/Modeli/Opis?id=" + this.modeli[i].id + "&opis=" + a, {responseType : "text"}).subscribe(
+          res=>{
+            this.onSuccess("Uspesno!");
+          },error=>{
+            (<HTMLDivElement>document.getElementById("opis")).innerHTML=a;
+            this.ucitajModel();
+          }
+        );
+      }
+    }
+
   }
 
 }

@@ -33,27 +33,30 @@
             <div id="snap"></div>
             <div id="nm">Metoda optimizacija</div>
             <div id="opt"></div>
-            <div id="nm">Epoha:</div>
+            <div id="nm">Epoha</div>
             <div id="eph"></div>
+        </div>
+        <div id="matrica">
+
         </div>
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Opis modela</h5>
+          <div class="modal-content" style="background-color:#5563a4;">
+            <div class="modal-header" style="border: none;">
+              <h5 class="modal-title" id="exampleModalLabel" style="color: #f5597e; font-size: x-large;">Opis modela</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="bodyc" class="modal-body">
+            <div contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
               
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="border: none;">
               <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+              <button type="button" id="edit" (click)="izmeniOpis()" data-bs-dismiss="modal">Sačuvaj izmene</button>
             </div>
           </div>
         </div>
-      </div>
+    </div>
     <simple-notifications></simple-notifications>
 </div>
 <!--<button (click)="obrisiModel(m.id)" class="noselect"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg></span>
