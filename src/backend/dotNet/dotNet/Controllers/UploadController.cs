@@ -369,8 +369,5 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
-
-        
-
     }
 }
