@@ -25,24 +25,26 @@
 
         <div class="d-flex align-items-center justify-content-between" id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
-            <div>
-                <select id="verzijaSnapshotaSelect">
-                    <option>Default snapshot</option>
-                    <option>Snapshot 1</option>
-                    <option>Snapshot 2</option>
-                    <option>Snapshot 3</option>
-                </select>
-            </div>
-            <div>
-                <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
-                <button id="deleteSnap">Obriši trenutnu verziju</button>
-            </div>
-            <div>
-                <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
-            </div>
-            <div>
-                <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+            <div class="col-md-10 d-flex justify-content-left">
+                <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
+                <div class="space">
+                    <select id="verzijaSnapshotaSelect">
+                        <option>Default snapshot</option>
+                        <option>Snapshot 1</option>
+                        <option>Snapshot 2</option>
+                        <option>Snapshot 3</option>
+                    </select>
+                </div>
+                <div class="space">
+                    <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
+                    <button id="deleteSnap"><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
+                </div>
+                <div class="space">
+                    <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
+                </div>
+                <div class="space">
+                    <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+                </div>
             </div>
             <div>
                 <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
@@ -81,13 +83,13 @@
 
            
                <!-- <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> -->
-               <div class="col-sm-7">
+               <div class="col-sm-7 justify-content-center">
                     <!-- Button trigger modal -->
                     <button type="button" id="dugmeIstorija" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">
                         Pogledaj istoriju
                     </button>
                </div>
-                <div class="col-sm-5 ">        
+                <div class="col-sm-5 d-flex justify-content-center">        
                     <button id="undoRedoDugme" (click)="tryUndoAction()"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
                     <button id="undoRedoDugme" (click)="tryRedoAction()"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
                 </div>   
