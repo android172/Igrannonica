@@ -1571,3 +1571,28 @@ th{
     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52); 
      border-radius: 5px;
 }
+
+
+/*   */
+
+.statistika-tip{
+    width: 100%;
+    margin-top: 12px; 
+    position: sticky;
+    left: 0;
+    display: grid;
+    margin-bottom: 10px;
+}
+
+.btn-coll{
+    width: 100%;
+    background-color: #3a3a53; 
+    border-radius: 5px;
+    color: #e3536e;
+    box-shadow: none;
+    height: 45px;
+}
+
+#numericka-tabela{
+    margin-top: 10px;
+}
