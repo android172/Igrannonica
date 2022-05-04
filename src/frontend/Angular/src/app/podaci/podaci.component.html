@@ -387,14 +387,8 @@
                 </div>
             </div>
 
-            <div id="pagingControls">
-            <pagination-controls *ngIf="this.json != undefined"
-            class="pagi text-center"
-            (pageChange)="gty(page = $event)"
-            ngDefaultControl
-            [(ngModel)]="this.page"
-            ></pagination-controls>
-            </div>
+            <ngb-pagination class="d-flex justify-content-center" *ngIf="this.json != undefined" (pageChange)="gty(page = $event)" [collectionSize]="this.totalItems" [(page)]="this.page" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+      
         </div>
 
         <div class="col-md-3 justify-content-center align-items-center">

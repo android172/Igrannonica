@@ -1678,3 +1678,16 @@ th{
     color: rgb(242, 244, 252);
 }
 
+/* */
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    background-color: #272741 !important;
+    color: rgb(183, 225, 246);
+    border: 1px solid #5d5d91 !important ;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: rgb(46, 69, 155) !important;
+    border: 2px solid rgb(189, 211, 222) !important;
+}
+
