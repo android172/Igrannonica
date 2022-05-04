@@ -369,5 +369,26 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
+
+        [Authorize]
+        [HttpGet("ColumnTypes")]
+        public string ColumnTypes()
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return "greska";
+                string kolone = eksperiment.GetColumnTypes();
+                return kolone;
+            }
+            catch
+            {
+                return "Nisu vraceni tipovi";
+            }
+        }
     }
 }
