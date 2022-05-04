@@ -90,7 +90,7 @@ ul .ngx-pagination
 #naslov{
     font-weight: 500;
     font-size: 17px;
-    margin: auto;
+    /* margin: auto; */
 }
 /****** PORUKA ERROR ****************/
 /*

@@ -90,8 +90,8 @@
                     </button>
                </div>
                 <div class="col-sm-5 d-flex justify-content-center">        
-                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
+                    <button id="undoRedoDugme"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
                 </div>   
             </div>
         </div>
@@ -739,7 +739,21 @@
 
         <div class="col-md-3 ">
             <div class="okvir visinaVizuelizacije ">
-                <div class="naslov pb-4">Nacin prikaza podataka</div>
+                    <div class="naslov p-0 m-0">Nacin prikaza podataka</div>
+                    <div id="header-help">
+                        <div id="helper"> 
+                            <span  class="hovertext" data-tooltip=" Dozvoljen broj i tip kolona:
+                                * Scatterplot - maksimum 6 kolona bilo kog tipa
+                                * Boxplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
+                                * Violinplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
+                                * Barplot - maksimum 2 kolone samo kategorickog tipa
+                                * Histogram - maksimum 4 kolone bilo kog tipa
+                                * Hexbin- maksimum 2 kolone bilo kog tipa
+                                * Density- maksimum 6 kolona bilo kog tipa">
+                            &#63;
+                            </span>
+                        </div>
+                </div>
                     <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
