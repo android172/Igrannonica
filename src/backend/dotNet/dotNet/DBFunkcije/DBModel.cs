@@ -87,14 +87,15 @@ namespace dotNet.DBFunkcije
                 return -1;
             }
         }
-        public bool dodajModel(string ime, int id)
+        public bool dodajModel(string ime, int id, string opis)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`,`opis`) values (@ime,@id,0,now(),now(),'')";
+                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`,`opis`) values (@ime,@id,0,now(),now(),@opis)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", ime);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@opis", opis);
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                 {

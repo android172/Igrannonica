@@ -1,6 +1,6 @@
 <div id="body1">
 <div id="div1">
-    <button id="sacuvaj" (click)="submit()">Sacuvaj izmene</button>
+    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
     <input id="nazivM">
 </div>
 <div id="centrirano">
@@ -252,6 +252,26 @@
         </table> -->
     </div>
     </div>
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-size: large;">Čuvanje modela</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div>Ime modela</div>
+            <div id="greska"></div>
+            <input type="text" id="imeM" style="width: 200px; border-radius: 10px; height: 40px; margin-bottom: 20px;">
+            <div>Opis modela</div>
+            <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="kreirajModel()">Sačuvaj</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <simple-notifications></simple-notifications>
 </div>
 
