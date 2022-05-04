@@ -6,6 +6,10 @@
         public int ideksperimenta { get; set; }
         public string Ime { get; set; }
         public string csv { get; set; }
+        public Snapshot()
+        {
+
+        }
         public Snapshot(int id, int eksperiment, string ime, string csv)
         {
             this.id = id;

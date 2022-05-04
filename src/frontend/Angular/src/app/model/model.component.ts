@@ -33,7 +33,8 @@ export class ModelComponent implements OnInit {
   nazivModela : any;
   json: any;
   json1: any;
-
+  jsonSnap: any;
+  snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
 
@@ -123,6 +124,7 @@ export class ModelComponent implements OnInit {
       this.signalR.LossListener();
       //console.log(this.signalR.data);
     }
+    this.dajSnapshots();
   }
   posaljiZahtev(data:number){
     //console.log(data);
@@ -731,5 +733,19 @@ export class ModelComponent implements OnInit {
   {
     this.napraviModel();
     //this.submit();
+  }
+
+  dajSnapshots()
+  {
+    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+      res => {
+        this.jsonSnap=res;
+        this.snapshots = Object.values(this.jsonSnap);
+        console.log(res);
+      },
+      error =>{
+        console.log(error.error);
+      }
+    )
   }
 }

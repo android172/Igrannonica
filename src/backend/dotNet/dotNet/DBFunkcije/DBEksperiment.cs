@@ -211,7 +211,13 @@ namespace dotNet.DBFunkcije
                 {
                     while (reader.Read())
                     {
-                        lista.Add(new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv")));
+                        Snapshot snap = new Snapshot();
+                        snap.id = reader.GetInt32("id");
+                        snap.ideksperimenta = reader.GetInt32("ideksperimenta");
+                        snap.Ime = reader.GetString("Ime");
+                        snap.csv = reader.GetString("csv");
+                        lista.Add(snap);
+                        //lista.Add(new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv")));
                     }
                 }
             }

@@ -1,4 +1,16 @@
 <div id="body1">
+    <div id="outliers-box">
+        <div ngbDropdown class="dropdown" class="zamena-select">
+            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdownLinReg">
+                Izaberi snapshot
+            </button>
+            <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
+                <div *ngFor="let s of snapshots">
+                <li ngbDropdownItem> <a role="button" class="dropdown-item">{{s.ime}}</a></li>   
+                </div>                      
+            </ul>
+        </div>
+    </div>
 <div id="div1">
     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
     <input id="nazivM">
