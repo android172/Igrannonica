@@ -23,9 +23,30 @@
 
         <div class="col-md-9 okvir">
 
-        <div id="desnielement">
+        <div class="d-flex align-items-center justify-content-between" id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
+            <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
+            <div>
+                <select id="verzijaSnapshotaSelect">
+                    <option>Default snapshot</option>
+                    <option>Snapshot 1</option>
+                    <option>Snapshot 2</option>
+                    <option>Snapshot 3</option>
+                </select>
+            </div>
+            <div>
+                <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
+                <button id="deleteSnap">Obriši trenutnu verziju</button>
+            </div>
+            <div>
+                <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
+            </div>
+            <div>
+                <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+            </div>
+            <div>
+                <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
+            </div>
         </div>
         
         </div>
@@ -34,7 +55,7 @@
         <div class="col-md-9 ">
             <div class="okvir d-flex justify-content-left ">
                 
-                <div id="brojRedovaTabelePoruka" style="color: white;">
+                <div id="brojRedovaTabelePoruka">
                     <div id="odabir-redova">Broj redova za prikaz:</div>
                     <span>
                         <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
@@ -46,7 +67,7 @@
                         </select>
                     </span>
                 </div>
-                <div class="d-flex align-items-center">
+                <div style="width: 100%;" class="d-flex align-items-center">
                     <button id="sve-kolone" (click)="selectAllColumns($event)">Selektuj sve kolone</button>
                     <button id="svi-redovi" (click)="selectAllRows($event)">Selektuj sve redove</button>
                 <!--  <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>-->
@@ -297,7 +318,7 @@
             <div class="okvir" id="table">
                 <div class="naslov">
                         <span id="ucitaniPodaci-naslov" style=" background-color: #5e6091; border-radius: 5px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>     
-                          <span style="position: absolute; left:63%;"><button style="background-color: #232449; color: white;" id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi podatke</button></span>
+                          <span style="position: absolute; left:62%; "><button  id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi podatke</button></span>
                 </div>
                 <div id="skrol" class="col-md-12">
                     <table *ngIf="this.indikator; else statistika">
@@ -321,15 +342,12 @@
                     <ng-template #statistika>
                      
                         <div class="accordion" id="accordionPanelsStayOpenExample">
-                            <div class="accordion-item" style="background-color: #272741; border:none; position: sticky; left: 0; display: grid; " >
-                              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <button class="accordion-button" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
-                                    <span style=" position:sticky; left:20px; display: inline-block;">Statistika numeričkih veličina</span>
+                           
+                            <div class="statistika-tip">
+                                <button class="accordion-button collapsed btn-coll" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNum" aria-expanded="false" aria-controls="collapseNum">
+                                    <span style=" position:sticky; left:25px; display: inline-block;">Statistika numeričkih veličina</span>
                                 </button>
-                              </h2>
-                              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-                                <div class="accordion-body" style=" background-color:#272741 ;">
-                                    
+                                <div class="collapse" id="collapseNum">
                                     <table id="numericka-tabela">
                                         <tr class="head-table">
                                             <th style="width:200px" *ngFor="let naslov of dajNaziveKolonaStatistikeNum();">
@@ -343,19 +361,14 @@
                                         </tr>
                                         
                                     </table>
-
                                 </div>
-                              </div>
                             </div>
-                            
-                            <div class="accordion-item" style="background-color: #272741; border:none; position: sticky; left: 0; display: grid; ">
-                              <h2 class="accordion-header" id="panelsStayOpen-headingThree" >
-                                <button class="accordion-button collapsed" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree" >
-                                    <span style=" position:sticky; left:20px; display: inline-block;">Statistika kategoričkih veličina</span>
+
+                            <div class="statistika-tip">
+                                <button class="accordion-button collapsed btn-coll" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCat" aria-expanded="false" aria-controls="collapseCat">
+                                    <span style=" position:sticky; left:25px; display: inline-block;">Statistika numeričkih veličina</span>
                                 </button>
-                              </h2>
-                              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
-                                <div class="accordion-body" style=" background-color:#272741 ;">
+                                <div class="collapse" id="collapseCat">
                                     <table id="kategoricka-tabela">
                                         <tr class="head-table">
                                             <th *ngFor="let naslov of statistikaCat;  let j = index" class="tr-button">
@@ -364,9 +377,9 @@
                                         </tr>
                                         
                                     </table>
-                                 </div>
-                              </div>
+                                </div>
                             </div>
+                            
                             
                           </div>
                 </ng-template>
