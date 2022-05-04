@@ -1,12 +1,12 @@
 <div id="body1">
     <div id="outliers-box">
         <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; float: left;">
-            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdownLinReg" style="color: whitesmoke; background-color: rgb(101, 72, 115);">
+            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdown" style="color: whitesmoke; background-color: rgb(101, 72, 115);">
                 Izaberi snapshot
             </button>
             <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
                 <div *ngFor="let s of snapshots">
-                <li ngbDropdownItem> <a role="button" class="dropdown-item">{{s.ime}}</a></li>   
+                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)">{{s.ime}}</a></li>   
                 </div>                      
             </ul>
         </div>

@@ -748,4 +748,9 @@ export class ModelComponent implements OnInit {
       }
     )
   }
+
+  selectSnapshot(id: any)
+  {
+    (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
+  }
 }
