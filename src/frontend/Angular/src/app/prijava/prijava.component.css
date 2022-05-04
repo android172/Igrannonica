@@ -179,9 +179,9 @@ span
 }
 
 #eye{
-    color:rgb(21, 21, 22);
+    color:rgb(145, 145, 145);
 }
 #eye:hover{
-    color:rgb(127, 128, 192); 
+    color:rgb(192, 127, 143); 
     text-shadow:  2px 2px 5px #0f0f1b;
 }
