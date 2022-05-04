@@ -33,10 +33,10 @@ img{
 .visible-n{
     visibility: visible;
 }
-#brojRedovaTabele, #brojRedovaTabelePoruka
+/* #brojRedovaTabele, #brojRedovaTabelePoruka
 {
-    visibility: hidden; /* hidden*/
-}
+    visibility: hidden; 
+} */
 
 .pagi
 {
@@ -1595,4 +1595,19 @@ th{
 
 #numericka-tabela{
     margin-top: 10px;
+}
+
+#dugmecsv{
+    background-color: #313357; 
+    font-size: smaller;
+    padding: 5px; 
+    border-radius: 5px; 
+    border: 1px solid rgb(36, 36, 76);
+    color:rgb(197, 197, 197);
+}
+
+#dugmecsv:hover{
+    background-color: #1c1e4e; 
+    color:rgb(255, 255, 255);
+    border: 1px solid rgb(110, 110, 120);
 }
