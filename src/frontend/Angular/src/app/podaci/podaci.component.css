@@ -55,15 +55,37 @@ ul .ngx-pagination
 #brojRedovaTabelePoruka{
    /* position: relative;*/
     /*left: 5%;*/
-    width: 15%;
+    width: 23%;
     color: #CED9FF;
+    display: flex;
+    background-color: #97ABF0;
+    padding: 8px 10px;
+    border-radius: 5px;
+    align-items: center;
+    background-color: #45457c;
+    color: rgb(216, 221, 251);
+    margin-right: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    min-width: 130px;
 }
 #odabir-redova{
     width: 100%;
     color: #CED9FF;
+    font-size: 15px;
 }
 #brojRedovaTabele{ 
-    background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240));
+    /* background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240)); */
+    background-color: rgb(101, 72, 115);
+    border-radius: 5px;
+    border-color: rgb(132, 95, 151);
+    color: rgb(216, 221, 251);
+    border-width: 2px;
+}
+
+#brojRedovaTabele:hover
+{
+    background-color: rgb(113, 84, 128);
 }
 
 #naslov{
