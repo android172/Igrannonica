@@ -65,10 +65,8 @@ ul .ngx-pagination
     align-items: center;
     background-color: #45457c;
     color: rgb(216, 221, 251);
-    margin-right: 5px;
-    margin-top: 1px;
-    margin-bottom: 1px;
     min-width: 130px;
+    margin: 3px 5px 3px 3px;
 }
 #odabir-redova{
     width: 100%;
