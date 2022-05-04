@@ -402,7 +402,7 @@ input:-webkit-autofill:active
 {
   background-color: #fa6698;
   border: 3px solid #f1587b;
-  border-radius: 10px;
+  border-radius: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 10px;
@@ -414,7 +414,7 @@ input:-webkit-autofill:active
 {
   background-color: #f5597e;
   border: 3px solid #fa6698;
-  border-radius: 10px;
+  border-radius: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 10px;

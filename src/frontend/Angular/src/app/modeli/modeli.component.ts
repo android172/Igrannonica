@@ -168,24 +168,24 @@ export class ModeliComponent implements OnInit {
     );
   }
 
-  obrisiModel(i:any)
-  {
-    if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
-    {
-      this.http.delete(url+'/api/Model/Modeli/' + i,{responseType: 'text'}).subscribe(
-       res=>{
-         console.log(res);
-            this.ucitajModel();
-            var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
-            this.onSuccess("Model je uspesno obrisan");
-       },
-       error=>{
-         console.log(error.error);
-         this.onError("Model nije obrisan!");
-       }
-     )
-    }
-  }
+  // obrisiModel(i:any)
+  // {
+  //   if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
+  //   {
+  //     this.http.delete(url+'/api/Model/Modeli/' + i,{responseType: 'text'}).subscribe(
+  //      res=>{
+  //        console.log(res);
+  //           this.ucitajModel();
+  //           var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
+  //           this.onSuccess("Model je uspesno obrisan");
+  //      },
+  //      error=>{
+  //        console.log(error.error);
+  //        this.onError("Model nije obrisan!");
+  //      }
+  //    )
+  //   }
+  // }
 
   handleKeyUp(event: any){
      if(event.keyCode === 13){
@@ -302,8 +302,29 @@ export class ModeliComponent implements OnInit {
         );
       }
     }
-
   }
 
+  obrisiModel()
+  {
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      if(this.modeli[i].id==this.izabranId)
+      {
+        this.http.delete(url+'/api/Model/Modeli/' + this.modeli[i].id).subscribe(
+          res=>{
+            console.log(res);
+               this.onSuccess("Model je uspesno obrisan");
+          },
+          error=>{
+            console.log(error.error);
+            this.ucitajModel();
+            var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
+            // this.onError("Model nije obrisan!");
+            this.onSuccess("Model je uspesno obrisan");
+          }
+        )
+      }
+    }
+  }
 }
 
