@@ -55,7 +55,7 @@ ul .ngx-pagination
 #brojRedovaTabelePoruka{
    /* position: relative;*/
     /*left: 5%;*/
-    width: 23%;
+    width: 30%;
     color: #CED9FF;
     display: flex;
     background-color: #97ABF0;
@@ -613,20 +613,22 @@ input#exampleFormControlFile1{
     margin-left: 5px;
 }
 #svi-redovi{
-    color: white;
-    background-color: rgb(116, 38, 38);
-    border: 1px solid rgb(60, 26, 26);
+    color: rgb(250, 228, 243);
+    background-color: rgb(112, 51, 82);
+    border: 1px solid rgb(60, 26, 47);
     border-radius: 5px;
     margin-left: 5px;
-    width: 140px;
+    /* width: 140px; */
+    padding: 5px 10px;
 }
 #sve-kolone{
-    color: white;
+    color: rgb(216, 221, 251);
     background-color: rgb(50, 50, 114);
     border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
-    width: 140px;
+    /* width: 140px; */
+    padding: 5px 10px;
 }
 /****** SELEKTOVANJE REDOVA *****/
 .selectedRow{
