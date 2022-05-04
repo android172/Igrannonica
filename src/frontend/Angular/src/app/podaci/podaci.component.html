@@ -297,7 +297,7 @@
             <div class="okvir" id="table">
                 <div class="naslov">
                         <span id="ucitaniPodaci-naslov" style=" background-color: #5e6091; border-radius: 5px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>     
-                          <span style="position: absolute; left:63%;"><button style="background-color: #232449; color: white;" id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi csv</button></span>
+                          <span style="position: absolute; left:63%;"><button style="background-color: #232449; color: white;" id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi podatke</button></span>
                 </div>
                 <div id="skrol" class="col-md-12">
                     <table *ngIf="this.indikator; else statistika">
@@ -323,7 +323,7 @@
                         <div class="accordion" id="accordionPanelsStayOpenExample">
                             <div class="accordion-item" style="background-color: #272741; border:none; position: sticky; left: 0; display: grid; " >
                               <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                                <button class="accordion-button" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                <button class="accordion-button" style="background-color: #32324c; box-shadow: none; color: #e3536e; height: 25px;" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
                                     <span style=" position:sticky; left:20px; display: inline-block;">Statistika numeričkih veličina</span>
                                 </button>
                               </h2>
