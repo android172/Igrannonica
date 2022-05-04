@@ -1639,6 +1639,26 @@ th{
     border: 1px solid rgb(110, 110, 120);
 }
 
+#izbaci-selekt-vrste
+{
+    color: rgb(249, 237, 245);
+    background-color: rgb(112, 51, 82);
+    border: 1px solid rgb(60, 26, 47);
+    border-radius: 5px;
+    margin-left: 5px;
+    padding: 5px 10px;
+}
+
+#izbaci-selekt-kolone
+{
+    color: rgb(216, 221, 251);
+    background-color: rgb(50, 50, 114);
+    border: 1px solid rgb(33, 33, 78);
+    border-radius: 5px;
+    margin-left: 5px;
+    padding: 5px 10px;
+}
+
 /* -----------------SNAPSHOTS------------------ */
 
 #tekstSnapshot
