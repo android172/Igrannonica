@@ -1673,7 +1673,7 @@ dajNaziveHeadera()
     this.indikator = true;
     var element = (<HTMLSpanElement>document.getElementById(event.target.id));
     var disableElement = (<HTMLSpanElement>document.getElementById("statPodaci-naslov"));
-    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
+    //(<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
 
 
     element.style.backgroundColor = "#5e6091";
@@ -1688,7 +1688,7 @@ dajNaziveHeadera()
     this.indikator = false; 
     var element = (<HTMLSpanElement>document.getElementById(event.target.id));
     var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
-    (<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
+    //(<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
 
     element.style.backgroundColor = "#5e6091";
     element.style.borderRadius = "5px";

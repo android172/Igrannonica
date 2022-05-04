@@ -1294,6 +1294,9 @@ th{
 
 .accordion-button:after {
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+
+    position: sticky;
+    right: 20px;
 }
 
 .pom
@@ -1676,5 +1679,18 @@ th{
     border: none;
     padding: 10px 15px;
     color: rgb(242, 244, 252);
+}
+
+/* */
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+    background-color: #272741 !important;
+    color: rgb(183, 225, 246);
+    border: 1px solid #5d5d91 !important ;
+}
+
+ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: rgb(46, 69, 155) !important;
+    border: 2px solid rgb(189, 211, 222) !important;
 }
 
