@@ -497,6 +497,19 @@ dajNaziveHeadera()
         this.totalItems = response.totalItems;
     })
   }
+  gtyLoadPageWithStatistics(page: any){
+    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
+    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+       (response: any) => {
+        this.jsonStatistika = undefined
+        this.statistikaCat = []
+        this.statistikaNum = []
+         this.json =  JSON.parse(response.data); 
+         this.totalItems = response.totalItems;
+         this.dajStatistiku();
+     });
+   }
+
 
   dajHeadere()
   {
@@ -549,7 +562,7 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
@@ -580,7 +593,7 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
@@ -833,7 +846,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
@@ -858,7 +871,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -926,7 +939,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -950,7 +963,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1073,7 +1086,7 @@ dajNaziveHeadera()
         {
           this.totalItems = (parseInt)(res);
           //this.loadDefaultItemsPerPage();
-          this.gty(this.page);
+          this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
@@ -1155,7 +1168,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         this.rowsAndPages = [];
@@ -1183,7 +1196,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1209,7 +1222,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1235,7 +1248,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1302,7 +1315,7 @@ dajNaziveHeadera()
        res => {
          console.log(res);
          //this.loadDefaultItemsPerPage();
-         this.gty(this.page);
+         this.gtyLoadPageWithStatistics(this.page);
          this.brojacAkcija++;
          this.selectedColumns = [];
          let dateTime = new Date();
@@ -1327,7 +1340,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1352,7 +1365,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1378,7 +1391,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1403,7 +1416,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1428,7 +1441,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1453,7 +1466,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1590,7 +1603,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani svi NA redovi");
@@ -1609,7 +1622,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisane kolone sa NA vrednostima");
@@ -1635,7 +1648,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1706,7 +1719,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedForRegression = -1;
         this.selectedColumns = [];
@@ -1730,6 +1743,7 @@ dajNaziveHeadera()
     var kljucevi = Object.keys(this.statistikaNum[0].data);
     var brojJ= this.statistikaNum.length;
     
+    this.nizRedovaStatistika = [];
     for(var i = 0; i<broj;i++)
     {
       var nizHead:string[] = [];
@@ -2032,7 +2046,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.obrisiKomandu();
       },
       error =>{
@@ -2060,7 +2074,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.vratiKomandu();
       },
       error =>{

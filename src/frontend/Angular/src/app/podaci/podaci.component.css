@@ -59,20 +59,19 @@ ul .ngx-pagination
     color: #CED9FF;
     display: flex;
     background-color: #97ABF0;
-    padding: 8px 10px;
+    /* padding: 8px 10px; */
+    padding: 6px 10px;
     border-radius: 5px;
     align-items: center;
     background-color: #45457c;
     color: rgb(216, 221, 251);
-    margin-right: 5px;
-    margin-top: 1px;
-    margin-bottom: 1px;
     min-width: 130px;
+    margin: 3px 5px 3px 3px;
 }
 #odabir-redova{
     width: 100%;
     color: #CED9FF;
-    font-size: 15px;
+    font-size: 14px;
 }
 #brojRedovaTabele{ 
     /* background: linear-gradient(to right, rgb(224, 171, 255) , rgb(193, 212, 240)); */
@@ -619,7 +618,7 @@ input#exampleFormControlFile1{
     border-radius: 5px;
     margin-left: 5px;
     /* width: 140px; */
-    padding: 5px 10px;
+    padding: 6px 12px;
 }
 #sve-kolone{
     color: rgb(216, 221, 251);
@@ -628,7 +627,7 @@ input#exampleFormControlFile1{
     border-radius: 5px;
     margin-left: 5px;
     /* width: 140px; */
-    padding: 5px 10px;
+    padding: 6px 12px;
 }
 /****** SELEKTOVANJE REDOVA *****/
 .selectedRow{
@@ -1501,9 +1500,10 @@ th{
 }
 
 #dugmeIstorija{
-    width: 100%;
+    width: 90%;
     margin-top: 2px;
     color: white;
+    font-size: 15px;
 }
 
 #dugmeIstorija:hover{
@@ -1646,7 +1646,7 @@ th{
     border: 1px solid rgb(60, 26, 47);
     border-radius: 5px;
     margin-left: 5px;
-    padding: 5px 10px;
+    padding: 6px 12px;
 }
 
 #izbaci-selekt-kolone
@@ -1656,7 +1656,12 @@ th{
     border: 1px solid rgb(33, 33, 78);
     border-radius: 5px;
     margin-left: 5px;
-    padding: 5px 10px;
+    padding: 6px 12px;
+}
+
+.space
+{
+    margin-left: 10px;
 }
 
 /* -----------------SNAPSHOTS------------------ */
@@ -1666,6 +1671,7 @@ th{
     color: rgb(216, 221, 251);
     text-align: right;
     font-size: 15px;
+    margin-left: 5px;
 }
 
 #verzijaSnapshotaSelect
@@ -1675,7 +1681,7 @@ th{
     border-color: rgb(132, 95, 151);
     color: rgb(216, 221, 251);
     border-width: 2px;
-    padding: 10px 10px 10px 15px;
+    padding: 8px 10px;
 }
 
 #verzijaSnapshotaSelect:hover
@@ -1685,11 +1691,11 @@ th{
 
 #deleteSnap
 {
-    border-radius: 10px;
+    border-radius: 5px;
     background: radial-gradient(#7a1d4bc0, #6e1b43b4);
     border: none;
     color: rgb(248, 236, 244);
-    padding: 10px 15px;
+    padding: 9px 15px;
 }
 
 #sacuvaj, #sacuvajKao
@@ -1697,7 +1703,7 @@ th{
     border-radius: 10px;
     background: radial-gradient(#7C96F3, #6E6E9C);
     border: none;
-    padding: 10px 15px;
+    padding: 9px 15px;
     color: rgb(242, 244, 252);
 }
 
