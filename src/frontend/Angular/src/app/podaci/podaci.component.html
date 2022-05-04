@@ -369,14 +369,40 @@
                                     <span style=" position:sticky; left:25px; display: inline-block;">Statistika numeričkih veličina</span>
                                 </button>
                                 <div class="collapse" id="collapseCat">
-                                    <table id="kategoricka-tabela">
-                                        <tr class="head-table">
-                                            <th *ngFor="let naslov of statistikaCat;  let j = index" class="tr-button">
-                                                {{naslov.key}}
-                                            </th>
-                                        </tr>
-                                        
-                                    </table>
+
+                                    <div *ngFor="let element of statistikaCat; index as i" style="display: flex; margin-left: 40px;">
+                                  
+                                        <span style="border-bottom-right-radius:30px; height: 200px; width:100px; margin-top: 10px; background-color: #60324d; color: #a7baff; font-weight: bolder;">{{element.key}}</span>
+                                        <div *ngFor="let item of element.data" style=" margin: 10px 0px;">
+                                            <div class="uvuceno">
+                                                <div class="item" *ngIf="item.imeKljucVC">
+                                                  {{item.imeKljucVC}}: {{item.ValidCount}}
+                                                </div>
+                                            <div class="item" *ngIf="item.imeKljucNC">
+                                              {{item.imeKljucNC}}: {{item.NaCount}}
+                                            </div>
+                                            <div class="item" *ngIf="item.imeKljucUC">
+                                              {{item.imeKljucUC}}: {{item.UniqueCount}}
+                                             </div>
+                                            <div *ngIf="item.Frequencies">
+                                                <div *ngFor="let freq of item.Frequencies; index as i">
+                                                    <div *ngIf="i==0">
+                                                        Most Common: &nbsp; <br> <div class="uvuceno">{{item.Frequencies[i][0]}}: &nbsp; {{item.Frequencies[i][1]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="item.imeKljucF">
+                                                {{item.imeKljucF}}:
+                                                <div class="uvucenoBezMB" *ngFor="let freq of item.Frequencies">
+                                                    <div>{{freq[0]}}: &nbsp; {{freq[1]}} </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div style="width: 10%; height: 10%; " *ngIf="pieplot"><img [src]="pieplot" class="img-fluid " alt="Responsive image"></div> -->
+                                    </div>
+                                    <hr>
+                                    </div>
                                 </div>
                             </div>
                             
