@@ -613,7 +613,7 @@ input#exampleFormControlFile1{
     margin-left: 5px;
 }
 #svi-redovi{
-    color: rgb(250, 228, 243);
+    color: rgb(249, 237, 245);
     background-color: rgb(112, 51, 82);
     border: 1px solid rgb(60, 26, 47);
     border-radius: 5px;
@@ -1635,3 +1635,46 @@ th{
     color:rgb(255, 255, 255);
     border: 1px solid rgb(110, 110, 120);
 }
+
+/* -----------------SNAPSHOTS------------------ */
+
+#tekstSnapshot
+{
+    color: rgb(216, 221, 251);
+    text-align: right;
+    font-size: 15px;
+}
+
+#verzijaSnapshotaSelect
+{
+    background-color: rgb(85, 60, 98);
+    border-radius: 5px;
+    border-color: rgb(132, 95, 151);
+    color: rgb(216, 221, 251);
+    border-width: 2px;
+    padding: 10px 10px 10px 15px;
+}
+
+#verzijaSnapshotaSelect:hover
+{
+    background-color: rgb(101, 72, 115);
+}
+
+#deleteSnap
+{
+    border-radius: 10px;
+    background: radial-gradient(#7a1d4bc0, #6e1b43b4);
+    border: none;
+    color: rgb(248, 236, 244);
+    padding: 10px 15px;
+}
+
+#sacuvaj, #sacuvajKao
+{
+    border-radius: 10px;
+    background: radial-gradient(#7C96F3, #6E6E9C);
+    border: none;
+    padding: 10px 15px;
+    color: rgb(242, 244, 252);
+}
+

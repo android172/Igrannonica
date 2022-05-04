@@ -23,9 +23,30 @@
 
         <div class="col-md-9 okvir">
 
-        <div id="desnielement">
+        <div class="d-flex align-items-center justify-content-between" id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
+            <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
+            <div>
+                <select id="verzijaSnapshotaSelect">
+                    <option>Default snapshot</option>
+                    <option>Snapshot 1</option>
+                    <option>Snapshot 2</option>
+                    <option>Snapshot 3</option>
+                </select>
+            </div>
+            <div>
+                <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
+                <button id="deleteSnap">Obriši trenutnu verziju</button>
+            </div>
+            <div>
+                <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
+            </div>
+            <div>
+                <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+            </div>
+            <div>
+                <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
+            </div>
         </div>
         
         </div>
@@ -34,7 +55,7 @@
         <div class="col-md-9 ">
             <div class="okvir d-flex justify-content-left ">
                 
-                <div id="brojRedovaTabelePoruka" style="color: white;">
+                <div id="brojRedovaTabelePoruka">
                     <div id="odabir-redova">Broj redova za prikaz:</div>
                     <span>
                         <select id="brojRedovaTabele" (change)="promeniBrojRedova(selectField.value);" #selectField>
