@@ -1,7 +1,7 @@
 <div id="body1">
     <div id="outliers-box">
-        <div ngbDropdown class="dropdown" class="zamena-select">
-            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdownLinReg">
+        <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; float: left;">
+            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdownLinReg" style="color: whitesmoke; background-color: rgb(101, 72, 115);">
                 Izaberi snapshot
             </button>
             <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
@@ -13,7 +13,6 @@
     </div>
 <div id="div1">
     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
-    <input id="nazivM">
 </div>
 <div id="centrirano">
     <div id="div2">
@@ -274,12 +273,13 @@
             <div class="modal-body">
             <div>Ime modela</div>
             <div id="greska"></div>
-            <input type="text" id="imeM" style="width: 200px; border-radius: 10px; height: 40px; margin-bottom: 20px;">
+            <input type="text" id="imeM" style="width: 200px; height: 30px; margin-bottom: 20px; border: none; border-bottom: 2px solid black;">
             <div>Opis modela</div>
-            <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;">
+            <textarea rows="5" id="opisM" style="width: 450px; border-radius: 10px;"></textarea>
+            <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="kreirajModel()">Sačuvaj</button>
+              <button type="button" class="btn btn-primary" (click)="kreirajModel()" data-bs-dismiss="modal">Sačuvaj</button>
             </div>
           </div>
         </div>
