@@ -28,11 +28,13 @@
             <div class="col-md-10 d-flex justify-content-left">
                 <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
                 <div class="space">
-                    <select id="verzijaSnapshotaSelect">
-                        <option>Default snapshot</option>
-                        <option>Snapshot 1</option>
+                    <select id="verzijaSnapshotaSelect" >
+                        <option value="0">Default snapshot</option>
+                        <option *ngFor="let i of snapshots;" value={{i.id}}>{{i.ime}}</option>
+                        <!---<option>Snapshot 1</option>
                         <option>Snapshot 2</option>
-                        <option>Snapshot 3</option>
+                        <option value="{{i.id}}">{{i.ime}}</option>
+                        <option>Snapshot 3</option>-->
                     </select>
                 </div>
                 <div class="space">
@@ -40,7 +42,7 @@
                     <button id="deleteSnap"><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
                 </div>
                 <div class="space">
-                    <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
+                    <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj trenutnu verziju</button>
                 </div>
                 <div class="space">
                     <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>

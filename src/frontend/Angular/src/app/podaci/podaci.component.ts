@@ -19,6 +19,7 @@ export class PodaciComponent implements OnInit {
     //this.getStat();
     this.ucitanipodaci();
     this.ucitajNaziv();
+    this.ucitajSnapshotove();
   }
 
   ucitanipodaci(){
@@ -147,6 +148,8 @@ export class PodaciComponent implements OnInit {
   selektovanGrafik: string = "";
   indikator:boolean = true; // tabela sa podacima
   nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
+
+  snapshots:any = [];
 
   onFileSelected(event:any) 
   {
@@ -1827,7 +1830,10 @@ dajNaziveHeadera()
 
   preuzmiDataset()
   {
-    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
+    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
+    console.log(this.snapshots);
+    console.log(id);
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text',params:{"versionName":this.snapshots[Number(id)-1].csv}}).subscribe(
       res => {
 
         var blob = new Blob([res], {type: 'text/csv' })
@@ -2097,6 +2103,24 @@ dajNaziveHeadera()
     this.nizKomandiTooltip.push(this.nizKomandiUndoRedoTooltip[this.nizKomandiUndoRedoTooltip.length - 1]);
     this.nizKomandiUndoRedo.pop();
     this.nizKomandiUndoRedoTooltip.pop();
+  }
+
+  ucitajSnapshotove(){
+    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+      res=>{
+        this.snapshots = res;
+      }
+    );
+  }
+  sacuvajTrenutnuVerziju(){
+    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
+    if(id!="0"){
+      this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+id,null,{responseType:"text"}).subscribe(
+        res=>{
+          console.log(res);
+        }
+      );
+    }
   }
 }
 
