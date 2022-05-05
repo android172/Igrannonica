@@ -13,6 +13,21 @@ def get_rows(self):
     self.connection.send(data.to_json(orient='records'))
     
     print(f"Rows: {row_indices} requested.")
+
+def get_columns(self):
+    # Receive dataset version
+    version = self.connection.receive()
+    
+    columns = self.network.data.get_columns(version)
+    
+    if columns is None:
+        self.report_error("ERROR :: Dataset version doesn't exist.")
+        return
+
+    self.connection.send("OK")
+    self.connection.send(columns)
+    
+    print(f"Columns for version '{version}' requested.")
     
 def get_row_count(self):
     count = self.network.data.get_row_count()

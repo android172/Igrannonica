@@ -119,5 +119,6 @@ def train(self):
     
     for loss in self.network.train():
         sr_connection.send_string(json.dumps(loss))
-        
+    sr_connection.send_string("Done")
+    
     print("Traning complete.")

@@ -140,6 +140,9 @@ namespace dotNet.Controllers {
 
                 // Load data
                 experiment.LoadDataset(1, "test_data.csv");
+                var sp = experiment.GetColumns("test_data.csv");
+                Console.WriteLine(sp);
+                return "";
 
                 //experiment.DrawScatterPlot(new int[] { 4, 6, 10 });
 

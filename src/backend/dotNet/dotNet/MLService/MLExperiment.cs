@@ -107,6 +107,15 @@ namespace dotNet.MLService {
             }
         }
 
+        public string GetColumns(string datasetVersion) {
+            lock (_lock) {
+                connection.Send(Command.GetColumns);
+                connection.Send(datasetVersion);
+                CheckStatus();
+                return connection.Receive();
+            }
+        }
+
         public int GetRowCount() {
             lock (_lock) {
                 connection.Send(Command.GetRowCount);
@@ -580,6 +589,7 @@ namespace dotNet.MLService {
         Redo,
         // Data access
         GetRows,
+        GetColumns,
         GetRowCount,
         GetColumnTypes,
         // Data manipulation

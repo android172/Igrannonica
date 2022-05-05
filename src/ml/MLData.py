@@ -197,6 +197,12 @@ class MLData:
     def get_rows(self, rows):
         return self.dataset.iloc[rows, :-1]
     
+    def get_columns(self, version):
+        dataset = self.dataset_versions.get(version, None)
+        if dataset is not None:
+            return [x for x in dataset.columns[:-1]]
+        return None
+    
     def get_row_count(self):
         return self.dataset.shape[0]
 

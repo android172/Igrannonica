@@ -44,6 +44,7 @@ class MLClientInstance(Thread):
             
             # Data access calls
             'GetRows'        : get_rows,
+            'GetColumns'     : get_columns,
             'GetRowCount'    : get_row_count,
             'GetColumnTypes' : get_column_types,
             
