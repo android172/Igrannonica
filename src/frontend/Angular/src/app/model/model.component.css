@@ -568,6 +568,31 @@ input
   color: #CED9FF;
 }
 
+#bs1{
+  border: 2px solid #bc7ca1;
+  background: transparent; 
+  border-radius: 8px;
+  min-width: 402px;
+  height: 40px;
+  color: #CED9FF;
+  padding: 10px;
+  color: white;
+}
+
+#opisM{
+  border: 2px solid #bc7ca1;
+  background: transparent; 
+  border-radius: 8px;
+  color: #CED9FF;
+  padding: 10px;
+  color: white;
+}
+
+#opisM:focus,#bs1:focus{
+  outline: none;
+  border: 2px solid #bc7ca1;
+}
+
 #is, #os{
   
   border: 2px solid rgb(37, 164, 214) ;
@@ -1134,3 +1159,33 @@ body {
   border: none;
   outline: none;
 }
+
+#dgm
+{
+  background-color: #fa6698;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+#dgm:hover
+{
+  background-color: #f5597e;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+#greska
+{
+  color: white;
+}
+

@@ -1,7 +1,7 @@
 <div id="body1">
     <div id="outliers-box">
-        <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; float: left;">
-            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdown" style="color: whitesmoke; background-color: rgb(101, 72, 115);">
+        <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; float: left; margin-bottom: 20px;">
+            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdown" style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
                 Izaberi snapshot
             </button>
             <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
@@ -265,21 +265,23 @@
     </div>
     <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel" style="font-size: large;">Čuvanje modela</h5>
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+            <div class="modal-header" style="border-bottom: none; padding: 30px;">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: bisque; margin: 0px;">Čuvanje modela</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-            <div>Ime modela</div>
-            <div id="greska"></div>
-            <input type="text" id="imeM" style="width: 200px; height: 30px; margin-bottom: 20px; border: none; border-bottom: 2px solid black;">
-            <div>Opis modela</div>
-            <textarea rows="5" id="opisM" style="width: 450px; border-radius: 10px;"></textarea>
+            <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
+            <!-- <div style="color: beige;">Ime modela</div> -->
+            <!-- <div style="color: bisque;">Ime modela</div> -->
+            <input type="text" id="bs1" autocomplete="off" placeholder="Unesite naziv modela">
+            <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
+            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
+            <!-- <div style="color: bisque;">Opis modela</div> -->
+            <textarea rows="5" cols="50" id="opisM" placeholder="Unesite opis modela"></textarea>
             <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="kreirajModel()" data-bs-dismiss="modal">Sačuvaj</button>
+            <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
+              <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModel()" data-bs-dismiss="modal">Sačuvaj</button>
             </div>
           </div>
         </div>

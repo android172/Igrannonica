@@ -25,24 +25,28 @@
 
         <div class="d-flex align-items-center justify-content-between" id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
-            <div>
-                <select id="verzijaSnapshotaSelect">
-                    <option>Default snapshot</option>
-                    <option>Snapshot 1</option>
-                    <option>Snapshot 2</option>
-                    <option>Snapshot 3</option>
-                </select>
-            </div>
-            <div>
-                <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
-                <button id="deleteSnap">Obriši trenutnu verziju</button>
-            </div>
-            <div>
-                <button id="sacuvaj">Sačuvaj trenutnu verziju</button>
-            </div>
-            <div>
-                <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+            <div class="col-md-10 d-flex justify-content-left">
+                <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
+                <div class="space">
+                    <select id="verzijaSnapshotaSelect" >
+                        <option value="0">Default snapshot</option>
+                        <option *ngFor="let i of snapshots;" value={{i.id}}>{{i.ime}}</option>
+                        <!---<option>Snapshot 1</option>
+                        <option>Snapshot 2</option>
+                        <option value="{{i.id}}">{{i.ime}}</option>
+                        <option>Snapshot 3</option>-->
+                    </select>
+                </div>
+                <div class="space">
+                    <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
+                    <button id="deleteSnap"><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
+                </div>
+                <div class="space">
+                    <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj trenutnu verziju</button>
+                </div>
+                <div class="space">
+                    <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+                </div>
             </div>
             <div>
                 <button id="sacuvajizmene" (click)="submit()">Sačuvaj izmene</button> 
@@ -69,7 +73,9 @@
                 </div>
                 <div style="width: 100%;" class="d-flex align-items-center">
                     <button id="sve-kolone" (click)="selectAllColumns($event)">Selektuj sve kolone</button>
+                    <button id="izbaci-selekt-kolone" (click)="deleteColumns()">Izbaci selektovane kolone</button>
                     <button id="svi-redovi" (click)="selectAllRows($event)">Selektuj sve redove</button>
+                    <button id="izbaci-selekt-vrste" (click)="deleteRows()">Izbaci selektovane redove</button>
                 <!--  <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>-->
                 </div>
             </div>
@@ -79,15 +85,15 @@
 
            
                <!-- <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> -->
-               <div class="col-sm-7">
+               <div class="col-sm-7 justify-content-center">
                     <!-- Button trigger modal -->
                     <button type="button" id="dugmeIstorija" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">
                         Pogledaj istoriju
                     </button>
                </div>
-                <div class="col-sm-5 ">        
-                    <button id="undoRedoDugme" (click)="tryUndoAction()"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme" (click)="tryRedoAction()"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
+                <div class="col-sm-5 d-flex justify-content-center">        
+                    <button id="undoRedoDugme"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
+                    <button id="undoRedoDugme"><i (click)="tryRedoAction()" class='fa fa-redo mt-1' style="font-size:22px;color:#CED9FF;"></i></button> 
                 </div>   
             </div>
         </div>
@@ -366,17 +372,43 @@
 
                             <div class="statistika-tip">
                                 <button class="accordion-button collapsed btn-coll" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCat" aria-expanded="false" aria-controls="collapseCat">
-                                    <span style=" position:sticky; left:25px; display: inline-block;">Statistika numeričkih veličina</span>
+                                    <span style=" position:sticky; left:25px; display: inline-block;">Statistika kategoričkih veličina</span>
                                 </button>
                                 <div class="collapse" id="collapseCat">
-                                    <table id="kategoricka-tabela">
-                                        <tr class="head-table">
-                                            <th *ngFor="let naslov of statistikaCat;  let j = index" class="tr-button">
-                                                {{naslov.key}}
-                                            </th>
-                                        </tr>
-                                        
-                                    </table>
+
+                                    <div *ngFor="let element of statistikaCat; index as i" style="display: flex; margin-left: 40px;">
+                                  
+                                        <span style="border-bottom-right-radius:30px; height: 200px; width:100px; margin-top: 10px; background-color: #60324d; color: #a7baff; font-weight: bolder;">{{element.key}}</span>
+                                        <div *ngFor="let item of element.data" style=" margin: 10px 0px;">
+                                            <div class="uvuceno">
+                                                <div class="item" *ngIf="item.imeKljucVC">
+                                                  {{item.imeKljucVC}}: {{item.ValidCount}}
+                                                </div>
+                                            <div class="item" *ngIf="item.imeKljucNC">
+                                              {{item.imeKljucNC}}: {{item.NaCount}}
+                                            </div>
+                                            <div class="item" *ngIf="item.imeKljucUC">
+                                              {{item.imeKljucUC}}: {{item.UniqueCount}}
+                                             </div>
+                                            <div *ngIf="item.Frequencies">
+                                                <div *ngFor="let freq of item.Frequencies; index as i">
+                                                    <div *ngIf="i==0">
+                                                        Most Common: &nbsp; <br> <div class="uvuceno">{{item.Frequencies[i][0]}}: &nbsp; {{item.Frequencies[i][1]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="item.imeKljucF">
+                                                {{item.imeKljucF}}:
+                                                <div class="uvucenoBezMB" *ngFor="let freq of item.Frequencies">
+                                                    <div>{{freq[0]}}: &nbsp; {{freq[1]}} </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div style="width: 10%; height: 10%; " *ngIf="pieplot"><img [src]="pieplot" class="img-fluid " alt="Responsive image"></div> -->
+                                    </div>
+                                    <hr>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -709,7 +741,21 @@
 
         <div class="col-md-3 ">
             <div class="okvir visinaVizuelizacije ">
-                <div class="naslov pb-4">Nacin prikaza podataka</div>
+                    <div class="naslov p-0 m-0">Nacin prikaza podataka</div>
+                    <div id="header-help">
+                        <div id="helper"> 
+                            <span  class="hovertext" data-tooltip=" Dozvoljen broj i tip kolona:
+                                * Scatterplot - maksimum 6 kolona bilo kog tipa
+                                * Boxplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
+                                * Violinplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
+                                * Barplot - maksimum 2 kolone samo kategorickog tipa
+                                * Histogram - maksimum 4 kolone bilo kog tipa
+                                * Hexbin- maksimum 2 kolone bilo kog tipa
+                                * Densityplot- maksimum 6 kolona bilo kog tipa">
+                            &#63;
+                            </span>
+                        </div>
+                </div>
                     <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>

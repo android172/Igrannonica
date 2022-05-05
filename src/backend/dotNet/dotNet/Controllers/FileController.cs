@@ -430,6 +430,25 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
+        [HttpDelete("Snapshot")]
+        public IActionResult izbrisiSnapshot(int id)
+        {
+            try
+            {
+                if (db.dbeksperiment.izbrisiSnapshot(id))
+                    if (db.dbmodel.zameniSnapshot(id))
+                        return Ok("Izbrisan je model");
+                else
+                        return Ok("Izbrisan snapshot ali nema promenjenih modela");
+                return BadRequest("Nije izbrisan snapshot.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [Authorize]
         [HttpGet("Snapshots")]
         public IActionResult dajlistuSnapshota(int id)
         {

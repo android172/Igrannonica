@@ -289,7 +289,7 @@ export class ModelComponent implements OnInit {
   napraviModel()
   {
     console.log(this.idEksperimenta);
-    var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
+    var ime = (<HTMLInputElement>document.getElementById("bs1")).value;
     var opis = (<HTMLInputElement>document.getElementById("opisM")).value;
     var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
     if(ime === ""){
@@ -753,4 +753,5 @@ export class ModelComponent implements OnInit {
   {
     (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
   }
+
 }
