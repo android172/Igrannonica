@@ -16,7 +16,7 @@
         </div>
     </div>
     <div id="info">
-        <div id="naslov1">Informacije i podesavanja o izabranom modelu</div>
+        <div id="naslov1"><div style="width: 400px; float: left; margin-left: 280px;">Informacije i podesavanja o izabranom modelu</div><i data-bs-toggle="modal" data-bs-target="#exampleModal3" class='fa fa-trash-alt' style='font-size:20px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'></i></div>
         <div id="osnovneI">
             <div id="nm">Naziv modela</div>
             <div id="n"></div>
@@ -34,7 +34,8 @@
             <div id="opt"></div>
             <div id="nm">Epoha</div>
             <div id="eph"></div>
-            <button  data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button>
+            <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
+            <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal4">Nastavi treniranje</button>
         </div>
         <div id="matrica">
 
@@ -42,12 +43,12 @@
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content" style="background-color:#5563a4;">
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
             <div class="modal-header" style="border: none;">
-              <h5 class="modal-title" id="exampleModalLabel" style="color: #f5597e; font-size: x-large;">Opis modela</h5>
+              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: x-large;">Opis modela</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
+            <div placeholder="" contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
               
             </div>
             <div class="modal-footer" style="border: none;">
@@ -59,16 +60,16 @@
     </div>
     <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content" style="background-color:#5563a4;">
+            <div class="modal-content" style= "background: rgba(36, 38, 74, 0.95);">
               <div class="modal-header" style="border: none;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: #f5597e; font-size: x-large;">Brisanje modela</h5>
+                <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: x-large;">Brisanje modela</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
                 Da li ste sigurni da želite da izbrišete ovaj model?
               </div>
               <div class="modal-footer" style="border: none;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                 <button type="button" id="edit" data-bs-dismiss="modal" (click)="obrisiModel()">Izbriši</button>
               </div>
             </div>
