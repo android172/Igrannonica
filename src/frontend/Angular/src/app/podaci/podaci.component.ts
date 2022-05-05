@@ -128,6 +128,9 @@ export class PodaciComponent implements OnInit {
   brojacAkcija : number = 0;
   nizKomandiUndoRedo : string[] = [];
   nizKomandiUndoRedoTooltip : string[] = [];
+  nizTipova : string[] = [];
+  nizNumerickihKolona : number[] = [];
+  nizKategorickihKolona : number[] = [];
 
   niz2:any[] = [];
 
@@ -181,6 +184,21 @@ export class PodaciComponent implements OnInit {
     }
   }
 
+  ucitajTipoveKolona(){
+
+    this.http.get(url+"/api/Upload/ColumnTypes").subscribe(
+      (response: any) => {
+
+        console.log(response);
+        this.nizTipova = response;
+
+      },error =>{
+
+        console.log(error.error);
+      }
+   );
+  }
+
   loadDefaultItemsPerPage()
   {      
     this.http.get(url+"/api/Upload/paging/1/10").subscribe(
@@ -198,6 +216,9 @@ export class PodaciComponent implements OnInit {
         this.gty(1);
         this.page = 1;
     })
+
+    this.ucitajTipoveKolona();
+    this.EnableDisableGrafik();
   }
   onFileSelectedTest(event:any){
     const filetest:File = event.target.files[0];
@@ -476,6 +497,19 @@ dajNaziveHeadera()
         this.totalItems = response.totalItems;
     })
   }
+  gtyLoadPageWithStatistics(page: any){
+    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
+    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+       (response: any) => {
+        this.jsonStatistika = undefined
+        this.statistikaCat = []
+        this.statistikaNum = []
+         this.json =  JSON.parse(response.data); 
+         this.totalItems = response.totalItems;
+         this.dajStatistiku();
+     });
+   }
+
 
   dajHeadere()
   {
@@ -483,7 +517,6 @@ dajNaziveHeadera()
       return;
 
     var headers = Object.keys(this.json[0]);
-    //console.log(Object.values(this.json[0]));
     for(let i=0; i<headers.length; i++)
     {
       this.kolone[i] = headers[i];
@@ -529,7 +562,7 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
@@ -560,7 +593,7 @@ dajNaziveHeadera()
         console.log(res);
         this.selectedColumns = [];
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
@@ -576,6 +609,55 @@ dajNaziveHeadera()
     })
   }
 
+
+  EnableDisableGrafik(){
+
+      if((this.nizKategorickihKolona.length > 6) || (this.nizNumerickihKolona.length > 6) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 6) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      {
+        (<HTMLButtonElement>document.getElementById("scatterplot")).disabled = true;
+        (<HTMLButtonElement>document.getElementById("densityplot")).disabled = true;
+      }
+      else{
+        (<HTMLButtonElement>document.getElementById("scatterplot")).disabled = false;
+        (<HTMLButtonElement>document.getElementById("densityplot")).disabled = false;
+      }
+
+      if(((this.nizKategorickihKolona.length == 1 && this.nizNumerickihKolona.length == 1)) || ( this.nizNumerickihKolona.length == 1 && this.nizKategorickihKolona.length == 0) ){
+
+        (<HTMLButtonElement>document.getElementById("boxplot")).disabled = false;
+        (<HTMLButtonElement>document.getElementById("violinplot")).disabled = false;
+      }
+      else{
+        (<HTMLButtonElement>document.getElementById("boxplot")).disabled = true;
+        (<HTMLButtonElement>document.getElementById("violinplot")).disabled = true;
+      }
+
+      if(this.nizKategorickihKolona.length <= 2 && this.nizKategorickihKolona.length > 0 && this.nizNumerickihKolona.length == 0)
+      {
+        (<HTMLButtonElement>document.getElementById("barplot")).disabled = false;
+      }
+      else
+      {
+        (<HTMLButtonElement>document.getElementById("barplot")).disabled = true;
+      }
+
+      if((this.nizKategorickihKolona.length > 4) || (this.nizNumerickihKolona.length > 4) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 4) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      {
+        (<HTMLButtonElement>document.getElementById("histogram")).disabled = true;
+      }
+      else{
+        (<HTMLButtonElement>document.getElementById("histogram")).disabled = false;
+      }
+
+      if((this.nizKategorickihKolona.length > 2) || (this.nizNumerickihKolona.length > 2) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 2) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      {
+        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = true;
+      }
+      else{
+        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = false;
+      }
+  }
+
   // selektovanje kolona
   getData(i: number, header:string)
   {
@@ -585,15 +667,46 @@ dajNaziveHeadera()
       if (index > -1) {
       this.selectedColumns.splice(index, 1);
       } 
-      
+
+      if(this.nizTipova[i] === "Categorical")
+      {
+        const index1 = this.nizKategorickihKolona.indexOf(i, 0);
+        if (index1 > -1) {
+        this.nizKategorickihKolona.splice(index1, 1);
+        } 
+        console.log(this.nizKategorickihKolona);
+      }
+      else
+      {
+        const index2 = this.nizNumerickihKolona.indexOf(i, 0);
+        if (index2 > -1) {
+        this.nizNumerickihKolona.splice(index2, 1);
+        } 
+        console.log(this.nizNumerickihKolona);
+      }
+
       if(!this.niz2.includes(header)) // dodatak za regression
       {
         this.niz2[i] = header;
       }
+      this.EnableDisableGrafik();
      return;
     }
     //this.dodajKomandu("Dodata kolona: "+ i);
     this.selectedColumns.push(i);
+    
+    if(this.nizTipova[i] === "Categorical")
+    {
+      this.nizKategorickihKolona.push(i); 
+      console.log(this.nizKategorickihKolona);
+    }
+    else
+    {
+      this.nizNumerickihKolona.push(i); 
+      console.log(this.nizNumerickihKolona);
+    }
+    this.EnableDisableGrafik();
+
     console.log(this.selectedColumns);
     this.selectedName = header;
 
@@ -603,6 +716,7 @@ dajNaziveHeadera()
       this.niz2[i] = "0";
       console.log(this.niz2);  
     }
+
   }
 
   isSelected(header:string)
@@ -732,9 +846,11 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
        // this.dodajKomandu("Uspesno obrisane kolone");
         this.onSuccess('Kolone su obrisane');
     },error=>{
@@ -755,7 +871,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -823,7 +939,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -847,7 +963,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -970,7 +1086,7 @@ dajNaziveHeadera()
         {
           this.totalItems = (parseInt)(res);
           //this.loadDefaultItemsPerPage();
-          this.gty(this.page);
+          this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
@@ -1052,7 +1168,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         this.rowsAndPages = [];
@@ -1080,7 +1196,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1106,7 +1222,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1132,7 +1248,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1199,7 +1315,7 @@ dajNaziveHeadera()
        res => {
          console.log(res);
          //this.loadDefaultItemsPerPage();
-         this.gty(this.page);
+         this.gtyLoadPageWithStatistics(this.page);
          this.brojacAkcija++;
          this.selectedColumns = [];
          let dateTime = new Date();
@@ -1224,7 +1340,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1249,7 +1365,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1275,7 +1391,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1300,7 +1416,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1325,7 +1441,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1350,7 +1466,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1487,7 +1603,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani svi NA redovi");
@@ -1506,7 +1622,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisane kolone sa NA vrednostima");
@@ -1532,7 +1648,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
         let dateTime = new Date();
@@ -1603,7 +1719,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedForRegression = -1;
         this.selectedColumns = [];
@@ -1627,6 +1743,7 @@ dajNaziveHeadera()
     var kljucevi = Object.keys(this.statistikaNum[0].data);
     var brojJ= this.statistikaNum.length;
     
+    this.nizRedovaStatistika = [];
     for(var i = 0; i<broj;i++)
     {
       var nizHead:string[] = [];
@@ -1728,12 +1845,15 @@ dajNaziveHeadera()
 
     if(this.selektovanGrafik != ""){
       (<HTMLButtonElement>document.getElementById(this.selektovanGrafik)).style.color="white";
+      (<HTMLButtonElement>document.getElementById(this.selektovanGrafik)).style.background="#6070a7";
       this.selektovanGrafik = event.target.id;
       (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.background="white";
     }
     else{
       this.selektovanGrafik = event.target.id;
       (<HTMLButtonElement>document.getElementById(event.target.id)).style.color="#272741";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).style.background="white";
     }
   
   }
@@ -1926,7 +2046,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.obrisiKomandu();
       },
       error =>{
@@ -1954,7 +2074,7 @@ dajNaziveHeadera()
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
-        this.gty(this.page);
+        this.gtyLoadPageWithStatistics(this.page);
         this.vratiKomandu();
       },
       error =>{

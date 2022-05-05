@@ -219,8 +219,6 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 cmd.ExecuteNonQuery();
-                
-
             }
         }
 
@@ -509,6 +507,19 @@ namespace dotNet.DBFunkcije
                 {
                     return true;
                 }
+                return false;
+            }
+        }
+        public bool zameniSnapshot(int id)
+        {
+            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set snapshot=0 where snapshot=@id";
+                MySqlCommand cmd = new MySqlCommand(query,connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
                 return false;
             }
         }

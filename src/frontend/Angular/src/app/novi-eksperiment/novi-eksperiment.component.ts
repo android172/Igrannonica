@@ -47,7 +47,7 @@ export class NoviEksperimentComponent implements OnInit {
   napraviEksperiment(){
     var ime = (<HTMLInputElement>document.getElementById("ime")).value;
     if(ime==""){
-      (<HTMLInputElement>document.getElementById("greska")).innerHTML="Polje ne sme biti prazno";
+      (<HTMLInputElement>document.getElementById("greska")).innerHTML="*Polje ne sme biti prazno";
       return;
     }
     this.http.post(url+"/api/Eksperiment/Eksperiment?ime="+ime,null,{responseType: 'text'}).subscribe(
