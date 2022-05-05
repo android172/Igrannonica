@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using dotNet.Models;
 using dotNet.MLService;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace dotNet.Controllers
 {
@@ -194,6 +195,8 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske");
             }
         }
+
+        [Authorize]
         [HttpPost("PostaviSnapshot")]
         public IActionResult postaviSnapshot(int model, int snapshot)
         {
@@ -206,6 +209,48 @@ namespace dotNet.Controllers
             catch
             {
                 return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Kolone")]
+        public string uzmiKolone(int snapshot)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                {
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
+                    eksperiment.SelectTraningData(snapshot1.csv);
+                    string kolones = eksperiment.GetColumns(snapshot1.csv);
+                    return kolones.Replace('\'', '"');
+                    //return kolones;
+                }
+                return null;
+                //return BadRequest("Ponovo se prijavi.");
+            }
+            catch
+            {
+                return null;
+             //   return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Detaljnije")]
+        public IActionResult detaljnije(int id)
+        {
+            try
+            {
+                ModelDetaljnije model = db.dbmodel.detaljnije(id);
+                return Ok(model);
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske");
             }
         }
     }

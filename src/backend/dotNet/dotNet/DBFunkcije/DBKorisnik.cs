@@ -37,7 +37,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from Korisnik where `KorisnickoIme`=@ime ";
+                string query = "select * from Korisnik where `KorisnickoIme`= BINARY @ime ";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", KorisnickoIme);
                 connection.Open();
@@ -67,16 +67,16 @@ namespace dotNet.DBFunkcije
         {
             string user = username.Replace(" ", "");
 
-            user = user.ToLower();
+            //user = user.ToLower();
 
-            return user;
+            return username.Trim();
         }
         private string EmailTransform(string email)
         {
             string mail = email.Replace(" ", "");
-            mail = mail.ToLower();
+            //mail = mail.ToLower();
 
-            return mail;
+            return email.Trim();
         }
         public KorisnikValid dodajKorisnika(Korisnik korisnik)
         {
@@ -86,7 +86,7 @@ namespace dotNet.DBFunkcije
             string mail = EmailTransform(korisnik.Email);
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from Korisnik where `KorisnickoIme`=@ime";
+                string query = "select * from Korisnik where `KorisnickoIme`= BINARY @ime";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", username);
                 connection.Open();
@@ -96,7 +96,7 @@ namespace dotNet.DBFunkcije
                         korisnikValid.korisnickoIme = true;
                 }
 
-                string query1 = "select * from Korisnik where `email`=@email";
+                string query1 = "select * from Korisnik where `email`= BINARY @email";
                 cmd = new MySqlCommand(query1, connection);
                 cmd.Parameters.AddWithValue("@email", mail);
                 using (MySqlDataReader reader = cmd.ExecuteReader())

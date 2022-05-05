@@ -7,6 +7,7 @@
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public string Snapshot { get; set; }
+        public int SnapshotVerzija { get; set; }
         public string Opis { get; set; }
         public string ProblemType { get; set; }
         public string Optimizacija { get; set; }

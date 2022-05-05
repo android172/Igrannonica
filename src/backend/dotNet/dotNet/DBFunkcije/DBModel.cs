@@ -482,6 +482,7 @@ namespace dotNet.DBFunkcije
                         model.CreatedDate = reader.GetDateTime("napravljen");
                         model.UpdatedDate = reader.GetDateTime("obnovljen");
                         model.Snapshot = reader.GetString("Ime");
+                        model.SnapshotVerzija = reader.GetInt32("snapshot");
                         model.Opis = reader.GetString("Opis");
                         model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
                         model.Epohe = reader.GetInt32("numberOfEpochs");

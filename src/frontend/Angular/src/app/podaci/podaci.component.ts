@@ -2122,5 +2122,43 @@ dajNaziveHeadera()
       );
     }
   }
-}
+  sacuvajKaoNovu(ime:string){
+    var naziv=ime.trim();
+    if(naziv!=""){
+      this.http.post(url+"/api/Eksperiment/SaveAsSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv,null).subscribe(
+        res=>{
+          console.log(res);
+          if(res!=-1){
+            console.log("Sacuvan snapshot.");
+          }
+        });
+      }
+    }
+    daLiPostoji(ime:string){
+      var naziv = ime.trim();
+      if(naziv!=""){
+        this.http.get(url+"/api/File/ProveriSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv).subscribe(
+          res=>{
+            if(res!=-1){
+              //Sacuvaj kao novu
+            }
+            else{
+              //sacuvaj u res
+            }
+          }
+        );
+      }
+    }
+    izbrisiSnapshot(){
+      var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
+      if(id!="0"){
+        this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
+          res=>{
+            console.log(res);
+          }
+        )
+      }
+    }
+  }
+
 

@@ -752,6 +752,14 @@ export class ModelComponent implements OnInit {
   selectSnapshot(id: any)
   {
     (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
+    this.http.get(url+"/api/Model/Kolone?snapshot="+id).subscribe(
+      (response: any)=>{
+        console.log(response);
+      },error =>{
+
+        //console.log(error.error);
+      }
+    );
   }
 
 }
