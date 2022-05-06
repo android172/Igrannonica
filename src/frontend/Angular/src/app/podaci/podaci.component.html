@@ -25,7 +25,7 @@
 
         <div class="d-flex align-items-center justify-content-between" id="desnielement">
             <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <div class="col-md-10 d-flex justify-content-left">
+            <div class="col-md-10 d-flex justify-content-left align-items-center">
                 <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
                 <div class="space">
                     <select id="verzijaSnapshotaSelect" >
@@ -42,10 +42,10 @@
                     <button id="deleteSnap" (click)="izbrisiSnapshot()" ><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
                 </div>
                 <div class="space">
-                    <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj trenutnu verziju</button>
+                    <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj verziju</button>
                 </div>
                 <div class="space">
-                    <button id="sacuvajKao" data-bs-toggle="modal" data-bs-target="#ModalSaveAs">Sačuvaj trenutnu verziju kao</button>
+                    <button id="sacuvajKao" data-bs-toggle="modal" data-bs-target="#ModalSaveAs">Sačuvaj verziju kao</button>
                 </div>
             </div>
             <div>
