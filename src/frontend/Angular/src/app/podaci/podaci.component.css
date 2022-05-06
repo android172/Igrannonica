@@ -732,7 +732,7 @@ th{
 }
 #table tr:hover:nth-child(odd)
 {
-    background-color: rgba(255, 0, 0, 0.09);
+    background-color: rgba(255, 0, 0, 0.155);
 }
 
 .selectedColHeader
@@ -1642,8 +1642,8 @@ th{
 #izbaci-selekt-vrste
 {
     color: rgb(249, 237, 245);
-    background-color: rgb(112, 51, 82);
-    border: 1px solid rgb(60, 26, 47);
+    background-color: rgb(84, 101, 124);
+    border: 1px solid rgb(60, 51, 26);
     border-radius: 5px;
     margin-left: 5px;
     padding: 7px 12px;
@@ -1746,3 +1746,8 @@ ngb-pagination ::ng-deep ul > li.active > a {
     color: white;
 }
 
+/* modali za brisanje vrednosti */  
+
+.btn-modal-close:focus{
+    box-shadow: none;
+}

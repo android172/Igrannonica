@@ -73,9 +73,10 @@
                 </div>
                 <div style="width: 100%;" class="d-flex align-items-center">
                     <button id="sve-kolone" (click)="selectAllColumns($event)">Selektuj sve kolone</button>
-                    <button id="izbaci-selekt-kolone" (click)="deleteColumns()">Izbaci selektovane kolone</button>
+                    <!-- <button id="izbaci-selekt-kolone" (click)="deleteColumns()">Izbaci selektovane kolone</button> -->
                     <button id="svi-redovi" (click)="selectAllRows($event)">Selektuj sve redove</button>
-                    <button id="izbaci-selekt-vrste" (click)="deleteRows()">Izbaci selektovane redove</button>
+                    <!-- <button id="izbaci-selekt-vrste" (click)="deleteRows()">Izbaci selektovane redove</button> -->
+                    <button id="izbaci-selekt-vrste" (click)="brisanjeVrednosti()">Delete</button>
                 <!--  <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>-->
                 </div>
             </div>
@@ -837,8 +838,37 @@
             <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="overrideSnapshot()" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Zameni</button>
         </div>
     </div>
-    
   </ng-template>
+
+  <ng-template #modalDeleteClose let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-basic-title">Delete</h3>
+    </div>
+    <div class="modal-body justify-content-center d-flex align-items-center ">
+        <div id="textDeleteClose">
+            
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark btn-modal-close" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+  <ng-template #modalDelete let-modal>
+    <div class="modal-header" >
+      <h3 class="modal-title" id="modal-basic-title">Delete</h3>
+    </div>
+    <div class="modal-body justify-content-center d-flex align-items-center ">
+        <div id="textDelete">
+           
+        </div>
+    </div>
+    <div class="modal-footer  d-flex justify-content-between">
+        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
+        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="brisanje()" (click)="modal.close('Save click')" >Delete</button>
+    </div>
+  </ng-template>
+  
 
     <simple-notifications></simple-notifications>
 </div>

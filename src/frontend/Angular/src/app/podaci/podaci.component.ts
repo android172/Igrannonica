@@ -26,6 +26,10 @@ export class PodaciComponent implements OnInit {
   @ViewChild('contentmdl') content:any;
   @ViewChild('btnexit') btnexit:any;
 
+  // delete modals
+  @ViewChild('modalDeleteClose') modalDeleteClose:any;
+  @ViewChild('modalDelete') modalDelete:any;
+
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
       res=>{
@@ -851,7 +855,7 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      //this.onInfo("Kolone nisu selektovane");
       return;
     }
     this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
@@ -1073,7 +1077,7 @@ dajNaziveHeadera()
   {
     if(this.rowsAndPages.length == 0)
     {
-      this.onInfo("Nema selektovanih redova."); 
+      //this.onInfo("Nema selektovanih redova."); 
       return; 
     }
     let redoviZaBrisanje:number[] = [];
@@ -2245,6 +2249,72 @@ sacuvajKaoNovu(ime:string){
   {
     let el: HTMLElement = this.btnexit.nativeElement;
     el.click();
+  }
+
+  brisanjeVrednosti()
+  {
+    var redoviString = " row";
+    var koloneString = " column";
+    var text = "Are you sure you want to delete ";
+
+    if(this.selectedColumns.length == 0 && this.rowsAndPages.length == 0)
+    {
+      text = "You have not selected any fields.";
+      
+      this.openModalDeleteClose(this.modalDeleteClose); 
+      (<HTMLDivElement>document.getElementById("textDeleteClose")).innerHTML = text;
+    }
+    else
+    {
+      if(this.selectedColumns.length > 0)
+      {
+        if(this.selectedColumns.length > 1)
+        {
+          koloneString += "s";
+        }
+        text += this.selectedColumns.length + koloneString;      
+      }
+      if(this.rowsAndPages.length > 0)
+      {
+          if(this.rowsAndPages.length > 1)
+          {
+            redoviString += "s";
+          }
+          if(this.selectedColumns.length > 0)
+          {
+            text += " and ";
+          }
+          text += this.rowsAndPages.length + redoviString;
+      }
+      text += "?"; 
+
+      
+      this.openModalDelete(this.modalDelete);
+      (<HTMLDivElement>document.getElementById("textDelete")).innerHTML = text;
+    }
+
+  }
+
+  openModalDeleteClose(modalDeleteClose: any) {
+    this.modalService.open(modalDeleteClose, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  openModalDelete(modalDelete: any) {
+    this.modalService.open(modalDelete, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  brisanje()
+  {
+    this.deleteColumns();
+    this.deleteRows();
   }
 
   }
