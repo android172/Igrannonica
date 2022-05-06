@@ -39,7 +39,7 @@
                 </div>
                 <div class="space">
                     <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
-                    <button id="deleteSnap"><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
+                    <button id="deleteSnap" (click)="izbrisiSnapshot()" ><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
                 </div>
                 <div class="space">
                     <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj trenutnu verziju</button>
@@ -834,7 +834,7 @@
     <div class="modal-body justify-content-center d-flex align-items-center ">
         <div class=" d-flex justify-content-between" style="width: 60%; margin: auto;">
             <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="vratiTekst()" (click)="modal.close('Close click')">Otkaži</button>
-            <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Zameni</button>
+            <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="overrideSnapshot()" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Zameni</button>
         </div>
     </div>
     

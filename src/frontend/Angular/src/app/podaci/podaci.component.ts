@@ -157,6 +157,8 @@ export class PodaciComponent implements OnInit {
 
   closeResult = ''; // Ng Modal 1 
   nazivSnapshot = "";
+  idSnapshotaOverride:string = "";
+  nazivSnapshotaOverride:string = "";
 
   onFileSelected(event:any) 
   {
@@ -2155,9 +2157,11 @@ sacuvajKaoNovu(ime:string){
             this.open(this.content);
             console.log("Postoji");          
             // override ... 
+            this.idSnapshotaOverride = res;
+            this.nazivSnapshotaOverride = naziv;
           }
           else{
-            // ne postoji u bazi  
+            // ne postoji u bazi -> cuvaj kao novu
             this.sacuvajKaoNovu(naziv);
             this.izadjiIzObaModala();
             
@@ -2178,6 +2182,28 @@ sacuvajKaoNovu(ime:string){
         }
       )
     }
+  }
+  // 2. fun za brisanje
+  izbrisiSnapshott(id:any){
+      this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
+        res=>{
+          console.log(res);
+          const index = this.snapshots.indexOf(this.nazivSnapshotaOverride, 0);
+          if (index > -1) {
+            this.snapshots.splice(index, 1);
+          }
+        }
+      );
+    
+  }
+
+  overrideSnapshot()
+  {
+    this.izbrisiSnapshott(this.idSnapshotaOverride);
+    this.sacuvajKaoNovu(this.nazivSnapshotaOverride);
+
+    this.idSnapshotaOverride = "";
+    this.nazivSnapshotaOverride = "";
   }
 
   vratiTekstiNaziv()
