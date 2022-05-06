@@ -7,6 +7,8 @@ import {NotificationsService} from 'angular2-notifications';
 import { DatePipe } from '@angular/common';
 import { Observable, Subscriber } from 'rxjs';
 import { saveAs } from 'file-saver';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-podaci',
@@ -14,13 +16,15 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./podaci.component.css']
 })
 export class PodaciComponent implements OnInit {
-
+  
   ngOnInit(): void {
     //this.getStat();
     this.ucitanipodaci();
     this.ucitajNaziv();
     this.ucitajSnapshotove();
   }
+  @ViewChild('contentmdl') content:any;
+  @ViewChild('btnexit') btnexit:any;
 
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
@@ -36,7 +40,7 @@ export class PodaciComponent implements OnInit {
     )
   }
 
-  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService,private service: NotificationsService) { 
+  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private shared: SharedService, private modalService: NgbModal, private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -150,6 +154,9 @@ export class PodaciComponent implements OnInit {
   nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
   snapshots:any = [];
+
+  closeResult = ''; // Ng Modal 1 
+  nazivSnapshot = "";
 
   onFileSelected(event:any) 
   {
@@ -2122,43 +2129,93 @@ dajNaziveHeadera()
       );
     }
   }
-  sacuvajKaoNovu(ime:string){
-    var naziv=ime.trim();
+  
+sacuvajKaoNovu(ime:string){
+  var naziv=ime.trim();
+  if(naziv!=""){
+    this.http.post(url+"/api/File/SaveAsSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv,null,{responseType:"text"}).subscribe(
+      res=>{
+        console.log(res);
+        if(res!="-1"){
+          console.log("Sacuvan snapshot.");
+          this.onSuccess("Nova verzija je uspesno sacuvana.");
+        }
+      });
+    }
+  }
+  
+  daLiPostoji(){
+    var naziv1 = (<HTMLInputElement>document.getElementById("imeVerzije")).value;
+    var naziv = naziv1.trim();
     if(naziv!=""){
-      this.http.post(url+"/api/Eksperiment/SaveAsSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv,null).subscribe(
+      this.http.get(url+"/api/File/ProveriSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv,{responseType:"text"}).subscribe(
+        res=>{
+          if(res!="-1"){
+            // vec postoji u bazi - override or discard  
+            this.open(this.content);
+            console.log("Postoji");          
+            // override ... 
+          }
+          else{
+            // ne postoji u bazi  
+            this.sacuvajKaoNovu(naziv);
+            this.izadjiIzObaModala();
+            
+          }
+        }
+      );
+    }
+    else{
+      (<HTMLDivElement>document.getElementById("nijeUnetoImeVerzije")).style.visibility = "visible";
+    }
+  }
+  izbrisiSnapshot(){
+    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
+    if(id!="0"){
+      this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
         res=>{
           console.log(res);
-          if(res!=-1){
-            console.log("Sacuvan snapshot.");
-          }
-        });
-      }
+        }
+      )
     }
-    daLiPostoji(ime:string){
-      var naziv = ime.trim();
-      if(naziv!=""){
-        this.http.get(url+"/api/File/ProveriSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv).subscribe(
-          res=>{
-            if(res!=-1){
-              //Sacuvaj kao novu
-            }
-            else{
-              //sacuvaj u res
-            }
-          }
-        );
-      }
+  }
+
+  vratiTekstiNaziv()
+  {
+    (<HTMLDivElement>document.getElementById("nijeUnetoImeVerzije")).style.visibility = "hidden";
+    this.nazivSnapshot = "";
+  }
+
+  vratiTekst()
+  {
+    (<HTMLDivElement>document.getElementById("nijeUnetoImeVerzije")).style.visibility = "hidden";
+  }
+
+
+  open(content: any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
     }
-    izbrisiSnapshot(){
-      var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
-      if(id!="0"){
-        this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
-          res=>{
-            console.log(res);
-          }
-        )
-      }
-    }
+  }
+
+  izadjiIzObaModala()
+  {
+    let el: HTMLElement = this.btnexit.nativeElement;
+    el.click();
+  }
+
   }
 
 

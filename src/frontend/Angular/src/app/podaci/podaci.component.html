@@ -45,7 +45,7 @@
                     <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Sačuvaj trenutnu verziju</button>
                 </div>
                 <div class="space">
-                    <button id="sacuvajKao">Sačuvaj trenutnu verziju kao</button>
+                    <button id="sacuvajKao" data-bs-toggle="modal" data-bs-target="#ModalSaveAs">Sačuvaj trenutnu verziju kao</button>
                 </div>
             </div>
             <div>
@@ -798,6 +798,47 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Save As -->
+<div  class="modal fade" id="ModalSaveAs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: #ffffff; color:#111111;" >
+        <div class="modal-header " style=" height:50px; background-color: #737391; color:#e6e6e6;">
+          <h3 class="modal-title pt-3" id="exampleModalLabel">Sačuvaj trenutnu verziju skupa podataka</h3>
+          <button #btnexit type="button" (click)="vratiTekstiNaziv()" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body justify-content-center align-items-center">
+            <div style="margin: auto; width: 80%;" class="pt-3">
+                <h4>Unesite željeni naziv verzije:</h4>
+                <input type="text" id="imeVerzije" [(ngModel)]="nazivSnapshot" >  <!--(change)="daLiPostoji()" -->
+                <div id="nijeUnetoImeVerzije" style="color: rgb(255, 43, 75);  visibility: hidden;">*Niste uneli naziv verzije!</div>
+            </div>
+        </div>
+    
+        <div class="modal-footer d-flex" style="border: none;">
+          <button type="button" (click)="vratiTekstiNaziv()" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+          <button type="button" (click)="this.daLiPostoji()" style="background-color: #6d6fb1;" class="btn btn-secondary">Sačuvaj</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #contentmdl let-modal>
+    <div class="modal-header" style="border: none; height: 80px;">
+      <h3 class="modal-title" id="modal-basic-title">Verzija sa tim nazivom već postoji. Da li želite da je zamenite?</h3>
+      <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+    </div>
+
+    <div class="modal-body justify-content-center d-flex align-items-center ">
+        <div class=" d-flex justify-content-between" style="width: 60%; margin: auto;">
+            <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="vratiTekst()" (click)="modal.close('Close click')">Otkaži</button>
+            <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Zameni</button>
+        </div>
+    </div>
+    
+  </ng-template>
 
     <simple-notifications></simple-notifications>
 </div>
