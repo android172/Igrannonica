@@ -1071,6 +1071,11 @@ dajNaziveHeadera()
 
   deleteRows()
   {
+    if(this.rowsAndPages.length == 0)
+    {
+      this.onInfo("Nema selektovanih redova."); 
+      return; 
+    }
     let redoviZaBrisanje:number[] = [];
 
     for(let j = 0;j<this.rowsAndPages.length;j++)
