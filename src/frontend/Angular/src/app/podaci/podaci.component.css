@@ -1780,3 +1780,8 @@ ngb-pagination ::ng-deep ul > li.active > a {
     color: rgb(255, 43, 75); 
     visibility: hidden;
 }
+
+.custom-slider
+{
+    width: 85%;
+}

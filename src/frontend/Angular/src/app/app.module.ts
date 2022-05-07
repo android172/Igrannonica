@@ -31,6 +31,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgChartsModule } from 'ng2-charts';
 import { ModalModule } from './_modal';
 import {SimpleNotificationsModule} from 'angular2-notifications';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -65,6 +66,7 @@ export const url = "http://localhost:5008";
     RouterModule,
     NgxCsvParserModule,
     NgxPaginationModule,
+    NgxSliderModule,
     FormsModule,
     JwtModule.forRoot({
       config: {

@@ -9,6 +9,7 @@ import { Observable, Subscriber } from 'rxjs';
 import { saveAs } from 'file-saver';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
+import { Options, LabelType } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-podaci',
@@ -16,12 +17,22 @@ import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
   styleUrls: ['./podaci.component.css']
 })
 export class PodaciComponent implements OnInit {
+
+  value: number = 50;
+  options: Options = {
+    floor: 0,
+    ceil: 100,
+    translate: (value: number): string => {
+      return value + "%";
+    }
+  }
   
   ngOnInit(): void {
     //this.getStat();
     this.ucitanipodaci();
     this.ucitajNaziv();
     this.ucitajSnapshotove();
+    (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
   @ViewChild('contentmdl') content:any;
   @ViewChild('btnexit') btnexit:any;
@@ -820,39 +831,52 @@ dajNaziveHeadera()
     }
   }
 
+  // ispisRatio(){
+  //   let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value; 
+  //   let val1:number = (parseFloat)((<HTMLInputElement>document.getElementById("input-ratio")).value);
+  //   (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost ;  
+  //   let procenat:number = Math.round(val1 * 100);
+  //   (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
+  //   if(val1 < 0.5)
+  //   {
+  //     (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 10}%`;
+  //   }
+  //   else{
+  //     (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 18}%`;
+  //   }
+  // }
+
   ispisRatio(){
-    let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value; 
-    let val1:number = (parseFloat)((<HTMLInputElement>document.getElementById("input-ratio")).value);
-    (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost ;  
-    let procenat:number = Math.round(val1 * 100);
-    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
-    if(val1 < 0.5)
-    {
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 10}%`;
-    }
-    else{
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100 - 18}%`;
-    }
+    // console.log(this.value);
+    (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
+    let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value;
+    (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost;
   }
+
   upisRatio()
   {
-    let vrednost = (<HTMLInputElement>document.getElementById("vrednost-ratio")).value; 
-    let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value); 
-    (<HTMLInputElement>document.getElementById("input-ratio")).value ="" + vrednost; 
-    let procenat:number = Math.round(val1 * 100);
-    (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
-    if(val1 < 0.5)
-    {
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-10}%`;
-    }
-    else{
-      (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-18}%`;
-    }
+    let vrednost = (<HTMLInputElement>document.getElementById("vrednost-ratio")).value;
+    // let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value);
+    this.value = parseInt(vrednost);
+    (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + ""; 
+    // console.log((<HTMLInputElement>document.getElementById("input-ratio")).value);
+    // let procenat:number = Math.round(val1 * 100);
+    // (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
+    // if(val1 < 0.5)
+    // {
+    //   (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-10}%`;
+    // }
+    // else{
+    //   (<HTMLDivElement>document.getElementById("current-value")).style.left = `${val1*100-18}%`;
+    // }
   }
 
   setRatio()
   {
     let ratio = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value); 
+    ratio = ratio / 100.0;
+    // console.log(ratio);
+    // console.log(typeof(ratio));
 
     if(Number.isNaN(ratio))
     {
