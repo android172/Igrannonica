@@ -2330,7 +2330,6 @@ sacuvajKaoNovu(ime:string){
   // ispis kategorija za AddRow 
   getHeadAndType()
   {
-    var niz:any[][] = []; 
     var headers = this.dajHeadere();
 
     if(headers == null)
@@ -2338,9 +2337,9 @@ sacuvajKaoNovu(ime:string){
     
     for(var i = 0;i<headers.length;i++)
     {
-      niz.push([headers[i],this.nizTipova[i].slice(0,1)]);
+      headers[i] = this.nizTipova[i][0] + headers[i];
     }
-    return niz;
+    return headers;
   }
   
   dodavanjeNovogReda()

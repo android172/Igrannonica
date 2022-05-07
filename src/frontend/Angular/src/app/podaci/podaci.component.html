@@ -878,9 +878,9 @@
         <div id="textNew" class="pt-2">
            <div class="d-flex justify-content-between" *ngFor="let head of getHeadAndType()" style="margin-bottom: 10px;">
                 <div class="d-flex justify-content-between" style="width: 100%; margin-right: 10px;">   
-                    <div style="margin-right: 12px;">{{head[0]}}:</div> <input class="input-new-row" value="" id="row{{head[0]}}">
+                    <div style="margin-right: 12px;">{{head.slice(1)}}:</div> <input class="input-new-row" id="row{{head.slice(1)}}">
                 </div> 
-                    <div id="tipPolja" >*{{head[1]}}</div>
+                    <div id="tipPolja" >*{{head[0]}}</div>
             </div>
         </div>
     </div>
