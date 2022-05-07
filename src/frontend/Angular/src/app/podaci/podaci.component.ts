@@ -580,6 +580,8 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -611,6 +613,9 @@ dajNaziveHeadera()
       res => {
         console.log(res);
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -631,20 +636,31 @@ dajNaziveHeadera()
 
   EnableDisableGrafik(){
 
-      if((this.nizKategorickihKolona.length > 6) || (this.nizNumerickihKolona.length > 6) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 6) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      if((this.nizNumerickihKolona.length <= 6) && (this.nizNumerickihKolona.length > 0) && (this.nizKategorickihKolona.length == 0))
       {
-        (<HTMLButtonElement>document.getElementById("scatterplot")).disabled = true;
-        (<HTMLButtonElement>document.getElementById("densityplot")).disabled = true;
-      }
-      else{
         (<HTMLButtonElement>document.getElementById("scatterplot")).disabled = false;
         (<HTMLButtonElement>document.getElementById("densityplot")).disabled = false;
+      }
+      else{
+        (<HTMLButtonElement>document.getElementById("scatterplot")).disabled = true;
+        (<HTMLButtonElement>document.getElementById("densityplot")).disabled = true;
       }
 
       if(((this.nizKategorickihKolona.length == 1 && this.nizNumerickihKolona.length == 1)) || ( this.nizNumerickihKolona.length == 1 && this.nizKategorickihKolona.length == 0) ){
 
         (<HTMLButtonElement>document.getElementById("boxplot")).disabled = false;
         (<HTMLButtonElement>document.getElementById("violinplot")).disabled = false;
+        let pom = -1;
+        if(this.selectedColumns.length == 2)
+        {
+          if(this.nizTipova[this.selectedColumns[0]] === "Categorical")
+          {
+              pom = this.selectedColumns[0];
+              this.selectedColumns[0] = this.selectedColumns[1];
+              this.selectedColumns[1] = pom;
+          }
+        }
+        console.log(this.selectedColumns);
       }
       else{
         (<HTMLButtonElement>document.getElementById("boxplot")).disabled = true;
@@ -660,20 +676,20 @@ dajNaziveHeadera()
         (<HTMLButtonElement>document.getElementById("barplot")).disabled = true;
       }
 
-      if((this.nizKategorickihKolona.length > 4) || (this.nizNumerickihKolona.length > 4) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 4) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      if((this.nizNumerickihKolona.length <= 4) && (this.nizNumerickihKolona.length > 0) && (this.nizKategorickihKolona.length == 0))
       {
-        (<HTMLButtonElement>document.getElementById("histogram")).disabled = true;
-      }
-      else{
         (<HTMLButtonElement>document.getElementById("histogram")).disabled = false;
       }
+      else{
+        (<HTMLButtonElement>document.getElementById("histogram")).disabled = true;
+      }
 
-      if((this.nizKategorickihKolona.length > 2) || (this.nizNumerickihKolona.length > 2) || ((this.nizKategorickihKolona.length + this.nizNumerickihKolona.length) > 2) || (this.nizNumerickihKolona.length == 0 && this.nizKategorickihKolona.length == 0))
+      if((this.nizNumerickihKolona.length == 2) && (this.nizKategorickihKolona.length == 0))
       {
-        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = true;
+        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = false;
       }
       else{
-        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = false;
+        (<HTMLButtonElement>document.getElementById("hexbin")).disabled = true;
       }
   }
 
@@ -761,7 +777,9 @@ dajNaziveHeadera()
   izbrisiSelektovaneKolone()
   {
     this.selectedColumns = [];
-
+    this.nizKategorickihKolona = [];
+    this.nizNumerickihKolona = [];
+    this.EnableDisableGrafik();
     //this.dodajKomandu("Nema selektovanih kolona");
   }
   obrisiIstoriju()
@@ -861,6 +879,8 @@ dajNaziveHeadera()
       //this.onInfo("Kolone nisu selektovane");
       return;
     }
+    this.nizKategorickihKolona = [];
+    this.nizNumerickihKolona = [];
     this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
@@ -870,6 +890,7 @@ dajNaziveHeadera()
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
         this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
        // this.dodajKomandu("Uspesno obrisane kolone");
         this.onSuccess('Kolone su obrisane');
     },error=>{
@@ -893,6 +914,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate Mean vrednosti");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -914,6 +938,9 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate median vrednosti");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -936,6 +963,9 @@ dajNaziveHeadera()
         console.log(res);
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate mode vrednosti");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -961,6 +991,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene kategoricke vrednosti");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -985,6 +1018,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene prazne numeričke vrednosti");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1002,8 +1038,13 @@ dajNaziveHeadera()
       for(var i = 0;i<this.kolone.length;i++)
       {
         this.selectedColumns.push(i);
+        if(this.nizTipova[i] === "Categorical")
+          this.nizKategorickihKolona.push(i);
+        else
+          this.nizNumerickihKolona.push(i);
         this.isSelectedNum(i);
       }
+      this.EnableDisableGrafik();
      console.log(this.selectedColumns);
      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj kolone";
     }
@@ -1195,6 +1236,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         this.rowsAndPages = [];
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Polje izmenjeno");
@@ -1223,6 +1267,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling izvrseno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1249,6 +1296,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1275,6 +1325,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1342,6 +1395,9 @@ dajNaziveHeadera()
          this.gtyLoadPageWithStatistics(this.page);
          this.brojacAkcija++;
          this.selectedColumns = [];
+         this.nizKategorickihKolona = [];
+         this.nizNumerickihKolona = [];
+         this.EnableDisableGrafik();
          let dateTime = new Date();
          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation izvršeno");
          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1367,6 +1423,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1392,6 +1451,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Z-Sore izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1418,6 +1480,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1443,6 +1508,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1468,6 +1536,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1493,6 +1564,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1675,6 +1749,9 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani NA redovi");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1747,6 +1824,9 @@ dajNaziveHeadera()
         this.brojacAkcija++;
         this.selectedForRegression = -1;
         this.selectedColumns = [];
+        this.nizKategorickihKolona = [];
+        this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamena vrednosti NA sa vrednostima dobijenih regresijom izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
