@@ -201,10 +201,11 @@ namespace dotNet.MLService {
             }
         }
 
-        public void DeleteColumn(int columnIndex) {
+        public void DeleteColumns(int[] columns) {
             lock (_lock) {
-                connection.Send(Command.DeleteColumn);
-                connection.Send(columnIndex);
+                connection.Send(Command.DeleteColumns);
+                connection.Send(EncodeIntArray(columns));
+                CheckStatus();
             }
         }
 
@@ -257,6 +258,15 @@ namespace dotNet.MLService {
         }
 
         // Fill NA values
+        public void FillNAWithValue(int column, string value) {
+            lock (_lock) {
+                connection.Send(Command.FillNAWithValue);
+                connection.Send(column);
+                connection.Send(value);
+                CheckStatus();
+            }
+        }
+
         public void FillNAWithMean(int[] columns) {
             lock (_lock) {
                 connection.Send(Command.FillNAWithMean);
@@ -601,13 +611,14 @@ namespace dotNet.MLService {
         UpdateColumn,
         RenameColumn,
         UpdateAndRenameColumn,
-        DeleteColumn,
+        DeleteColumns,
         UpdateValue,
         EmptyStringToNA,
         ZeroToNA,
         DropNAListwise,
         DropNAPairwise,
         DropNAColumns,
+        FillNAWithValue,
         FillNAWithMean,
         FillNAWithMedian,
         FillNAWithMode,

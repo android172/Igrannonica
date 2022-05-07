@@ -61,10 +61,12 @@ def update_row(self):
     self.connection.send("OK")
     print(f"Row {row_index} replaced with values: {new_row}.")
     
-def delete_row(self):
+def delete_rows(self):
     # Receive row index
     row_string = self.connection.receive()
-    rows = [int(x) for x in row_string.split(":")]
+    rows = []
+    if row_string != '':
+        rows = [int(x) for x in row_string.split(":")]
     deleted = self.network.data.remove_rows(rows)
     if not deleted:
         self.report_error("ERROR :: Row doesn't exist.")
@@ -115,12 +117,16 @@ def update_and_rename_column(self):
     print(f"Column {column_index} replaced with values: {new_column}.")
     print(f"Column {column_index} renamed from {self.network.data.dataset.columns[column_index]} to {column_name}.")
     
-def delete_column(self):
+def delete_columns(self):
     # Receive column index
-    column = int(self.connection.receive())
-    self.network.data.remove_column(column)
+    columns_string = self.connection.receive()
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
-    print(f"Column {column} removed from the dataset.")
+    self.network.data.remove_columns(columns)
+    
+    self.connection.send("OK")
+    print(f"Columns {columns} removed from the dataset.")
     
 def update_value(self):
     # Receive row
@@ -186,6 +192,23 @@ def drop_na_columns(self):
     self.network.data.drop_na_columns()
     
     print("All columns with any NA values dropped from dataset.")
+    
+def fill_na_with_value(self):
+    # Receive columns
+    column = int(self.connection.receive())
+    if not self.network.data.columns_are_valid([column]):
+        self.report_error("ERROR :: Illegal output column given.")
+        return
+    
+    # Receive value
+    value = self.connection.receive()
+    
+    if not self.network.data.replace_na_with_value(column, value):
+        self.report_error("ERROR :: NA column is numerical, but categorical value was given.")
+        return
+    
+    self.connection.send("OK")
+    print(f"NA values in column {column} replaced with {value}.")
     
 def fill_na_with_mean(self):
     # Receive columns

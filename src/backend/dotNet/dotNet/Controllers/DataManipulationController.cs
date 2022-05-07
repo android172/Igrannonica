@@ -81,10 +81,7 @@ namespace dotNet.Controllers
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
                 if (niz.Length == 0)
                     return BadRequest("Prazan niz");
-                foreach (var i in niz)
-                {
-                    eksperiment.DeleteColumn(i);
-                }
+                eksperiment.DeleteColumns(niz);
                 return Ok("Obrisane zeljene kolone");
             }
             catch

@@ -303,11 +303,13 @@ class MLData:
         self.column_types[column] = new_column_type
         self.column_data_ty[column] = 'Numerical' if (type == 'int64' or type == 'float64') else 'Categorical'
         
-    def remove_column(self, column):
+    def remove_columns(self, columns):
         self.save_change()
-        self.dataset.drop(self.dataset.columns[column], axis=1, inplace=True)
-        self.column_types.pop(column)
-        self.column_data_ty.pop(column)
+        self.dataset.drop(self.dataset.columns[columns], axis=1, inplace=True)
+        columns.sort(reverse=True)
+        for col in columns:
+            self.column_types.pop(col)
+            self.column_data_ty.pop(col)
             
     # Handeling NA values
     def replace_value_with_na(self, columns, value):
@@ -328,6 +330,25 @@ class MLData:
         self.dataset.dropna(subset=subset, inplace=True)
         
     # NA imputing
+    def replace_na_with_value(self, column, value):
+        column_type = self.column_types[column]
+        try:
+            if column_type == 'int64':
+                value = int(value)
+            elif column_type == 'float64':
+                value = float(value)
+        except:
+            return False
+        
+        self.save_change()
+        self.dataset.fillna(value, inplace=True)
+        
+        if column_type == 'int64':
+            self.dataset.iloc[:, column] = self.dataset.iloc[:, column].astype('int64')
+        elif column_type == 'float64':
+            self.dataset.iloc[:, column] = self.dataset.iloc[:, column].astype('float64')
+        return True
+    
     def replace_na_with_mean(self, columns):
         try: means = self.dataset.iloc[:, columns].replace(pd.NA, np.nan).astype('float64').mean()
         except: return False
