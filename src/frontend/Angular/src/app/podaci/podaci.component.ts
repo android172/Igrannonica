@@ -1817,8 +1817,10 @@ dajNaziveHeadera()
     //(<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "";
 
 
-    element.style.backgroundColor = "#5e6091";
-    element.style.borderRadius = "5px";
+    element.style.backgroundColor = "#5e609150"; 
+    element.style.borderTopLeftRadius = "2px"; 
+    element.style.borderTopLeftRadius = "2px"; 
+    element.style.borderBottom = "1px solid rgb(160, 181, 189)";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
     
@@ -1831,8 +1833,10 @@ dajNaziveHeadera()
     var disableElement = (<HTMLSpanElement>document.getElementById("ucitaniPodaci-naslov"));
     //(<HTMLDivElement>document.getElementById("pagingControls")).style.visibility = "hidden";
 
-    element.style.backgroundColor = "#5e6091";
-    element.style.borderRadius = "5px";
+    element.style.backgroundColor = "#5e609150"; 
+    element.style.borderTopLeftRadius = "2px"; 
+    element.style.borderTopLeftRadius = "2px"; 
+    element.style.borderBottom = "1px solid rgb(160, 181, 189)";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
   }

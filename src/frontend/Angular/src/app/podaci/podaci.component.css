@@ -1550,7 +1550,10 @@ th{
 
 #ucitaniPodaci-naslov,#statPodaci-naslov{
     cursor: pointer;
-    padding: 3px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
  #numericka-tabela td{
@@ -1591,12 +1594,11 @@ th{
 }
 /* NASLOV TABELE STATISTIKA I PODACI */
 #ucitaniPodaci-naslov:hover{
-     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52);  
-     border-radius: 5px;
+     box-shadow: inset 0 0 10px 0px rgba(196, 196, 196, 0.52); 
+
 }
 #statPodaci-naslov:hover{
     box-shadow: inset 0 0 9px rgba(196, 196, 196, 0.52); 
-     border-radius: 5px;
 }
 
 
