@@ -568,6 +568,10 @@ namespace dotNet.Controllers
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
 
+                if(red == null)
+                {
+                    return BadRequest("Podaci nisu uneti.");
+                }
                 eksperiment.AddRow(red);
                 return Ok("Dodat novi red.");
             }
