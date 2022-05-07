@@ -577,6 +577,34 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
+        [Authorize]
+        [HttpPost("fillNaWithValue/{column}/{value}")]
+        public IActionResult FillNaWithValue(int column, string value)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+
+                if (value == "")
+                {
+                    return BadRequest("Podaci nisu uneti.");
+                }
+                //Console.WriteLine(column + " -- " + value);
+                eksperiment.FillNAWithValue(column, value);
+                
+                
+                return Ok("NA vrednosti su zamenjene.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
 
     }
 }

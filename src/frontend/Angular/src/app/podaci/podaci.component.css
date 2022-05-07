@@ -1768,3 +1768,15 @@ ngb-pagination ::ng-deep ul > li.active > a {
     color: rgb(150, 150, 150);
     font-size: smaller;
 }
+
+/* NA new Value */
+#newNaValue{
+    width: 200px;
+    border-radius: 4px;
+    
+}
+
+#checkNumerical{
+    color: rgb(255, 43, 75); 
+    visibility: hidden;
+}
