@@ -327,6 +327,10 @@ def remove_outliers_standard_deviation(self):
     # Receive threshold
     threshold = float(self.connection.receive())
     
+    if threshold < 0:
+        self.report_error("ERROR :: Threshold must be positive.")
+        return
+    
     if not self.network.data.standard_deviation_outlier_removal(columns, threshold):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
         return
@@ -343,6 +347,10 @@ def remove_outliers_quantiles(self):
     # Receive threshold
     threshold = float(self.connection.receive())
     
+    if threshold < 0 or threshold > 1:
+        self.report_error("ERROR :: Threshold must be positive value smaller then one.")
+        return
+    
     if not self.network.data.quantile_outlier_removal(columns, threshold):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
         return
@@ -358,6 +366,10 @@ def remove_outliers_z_score(self):
     
     # Receive threshold
     threshold = float(self.connection.receive())
+    
+    if threshold < 0:
+        self.report_error("ERROR :: Threshold must be positive.")
+        return
     
     if not self.network.data.z_score_outlier_removal(columns, threshold):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
