@@ -34,6 +34,7 @@ export class ModelComponent implements OnInit {
   json: any;
   json1: any;
   jsonSnap: any;
+  selectedSS: any;
   snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
@@ -299,7 +300,7 @@ export class ModelComponent implements OnInit {
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
     }
-    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.idEksperimenta + "&opis=" + opis,null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.idEksperimenta + "&opis=" + opis + "&snapshot=" + this.selectedSS,null,{responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
@@ -752,14 +753,16 @@ export class ModelComponent implements OnInit {
   selectSnapshot(id: any)
   {
     (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
-    this.http.get(url+"/api/Model/Kolone?snapshot="+id).subscribe(
-      (response: any)=>{
-        console.log(response);
-      },error =>{
+    // this.http.get(url+"/api/Model/Kolone?snapshot="+id).subscribe(
+    //   (response: any)=>{
+    //     console.log(response);
+    //   },error =>{
 
-        //console.log(error.error);
-      }
-    );
+    //     //console.log(error.error);
+    //   }
+    // );
+    this.selectedSS=id;
+    console.log(this.selectedSS);
   }
 
 }
