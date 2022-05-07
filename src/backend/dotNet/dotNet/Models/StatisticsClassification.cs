@@ -1,6 +1,6 @@
 ﻿namespace dotNet.Models {
-    public class ClassificationStats {
-        public ClassificationStats(
+    public class StatisticsClassification {
+        public StatisticsClassification(
             float accuracy, 
             float balancedAccuracy, 
             float precision, 
