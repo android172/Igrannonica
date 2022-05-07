@@ -168,25 +168,6 @@ export class ModeliComponent implements OnInit {
     );
   }
 
-  // obrisiModel(i:any)
-  // {
-  //   if(confirm("Da li ste sigurni da zelite da obrisete ovaj model?"))
-  //   {
-  //     this.http.delete(url+'/api/Model/Modeli/' + i,{responseType: 'text'}).subscribe(
-  //      res=>{
-  //        console.log(res);
-  //           this.ucitajModel();
-  //           var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
-  //           this.onSuccess("Model je uspesno obrisan");
-  //      },
-  //      error=>{
-  //        console.log(error.error);
-  //        this.onError("Model nije obrisan!");
-  //      }
-  //    )
-  //   }
-  // }
-
   handleKeyUp(event: any){
      if(event.keyCode === 13){
       this.napraviModel();
@@ -194,66 +175,28 @@ export class ModeliComponent implements OnInit {
      }
   }
 
-  dajAnn()
+  modelDetaljnije(id: any)
   {
-    if(this.json1["annType"]==1)
-          (<HTMLDivElement>document.getElementById("ann")).innerHTML="Classification";
-        else
-          (<HTMLDivElement>document.getElementById("ann")).innerHTML="Regression";
-  }
-
-  dajOptimizer()
-  {
-    if(this.json1["optimizer"]==0)
-      (<HTMLDivElement>document.getElementById("opt")).innerHTML="SGD";
-    else if(this.json1["optimizer"]==1)
-      (<HTMLDivElement>document.getElementById("opt")).innerHTML="AdaGrad";
-    else if(this.json1["optimizer"]==2)
-      (<HTMLDivElement>document.getElementById("opt")).innerHTML="AdaDelta";
-    else
-    (<HTMLDivElement>document.getElementById("opt")).innerHTML="Adam";
-  }
-
-  dajEpohe()
-  {
-    (<HTMLDivElement>document.getElementById("eph")).innerHTML=this.json1["numberOfEpochs"];
-  }
-
-  prikaziPod(id: any)
-  {
-    this.http.get(url+"/api/Eksperiment/Podesavanja/"+id).subscribe(
-      res=>{
-        console.log(res);
+    this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
+      res => {
         this.json1=res;
-        this.dajAnn();
-        this.dajOptimizer();
-        this.dajEpohe();
+        (<HTMLDivElement>document.getElementById("n")).innerHTML=this.json1['name'];
+        (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.json1['opis'];
+        (<HTMLDivElement>document.getElementById("ann")).innerHTML=this.json1['problemType'];
+        (<HTMLDivElement>document.getElementById("opt")).innerHTML=this.json1['optimizacija'];
+        (<HTMLDivElement>document.getElementById("eph")).innerHTML=this.json1["epohe"];
+        (<HTMLDivElement>document.getElementById("snap")).innerHTML=this.json1["snapshot"];
+        for(let i=0;i<this.modeli.length;i++)
+        {
+          if(this.modeli[i].id==id)
+            (<HTMLDivElement>document.getElementById("d")).innerHTML=this.modeli[i].createdDate;
+        }
+
       },
-      error=>{
-        console.log(error);
-        this.onError("Neuspesno!");
+      error => {
+        console.log(error.error);
       }
     )
-  }
-
-  uzmiId(id: any){
-    this.izabranId=id;
-    this.prikaziInfo(id);
-  }
-
-  prikaziInfo(id: any)
-  {
-    for(let i=0;i<this.modeli.length;i++)
-    {
-      if(this.modeli[i].id==id)
-      {
-        (<HTMLDivElement>document.getElementById("n")).innerHTML=this.modeli[i].name;
-        (<HTMLDivElement>document.getElementById("d")).innerHTML=this.modeli[i].createdDate;
-        (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.modeli[i].opis;
-        (<HTMLDivElement>document.getElementById("snap")).innerHTML=this.modeli[i].snap;
-      }
-    }
-    
   }
 
   promeni(event:any){
@@ -302,6 +245,11 @@ export class ModeliComponent implements OnInit {
         );
       }
     }
+  }
+
+  uzmiId(id: any)
+  {
+    this.izabranId=id;
   }
 
   obrisiModel()
