@@ -122,3 +122,15 @@ class MLClientInstance(Thread):
     def report_error(self, message):
         print(message, flush=True)
         self.connection.send(message)
+    
+    def parse_columns(self, columns_string):
+        if columns_string == '':
+            self.report_error("ERROR :: No columns given.")
+            return None
+        
+        columns = [int(x) for x in columns_string.split(":")]
+        if not self.network.data.columns_are_valid(columns):
+            self.report_error("ERROR :: Illegal columns given.")
+            return None
+        
+        return columns

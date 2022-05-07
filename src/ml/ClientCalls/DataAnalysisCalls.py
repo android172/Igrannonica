@@ -3,10 +3,8 @@ import json
 def numerical_statistics(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     statistics = self.network.data.get_numerical_statistics(columns)
     if statistics is None:
@@ -21,10 +19,8 @@ def numerical_statistics(self):
 def categorical_statistics(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     statistics = self.network.data.get_categorical_statistics(columns)
     

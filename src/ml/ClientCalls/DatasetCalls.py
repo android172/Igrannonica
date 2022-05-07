@@ -123,10 +123,8 @@ def save_dataset(self):
 def select_inputs(self):
     # Receive inputs
     inputs_string = self.connection.receive()
-    inputs = [int(x) for x in inputs_string.split(":")]
-    if not self.network.data.columns_are_valid(inputs, self.network.dataset_version):
-        self.report_error("ERROR :: Illegal columns selected.")
-        return
+    inputs = self.parse_columns(inputs_string)
+    if inputs is None: return
     
     if not self.network.data.select_input_columns(inputs, self.network.dataset_version):
         self.report_error("ERROR :: All input columns need to be numerical or encoded.")
@@ -138,10 +136,8 @@ def select_inputs(self):
 def select_outputs(self):
     # Receive outputs
     outputs_string = self.connection.receive()
-    outputs = [int(x) for x in outputs_string.split(":")]
-    if not self.network.data.columns_are_valid(outputs, self.network.dataset_version):
-        self.report_error("ERROR :: Illegal columns selected.")
-        return
+    outputs = self.parse_columns(outputs_string)
+    if outputs is None: return
     
     if not self.network.data.select_output_columns(outputs, self.network.dataset_version):
         self.report_error("ERROR :: All output columns need to be numerical or encoded.")
@@ -164,10 +160,8 @@ def random_train_test_split(self):
 def toggle_column_type(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     self.network.data.toggle_column_data_type(columns)
     

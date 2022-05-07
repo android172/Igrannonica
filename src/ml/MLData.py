@@ -629,12 +629,19 @@ class MLData:
         fig.savefig(path, dpi=150, bbox_inches = 'tight', transparent=True)
     
     def _generate_colors(self, n):
-        color = CustomColors.accent
-        colors = [color]
-        for i in range(1, n):
-            r = int(color[1:3], 16) - i * 10
-            g = int(color[3:5], 16) + i * 1
-            b = int(color[5:7], 16) + i * 2
+        initial_r = int(CustomColors.accent[1:3], 16)
+        initial_g = int(CustomColors.accent[3:5], 16)
+        initial_b = int(CustomColors.accent[5:7], 16)
+        
+        step_r = 250 // n
+        step_g = 20 // n
+        step_b = 40 // n
+        
+        colors = []
+        for i in range(0, n):
+            r = initial_r - i * step_r
+            g = initial_g + i * step_g
+            b = initial_b + i * step_b
             
             r = min(255, max(0, r))
             g = min(255, max(0, g))
@@ -648,11 +655,14 @@ class MLData:
             if len(g) == 1: g = '0' + g
             if len(b) == 1: b = '0' + b
             
-            color = f"#{r}{g}{b}"
-            colors.append(color)
+            colors.append(f"#{r}{g}{b}")
         return colors
     
     def draw_scatter_plot(self, columns, path):
+        for col in columns:
+            if self.column_data_ty[col] == 'Categorical':
+                return False
+        
         if len(columns) == 2:
             ax = self.dataset.plot.scatter(columns[0], columns[1], c=CustomColors.accent, alpha=0.25)
             self._change_style(ax)
@@ -676,23 +686,31 @@ class MLData:
                     ax.xaxis.label.set_ha(style_of_x_lab)
             
             self._save_fig(axs[0][0], path)
+            
+        return True
     
     def draw_box_plot(self, columns, path):
+        _, ax = plt.subplots()
         if len(columns) == 1:
-            ax = self.dataset.boxplot(
+            self.dataset.boxplot(
                 column = self.dataset.columns[columns[0]],
                 color  = CustomColors.accent,
                 sym    = CustomColors.accent,
                 grid   = False,
                 vert   = False,
-                widths = 0.3
+                widths = 0.3,
+                ax     = ax
             )
         elif len(columns) == 2 and self.column_data_ty[columns[1]] == "Categorical":
-            ax = self.dataset.boxplot(
+            if len(self.dataset.iloc[:, columns[1]].unique()) > 20:
+                return False
+            
+            self.dataset.boxplot(
                 column = self.dataset.columns[columns[0]],
                 by     = self.dataset.columns[columns[1]],
                 color  = CustomColors.accent,
-                sym    = CustomColors.accent
+                sym    = CustomColors.accent,
+                ax     = ax
             )
             ax.get_figure().gca().set_title("")
             ax.get_figure().suptitle('')
@@ -711,7 +729,12 @@ class MLData:
             by  = self.dataset.columns[columns[1]]
             
             categories = self.dataset[by].unique()
+            
+            if len(categories) > 20:
+                return False
+            
             categories.sort()
+            
             splits = []
             for cat in categories:
                 splits.append(self.dataset[self.dataset[by] == cat][col])
@@ -740,16 +763,22 @@ class MLData:
             return False
         
         col = self.dataset.columns[columns[0]]
+        x = self.dataset[col].unique()
+        
+        if len(x) > 20:
+            return False
         
         if len(columns) == 1:
             ax = self.dataset.value_counts(col, sort=True).plot.bar(color = CustomColors.accent)
         elif len(columns) == 2 and self.column_data_ty[columns[1]] == "Categorical":
             
             by = self.dataset.columns[columns[1]]
-            
-            x = self.dataset[col].unique()
-            x.sort()
             y = self.dataset[by].unique()
+            
+            if len(y) > 20:
+                return False
+            
+            x.sort()
             y.sort()
             
             ndf = {}
@@ -781,6 +810,10 @@ class MLData:
         if len(columns) > 4:
             return False
         
+        for col in columns:
+            if self.column_data_ty[col] == 'Categorical':
+                return False
+        
         axs = self.dataset.hist(
             self.dataset.columns[columns], 
             grid  = False, 
@@ -798,6 +831,10 @@ class MLData:
     def draw_hexbin(self, columns, path):
         if len(columns) != 2:
             return False
+        
+        for col in columns:
+            if self.column_data_ty[col] == 'Categorical':
+                return False
         
         fig, ax = plt.subplots()
         s = ax.hexbin(
@@ -823,7 +860,12 @@ class MLData:
         if len(columns) > 6:
             return False
         
-        ax = self.dataset.iloc[:, columns].plot.kde(color = CustomColors.accent)
+        for col in columns:
+            if self.column_data_ty[col] == 'Categorical':
+                return False
+        
+        colors = self._generate_colors(len(columns))
+        ax = self.dataset.iloc[:, columns].plot.kde(color = colors)
         
         self._change_style(ax)
         self._save_fig(ax, path)
@@ -851,7 +893,7 @@ class MLData:
                 bbox_to_anchor=(1, 0, 0.5, 1))
 
         self._change_style(ax)
-        self._save_fig(ax)
+        self._save_fig(ax, path)
         
         return True
         

@@ -147,10 +147,9 @@ def update_value(self):
 def empty_string_to_na(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
+    
     self.network.data.replace_value_with_na(columns, '')
     
     self.connection.send("OK")
@@ -159,10 +158,9 @@ def empty_string_to_na(self):
 def zero_to_na(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
+    
     self.network.data.replace_value_with_na(columns, 0)
     
     self.connection.send("OK")
@@ -176,10 +174,8 @@ def drop_na_listwise(self):
 def drop_na_pairwise(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     self.network.data.drop_na_pairwise(columns)
     
@@ -194,10 +190,8 @@ def drop_na_columns(self):
 def fill_na_with_mean(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.replace_na_with_mean(columns):
         self.report_error("ERROR :: Only numerical columns can be used.")
@@ -209,10 +203,8 @@ def fill_na_with_mean(self):
 def fill_na_with_median(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.replace_na_with_median(columns):
         self.report_error("ERROR :: Only numerical columns can be used.")
@@ -224,10 +216,8 @@ def fill_na_with_median(self):
 def fill_na_with_mode(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     self.network.data.replace_na_with_mode(columns)
     
@@ -239,10 +229,9 @@ def fill_na_with_regression(self):
     column = int(self.connection.receive())
     # Receive columns for regression
     columns_string = self.connection.receive()
-    input_columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(input_columns):
-        self.report_error("ERROR :: Illegal input columns given.")
-        return
+    input_columns = self.parse_columns(columns_string)
+    if input_columns is None: return
+    
     if not self.network.data.columns_are_valid([column]):
         self.report_error("ERROR :: Illegal output column given.")
         return
@@ -258,10 +247,8 @@ def fill_na_with_regression(self):
 def label_encoding(self):
     # Receive columns to encode
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.label_encode_columns(columns):
         self.report_error("ERROR :: Only non float columns can be encoded.")
@@ -273,10 +260,8 @@ def label_encoding(self):
 def one_hot_encoding(self):
     # Receive columns to encode
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     result = self.network.data.one_hot_encode_columns(columns)
     if   result == 1:
@@ -293,10 +278,8 @@ def one_hot_encoding(self):
 def scale_absolute_max(self):
     # Receive columns to scale
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     return_code = self.network.data.maximum_absolute_scaling(columns)
     if return_code >= 0:
@@ -309,10 +292,8 @@ def scale_absolute_max(self):
 def scale_min_max(self):
     # Receive columns to scale
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     return_code = self.network.data.min_max_scaling(columns)
     if return_code >= 0:
@@ -325,10 +306,8 @@ def scale_min_max(self):
 def scale_z_score(self):
     # Receive columns to scale
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     return_code = self.network.data.z_score_scaling(columns)
     if return_code >= 0:
@@ -342,10 +321,9 @@ def scale_z_score(self):
 def remove_outliers_standard_deviation(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
+    
     # Receive threshold
     threshold = float(self.connection.receive())
     
@@ -359,10 +337,9 @@ def remove_outliers_standard_deviation(self):
 def remove_outliers_quantiles(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
+    
     # Receive threshold
     threshold = float(self.connection.receive())
     
@@ -376,10 +353,9 @@ def remove_outliers_quantiles(self):
 def remove_outliers_z_score(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
+    
     # Receive threshold
     threshold = float(self.connection.receive())
     
@@ -393,10 +369,8 @@ def remove_outliers_z_score(self):
 def remove_outliers_iqr(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.iqr_outlier_removal(columns):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
@@ -408,10 +382,8 @@ def remove_outliers_iqr(self):
 def remove_outliers_isolation_forest(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.isolation_forest_outlier_removal(columns):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
@@ -423,10 +395,8 @@ def remove_outliers_isolation_forest(self):
 def remove_outliers_one_class_svm(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.one_class_svm_outlier_removal(columns):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")
@@ -438,10 +408,8 @@ def remove_outliers_one_class_svm(self):
 def remove_outliers_by_local_factor(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     if not self.network.data.local_outlier_factor_outlier_removal(columns):
         self.report_error("ERROR :: Method can only be applied to numerical variables.")

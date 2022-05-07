@@ -4,15 +4,17 @@ import requests
 def draw_scatter_plot(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
     file_path = os.path.join(os.curdir, 'data', self.experiment_id, file_name)
-    self.network.data.draw_scatter_plot(columns, file_path)
+    accepted = self.network.data.draw_scatter_plot(columns, file_path)
+    
+    if not accepted:
+        self.report_error("ERROR :: Input columns not accepted; Graph couldn't be drawn.")
+        return
     
     # Upload graph
     upload_image(self, file_name, file_path)
@@ -23,10 +25,8 @@ def draw_scatter_plot(self):
 def draw_box_plot(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
@@ -46,10 +46,8 @@ def draw_box_plot(self):
 def draw_violin_plot(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
@@ -69,10 +67,8 @@ def draw_violin_plot(self):
 def draw_bar_plot(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
@@ -92,10 +88,8 @@ def draw_bar_plot(self):
 def draw_histogram(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
@@ -115,10 +109,8 @@ def draw_histogram(self):
 def draw_hexbin(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
@@ -138,10 +130,8 @@ def draw_hexbin(self):
 def draw_density_plot(self):
     # Receive columns
     columns_string = self.connection.receive()
-    columns = [int(x) for x in columns_string.split(":")]
-    if not self.network.data.columns_are_valid(columns):
-        self.report_error("ERROR :: Illegal columns given.")
-        return
+    columns = self.parse_columns(columns_string)
+    if columns is None: return
     
     # Create graph
     file_name = 'requested_image.png'
