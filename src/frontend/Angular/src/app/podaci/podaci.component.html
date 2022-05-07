@@ -76,6 +76,7 @@
                     <!-- <button id="izbaci-selekt-kolone" (click)="deleteColumns()">Izbaci selektovane kolone</button> -->
                     <button id="svi-redovi" (click)="selectAllRows($event)">Selektuj sve redove</button>
                     <!-- <button id="izbaci-selekt-vrste" (click)="deleteRows()">Izbaci selektovane redove</button> -->
+                    <button id="izbaci-selekt-vrste" (click)="dodavanjeNovogReda()">New</button>
                     <button id="izbaci-selekt-vrste" (click)="brisanjeVrednosti()">Delete</button>
                 <!--  <button id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button>-->
                 </div>
@@ -866,6 +867,23 @@
     <div class="modal-footer  d-flex justify-content-between">
         <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
         <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="brisanje()" (click)="modal.close('Save click')" >Delete</button>
+    </div>
+  </ng-template>
+
+  <ng-template #modalNew let-modal>
+    <div class="modal-header" style="height:50px; background-color: #ddddf6;" >
+      <h3 class="modal-title pt-3" id="modal-basic-title">Create New Row</h3>
+    </div>
+    <div class="modal-body justify-content-center d-flex align-items-center">
+        <div id="textNew" class="pt-2">
+           <div class="d-flex justify-content-between" *ngFor="let header of dajHeadere()" style="margin-bottom: 10px;">
+               <div style="margin-right: 12px;">{{header}}:</div> <input class="input-new-row" value="" id="row{{header}}">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer  d-flex justify-content-between">
+        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
+        <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="kreirajNoviRed()" (click)="modal.close('Save click')" >Create</button>
     </div>
   </ng-template>
   

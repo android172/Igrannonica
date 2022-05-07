@@ -555,5 +555,27 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
+        [Authorize]
+        [HttpPost("addNewRow")]
+        public IActionResult AddNewRow(string[] red)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+
+                eksperiment.AddRow(red);
+                return Ok("Dodat novi red.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
     }
 }

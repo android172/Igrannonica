@@ -1751,3 +1751,11 @@ ngb-pagination ::ng-deep ul > li.active > a {
 .btn-modal-close:focus{
     box-shadow: none;
 }
+
+/* INPUT NEW ROW */ 
+
+.input-new-row{
+    width: 250px;
+    border-radius: 4px;
+    border: 1px solid rgb(170, 170, 170);
+}

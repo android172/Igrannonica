@@ -30,6 +30,9 @@ export class PodaciComponent implements OnInit {
   @ViewChild('modalDeleteClose') modalDeleteClose:any;
   @ViewChild('modalDelete') modalDelete:any;
 
+  // new 
+  @ViewChild('modalNew') modalNew:any;
+
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
       res=>{
@@ -2315,6 +2318,60 @@ sacuvajKaoNovu(ime:string){
   {
     this.deleteColumns();
     this.deleteRows();
+  }
+
+  openModalNew(modalNew: any) {
+    this.modalService.open(modalNew, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  
+  dodavanjeNovogReda()
+  {
+    this.openModalNew(this.modalNew); 
+  }
+
+  kreirajNoviRed()
+  {
+    var kolone = this.dajHeadere();
+    var uneteVrednosti:string[] = [];
+
+    if(kolone == null)
+      return;
+
+    for(var i = 0; i<kolone.length;i++)
+    {
+      var field = (<HTMLInputElement>document.getElementById("row" + kolone[i])).value;
+      if(field != "")
+      {
+        uneteVrednosti.push(field);
+      }
+      else
+      {
+        console.log("Niste uneli sva polja!"); 
+        this.onInfo("Niste uneli sva potrebna polja.");
+        return; 
+      }
+    }
+    console.log(uneteVrednosti);
+
+    this.http.post(url+"/api/DataManipulation/addNewRow", uneteVrednosti, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.loadDefaultItemsPerPage();
+        //this.gtyLoadPageWithStatistics(this.page);
+        this.brojacAkcija++;
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodat novi red.");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+        this.onSuccess("Dodat je novi red.");
+    },error=>{
+      console.log(error.error);
+      this.onError("Dodavanje reda nije izvrseno.");
+    });
+
   }
 
   }
