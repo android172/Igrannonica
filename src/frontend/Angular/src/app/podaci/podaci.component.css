@@ -840,7 +840,8 @@ th{
     height: 34px;
     color: rgb(242, 244, 252);
 
-    background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%);
+    /* background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%); */
+    background-color: #535393;
     border: none;
     box-sizing: border-box;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
@@ -1700,7 +1701,7 @@ th{
 #sacuvaj, #sacuvajKao
 {
     border-radius: 5px;
-    background: radial-gradient(#7C96F3, #6E6E9C);
+    background-color: #535393;
     border: none;
     padding: 7px 12px;
     color: rgb(242, 244, 252);
