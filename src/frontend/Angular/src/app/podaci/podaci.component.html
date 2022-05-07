@@ -820,7 +820,7 @@
     
         <div class="modal-footer d-flex" style="border: none;">
           <button type="button" (click)="vratiTekstiNaziv()" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
-          <button type="button" (click)="this.daLiPostoji()" style="background-color: #6d6fb1;" class="btn btn-secondary">Sačuvaj</button>
+          <button type="button" (click)="this.daLiPostoji()" style="background-color: #7779b0;" class="btn btn-secondary">Sačuvaj</button>
         </div>
 
     </div>
@@ -876,8 +876,11 @@
     </div>
     <div class="modal-body justify-content-center d-flex align-items-center">
         <div id="textNew" class="pt-2">
-           <div class="d-flex justify-content-between" *ngFor="let header of dajHeadere()" style="margin-bottom: 10px;">
-               <div style="margin-right: 12px;">{{header}}:</div> <input class="input-new-row" value="" id="row{{header}}">
+           <div class="d-flex justify-content-between" *ngFor="let head of getHeadAndType()" style="margin-bottom: 10px;">
+                <div class="d-flex justify-content-between" style="width: 100%; margin-right: 10px;">   
+                    <div style="margin-right: 12px;">{{head[0]}}:</div> <input class="input-new-row" value="" id="row{{head[0]}}">
+                </div> 
+                    <div id="tipPolja" >*{{head[1]}}</div>
             </div>
         </div>
     </div>

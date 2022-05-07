@@ -2327,6 +2327,21 @@ sacuvajKaoNovu(ime:string){
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+  // ispis kategorija za AddRow 
+  getHeadAndType()
+  {
+    var niz:any[][] = []; 
+    var headers = this.dajHeadere();
+
+    if(headers == null)
+      return;
+    
+    for(var i = 0;i<headers.length;i++)
+    {
+      niz.push([headers[i],this.nizTipova[i].slice(0,1)]);
+    }
+    return niz;
+  }
   
   dodavanjeNovogReda()
   {

@@ -1755,11 +1755,16 @@ ngb-pagination ::ng-deep ul > li.active > a {
 /* INPUT NEW ROW */ 
 
 .input-new-row{
-    width: 250px;
+    width: 230px;
     border-radius: 4px;
     border: 1px solid rgb(170, 170, 170);
 }
 
 #btn-otkazi-newrow{
     box-shadow: none;
+}
+
+#tipPolja{
+    color: rgb(150, 150, 150);
+    font-size: smaller;
 }
