@@ -30,8 +30,10 @@ export class PodaciComponent implements OnInit {
   @ViewChild('modalDeleteClose') modalDeleteClose:any;
   @ViewChild('modalDelete') modalDelete:any;
 
-  // new 
+  // new rwo
   @ViewChild('modalNew') modalNew:any;
+  // new Na Value
+  @ViewChild('modalNaValue') modalValue:any;
 
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
@@ -2389,7 +2391,43 @@ sacuvajKaoNovu(ime:string){
       console.log(error.error);
       this.onError("Dodavanje reda nije izvrseno.");
     });
+  }
 
+  replaceNaValue()
+  {
+    if(this.selectedColumns.length == 0)
+    {
+      this.onInfo("Niste odabrali kolonu.");
+      return;
+    }
+    if(this.selectedColumns.length > 1)
+    {
+      this.onInfo("Odaberite jednu kolonu.");
+      return;
+    }
+    this.openModalDelete(this.modalValue);
+    (<HTMLDivElement>document.getElementById("tip-Vrednosti")).innerHTML = "*" + this.nizTipova[this.selectedColumns[0]];
+  }
+
+  fillNaWithValue()
+  {
+    var vrednost = (<HTMLInputElement>document.getElementById("newNaValue")).value; 
+    var kolona = this.selectedColumns[0]; 
+
+    this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost ,null, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+        this.selectedColumns = []; 
+        this.gtyLoadPageWithStatistics(this.page);
+        this.brojacAkcija++;
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene NA vrendosti novom vrednoscu.");
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+        this.onSuccess("Zamenjene NA vrednosti novom vrednoscu.");
+    },error=>{
+      console.log(error.error);
+      this.onError("Zamena NA nije izvrsena.");
+    });
   }
 
   }
