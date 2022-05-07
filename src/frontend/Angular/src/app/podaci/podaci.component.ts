@@ -881,8 +881,6 @@ dajNaziveHeadera()
       //this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.nizKategorickihKolona = [];
-    this.nizNumerickihKolona = [];
     this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);

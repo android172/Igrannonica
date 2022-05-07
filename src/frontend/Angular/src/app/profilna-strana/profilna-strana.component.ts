@@ -16,6 +16,7 @@ export class ProfilnaStranaComponent implements OnInit {
   korisnickoIme: any;
   email: any;
   json: any;
+  flag:boolean = true;
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService, private router: Router) { }
 
@@ -49,4 +50,20 @@ export class ProfilnaStranaComponent implements OnInit {
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
 
+  promenaTaba(broj : number){
+
+    
+    if(this.flag == true && broj == 2)
+    {
+      this.ucitajPodatke();
+       this.flag = false;
+    }
+    else
+      if(this.flag == false && broj == 1)
+      {
+        this.ucitajPodatke();
+        this.flag = true;
+      }
+
+  }
 }
