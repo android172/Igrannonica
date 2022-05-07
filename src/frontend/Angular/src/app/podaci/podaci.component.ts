@@ -2414,20 +2414,30 @@ sacuvajKaoNovu(ime:string){
     var vrednost = (<HTMLInputElement>document.getElementById("newNaValue")).value; 
     var kolona = this.selectedColumns[0]; 
 
-    this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost ,null, {responseType: 'text'}).subscribe(
-      res => {
-        console.log(res);
-        this.selectedColumns = []; 
-        this.gtyLoadPageWithStatistics(this.page);
-        this.brojacAkcija++;
-        let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene NA vrendosti novom vrednoscu.");
-        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Zamenjene NA vrednosti novom vrednoscu.");
-    },error=>{
-      console.log(error.error);
-      this.onError("Zamena NA nije izvrsena.");
-    });
+     if(isNaN(Number(vrednost)) && this.nizTipova[this.selectedColumns[0]] == "Numerical")
+     {
+    //   (<HTMLDivElement>document.getElementById("checkNumerical")).style.visibility = "visible";
+         this.onInfo("Unet je pogresan tip polja.");
+     }
+     else
+     {
+      this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost ,null, {responseType: 'text'}).subscribe(
+        res => {
+          console.log(res);
+          this.selectedColumns = []; 
+          this.gtyLoadPageWithStatistics(this.page);
+          this.brojacAkcija++;
+          let dateTime = new Date();
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene NA vrendosti novom vrednoscu.");
+          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+          this.onSuccess("Zamenjene NA vrednosti novom vrednoscu.");
+      },error=>{
+        console.log(error.error);
+        this.onError("Zamena NA nije izvrsena.");
+      });
+      // close modal 
+    }
+    
   }
 
   }

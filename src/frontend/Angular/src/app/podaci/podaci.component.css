@@ -1775,3 +1775,8 @@ ngb-pagination ::ng-deep ul > li.active > a {
     border-radius: 4px;
     
 }
+
+#checkNumerical{
+    color: rgb(255, 43, 75); 
+    visibility: hidden;
+}
