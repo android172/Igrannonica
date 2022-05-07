@@ -842,11 +842,11 @@
   </ng-template>
 
   <ng-template #modalDeleteClose let-modal>
-    <div class="modal-header">
-      <h3 class="modal-title" id="modal-basic-title">Delete</h3>
+    <div class="modal-header" style="height:50px; background-color: #ddddf6;">
+      <h3 class="modal-title pt-3" id="modal-basic-title">Delete</h3>
     </div>
     <div class="modal-body justify-content-center d-flex align-items-center ">
-        <div id="textDeleteClose">
+        <div id="textDeleteClose" class="pt-3">
             
         </div>
     </div>
@@ -882,7 +882,7 @@
         </div>
     </div>
     <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
+        <button type="button" id="btn-otkazi-newrow"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
         <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="kreirajNoviRed()" (click)="modal.close('Save click')" >Create</button>
     </div>
   </ng-template>
