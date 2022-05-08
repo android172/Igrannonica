@@ -479,7 +479,9 @@
                                     </div>
                                     <br><br>
                                     <div id="div-ratio">
-                                        <input type="number" value="50" min="1" max="100" step="1" id="vrednost-ratio" placeholder="50%" (change)="upisRatio()">   
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <input type="number" value="50" min="1" max="100" step="1" id="vrednost-ratio" placeholder="50%" (change)="upisRatio()"><div id="procenat">%</div> 
+                                        </div>
                                         <button class="btn btn-primary" id="btn-ratio" (click)="setRatio()">Primeni</button>
                                     </div>   
                                 </div>
