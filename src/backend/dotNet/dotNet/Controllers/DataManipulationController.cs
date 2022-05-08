@@ -605,6 +605,34 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske.");
             }
         }
+        [Authorize]
+        [HttpPost("toggleColumnType")]
+        public IActionResult ToggleColumnType(int[] idColumn)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+
+                if (idColumn == null)
+                {
+                    return BadRequest("Podaci nisu uneti.");
+                }
+
+                eksperiment.ToggleColumnsType(idColumn);
+
+                return Ok("Tip kolone je zamenjen");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
 
     }
 }
