@@ -198,17 +198,17 @@ class MLData:
     
     def get_train_dataset(self):
         train_data = []
-        for col in self.dataset[self.dataset[self.test_col] == 0].values:
-            x = tensor(col[self.input_columns]).float()
-            y = tensor(col[self.output_columns]).float()
+        for row in self.dataset[self.dataset[self.test_col] == 0].values:
+            x = tensor(row[self.input_columns].astype('float64')).float()
+            y = tensor(row[self.output_columns].astype('float64')).float()
             train_data.append((x, y))
         return train_data
     
     def get_test_dataset(self):
         test_data = []
-        for col in self.dataset[self.dataset[self.test_col] == 1].values:
-            x = tensor(col[self.input_columns]).float()
-            y = tensor(col[self.output_columns]).float()
+        for row in self.dataset[self.dataset[self.test_col] == 1].values:
+            x = tensor(row[self.input_columns].astype('float64')).float()
+            y = tensor(row[self.output_columns].astype('float64')).float()
             test_data.append((x, y))
         return test_data
     
