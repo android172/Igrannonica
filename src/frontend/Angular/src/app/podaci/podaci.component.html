@@ -325,15 +325,17 @@
         <div page class="col-md-9">
             <div class="okvir" id="table">
                 <div class="naslov">
-                        <span id="ucitaniPodaci-naslov" style=" background-color: #5e609150; border-bottom: 1px solid rgb(160, 181, 189); border-top-left-radius: 2px; border-top-right-radius: 2px;" (click)="prikaziUcitanePodatke($event)">Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>     
+                    <span id="ucitaniPodaci-naslov" style=" background-color: #5e609150; border-bottom: 1px solid rgb(160, 181, 189); border-top-left-radius: 2px; border-top-right-radius: 2px;" (click)="prikaziUcitanePodatke($event)" (click)="dodajTipovePoredKolona(this.nizTipova)" >Učitani podaci</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistički podaci </span>      
                           <span style="position: absolute; left:62%; "><button  id="dugmecsv" (click)="preuzmiDataset()" >Preuzmi podatke</button></span>
                 </div>
                 <div id="skrol" class="col-md-12">
                     <table *ngIf="this.indikator; else statistika">
                         <tr class="head-table">
-                            <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header)" [class.selectedColHeader]="isSelectedNum(j)">
-                                {{header}}
-                            </th>
+                            <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header.slice(1))" [class.selectedColHeader]="isSelectedNum(j)">
+                                <div class="d-flex justify-content-left align-items-center ">
+                                 <div style="margin-right: 5px;"> {{header}}</div> <div id="{{j}}column" class="d-flex justify-content-center align-items-center span-toggle" style=" width: 13px; height: 13px; font-size: smaller; border-radius: 50%; padding-top: 1px;" (click)="zamenaTipaKolone($event)" ></div> 
+                                </div>
+                             </th>
                         </tr>
                         <tr class="trbody" *ngFor="let red of json | paginate
                         : {

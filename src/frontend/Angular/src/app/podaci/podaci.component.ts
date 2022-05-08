@@ -212,6 +212,7 @@ export class PodaciComponent implements OnInit {
 
         console.log(response);
         this.nizTipova = response;
+        this.dodajTipovePoredKolona(response); // dodavanje tipova
 
       },error =>{
 
@@ -236,9 +237,9 @@ export class PodaciComponent implements OnInit {
         this.totalItems = response.totalItems;
         this.gty(1);
         this.page = 1;
+        this.ucitajTipoveKolona(); // premesteno
     })
 
-    this.ucitajTipoveKolona();
     this.EnableDisableGrafik();
   }
   onFileSelectedTest(event:any){
@@ -591,6 +592,7 @@ dajNaziveHeadera()
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
+        this.ucitajTipoveKolona(); 
         this.onSuccess('OneHot Encoding izvrsen');
     },error=>{
       console.log(error.error);
@@ -625,6 +627,7 @@ dajNaziveHeadera()
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
+        this.ucitajTipoveKolona(); 
         this.onSuccess('Label Encoding izvrsen');
     },error=>{
       console.log(error.error);
@@ -2517,6 +2520,92 @@ sacuvajKaoNovu(ime:string){
     }
     
   }
+  
+toggleColumnType(idKolone:number)
+{
+  var niz:number[] = [];
+  niz.push(idKolone);
+  console.log("ID KOLONE type: "+ idKolone);
+
+  this.http.post(url+"/api/DataManipulation/toggleColumnType", niz, {responseType: 'text'}).subscribe(
+    res => {
+      console.log(res);
+      this.selectedColumns = []; 
+      this.gtyLoadPageWithStatistics(this.page);
+      this.brojacAkcija++;
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjen tip kolone.");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+      this.onSuccess("Tip kolone zamenjen.");
+  },error=>{
+    console.log(error.error);
+    this.onError("Tip kolone nije zamenjen.");
+  });
+  
+}
+
+dodajTipovePoredKolona(tipovi:string[])
+{
+  var headers = this.dajHeadere();
+
+  if(headers == null)
+   return;
+
+  for(var i=0; i<headers.length;i++)
+  {
+    (<HTMLDivElement>document.getElementById(i + "column")).innerHTML = tipovi[i][0]; 
+
+    if(tipovi[i][0] == "C")
+    {
+      (<HTMLDivElement>document.getElementById(i + "column")).style.backgroundColor = "rgb(141, 133, 169)"; 
+      (<HTMLDivElement>document.getElementById(i + "column")).style.color = "#301345";
+    }
+    else
+    {
+      (<HTMLDivElement>document.getElementById(i + "column")).style.backgroundColor = "rgb(135, 172, 126)"; 
+      (<HTMLDivElement>document.getElementById(i + "column")).style.color = "#204513";
+    }
+  }    
+}
+
+zamenaTipaKolone(event:any)
+{
+  var id = event.target.id;
+  var i = 0;
+  var prethodni:number = 0;
+
+  while(!isNaN(Number(id[i])))
+  {
+    prethodni = Number(id[i]) + prethodni * 10;
+    i++; 
+  }
+  var idKolone = prethodni;
+  var idKoloneUTabeli = event.target.id;
+
+  this.toggleColumnType(idKolone);
+
+  var type = this.nizTipova[idKolone];
+
+  if(type[0] == 'C')
+  { console.log("Kategorisjki");
+    var elementCat = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
+    elementCat.innerHTML = "N";
+    elementCat.style.backgroundColor = "rgb(135, 172, 126)"; 
+    elementCat.style.color = "#204513";
+    this.nizTipova[idKolone] = "Numerical";
+  }
+  else
+  {console.log("NUMERICKI");
+    var elementNum = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
+    elementNum.innerHTML = "C";
+    elementNum.style.backgroundColor = "rgb(141, 133, 169)"; 
+    elementNum.style.color = "#301345";
+    this.nizTipova[idKolone] = "Categorical";
+  }
+  
+  console.log("TIPOVI: "+this.nizTipova);
+ }
+
 
   }
 

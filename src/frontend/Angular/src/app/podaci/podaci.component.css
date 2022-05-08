@@ -1780,3 +1780,16 @@ ngb-pagination ::ng-deep ul > li.active > a {
     color: rgb(255, 43, 75); 
     visibility: hidden;
 }
+
+/* Tip kolona */ 
+
+.span-toggle:hover{
+    color: #8e2400!important;
+    background-color: rgb(211, 132, 112)!important;
+}
+/* 
+.span-toggle{
+    color:#204513; 
+    background-color: rgb(135, 172, 126);
+} 
+ */
