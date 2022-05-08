@@ -2275,9 +2275,10 @@ sacuvajKaoNovu(ime:string){
   izbrisiSnapshot(){
     var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
     if(id!="0"){
-      this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
+      this.http.delete(url+"/api/File/Snapshot?id="+id).subscribe(
         res=>{
-          console.log(res);
+          this.ucitajSnapshotove();
+          this.ucitajPodatkeSnapshota(0);
         }
       )
     }
@@ -2298,11 +2299,18 @@ sacuvajKaoNovu(ime:string){
 
   overrideSnapshot()
   {
-    this.izbrisiSnapshott(this.idSnapshotaOverride);
-    this.sacuvajKaoNovu(this.nazivSnapshotaOverride);
+    //this.izbrisiSnapshott(this.idSnapshotaOverride);
+    //this.sacuvajKaoNovu(this.nazivSnapshotaOverride);
+    this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+this.idSnapshotaOverride,null,{responseType:"text"}).subscribe(
+      res=>{
+        this.ucitajSnapshotove();
+        this.ucitajPodatkeSnapshota(Number(this.idSnapshotaOverride));
+        (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapshot
+      }
+    );
 
-    this.idSnapshotaOverride = "";
-    this.nazivSnapshotaOverride = "";
+    //this.idSnapshotaOverride = "";
+    //this.nazivSnapshotaOverride = "";
   }
 
   vratiTekstiNaziv()
@@ -2605,7 +2613,13 @@ zamenaTipaKolone(event:any)
   
   console.log("TIPOVI: "+this.nizTipova);
  }
-
+ ucitajPodatkeSnapshota(id:Number){
+   this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
+     res=>{
+      this.loadDefaultItemsPerPage();
+     }
+   );
+ }
 
   }
 

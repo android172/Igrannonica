@@ -421,7 +421,7 @@ namespace dotNet.Controllers
                     return BadRequest("Postoji verzija sa tim imenom.");
                 Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
                 eksperiment.SaveDataset(snapshot.csv);
-                return Ok(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv) == -1);
+                return Ok(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
             }
             catch
             {

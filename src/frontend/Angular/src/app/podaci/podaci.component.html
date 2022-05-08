@@ -29,8 +29,8 @@
                 <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
                 <div class="space">
                     <select id="verzijaSnapshotaSelect" >
-                        <option value="0">Default snapshot</option>
-                        <option *ngFor="let i of snapshots;" value={{i.id}}>{{i.ime}}</option>
+                        <option value="0" (click)="ucitajPodatkeSnapshota(0)">Default snapshot</option>
+                        <option *ngFor="let i of snapshots;" value={{i.id}} (click)="ucitajPodatkeSnapshota(i.id)">{{i.ime}}</option>
                         <!---<option>Snapshot 1</option>
                         <option>Snapshot 2</option>
                         <option value="{{i.id}}">{{i.ime}}</option>
