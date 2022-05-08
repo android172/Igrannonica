@@ -159,11 +159,14 @@ def random_train_test_split(self):
     
 def toggle_column_type(self):
     # Receive columns
-    columns_string = self.connection.receive()
-    columns = self.parse_columns(columns_string)
-    if columns is None: return
+    column = int(self.connection.receive())
+    if not self.network.data.columns_are_valid([column]):
+        self.report_error("ERROR :: Illegal column given.")
+        return
     
-    self.network.data.toggle_column_data_type(columns)
+    if not self.network.data.toggle_column_data_type(column):
+        self.report_error("ERROR :: Column type could not be converted.")
+        return
     
     self.connection.send("OK")
-    print(f"Numerical statistics computed for columns {columns}.")
+    print(f"Column type toggled for column {column}.")

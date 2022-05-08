@@ -94,21 +94,39 @@ class MLData:
         
     # Manage versions
     def save_change(self):
-        self.past_states.append(self.dataset.copy(deep=True))
+        self.past_states.append({
+            'dataset'       : self.dataset.copy(deep=True),
+            'column_types'  : [x for x in self.column_types],
+            'column_data_ty': [x for x in self.column_data_ty]
+        })
         self.future_states.clear()
     
     def undo_change(self):
         if len(self.past_states) == 0:
             return False
-        self.future_states.append(self.dataset)
-        self.dataset = self.past_states.pop()
+        self.future_states.append({
+            'dataset'       : self.dataset,
+            'column_types'  : self.column_types,
+            'column_data_ty': self.column_data_ty
+        })
+        past_state = self.past_states.pop()
+        self.dataset        = past_state['dataset']
+        self.column_types   = past_state['column_types']
+        self.column_data_ty = past_state['column_data_ty']
         return True
     
     def redo_change(self):
         if len(self.future_states) == 0:
             return False
-        self.past_states.append(self.dataset)
-        self.dataset = self.future_states.pop()
+        self.past_states.append({
+            'dataset'       : self.dataset,
+            'column_types'  : self.column_types,
+            'column_data_ty': self.column_data_ty
+        })
+        future_state = self.future_states.pop()
+        self.dataset        = future_state['dataset']
+        self.column_types   = future_state['column_types']
+        self.column_data_ty = future_state['column_data_ty']
         return True
     
     def clear_change_history(self):
@@ -548,10 +566,19 @@ class MLData:
     # Analysis #
     # ######## #
     # Toggle Numerical/Categorical
-    def toggle_column_data_type(self, columns):
-        for col in columns:
-            col_prev_type = self.column_data_ty[col]
-            self.column_data_ty[col] = 'Numerical' if col_prev_type == 'Categorical' else 'Categorical'
+    def toggle_column_data_type(self, column):
+        col_prev_type = self.column_data_ty[column]
+        
+        if col_prev_type == 'Numerical':
+            if self.dataset.dtypes[column] not in ['Int64', 'float64']:
+                return False
+            self.column_data_ty[column] = 'Categorical'
+        else:
+            if self.dataset.dtypes[column] == 'float64':
+                return False
+            self.column_data_ty[column] = 'Numerical'
+        
+        return True
     
     # Column statistics
     def get_numerical_statistics(self, columns):

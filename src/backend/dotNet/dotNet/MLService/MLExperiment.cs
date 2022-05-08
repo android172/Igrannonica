@@ -407,10 +407,10 @@ namespace dotNet.MLService {
 
 
         // Change column type
-        public void ToggleColumnsType(int[] columns) {
+        public void ToggleColumnsType(int columns) {
             lock (_lock) {
                 connection.Send(Command.ToggleColumnType);
-                connection.Send(EncodeIntArray(columns));
+                connection.Send(columns);
                 CheckStatus();
             }
         }
