@@ -2587,7 +2587,7 @@ zamenaTipaKolone(event:any)
   var type = this.nizTipova[idKolone];
 
   if(type[0] == 'C')
-  { console.log("Kategorisjki");
+  {
     var elementCat = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
     elementCat.innerHTML = "N";
     elementCat.style.backgroundColor = "rgb(135, 172, 126)"; 
@@ -2595,7 +2595,7 @@ zamenaTipaKolone(event:any)
     this.nizTipova[idKolone] = "Numerical";
   }
   else
-  {console.log("NUMERICKI");
+  {
     var elementNum = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
     elementNum.innerHTML = "C";
     elementNum.style.backgroundColor = "rgb(141, 133, 169)"; 
