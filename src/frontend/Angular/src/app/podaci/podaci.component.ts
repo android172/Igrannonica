@@ -180,7 +180,7 @@ export class PodaciComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", file, this.fileName);  	
 
-      const upload$ = this.http.post(url+"/api/Upload/fileUpload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
+      const upload$ = this.http.post(url+"/api/File/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
@@ -592,7 +592,7 @@ dajNaziveHeadera()
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
-        this.ucitajTipoveKolona(); 
+        // this.ucitajTipoveKolona(); 
         this.onSuccess('OneHot Encoding izvrsen');
     },error=>{
       console.log(error.error);
@@ -2143,6 +2143,7 @@ dajNaziveHeadera()
 
   tryUndoAction(){
 
+    console.log("Broj akcija:" + this.brojacAkcija);
     if(this.brojacUndoRedo < 5 && this.brojacAkcija > 0)
     {
       this.undo();
@@ -2273,7 +2274,7 @@ sacuvajKaoNovu(ime:string){
     }
   }
   izbrisiSnapshot(){
-    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
+    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
     if(id!="0"){
       this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
         res=>{
@@ -2532,7 +2533,10 @@ toggleColumnType(idKolone:number)
       console.log(res);
       this.selectedColumns = []; 
       this.gtyLoadPageWithStatistics(this.page);
-      this.brojacAkcija++;
+      // this.selectedColumns = []; 
+      this.nizNumerickihKolona = [];
+      this.nizKategorickihKolona = [];
+      this.EnableDisableGrafik();
       let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjen tip kolone.");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
