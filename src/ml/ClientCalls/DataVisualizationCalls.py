@@ -152,7 +152,7 @@ def draw_pie_plot(self):
     # Receive columns
     column = int(self.connection.receive())
     if not self.network.data.columns_are_valid([column]):
-        self.report_error("ERROR :: Illegal columns given.")
+        self.report_error("ERROR :: Illegal column given.")
         return
     
     # Create graph

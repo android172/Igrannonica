@@ -112,6 +112,36 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Snapshot` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `Baza`.`Classification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Classification` (
+  `id` INT UNSIGNED NOT NULL,
+  `Accuracy` FLOAT NOT NULL,
+  `BalancedAccuracy` FLOAT NOT NULL,
+  `Precision` FLOAT NOT NULL,
+  `Recall` FLOAT NOT NULL,
+  `F1Score` FLOAT NOT NULL,
+  `HammingLoss` FLOAT NOT NULL,
+  `CrossEntropyLoss` FLOAT NOT NULL,
+  `ConfusionMatrix` VARCHAR(512) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Baza`.`Reggresion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Reggresion` (
+  `id` INT UNSIGNED NOT NULL,
+  `MAE` FLOAT NOT NULL,
+  `MSE` FLOAT NOT NULL,
+  `RSE` FLOAT NOT NULL,
+  `R2` FLOAT NOT NULL,
+  `AdjustedR2` FLOAT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

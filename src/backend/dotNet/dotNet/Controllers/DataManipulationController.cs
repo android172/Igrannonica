@@ -607,7 +607,7 @@ namespace dotNet.Controllers
         }
         [Authorize]
         [HttpPost("toggleColumnType")]
-        public IActionResult ToggleColumnType(int[] idColumn)
+        public IActionResult ToggleColumnType(int idColumn)
         {
             try
             {
@@ -617,11 +617,6 @@ namespace dotNet.Controllers
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-
-                if (idColumn == null)
-                {
-                    return BadRequest("Podaci nisu uneti.");
-                }
 
                 eksperiment.ToggleColumnsType(idColumn);
 

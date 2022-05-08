@@ -431,6 +431,14 @@ ul .ngx-pagination
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
 }
 
+#procenat
+{
+    width: 100%;
+    margin-left: 3%;
+    font-size: 18px;
+    color: #c1cdff;
+}
+
 #input-ratio{
     accent-color: rgb(101, 72, 115);
 }
@@ -448,7 +456,7 @@ ul .ngx-pagination
     text-align: center;
     justify-content: center;
     position: relative;
-    top: -20px;
+    top: -12px;
 }
 
 .visible-testniskup{
@@ -817,10 +825,14 @@ th{
     font-size: 16px;
 }
 #vrednost-ratio{
-    background-color: #f9fbff;
-    border-radius: 10px;
-    width: 30%;
+    background-color: #171f37;
+    border-radius: 5px;
+    width: 60px;
     border: none;
+    height: 35px;
+    font-size: 14px;
+    color: #c1cdff;
+    border: 2px solid rgb(98, 98, 182);
 }
 
 #nedostajucevrednosti{
@@ -1415,6 +1427,11 @@ th{
     background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
 }
 
+.btn-primary:focus
+{
+    box-shadow: 0 0 0 0.2rem rgb(80, 76, 185);
+}
+
 #enkodiranjeHolder
 {
     margin-top: 10px;
@@ -1793,3 +1810,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
     background-color: rgb(135, 172, 126);
 } 
  */
+.custom-slider
+{
+    width: 85%;
+}
