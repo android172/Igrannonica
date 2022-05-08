@@ -753,16 +753,17 @@ export class ModelComponent implements OnInit {
   selectSnapshot(id: any)
   {
     (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
-    // this.http.get(url+"/api/Model/Kolone?snapshot="+id).subscribe(
-    //   (response: any)=>{
-    //     console.log(response);
-    //   },error =>{
+     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+     (response: any)=>{
+         console.log(response);
+         this.kolone = Object.assign([],response);
+         this.kolone2 = Object.assign([],this.kolone);
 
-    //     //console.log(error.error);
-    //   }
-    // );
+      },error =>{
+       console.log(error.error);
+     }
+    );
     this.selectedSS=id;
     console.log(this.selectedSS);
   }
-
 }
