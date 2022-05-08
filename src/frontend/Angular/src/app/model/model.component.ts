@@ -34,6 +34,7 @@ export class ModelComponent implements OnInit {
   json: any;
   json1: any;
   jsonSnap: any;
+  jsonMetrika: any;
   selectedSS: any;
   snapshots: any[] = [];
   public aktFunk: any[] = [];
@@ -765,4 +766,22 @@ export class ModelComponent implements OnInit {
     console.log(this.selectedSS);
   }
 
+  dajMetriku(event: any)
+  {
+    this.http.get(url+"/api/Model/metrika?problemType=" + event.target.value).subscribe(
+      res => {
+        console.table(res);
+        this.jsonMetrika = res;
+        console.log(this.jsonMetrika);
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  // dajMetriku1()
+  // {
+  //   this.dajMetriku(this.selectedPT);
+  // }
 }

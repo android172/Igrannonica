@@ -13,6 +13,7 @@
     </div>
 <div id="div1">
     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
+    <!-- <button (click)="dajMetriku1()">Metrika</button> -->
 </div>
 <div id="centrirano">
     <div id="div2">
@@ -64,7 +65,7 @@
 
                     <div id="grupaP">
                         <h4> Problem type </h4>
-                        <select name="" id="dd3" (change)="selectPT($event)">
+                        <select name="" id="dd3" (change)="selectPT($event)" (change)="dajMetriku($event)">
                             <option id="ddp" value="1">Classification</option>
                             <option id="ddp" value="0">Regression</option>
                         </select>

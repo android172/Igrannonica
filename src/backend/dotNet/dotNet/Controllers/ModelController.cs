@@ -260,5 +260,59 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske");
             }
         }
+
+        [Authorize]
+        [HttpGet("metrika")]
+        public IActionResult getMetrics(int problemType)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                string metrika;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                {
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                }
+                else
+                    return BadRequest("GRESKA");
+
+                eksperiment.LoadInputs(new int[] { 3, 7, 8 });
+                eksperiment.LoadOutputs(new int[] { 13, 14 });
+                eksperiment.TrainTestSplit(0.1f);
+                Console.WriteLine(problemType);
+                ProblemType type;
+                if (problemType == 1)
+                    type = ProblemType.Classification;
+                else
+                    type = ProblemType.Regression;
+                ANNSettings settings = new(
+                    aNNType: type,
+                    learningRate: 0.001f,
+                    batchSize: 64,
+                    numberOfEpochs: 10,
+                    inputSize: 3,
+                    outputSize: 2,
+                    hiddenLayers: new int[] { },
+                    activationFunctions: new ActivationFunction[] { },
+                    regularization: RegularizationMethod.L1,
+                    regularizationRate: 0.0001f,
+                    lossFunction: LossFunction.CrossEntropyLoss,
+                    optimizer: Optimizer.Adam,
+                    kFoldCV: 0
+                );
+
+                eksperiment.ApplySettings(settings);
+
+                metrika = eksperiment.ComputeMetrics();
+                Console.WriteLine(metrika);
+                return Ok(metrika);
+            }
+            catch
+            {
+                return BadRequest("Nije uspelo");
+            }
+        }
+
     }
 }
