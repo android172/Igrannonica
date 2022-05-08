@@ -36,3 +36,39 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
     background: #4d5779;
   }
+
+/* -----------------------SLIDER---------------------- */
+
+  .ngx-slider .ngx-slider-bar {
+    background: rgb(114, 81, 131) !important;
+    height: 10px !important;
+    border-radius: 10px !important;
+    position: relative;
+    top: 9px;
+    border: 2px solid rgb(84, 53, 100);
+  }
+
+  .ngx-slider .ngx-slider-pointer {
+    width: 25px !important;
+    height: 25px !important;
+    background-color: rgb(173, 128, 195) !important;
+    border: 2px solid rgb(84, 53, 100);
+  }
+
+  .ngx-slider .ngx-slider-pointer:after {
+    display: none !important; 
+  }
+
+  .ngx-slider .ngx-slider-bubble {
+    color: #c1cdff !important;
+  }
+
+  .ngx-slider-span .ngx-slider-bubble .ngx-slider-limit .ngx-slider-floor {
+    font-weight: bold;
+    bottom: 20px !important;
+  }
+
+  /* .ngx-slider .ngx-slider-bubble.ngx-slider-limit
+  {
+      color: green !important;
+  } */

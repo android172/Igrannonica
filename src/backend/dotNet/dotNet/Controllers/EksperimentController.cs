@@ -174,6 +174,35 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske");
             }
         }
+        [Authorize]
+        [HttpPost("Eksperiment/Csv")]
+        public IActionResult UcitajSnapshotcsv(int idEksperimenta,int idSnapshota)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                {
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                }
+                else return BadRequest("Potrebno ponovno prijavljivanje.");
+                if(idSnapshota == 0)
+                {
+                    eksperiment.LoadDataset(idEksperimenta, db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                    return Ok();
+                }
+                Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
+                Console.WriteLine(snapshot.csv);
+                eksperiment.LoadDataset(idEksperimenta, snapshot.csv);
+                return Ok();
+                }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
 
         // ovde
 

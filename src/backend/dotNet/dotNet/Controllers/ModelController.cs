@@ -214,7 +214,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Kolone")]
-        public string uzmiKolone(int snapshot)
+        public string uzmiKolone(int idEksperiment,int snapshot)
         {
             try
             {
@@ -223,6 +223,13 @@ namespace dotNet.Controllers
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                 {
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if(snapshot == 0)
+                    {
+                        string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperiment);
+                        eksperiment.SelectTraningData(csv);
+                        string koloness = eksperiment.GetColumns(csv);
+                        return koloness.Replace('\'', '"');
+                    }
                     Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
                     eksperiment.SelectTraningData(snapshot1.csv);
                     string kolones = eksperiment.GetColumns(snapshot1.csv);

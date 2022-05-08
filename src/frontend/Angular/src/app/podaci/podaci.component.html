@@ -29,8 +29,8 @@
                 <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
                 <div class="space">
                     <select id="verzijaSnapshotaSelect" >
-                        <option value="0">Default snapshot</option>
-                        <option *ngFor="let i of snapshots;" value={{i.id}}>{{i.ime}}</option>
+                        <option value="0" (click)="ucitajPodatkeSnapshota(0)">Default snapshot</option>
+                        <option *ngFor="let i of snapshots;" value={{i.id}} (click)="ucitajPodatkeSnapshota(i.id)">{{i.ime}}</option>
                         <!---<option>Snapshot 1</option>
                         <option>Snapshot 2</option>
                         <option value="{{i.id}}">{{i.ime}}</option>
@@ -473,14 +473,17 @@
                 
                                 <div id="proizvoljan-unos" class="visible-unos">
                                     <div id="slider">
-                                        <div style="margin: auto; color: #c1cdff; position: relative; top: -20px;">Uneti vrednost iz intervala [0,1]</div>
-                                        <div id="current-value">50%</div>
+                                        <div style="margin: auto; color: #c1cdff; position: relative; top: -15px;">Izabrati udeo testnog skupa:</div>
+                                        <!-- <div id="current-value">50%</div>
                                         
-                                        <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio">
+                                        <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio"> -->
+                                        <ngx-slider class="custom-slider" (userChangeEnd)="ispisRatio()" id="input-ratio" [(value)]="value" [options]="options"></ngx-slider>
                                     </div>
                                     <br><br>
                                     <div id="div-ratio">
-                                        <input type="number" min="0" max="1" step="0.01" id="vrednost-ratio" placeholder="0.5" (change)="upisRatio()">  
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <input type="number" value="50" min="1" max="100" step="1" id="vrednost-ratio" placeholder="50%" (change)="upisRatio()"><div id="procenat">%</div> 
+                                        </div>
                                         <button class="btn btn-primary" id="btn-ratio" (click)="setRatio()">Primeni</button>
                                     </div>   
                                 </div>
