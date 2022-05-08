@@ -1717,6 +1717,9 @@ dajNaziveHeadera()
     (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
     (<HTMLInputElement>document.getElementById("threshold")).value = "";
     (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
+    (<HTMLInputElement>document.getElementById("threshold")).style.boxShadow = "none";
+    (<HTMLInputElement>document.getElementById("threshold")).style.cursor = "default";
+    (<HTMLInputElement>document.getElementById("threshold")).style.pointerEvents = "none";
   }
 
   deleteAllRowsWithNA()
