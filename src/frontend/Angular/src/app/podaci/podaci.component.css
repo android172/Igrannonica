@@ -449,7 +449,7 @@ ul .ngx-pagination
     align-items: center;
     text-align: center;
     justify-content: center;
-    height: 150px;
+    height: 185px;
 }
 
 #proizvoljan-unos{
@@ -1801,4 +1801,19 @@ ngb-pagination ::ng-deep ul > li.active > a {
 .custom-slider
 {
     width: 85%;
+}
+
+#infoTrainTestSplit
+{
+    width: 85%;
+    color: #959fcb;
+    font-size: 13.5px;
+    margin-bottom: 30px;
+    margin-top: -25px;
+    border-bottom: 1px solid #959fcb;
+}
+
+#procenatTestni, #procenatTrening, .proc
+{
+    color: #c1cdff;
 }

@@ -827,7 +827,7 @@ dajNaziveHeadera()
     {
       (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "visible-unos";   
       (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";
-      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "150px";
+      (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "185px";
       (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
     }
   }
