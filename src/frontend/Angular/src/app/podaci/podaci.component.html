@@ -481,7 +481,9 @@
                                         <!-- <div id="current-value">50%</div>
                                         
                                         <input type="range" min="0" max="1" step="0.01" value="0.5" (change)="ispisRatio()" id="input-ratio"> -->
-                                        <ngx-slider class="custom-slider" (userChangeEnd)="ispisRatio()" id="input-ratio" [(value)]="value" [options]="options"></ngx-slider>
+                                        <div id="sliderHolder">
+                                            <ngx-slider class="custom-slider" (userChangeEnd)="ispisRatio()" id="input-ratio" [(value)]="value" [options]="options"></ngx-slider>
+                                        </div>
                                     </div>
                                     <br><br>
                                     <div id="div-ratio">

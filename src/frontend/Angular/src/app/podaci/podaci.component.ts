@@ -822,6 +822,7 @@ dajNaziveHeadera()
       (<HTMLDivElement>document.getElementById("proizvoljan-unos")).className = "invisible-unos";
       (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "80px";
       (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
+      (<HTMLDivElement>document.getElementById("sliderHolder")).style.display = "none";
     }
     if(str === "Proizvoljno")
     {
@@ -829,6 +830,8 @@ dajNaziveHeadera()
       (<HTMLDivElement>document.getElementById("unos-fajla")).className = "invisible-testniskup";
       (<HTMLDivElement>document.getElementById("testniskup-comp")).style.height = "185px";
       (<HTMLDivElement>document.getElementById("testniskup-comp")).style.transition = "0.3s";
+      (<HTMLDivElement>document.getElementById("sliderHolder")).style.display = "flex";
+      (<HTMLDivElement>document.getElementById("sliderHolder")).style.justifyContent = "center";
     }
   }
 

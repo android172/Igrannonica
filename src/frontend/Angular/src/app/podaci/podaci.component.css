@@ -442,6 +442,13 @@ ul .ngx-pagination
 #input-ratio{
     accent-color: rgb(101, 72, 115);
 }
+
+#sliderHolder
+{
+    display: flex;
+    justify-content: center;
+}
+
 /*************** TESTNI SKUP *********************/ 
 
 #testniskup-comp{
