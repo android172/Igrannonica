@@ -10,6 +10,7 @@ import { saveAs } from 'file-saver';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
 import { Options, LabelType } from '@angular-slider/ngx-slider';
+import { HtmlParser } from '@angular/compiler';
 
 @Component({
   selector: 'app-podaci',
@@ -850,15 +851,21 @@ dajNaziveHeadera()
     // console.log(this.value);
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
     let vrednost = (<HTMLInputElement>document.getElementById("input-ratio")).value;
+    let vrednost2 = (100 - Number(vrednost)) + "";
     (<HTMLInputElement>document.getElementById("vrednost-ratio")).value = vrednost;
+    (<HTMLSpanElement>document.getElementById("procenatTestni")).innerHTML = vrednost;
+    (<HTMLSpanElement>document.getElementById("procenatTrening")).innerHTML = vrednost2;
   }
 
   upisRatio()
   {
     let vrednost = (<HTMLInputElement>document.getElementById("vrednost-ratio")).value;
-    // let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value);
+    let vrednost2 = (100 - Number(vrednost)) + "";
     this.value = parseInt(vrednost);
-    (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + ""; 
+    (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
+    (<HTMLSpanElement>document.getElementById("procenatTestni")).innerHTML = vrednost;
+    (<HTMLSpanElement>document.getElementById("procenatTrening")).innerHTML = vrednost2;
+    // let val1 = (parseFloat)((<HTMLInputElement>document.getElementById("vrednost-ratio")).value);
     // console.log((<HTMLInputElement>document.getElementById("input-ratio")).value);
     // let procenat:number = Math.round(val1 * 100);
     // (<HTMLDivElement>document.getElementById("current-value")).innerHTML = "" + procenat + "%";
