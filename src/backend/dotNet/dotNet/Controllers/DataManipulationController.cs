@@ -606,7 +606,7 @@ namespace dotNet.Controllers
             }
         }
         [Authorize]
-        [HttpPost("toggleColumnType")]
+        [HttpPost("toggleColumnType/{idColumn}")]
         public IActionResult ToggleColumnType(int idColumn)
         {
             try

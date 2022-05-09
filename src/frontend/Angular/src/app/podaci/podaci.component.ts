@@ -602,8 +602,7 @@ dajNaziveHeadera()
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        //this.loadDefaultItemsPerPage();
-        // this.ucitajTipoveKolona(); 
+        this.ucitajTipoveKolona();
         this.onSuccess('OneHot Encoding izvrsen');
     },error=>{
       console.log(error.error);
@@ -2190,6 +2189,7 @@ dajNaziveHeadera()
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.obrisiKomandu();
+        this.dodajTipovePoredKolona(this.nizTipova);
       },
       error =>{
         console.log(error.error);
@@ -2218,6 +2218,7 @@ dajNaziveHeadera()
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.vratiKomandu();
+        this.ucitajTipoveKolona(); 
       },
       error =>{
         console.log(error.error);
@@ -2559,11 +2560,9 @@ sacuvajKaoNovu(ime:string){
   
 toggleColumnType(idKolone:number)
 {
-  var niz:number[] = [];
-  niz.push(idKolone);
   console.log("ID KOLONE type: "+ idKolone);
 
-  this.http.post(url+"/api/DataManipulation/toggleColumnType", niz, {responseType: 'text'}).subscribe(
+  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone, null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
       this.selectedColumns = []; 
@@ -2578,6 +2577,7 @@ toggleColumnType(idKolone:number)
       this.onSuccess("Tip kolone zamenjen.");
   },error=>{
     console.log(error.error);
+    this.selectedColumns = [];  
     this.onError("Tip kolone nije zamenjen.");
   });
   
