@@ -2189,7 +2189,7 @@ dajNaziveHeadera()
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.obrisiKomandu();
-        this.dodajTipovePoredKolona(this.nizTipova);
+        //this.dodajTipovePoredKolona(this.nizTipova);
       },
       error =>{
         console.log(error.error);
