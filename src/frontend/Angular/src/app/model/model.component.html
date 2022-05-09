@@ -6,7 +6,7 @@
             </button>
             <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
                 <div *ngFor="let s of snapshots">
-                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)">{{s.ime}}</a></li>   
+                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)" (click)="imeS(s.ime)">{{s.ime}}</a></li>   
                 </div>                      
             </ul>
         </div>

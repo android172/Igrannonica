@@ -743,7 +743,6 @@ export class ModelComponent implements OnInit {
       res => {
         this.jsonSnap=res;
         this.snapshots = Object.values(this.jsonSnap);
-        console.log(res);
       },
       error =>{
         console.log(error.error);
@@ -751,9 +750,13 @@ export class ModelComponent implements OnInit {
     )
   }
 
+ imeS(ime: string)
+ {
+   (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = ime;
+ }
+
   selectSnapshot(id: any)
   {
-    (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = this.snapshots[id-1].ime;
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
          console.log(response);
