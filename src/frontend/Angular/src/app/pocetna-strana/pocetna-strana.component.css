@@ -1,4 +1,4 @@
-#container
+#particles-js
 {
     position: relative;
     display: flex;
@@ -6,17 +6,12 @@
     height: 600px;
     margin-top: 20px;
 }
-
-#oblast1
-{
-    position: relative;
-    width: 554px;
-    height: 346px;
-
-    background: rgba(77, 81, 143, 0.9);
-    box-shadow: 13px 20px 29px rgba(0, 0, 0, 0.25);
-    border-radius: 14px;
-    left: 70px;
+.particles-js-canvas-el {
+    position: fixed;
+    top: 0;
+    z-index: -1;
+      /* color: #1e042b;   */
+    /* color: 150226;  trenutna  */
 }
 
 #oblast2

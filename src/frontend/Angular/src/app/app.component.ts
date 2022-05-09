@@ -53,6 +53,11 @@ export class AppComponent {
     {
       this.header = true;
     }
+    if(this.router.url == "/pocetna-strana")
+    {
+      document.body.style.background = '#1e042b';
+    }
+
   }
 }
 
