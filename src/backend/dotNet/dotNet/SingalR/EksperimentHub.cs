@@ -14,18 +14,11 @@ namespace dotNet.SingalR
             return Context.ConnectionId;
         }
 
-        public void SendLoss(string token, string loss)
-        {
-            try { Clients.Clients(users[token]).SendAsync("loss", loss); }
-            catch (Exception e) { Console.WriteLine(loss); }
+        public void ForwardToFrontEnd(string token, string method, string param) {
+            try { Clients.Clients(users[token]).SendAsync(method, param); }
+            catch (Exception) { Console.WriteLine(param); }
         }
 
-        public void ZaustaviTreniranje()
-        {
-            Console.WriteLine("Treniranje Zaustavljeno");
-            // TODO
-        }
-        
 
         public override Task OnConnectedAsync()
         {

@@ -18,6 +18,9 @@ class MLClientInstance(Thread):
         self.connection = connection
         self.token = ""
         self.experiment_id = 1
+        
+        self.active_models = {}
+        self.last_active_id = 0
     
     def run(self) -> None:
         super().run()
@@ -110,7 +113,9 @@ class MLClientInstance(Thread):
             'ComputeMetrics'    : compute_metrics,
             'ChangeSettings'    : change_settings,
             'SelectTraningData' : select_traning_data,
-            'Start'             : start
+            'Start'             : start,
+            'Stop'              : stop,
+            'Continue'          : continue_training
         }
         
         while True:

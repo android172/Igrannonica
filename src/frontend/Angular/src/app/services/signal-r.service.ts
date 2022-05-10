@@ -34,41 +34,42 @@ export class SignalRService {
         }
     ); 
   }
-  public ZapocniTreniranje(token:any,id:any){
-      this.hubConnection.invoke('treniraj',token,id)
-      .catch(err => console.error(err));
-    }
-  public ZaustaviTreniranje(){
-    this.hubConnection.invoke('zaustavitreniranje')
-      .catch(err => console.error(err));
-  }
-  public TrenirajListener(){
-    this.hubConnection.on('treniranje', (data) => {
-      if(data=="Treniranje zavrseno")
-        alert("JEEEJ!");
-      else console.log(data);
+
+  public models: Array<number> = []
+  public StartModelTrainingListener() {
+    this.hubConnection.on('StartModelTraining', (modelId) => {
+      this.models.push(modelId)
     })
   }
   public LossListener()
   {
-    this.hubConnection.on('loss', (data) => {
-      this.data.push(data);
-      var pom = data.split(",");
-      //console.log(pom);
-      var epoha = pom[0];
-      var loss = pom[1];
-      var epohaNiz = epoha.split(":");
-      var lossNiz = loss.split(":");
-      var brojEpohe = epohaNiz[1];
-      var brojLoss = lossNiz[1];
-      var brojLossPravi = brojLoss.split("}");
-      console.log(brojEpohe);
-      console.log(brojLossPravi[0]);
-      this.lineChartData.datasets[0].data.push(brojLossPravi[0]);
-      this.lineChartData.labels?.push(brojEpohe);
-      //console.log(this.lineChartData.datasets[0].data);
+    this.hubConnection.on('Loss', (data) => {
+      var res = JSON.parse(data)
+
+      var id = res.modelId
+
+      var epochRes = res.epochRes
+      var currentEpoch = res.epoch
+      var currentLoss = res.loss
+      if (res.fold !== undefined) {}
+
+      // this.data.push(data);
+      
+      console.log(currentEpoch);
+      console.log(currentLoss);
+
+      this.lineChartData.datasets[0].data.push(currentLoss);
+      this.lineChartData.labels?.push(currentEpoch);
+      
       this.switch = !this.switch;
       this.switchChange.next(this.switch);
+    })
+  }
+
+  public FinishModelTrainingListener() {
+    this.hubConnection.on('FinishModelTraining', (modelId) => {
+      const index: number = this.models.indexOf(modelId)
+      this.models.splice(index, 1)
     })
   }
 

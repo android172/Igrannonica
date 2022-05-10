@@ -561,6 +561,20 @@ namespace dotNet.MLService {
             }
         }
 
+        public void Stop(int modelId) {
+            lock (_lock) {
+                connection.Send(Command.Stop);
+                connection.Send(modelId);
+            }
+        }
+
+        public void Continue(int modelId) {
+            lock (_lock) {
+                connection.Send(Command.Continue);
+                connection.Send(modelId);
+            }
+        }
+
         // Helper functions
         private static string EncodeIntArray(int[] arrray) {
             if (arrray == null || arrray.Length == 0)
@@ -655,6 +669,8 @@ namespace dotNet.MLService {
         ComputeMetrics,
         ChangeSettings,
         SelectTraningData,
-        Start
+        Start,
+        Stop,
+        Continue
     }
 }

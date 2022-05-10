@@ -9,8 +9,9 @@ namespace dotNet.Models {
         public ANNSettings(
             ProblemType aNNType, 
             float learningRate, 
-            int batchSize, int 
-            numberOfEpochs, 
+            int batchSize,
+            int numberOfEpochs, 
+            int currentEpoch, 
             int inputSize, 
             int outputSize, 
             int[]? hiddenLayers, 
@@ -25,6 +26,7 @@ namespace dotNet.Models {
             LearningRate = learningRate;
             BatchSize = batchSize;
             NumberOfEpochs = numberOfEpochs;
+            CurrentEpoch = currentEpoch;
             InputSize = inputSize;
             OutputSize = outputSize;
             HiddenLayers = hiddenLayers;
@@ -39,6 +41,7 @@ namespace dotNet.Models {
         public float LearningRate { get; set;}
         public int BatchSize { get; set; }
         public int NumberOfEpochs { get; set; }
+        public int CurrentEpoch { get; set; }
         // IO
         public int InputSize { get; set; }
         public int OutputSize { get; set; }

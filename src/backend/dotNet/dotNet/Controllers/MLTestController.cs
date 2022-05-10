@@ -110,6 +110,7 @@ namespace dotNet.Controllers {
                 learningRate: 0.001f,
                 batchSize: 64,
                 numberOfEpochs: 10,
+                currentEpoch: 0,
                 inputSize: 13,
                 outputSize: 2,
                 hiddenLayers: hiddentLayers,
@@ -141,49 +142,45 @@ namespace dotNet.Controllers {
                 // Load data
                 experiment.LoadDataset(1, "test_data.csv");
 
-                experiment.ReplaceZeroWithNA(new int[] { 8 });
-                experiment.FillNAWithValue(8, "11");
-
-                return "";
-
                 //experiment.DrawScatterPlot(new int[] { 4, 6, 10 });
 
                 //return "Done";
 
                 // Add row and column
-                experiment.AddRow(new[] { "1", "1123", "0", "1", "44", "1", "999",
-                                      "1", "1", "1", "12412.1", "0", "1"});
+                //experiment.AddRow(new[] { "1", "1123", "0", "1", "44", "1", "999",
+                //                      "1", "1", "1", "12412.1", "0", "1"});
 
                 int rowCounts = experiment.GetRowCount();
                 Console.WriteLine(rowCounts);
-                var column = new string[rowCounts];
-                for (int i = 0; i < column.Length; i++)
-                    column[i] = "2";
-                experiment.AddColumn("IDK", column);
+                //var column = new string[rowCounts];
+                //for (int i = 0; i < column.Length; i++)
+                //    column[i] = "2";
+                //experiment.AddColumn("IDK", column);
 
-                experiment.Undo();
+                //experiment.Undo();
 
                 // Normalize rows
                 experiment.ScaleZScore(new int[] { 3, 12 });
 
                 // Encode categorical values
-                experiment.OneHotEncoding(new int[] { 5, 8 });
+                experiment.LabelEncoding(new int[] { 4, 5 });
+                experiment.OneHotEncoding(new int[] { 13 });
 
-                experiment.Undo();
+                //experiment.Undo();
 
-                experiment.Redo();
+                //experiment.Redo();
 
-                var x = experiment.GetRows(new int[] { 0, 1, 2, 3, 4, 5 });
-                Console.WriteLine(x);
+                //var x = experiment.GetRows(new int[] { 0, 1, 2, 3, 4, 5 });
+                //Console.WriteLine(x);
 
-                return "Done";
+                //return "Done";
 
                 // Save dataset
                 //experiment.SaveDataset();
 
                 // Replace NA values
                 experiment.ReplaceZeroWithNA(new int[] { 8 });
-                experiment.FillNAWithRegression(8, new int[] { 5, 7, 9, 10, 12, 13, 14, 15, 16 });
+                experiment.FillNAWithRegression(8, new int[] { 5, 7, 9, 10, 12 });
 
                 // Set ANN settings
                 int networkSize = 5;
@@ -192,8 +189,8 @@ namespace dotNet.Controllers {
                 Console.WriteLine(experiment.GetColumnTypes());
 
                 // Select inputs, outputs and split data
-                experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
-                experiment.LoadOutputs(new int[] { 16, 17 });
+                experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
+                experiment.LoadOutputs(new int[] { 13, 14 });
                 experiment.TrainTestSplit(0.1f);
 
                 int[] hiddentLayers = new int[networkSize];
@@ -214,8 +211,9 @@ namespace dotNet.Controllers {
                     aNNType: ProblemType.Regression,
                     learningRate: 0.001f,
                     batchSize: 64,
-                    numberOfEpochs: 10,
-                    inputSize: 13,
+                    numberOfEpochs: 30,
+                    currentEpoch: 0,
+                    inputSize: 10,
                     outputSize: 2,
                     hiddenLayers: hiddentLayers,
                     activationFunctions: activationFunctions,
@@ -232,15 +230,21 @@ namespace dotNet.Controllers {
                 // Start training
                 experiment.Start();
 
+                Thread.Sleep(4000);
+
+                experiment.Stop(1);
+
+                Thread.Sleep(2000);
+
+                experiment.Continue(1);
                 // Save model / load model
-                //Thread.Sleep(10000);
                 //try { experiment.LoadEpoch("2"); }
                 //catch (MLException e) { Console.WriteLine(e.Message); }
                 //experiment.SaveModel("TestModel");
 
                 // Get metrics
-                var stats = experiment.ComputeMetrics();
-                Console.WriteLine(stats);
+                //var stats = experiment.ComputeMetrics();
+                //Console.WriteLine(stats);
             }
             catch (MLException e) {
                 Console.WriteLine(e.Message);

@@ -294,6 +294,7 @@ namespace dotNet.Controllers
                     inputSize: 3,
                     outputSize: 2,
                     hiddenLayers: new int[] { },
+                    currentEpoch: 0,
                     activationFunctions: new ActivationFunction[] { },
                     regularization: RegularizationMethod.L1,
                     regularizationRate: 0.0001f,

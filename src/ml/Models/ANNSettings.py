@@ -11,6 +11,7 @@ class ANNSettings:
         learningRate        = 0.0, 
         batchSize           = 0, 
         numberOfEpochs      = 0, 
+        currentEpoch        = 0,
         inputSize           = 0, 
         outputSize          = 0, 
         hiddenLayers        = None, 
@@ -25,6 +26,7 @@ class ANNSettings:
         self.problemType         = problemType
         self.learningRate        = learningRate
         self.batchSize           = batchSize
+        self.currentEpoch        = currentEpoch
         self.numberOfEpochs      = numberOfEpochs
         self.inputSize           = inputSize
         self.outputSize          = outputSize
@@ -43,6 +45,7 @@ class ANNSettings:
             learningRate        = jsonObj["LearningRate"],
             batchSize           = jsonObj["BatchSize"],
             numberOfEpochs      = jsonObj["NumberOfEpochs"],
+            currentEpoch        = jsonObj["CurrentEpoch"],
             inputSize           = jsonObj["InputSize"],
             outputSize          = jsonObj["OutputSize"],
             hiddenLayers        = jsonObj["HiddenLayers"],

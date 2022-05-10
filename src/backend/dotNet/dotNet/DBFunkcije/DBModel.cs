@@ -193,6 +193,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("LearningRate"),
                             reader.GetInt32("BatchSize"),
                             reader.GetInt32("numberOfEpochs"),
+                            0,
                             reader.GetInt32("inputSize"),
                             reader.GetInt32("OutputSize"),
                             HiddenLayers(reader.GetString("HiddenLayers")),

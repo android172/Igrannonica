@@ -1,5 +1,6 @@
 from threading import Thread
 from io import BytesIO
+import threading
 import requests
 import json
 import os
@@ -22,6 +23,7 @@ def change_settings(self):
     settingsString = self.connection.receive()
     annSettings = ANNSettings.load(settingsString)
     self.network.load_settings(annSettings)
+    self.network.create_new_network()
     
     print("ANN settings changed.")
 
@@ -81,11 +83,49 @@ def start(self):
     # Initialize random data if no dataset is selected
     if self.network.data.dataset is None:
         self.network.initialize_random_data()
+        
+    self.last_active_id += 1
+    id = self.last_active_id
+    
+    # Setup network
+    ann = self.network.create_deep_copy()
     
     # Train
-    Thread(target= lambda : train(self)).start()
+    Thread(target= lambda : train(self.token, id, ann)).start()
+    
+    running_model = ann.isRunning
+    self.active_models = {id : running_model}
+    running_model.set()
     
     print("Traning commences.")
+    
+def stop(self):
+    # Receive model identifier
+    model_id = int(self.connection.receive())
+    
+    running_model = self.active_models.get(model_id, None)
+    if running_model is None:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+
+    running_model.clear()
+
+    self.connection.send("OK")
+    print("Traning stopped.")
+
+def continue_training(self):
+    # Receive model identifier
+    model_id = int(self.connection.receive())
+    
+    running_model = self.active_models.get(model_id, None)
+    if running_model is None:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+
+    running_model.set()
+
+    self.connection.send("OK")
+    print("Traning continued.")
     
 # Helper functions #
 def compute_metrics(self):
@@ -107,18 +147,33 @@ def compute_metrics(self):
 
     print("Network statistics requested.")
     
-def train(self):
-    sr_connection = SignalRConnection(self.token)
-    sr_connection.set_method("SendLoss")
+def train(token, id, network):
+    connection_established = threading.Event()
+    sr_connection = SignalRConnection(token, connection_established)
     
     # Setup dataset version
-    if self.network.dataset_version is not None:
-        if not self.network.data.load_dataset_version(self.network.dataset_version):
-            sr_connection.send_string("ERROR :: Selected dataset not recognized.")
+    if network.dataset_version is not None:
+        if not network.data.load_dataset_version(network.dataset_version):
+            sr_connection.set_method("SendError")
+            sr_connection.send_to_front("ERROR :: Selected dataset not recognized.")
             return
+        
+    # Wait for connection
+    connection_established.wait()
     
-    for loss in self.network.train():
-        sr_connection.send_string(json.dumps(loss))
-    sr_connection.send_string("Done")
+    # Announce self
+    sr_connection.set_method("StartModelTraining")
+    sr_connection.send_to_front(id)
+    
+    sr_connection.set_method("Loss")
+    for loss in network.train():
+        results = {
+            'modelId' : id,
+            'epochRes' : loss
+        }
+        sr_connection.send_to_front(json.dumps(results))
+        
+    sr_connection.set_method("FinishModelTraining")
+    sr_connection.send_to_front(id)
     
     print("Traning complete.")
