@@ -423,7 +423,7 @@
                 </div>
             </div>
 
-            <ngb-pagination class="d-flex justify-content-center" *ngIf="this.json != undefined" (pageChange)="gty(page = $event)" [collectionSize]="this.totalItems" [(page)]="this.page" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+            <ngb-pagination class="d-flex justify-content-center" *ngIf="this.json != undefined" (pageChange)="gty(page = $event)" [pageSize]="this.itemsPerPage" [collectionSize]="this.totalItems" [(page)]="this.page" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
       
         </div>
 
