@@ -332,7 +332,7 @@
                     <table *ngIf="this.indikator; else statistika">
                         <tr class="head-table">
                             <th *ngFor="let header of dajHeadere();  let j = index" class="tr-button" (click)="getData(j, header.slice(1))" [class.selectedColHeader]="isSelectedNum(j)">
-                                <div class="d-flex justify-content-left align-items-center ">
+                                <div class="d-flex justify-content-left align-items-center " style="min-width: fit-content;" >
                                  <div style="margin-right: 5px;"> {{header}}</div> <div id="{{j}}column" class="d-flex justify-content-center align-items-center span-toggle" style=" width: 13px; height: 13px; font-size: smaller; border-radius: 50%; padding-top: 1px;" (click)="zamenaTipaKolone($event)" ></div> 
                                 </div>
                              </th>
@@ -423,7 +423,7 @@
                 </div>
             </div>
 
-            <ngb-pagination class="d-flex justify-content-center" *ngIf="this.json != undefined" (pageChange)="gty(page = $event)" [collectionSize]="this.totalItems" [(page)]="this.page" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+            <ngb-pagination class="d-flex justify-content-center" *ngIf="this.json != undefined" (pageChange)="gty(page = $event)" [pageSize]="this.itemsPerPage" [collectionSize]="this.totalItems" [(page)]="this.page" [maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
       
         </div>
 

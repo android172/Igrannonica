@@ -567,14 +567,12 @@ class MLData:
     # ######## #
     # Toggle Numerical/Categorical
     def toggle_column_data_type(self, column):
-        col_prev_type = self.column_data_ty[column]
-        
-        if col_prev_type == 'Numerical':
-            if self.dataset.dtypes[column] not in ['Int64', 'float64']:
+        if self.column_data_ty[column] == 'Numerical':
+            if self.dataset.dtypes[column] == 'float64':
                 return False
             self.column_data_ty[column] = 'Categorical'
         else:
-            if self.dataset.dtypes[column] == 'float64':
+            if self.dataset.dtypes[column] not in ['int64', 'float64']:
                 return False
             self.column_data_ty[column] = 'Numerical'
         
