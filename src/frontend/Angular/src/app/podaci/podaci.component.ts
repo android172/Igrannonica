@@ -2645,7 +2645,8 @@ zamenaTipaKolone(event:any)
   },error=>{
     console.log(error.error);
     this.selectedColumns = [];  
-    this.onError("Tip kolone nije zamenjen.");
+    this.onInfo("Tip odabrane kolone nije moguce zameniti.");
+    //this.onError("Tip kolone nije zamenjen.");
   });
 
  }
