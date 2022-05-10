@@ -247,7 +247,7 @@
         </div>
     </div>
 </div>
-    <div id="centrirano3">
+<div id="centrirano3">
     <div id="div">
         <div id="grafik">
             <div id="canvas">
@@ -263,10 +263,55 @@
             <tr><td>{{elem}}</td></tr>
         </table> -->
     </div>
-    <div id="statistika">
+    <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
         
     </div>
+    <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
+        <h3>Statistika testnog i trening skupa</h3>
+        <table id="stat" style="width:100%">
+            <tr>
+              <th>Parametri</th>
+              <th>Testni</th>
+              <th>Trening</th>
+            </tr>
+            <tr>
+              <td>Accuracy</td>
+              <td id="actest"></td>
+              <td id="actrain"></td>
+            </tr>
+            <tr>
+              <td>Balanced Accuracy</td>
+              <td id="batest"></td>
+              <td id="batrain"></td>
+            </tr>
+            <tr>
+                <td>CrossEntropyLoss</td>
+                <td id="celtest"></td>
+                <td id="celtrain"></td>
+            </tr>
+            <tr>
+                <td>F1Score</td>
+                <td id="f1test"></td>
+                <td id="f1train"></td>
+            </tr>
+            <tr>
+                <td>HammingLoss</td>
+                <td id="htest"></td>
+                <td id="htrain"></td>
+            </tr>
+            <tr>
+                <td>Precision</td>
+                <td id="ptest"></td>
+                <td id="ptrain"></td>
+            </tr>
+            <tr>
+                <td>Recall</td>
+                <td id="rtest" ></td>
+                <td id="rtrain"></td>
+            </tr>
+          </table>
     </div>
+</div>
     <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">

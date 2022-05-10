@@ -61,6 +61,10 @@ export class ModelComponent implements OnInit {
   public broj : number = 0;
   public crossV : number = 5;
   public flag: boolean = true;
+
+  public pomocna: boolean = false;
+  // public testC: any[] = [];
+  // public trainC: any[] = [];
   cv: number = 0;
 
   buttonDisable : boolean = true;
@@ -776,14 +780,70 @@ export class ModelComponent implements OnInit {
     this.http.get(url+"/api/Model/metrika?problemType=" + event.target.value).subscribe(
       res => {
         console.table(res);
-        this.jsonMetrika = res;
-        console.log(this.jsonMetrika);
+        this.jsonMetrika = Object.values(res);
+        this.checkType(event.target.value);
       },
       error => {
         console.log(error.error);
       }
     )
   }
+
+  checkType(event: any)
+  {
+    if(event==1)
+    {
+      this.setujMetrikuK();
+    }
+    else if(event==0)
+    {
+      this.setujMetrikuR();
+    }
+  }
+
+  setujMetrikuK()
+  {
+    var br = Number(this.jsonMetrika[0]['Accuracy']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("actest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['Accuracy']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("actrain")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['BalancedAccuracy']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("batest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['BalancedAccuracy']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("batrain")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['CrossEntropyLoss']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("celtest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['CrossEntropyLoss']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("celtrain")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['F1Score']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("f1test")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['F1Score']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("f1train")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['F1Score']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("htest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['F1Score']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("htrain")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['Precision']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("ptest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['Precision']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("ptrain")).innerHTML = br;
+
+    var br = Number(this.jsonMetrika[0]['Recall']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("rtest")).innerHTML = br;
+    var br = Number(this.jsonMetrika[1]['Recall']).toFixed(3);
+    (<HTMLTableColElement>document.getElementById("rtrain")).innerHTML = br;
+  }
+
+  setujMetrikuR()
+  {
+    
+  }
+
 
   // dajMetriku1()
   // {

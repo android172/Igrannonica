@@ -328,8 +328,9 @@ p
 }
 
 h3{
-  color: #FFFFFF;
+  color: rgb(216, 221, 251);
   margin-bottom: 5px;
+  text-align: center;
 }
 
 h4{
@@ -747,6 +748,7 @@ input
   overflow: auto;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
   /* margin-top: 80px; */
  /* margin-right: 50px;*/
   /* margin-right:100px;
@@ -754,7 +756,8 @@ input
  /* position: relative;*/
 }
 
-#statistika{
+#statistikaR, #statistikaC{
+  padding-top: 15px;
   width: 35vw;
   height: 65vh;
   border: 2.5px solid rgba(89, 119, 223, 1);
@@ -764,6 +767,19 @@ input
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-left: 25px;
+  background-color: #272741;
+}
+
+#stat{
+  /* border: 1px solid white; */
+  text-align: center;
+  margin: auto;
+  margin-top: 10px;
+}
+
+td{
+  width: 133.33px !important;
+  padding: 5px;
 }
 
 #centrirano3
