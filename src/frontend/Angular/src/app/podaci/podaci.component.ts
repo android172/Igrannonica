@@ -2568,30 +2568,6 @@ sacuvajKaoNovu(ime:string){
     
   }
   
-toggleColumnType(idKolone:number)
-{
-  console.log("ID KOLONE type: "+ idKolone);
-
-  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone, null, {responseType: 'text'}).subscribe(
-    res => {
-      console.log(res);
-      this.selectedColumns = []; 
-      this.gtyLoadPageWithStatistics(this.page);
-      // this.selectedColumns = []; 
-      this.nizNumerickihKolona = [];
-      this.nizKategorickihKolona = [];
-      this.EnableDisableGrafik();
-      let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjen tip kolone.");
-      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onSuccess("Tip kolone zamenjen.");
-  },error=>{
-    console.log(error.error);
-    this.selectedColumns = [];  
-    this.onError("Tip kolone nije zamenjen.");
-  });
-  
-}
 
 dodajTipovePoredKolona(tipovi:string[])
 {
@@ -2631,28 +2607,47 @@ zamenaTipaKolone(event:any)
   var idKolone = prethodni;
   var idKoloneUTabeli = event.target.id;
 
-  this.toggleColumnType(idKolone);
-
   var type = this.nizTipova[idKolone];
 
-  if(type[0] == 'C')
-  {
-    var elementCat = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
-    elementCat.innerHTML = "N";
-    elementCat.style.backgroundColor = "rgb(135, 172, 126)"; 
-    elementCat.style.color = "#204513";
-    this.nizTipova[idKolone] = "Numerical";
-  }
-  else
-  {
-    var elementNum = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
-    elementNum.innerHTML = "C";
-    elementNum.style.backgroundColor = "rgb(141, 133, 169)"; 
-    elementNum.style.color = "#301345";
-    this.nizTipova[idKolone] = "Categorical";
-  }
-  
-  console.log("TIPOVI: "+this.nizTipova);
+  console.log("ID KOLONE type: "+ idKolone);
+
+  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone, null, {responseType: 'text'}).subscribe(
+    res => {
+      console.log(res);
+      this.selectedColumns = []; 
+      this.gtyLoadPageWithStatistics(this.page);
+      // this.selectedColumns = []; 
+      this.nizNumerickihKolona = [];
+      this.nizKategorickihKolona = [];
+      this.EnableDisableGrafik();
+      let dateTime = new Date();
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjen tip kolone.");
+      this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+      this.onSuccess("Tip kolone zamenjen.");
+
+      if(type[0] == 'C')
+      {
+        var elementCat = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
+        elementCat.innerHTML = "N";
+        elementCat.style.backgroundColor = "rgb(135, 172, 126)"; 
+        elementCat.style.color = "#204513";
+        this.nizTipova[idKolone] = "Numerical";
+      }
+      else
+      {
+        var elementNum = (<HTMLDivElement>document.getElementById(idKoloneUTabeli));
+        elementNum.innerHTML = "C";
+        elementNum.style.backgroundColor = "rgb(141, 133, 169)"; 
+        elementNum.style.color = "#301345";
+        this.nizTipova[idKolone] = "Categorical";
+      }
+
+  },error=>{
+    console.log(error.error);
+    this.selectedColumns = [];  
+    this.onError("Tip kolone nije zamenjen.");
+  });
+
  }
  ucitajPodatkeSnapshota(id:Number){
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
