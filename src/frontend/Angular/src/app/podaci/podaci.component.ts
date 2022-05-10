@@ -194,6 +194,7 @@ export class PodaciComponent implements OnInit {
 
       const upload$ = this.http.post(url+"/api/File/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
+          this.ucitajSnapshotove();
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
