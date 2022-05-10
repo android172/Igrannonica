@@ -50,7 +50,7 @@ export class AppComponent {
     {
       this.header = false;
       this.footer = true;
-      document.body.style.backgroundImage = "url('/assets/pozadina.jpg')";
+      document.body.style.backgroundImage = "url('/assets/backgroundNova.jpg')";
       document.body.style.backgroundRepeat = "no-repeat";
       document.body.style.backgroundAttachment = "fixed";
       document.body.style.backgroundSize = "cover";
@@ -67,7 +67,7 @@ export class AppComponent {
     {
       this.header = true;
       this.footer = true;
-      document.body.style.background = "url('/assets/pozadina.jpg')";
+      document.body.style.background = "url('/assets/backgroundNova.jpg')";
       document.body.style.backgroundRepeat = "no-repeat";
       document.body.style.backgroundAttachment = "fixed";
       document.body.style.backgroundSize = "cover";
