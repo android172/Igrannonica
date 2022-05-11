@@ -28,6 +28,7 @@ export class ModelComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() mod!: Observable<number>;
+  @Input() index!: Observable<number>; 
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
@@ -122,7 +123,8 @@ export class ModelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
+    // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
+    this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -132,6 +134,14 @@ export class ModelComponent implements OnInit {
     }
     this.dajSnapshots();
   }
+
+  primiSnapshot(data:number){
+
+    this.dajSnapshots();
+    this.selectSnapshot(data);
+    this.imeS("SIROVI PODACI");
+  }
+
   posaljiZahtev(data:number){
     //console.log(data);
     this.aktFunk = [];

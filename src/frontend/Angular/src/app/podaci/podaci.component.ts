@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
@@ -19,6 +19,7 @@ import { HtmlParser } from '@angular/compiler';
 })
 export class PodaciComponent implements OnInit {
 
+  @Output() PosaljiDefaultSnapshot:EventEmitter<number> = new EventEmitter<number>();
   value: number = 50;
   options: Options = {
     floor: 0,
@@ -2258,6 +2259,7 @@ dajNaziveHeadera()
     this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
       res=>{
         this.snapshots = res;
+        this.PosaljiDefaultSnapshot.emit(this.snapshots[0].id);
       }
     );
   }

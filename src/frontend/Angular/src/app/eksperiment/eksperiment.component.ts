@@ -44,6 +44,10 @@ export class EksperimentComponent implements OnInit {
     (<HTMLAnchorElement>document.getElementById("model")).classList.add("active","show");
   }
 
+  primi2(id:number){
+    this.eventsSubject.next(id);
+  }
+
   boolPodaciPromena()
   {
     this.podaci = true;
