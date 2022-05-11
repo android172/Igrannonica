@@ -314,6 +314,32 @@ namespace dotNet.Controllers
                 return BadRequest("Nije uspelo");
             }
         }
+        
+        [HttpPost("NoviModel")]
+        public IActionResult noviModel(int idEksperimenta,[FromBody]NovModel model)
+        {
+            try
+            {
+                if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot)) {
+                    int modela = db.dbmodel.proveriModel(model.naziv,idEksperimenta);
+                    if (db.dbmodel.izmeniPodesavanja(modela, model.podesavalja))
+                    {
+                        if(db.dbmodel.UpisiKolone(modela, model.kolone))
+                        {
+                        return Ok(modela);
+                        }
+                        return BadRequest("Doslo do greske prilikom cuvanja kolona.");
+                    }
+                    return BadRequest("Doslo do greske prilikom cuvanja podesavanja.");
+                }
+                return BadRequest("Doslo do greske prilikom pravljenja modela.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
 
     }
 }

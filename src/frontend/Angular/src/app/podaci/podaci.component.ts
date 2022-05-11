@@ -599,6 +599,7 @@ dajNaziveHeadera()
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
         this.nizNumerickihKolona = [];
+        this.EnableDisableGrafik();
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -2283,6 +2284,7 @@ sacuvajKaoNovu(ime:string){
         if(res!="-1"){
           console.log("Sacuvan snapshot.");
           this.onSuccess("Nova verzija je uspesno sacuvana.");
+          this.ucitajSnapshotove();
         }
       });
     }
@@ -2322,6 +2324,9 @@ sacuvajKaoNovu(ime:string){
         res=>{
           this.ucitajSnapshotove();
           this.ucitajPodatkeSnapshota(0);
+        },
+        error=>{
+          this.ucitajSnapshotove();
         }
       )
     }
