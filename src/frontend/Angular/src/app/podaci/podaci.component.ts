@@ -2324,6 +2324,9 @@ sacuvajKaoNovu(ime:string){
         res=>{
           this.ucitajSnapshotove();
           this.ucitajPodatkeSnapshota(0);
+        },
+        error=>{
+          this.ucitajSnapshotove();
         }
       )
     }
