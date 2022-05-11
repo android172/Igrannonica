@@ -35,3 +35,62 @@ canvas{
     height: 100%;
     display:block;
     } */
+
+ul    
+{
+    display: flex;
+    justify-content: row;
+    margin: 0 auto;
+    width: 90%;
+    list-style-type: none;
+    margin-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 0;
+    overflow: hidden;
+    opacity: 0.9;
+    border-radius: 25px;
+    align-content: center;
+}
+      
+li 
+{
+    float: left;
+    padding: 20px 10px;
+    padding-top: 20px;
+}
+      
+li a
+{
+    display: block;
+    color: #ffdee5;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'Roboto';
+    font-style: normal;
+    padding-right: 22px;
+    cursor: pointer;
+}
+    
+a
+{
+    border-right: 1px solid #ffdee5;
+}
+      
+ul li a:hover 
+{
+    color: #F45E82 !important; 
+    transition: 0.15s !important;
+}
+
+#meni
+{
+    font-size: 1.3em;
+    position: absolute;
+    height: 220px;
+    top: 0px;
+    left: 0px;
+    padding: 20px;
+    margin-left: 25px;
+    z-index: 100;
+}

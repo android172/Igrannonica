@@ -6,4 +6,11 @@
     </div> -->
     <canvas class="particles-js-canvas-el" width="937" height="902" style="width: 100%; height: 100%;">
     </canvas>
+    <ul id="meni">
+        <div *ngFor="let tabs of prikaziMeni_1">
+          <li *ngIf="tabs.id==false">
+              <a routerLink="{{tabs.link}}" [style]="tabs.style">{{tabs.tab}}</a>
+          </li>
+        </div>
+    </ul>
 </div>
