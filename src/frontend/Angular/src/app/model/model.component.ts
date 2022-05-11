@@ -64,8 +64,16 @@ export class ModelComponent implements OnInit {
   public flag: boolean = true;
 
   public pomocna: boolean = false;
+  public prikazi: boolean = false;
+  public prikazi1: boolean = false;
   // public testC: any[] = [];
   // public trainC: any[] = [];
+  public mtest: any[] = [];
+  public mtrain: any[] = [];
+  public nizPoljaTest: any[] = [];
+  public nizPoljaTrain: any[] = [];
+  public maxNizaT: any;
+  public maxNizaTr: any;
   cv: number = 0;
 
   buttonDisable : boolean = true;
@@ -80,6 +88,21 @@ export class ModelComponent implements OnInit {
   public izabraneU : number[] = [];
   public izabraneI : number[] = [];
   public pomocni : number[] = [];
+
+  public atest: String = "";
+  public atrain: String = "";
+  public btest: String = "";
+  public btrain: String = "";
+  public ctest: String = "";
+  public ctrain: String = "";
+  public ftest: String = "";
+  public ftrain: String = "";
+  public htest: String = "";
+  public htrain: String = "";
+  public ptest: String = "";
+  public ptrain: String = "";
+  public rtest: String = "";
+  public rtrain: String = "";
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -246,7 +269,6 @@ export class ModelComponent implements OnInit {
     {
       if(nizK[i].checked)
       {
-
         ind1 = 0;
         for(let j=0; j<this.ulazneKolone.length; j++)
         {
@@ -258,30 +280,45 @@ export class ModelComponent implements OnInit {
         if(ind1 == 0)
         {
            this.ulazneKolone.push(nizK[i].value);
-           (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
-           this.brojU++;
-           if(this.brojU > 0 && this.brojI > 0)
+        }
+        this.kolone.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           // console.log(element);
+            this.kolone.splice(index,1);
+            this.brojU++;
+            if(this.brojU > 0 && this.brojI > 0)
             {
               this.buttonDisable = false;
             }
             console.log(this.brojU);
-        }
+          }
+        });
+        //console.log(this.kolone);
       }
       if(!nizK[i].checked)
       {
         for(let j=0; j < this.ulazneKolone.length; j++)
         {
-          if(this.ulazneKolone[j] === nizK[i].value)
+          if(this.ulazneKolone[j] == nizK[i].value)
           {
             this.ulazneKolone.splice(j,1);
-            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojU--;
-             console.log(this.brojU);
-            if(this.brojU == 0)
-            {
-              this.buttonDisable = true;
-            }
+          }
+        }
+        //console.log(this.ulazneKolone);
+        var ind = 0;
+        this.kolone.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           // console.log(element);
+            ind = 1;
+          }
+        });
+        if(ind == 0)
+        {
+          this.kolone.splice(i, 0, nizK[i].value);
+          this.brojU--;
+          if(this.brojU)
+          {
+            this.buttonDisable = true;
           }
         }
       }
@@ -337,31 +374,46 @@ export class ModelComponent implements OnInit {
         if(ind2 == 0)
         {
            this.izlazneKolone.push(nizK[i].value);
-           (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = true;
-           this.brojI++;
-           if(this.brojI > 0 && this.brojU > 0)
+        }
+        console.log(this.ulazneKolone);
+
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+           this.kolone2.splice(index,1);
+            this.brojI++;
+            if(this.brojI > 0 && this.brojU > 0)
             {
               this.buttonDisable = false;
             }
-            console.log(this.brojI);
-        }
+            return;
+          }
+        });
       }
       if(!nizK[i].checked)
       {
         for(let j=0; j < this.izlazneKolone.length; j++)
         {
-          if(this.izlazneKolone[j] === nizK[i].value)
+          if(this.izlazneKolone[j] == nizK[i].value)
           {
             this.izlazneKolone.splice(j,1);
-            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojI--;
-             console.log(this.brojI);
-            if(this.brojI == 0)
-            {
-              this.buttonDisable = true;
-            }
           }
+        }
+        //console.log(this.izlazneKolone);
+        var ind = 0;
+        this.kolone2.forEach((element:any,index:any) => { 
+          if(element === nizK[i].value){
+            ind = 1;
+          }
+        });
+        if(ind == 0)
+        {
+          this.kolone2.splice(i, 0, nizK[i].value);
+          this.brojI--;
+          if(this.brojI == 0)
+          {
+            this.buttonDisable = true;
+          }
+          return;
         }
       }
     }
@@ -756,13 +808,13 @@ export class ModelComponent implements OnInit {
     console.log(this.selectedSS);
   }
 
-  dajMetriku(event: any)
+  dajMetriku()
   {
-    this.http.get(url+"/api/Model/metrika?problemType=" + event.target.value).subscribe(
+    this.http.get(url+"/api/Model/metrika?problemType=" + this.selectedPT).subscribe(
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
-        this.checkType(event.target.value);
+        this.checkType();
       },
       error => {
         console.log(error.error);
@@ -770,54 +822,50 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  checkType(event: any)
+  checkType()
   {
-    if(event==1)
+    if(this.selectedPT==1)
     {
+      if(this.pomocna==true)
+        this.pomocna=false;
       this.setujMetrikuK();
+      this.kreirajMatricuTest();
+      this.kreirajMatricuTrain();
     }
-    else if(event==0)
+    else if(this.selectedPT==0)
     {
       this.setujMetrikuR();
+      if(this.pomocna==false)
+        this.pomocna=true;
     }
   }
 
   setujMetrikuK()
   {
-    var br = Number(this.jsonMetrika[0]['Accuracy']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("actest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['Accuracy']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("actrain")).innerHTML = br;
+    this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
+    this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
+    
+    this.btest = (Number(this.jsonMetrika[0]['BalancedAccuracy'])).toFixed(3);
+    this.btrain = (Number(this.jsonMetrika[1]['BalancedAccuracy'])).toFixed(3);
 
-    var br = Number(this.jsonMetrika[0]['BalancedAccuracy']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("batest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['BalancedAccuracy']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("batrain")).innerHTML = br;
+    this.ctest = (Number(this.jsonMetrika[0]['CrossEntropyLoss'])).toFixed(3);
+    this.ctrain = (Number(this.jsonMetrika[1]['CrossEntropyLoss'])).toFixed(3);
+   
+    this.ftest = (Number(this.jsonMetrika[0]['F1Score'])).toFixed(3);
+    this.ftrain = (Number(this.jsonMetrika[1]['F1Score'])).toFixed(3);
+    
+    this.htest = (Number(this.jsonMetrika[0]['HammingLoss'])).toFixed(3);
+    this.htrain = (Number(this.jsonMetrika[1]['HammingLoss'])).toFixed(3);
+    
+    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+    
+    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
 
-    var br = Number(this.jsonMetrika[0]['CrossEntropyLoss']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("celtest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['CrossEntropyLoss']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("celtrain")).innerHTML = br;
+    this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
+    this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
 
-    var br = Number(this.jsonMetrika[0]['F1Score']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("f1test")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['F1Score']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("f1train")).innerHTML = br;
-
-    var br = Number(this.jsonMetrika[0]['F1Score']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("htest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['F1Score']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("htrain")).innerHTML = br;
-
-    var br = Number(this.jsonMetrika[0]['Precision']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("ptest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['Precision']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("ptrain")).innerHTML = br;
-
-    var br = Number(this.jsonMetrika[0]['Recall']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("rtest")).innerHTML = br;
-    var br = Number(this.jsonMetrika[1]['Recall']).toFixed(3);
-    (<HTMLTableColElement>document.getElementById("rtrain")).innerHTML = br;
   }
 
   setujMetrikuR()
@@ -825,9 +873,76 @@ export class ModelComponent implements OnInit {
     
   }
 
+  kreirajMatricuTest()
+  {
+    var p=0;
+    this.mtest = this.jsonMetrika[0]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtest.length;i++)
+       for(let j=0;j<this.mtest[i].length;j++)
+       {
+          this.nizPoljaTest[p]=this.mtest[i][j];
+          console.log(this.nizPoljaTest[p]);
+          p++;
+       }
+       this.nadjiMaxTest();
+  }
 
-  // dajMetriku1()
-  // {
-  //   this.dajMetriku(this.selectedPT);
-  // }
+  nadjiMaxTest()
+  {
+    var t;
+    for(let i=0;i<this.nizPoljaTest.length-1;i++)
+      for(let j=1;j<this.nizPoljaTest.length;j++)
+      {
+        if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
+        {
+          t=this.nizPoljaTest[i];
+          this.nizPoljaTest[i]=this.nizPoljaTest[j];
+          this.nizPoljaTest[j]=t;
+        }
+      }
+      this.maxNizaT= this.nizPoljaTest[0];
+  }
+  
+  kreirajMatricuTrain()
+  {
+    var p=0;
+    this.mtrain = this.jsonMetrika[1]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtrain.length;i++)
+       for(let j=0;j<this.mtrain[i].length;j++)
+       {
+          this.nizPoljaTrain[p]=this.mtrain[i][j];
+          console.log(this.nizPoljaTrain[p]);
+          p++;
+       }
+       this.nadjiMaxTrain();
+  }
+
+  nadjiMaxTrain()
+  {
+    var t;
+    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
+      for(let j=1;j<this.nizPoljaTrain.length;j++)
+      {
+        if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
+        {
+          t=this.nizPoljaTrain[i];
+          this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
+          this.nizPoljaTrain[j]=t;
+        }
+      }
+      this.maxNizaTr= this.nizPoljaTrain[0];
+  }
+
+  colapseLoss()
+  {
+    this.prikazi=true;
+    (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
+  }
+  
+  colapseStatistics()
+  {
+    this.prikazi1=true;
+  }
 }

@@ -13,38 +13,26 @@
     </div>
 <div id="div1">
     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
-    <!-- <button (click)="dajMetriku1()">Metrika</button> -->
+    <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button>
 </div>
 <div id="centrirano">
     <div id="div2">
         <div id="divUI">
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
-                <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
+                <label class="container" *ngFor="let e of kolone2">{{e}}
                     <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                     <span class="checkmark"></span>
-                </label> -->
-                <div class="form-check pb-3" *ngFor="let e of kolone2" style="color: #fff; font-size: 15px;">
-                    <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1">
-                    <label class="form-check-label" style="padding-top: 0.1rem;" for="flexCheckDefault">
-                      {{e}}
-                    </label>
-                </div>
+                </label>
             </div>
         </div>
         <div id="divUI">
             <p>Izbor kolona za izlaz</p>
             <div id="ulaziIzlaz2">
-                <!-- <label class="container" *ngFor="let m of kolone">{{m}}
-                    <input type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" id="{{m}}">
+                <label class="container" *ngFor="let m of kolone">{{m}}
+                    <input type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" >
                     <span class="checkmark"></span>
-                </label>     -->
-                <div class="form-check pb-3" *ngFor="let m of kolone" style="color: #fff;font-size: 15px;">
-                    <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" id="flexCheckDefault" id="{{m}}">
-                    <label class="form-check-label"  style="padding-top: 0.1rem;" for="flexCheckDefault">
-                      {{m}}
-                    </label>
-                </div>
+                </label>    
             </div>
         </div>
     </div>
@@ -77,7 +65,7 @@
 
                     <div id="grupaP">
                         <h4> Problem type </h4>
-                        <select name="" id="dd3" (change)="selectPT($event)" (change)="dajMetriku($event)">
+                        <select name="" id="dd3" (change)="selectPT($event)">
                             <option id="ddp" value="1">Classification</option>
                             <option id="ddp" value="0">Regression</option>
                         </select>
@@ -118,7 +106,7 @@
                         </div>
                         <ng-template #onemoguceno>
                             <input id="crossVd" disabled>
-                          </ng-template>
+                        </ng-template>
                         <!--
                         <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
                         <div *ngIf="!flag; else onemoguceno">
@@ -260,7 +248,9 @@
     </div>
 </div>
 <div id="centrirano3">
-    <div id="div">
+    <div id="collapse1" style="min-height: 30px;">
+    <h3 id="loss">Graficki prikaz loss funkcije</h3>
+    <div id="div" *ngIf="prikazi==true">
         <div id="grafik">
             <div id="canvas">
                 <canvas baseChart
@@ -275,53 +265,66 @@
             <tr><td>{{elem}}</td></tr>
         </table> -->
     </div>
-    <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
-        
-    </div>
-    <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
-        <h3>Statistika testnog i trening skupa</h3>
-        <table id="stat" style="width:100%">
-            <tr>
-              <th>Parametri</th>
-              <th>Testni</th>
-              <th>Trening</th>
-            </tr>
-            <tr>
-              <td>Accuracy</td>
-              <td id="actest"></td>
-              <td id="actrain"></td>
-            </tr>
-            <tr>
-              <td>Balanced Accuracy</td>
-              <td id="batest"></td>
-              <td id="batrain"></td>
-            </tr>
-            <tr>
-                <td>CrossEntropyLoss</td>
-                <td id="celtest"></td>
-                <td id="celtrain"></td>
-            </tr>
-            <tr>
-                <td>F1Score</td>
-                <td id="f1test"></td>
-                <td id="f1train"></td>
-            </tr>
-            <tr>
-                <td>HammingLoss</td>
-                <td id="htest"></td>
-                <td id="htrain"></td>
-            </tr>
-            <tr>
-                <td>Precision</td>
-                <td id="ptest"></td>
-                <td id="ptrain"></td>
-            </tr>
-            <tr>
-                <td>Recall</td>
-                <td id="rtest" ></td>
-                <td id="rtrain"></td>
-            </tr>
-          </table>
+</div>
+    <div>
+        <div id="collapse" style="min-height: 30px;">
+            <h3>Statistika testnog i trening skupa</h3>
+            <div id="metrika" *ngIf="prikazi1==true">
+                <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
+                    <h3 style="color:aliceblue">Regresija</h3>
+                </div>
+                <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
+                    <table id="stat" style="width:100%">
+                        <tr>
+                          <th>Parametri</th>
+                          <th>Testni</th>
+                          <th>Trening</th>
+                        </tr>
+                        <tr>
+                          <td>Accuracy</td>
+                          <td id="actest">{{atest}}</td>
+                          <td id="actrain">{{atrain}}</td>
+                        </tr>
+                        <tr>
+                          <td>Balanced Accuracy</td>
+                          <td id="batest">{{btest}}</td>
+                          <td id="batrain">{{btrain}}</td>
+                        </tr>
+                        <tr>
+                            <td>CrossEntropyLoss</td>
+                            <td id="celtest">{{ctest}}</td>
+                            <td id="celtrain">{{ctrain}}</td>
+                        </tr>
+                        <tr>
+                            <td>F1Score</td>
+                            <td id="f1test">{{ftest}}</td>
+                            <td id="f1train">{{ftrain}}</td>
+                        </tr>
+                        <tr>
+                            <td>HammingLoss</td>
+                            <td id="htest">{{htest}}</td>
+                            <td id="htrain">{{htrain}}</td>
+                        </tr>
+                        <tr>
+                            <td>Precision</td>
+                            <td id="ptest">{{atest}}</td>
+                            <td id="ptrain">{{atest}}</td>
+                        </tr>
+                        <tr>
+                            <td>Recall</td>
+                            <td id="rtest">{{rtest}}</td>
+                            <td id="rtrain">{{rtrain}}</td>
+                        </tr>
+                      </table>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 95px;">
+                        Pogledaj konfuzionu matricu testnog skupa
+                      </button>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM1" style="margin-left: 95px; margin-top: 10px; margin-bottom: 10px;">
+                         Pogledaj konfuzionu matricu training skupa
+                      </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
     <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -347,6 +350,45 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="exampleModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+            <div class="modal-header" style="border: none;">
+              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Konfuziona matrica testnog skupa</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style=" text-align: center;">
+                <div *ngFor="let m of mtest; let ind = index" style="margin-left: 180px">
+                    <div style="color: white;" id="conMat" *ngFor="let i of mtest[ind]">
+                        <div style="width: 50px; height: 50px; float: left; border: 1px solid white; padding-top: 15px; text-align: center;">{{(i/maxNizaT).toFixed(3)}}</div>
+                    </div>
+                    <div style="width: 100px; height: 50px"></div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+            <div class="modal-header" style="border: none;">
+              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Konfuziona matrica trening skupa</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style=" text-align: center;">
+                <div *ngFor="let m of mtrain; let ind = index" style="margin-left: 180px">
+                    <div style="color: white;" id="conMat" *ngFor="let i of mtrain[ind]">
+                        <div style="width: 50px; height: 50px; float: left; border: 1px solid white; padding-top: 15px; text-align: center;">{{(i/maxNizaTr).toFixed(3)}}</div>
+                    </div>
+                    <div style="width: 100px; height: 50px"></div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+    </div>
     <simple-notifications></simple-notifications>
 </div>
 

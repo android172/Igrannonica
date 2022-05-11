@@ -488,7 +488,6 @@ input
 #div3{
   position: relative;
   width: 320px;
-  height: 550px;
   float: left;
   box-sizing: border-box;
   justify-content: center;
@@ -738,16 +737,16 @@ input
 
 #div{
 
-  width: 65vw;
-  height: 65vh;
-  border: 2.5px solid rgba(89, 119, 223, 1);
+  width: 50vw;
+  height: 55vh;
+  /* border: 2.5px solid rgba(89, 119, 223, 1); */
   border-radius: 10px;
   float: left;
  /* padding-top: 25px;
   padding-left: 30px;*/
-  overflow: auto;
+  /* overflow: auto; */
   box-sizing: border-box;
-  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25); */
   background-color: #272741;
   /* margin-top: 80px; */
  /* margin-right: 50px;*/
@@ -756,10 +755,9 @@ input
  /* position: relative;*/
 }
 
-#statistikaR, #statistikaC{
-  padding-top: 15px;
+#collapse{
+  padding-top: 5px;
   width: 35vw;
-  height: 65vh;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -770,11 +768,25 @@ input
   background-color: #272741;
 }
 
+#collapse1{
+  padding-top: 5px;
+  width: 65vw;
+  border: 2.5px solid rgba(89, 119, 223, 1);
+  border-radius: 10px;
+  float: left;
+  overflow: auto;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
+  
+}
+
 #stat{
   /* border: 1px solid white; */
   text-align: center;
   margin: auto;
   margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 td{
@@ -788,7 +800,7 @@ td{
   position: relative;
   display: flex;
   clear: both;
-    
+  margin-top: 30px;
 }
 
 #centrirano4
@@ -847,14 +859,14 @@ td{
 #grafik
 {
   display: flex;
-  justify-content: center;
+  justify-content: center; 
 }
 
 #canvas
 {
   width: 90%;
   height: 90%;
-  margin-top: 50px;
+  margin-top: 20px; 
 }
 
 #cp{
