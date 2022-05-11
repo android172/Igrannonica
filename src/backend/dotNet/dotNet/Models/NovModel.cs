@@ -6,6 +6,6 @@
         public string opis { get; set; }
         public int snapshot { get; set; }
         public ANNSettings podesavalja { get; set; }
-        public int[][] kolone { get; set; }
+        public Kolone kolone { get; set; }
     }
 }
