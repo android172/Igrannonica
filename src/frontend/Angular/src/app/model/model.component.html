@@ -20,19 +20,31 @@
         <div id="divUI">
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
-                <label class="container" *ngFor="let e of kolone2">{{e}}
+                <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
                     <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                     <span class="checkmark"></span>
-                </label>
+                </label> -->
+                <div class="form-check pb-3" *ngFor="let e of kolone2" style="color: #fff; font-size: 15px;">
+                    <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1">
+                    <label class="form-check-label" style="padding-top: 0.1rem;" for="flexCheckDefault">
+                      {{e}}
+                    </label>
+                </div>
             </div>
         </div>
         <div id="divUI">
             <p>Izbor kolona za izlaz</p>
             <div id="ulaziIzlaz2">
-                <label class="container" *ngFor="let m of kolone">{{m}}
+                <!-- <label class="container" *ngFor="let m of kolone">{{m}}
                     <input type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" >
                     <span class="checkmark"></span>
-                </label>    
+                </label>     -->
+                <div class="form-check pb-3" *ngFor="let m of kolone" style="color: #fff;font-size: 15px;">
+                    <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="izl"(change)="funkcija2()" value="{{m}}" id="flexCheckDefault" id="{{m}}">
+                    <label class="form-check-label"  style="padding-top: 0.1rem;" for="flexCheckDefault">
+                      {{m}}
+                    </label>
+                </div>
             </div>
         </div>
     </div>
