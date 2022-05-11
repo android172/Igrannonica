@@ -133,6 +133,7 @@ export class ModelComponent implements OnInit {
       //console.log(this.signalR.data);
     }
     this.dajSnapshots();
+    (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
   primiSnapshot(data:number){
