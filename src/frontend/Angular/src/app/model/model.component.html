@@ -13,7 +13,7 @@
     </div>
 <div id="div1">
     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button>
-    <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button>
+    <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
 </div>
 <div id="centrirano">
     <div id="div2">
@@ -181,8 +181,8 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-footer" style="border-top: none;">
-                          <button type="button"  class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;">Pokreni bez cuvanja</button>
-                          <button type="button"  class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;">Sačuvaj izmene</button>
+                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()" (click)="dajMetriku()">Pokreni bez cuvanja</button>
+                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()" (click)="dajMetriku()">Sačuvaj izmene</button>
                         </div>
                       </div>
                     </div>
