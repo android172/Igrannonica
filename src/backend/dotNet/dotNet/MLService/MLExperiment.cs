@@ -560,6 +560,7 @@ namespace dotNet.MLService {
         public void Start() {
             lock (_lock) {
                 connection.Send(Command.Start);
+                CheckStatus();
             }
         }
 

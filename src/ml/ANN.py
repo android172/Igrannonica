@@ -1,7 +1,9 @@
 
 from math import sqrt
 import random
+import sys
 import threading
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -87,9 +89,8 @@ class ANN:
         
         new_ann.create_new_network()
         
-        new_ann.model.load_state_dict(self.model.state_dict())
-        
-        new_ann.weights_history = {}
+        if self.model is not None:
+            new_ann.model.load_state_dict(self.model.state_dict())
         
         return new_ann
         
@@ -110,6 +111,26 @@ class ANN:
         test_dataset = self.data.get_test_dataset()
         if len(test_dataset) > 0:
             self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
+    
+    def setup_output_columns(self):
+        if self.output_size > 1:
+            return True
+        if self.output_size < 1:
+            return False
+        
+        output_column = self.data.output_columns[0]
+        number_of_unique = self.data.dataset.iloc[:, output_column].nunique()
+        if number_of_unique < 2:
+            return False
+        
+        res = self.data.one_hot_encode_columns([output_column])
+        if  res > 0:
+            return False
+        self.output_size = number_of_unique
+        
+        self.create_new_network()
+        
+        return True
     
     # #################### #
     # Working with a model #
@@ -197,7 +218,7 @@ class ANN:
         weights = []
         for layer, layer_weights in self.model.state_dict().items():
             if layer[-4:] != 'bias':
-                weights.append(layer_weights.tolist())
+                weights.append([x if x != np.nan else 0 for x in layer_weights.tolist()])
         return weights
     
     def load_weights(self, weights_path):
@@ -292,7 +313,7 @@ class ANN:
                     yield {
                         "fold"    : fold,
                         "epoch"   : self.current_epoch,
-                        "loss"    : loss,
+                        "loss"    : loss if loss != np.nan else sys.float_info.max,
                         "valLoss" : valLoss,
                         "weights" : self.get_weights()
                     }
@@ -306,7 +327,7 @@ class ANN:
                 loss = self.train_epoch(self.train_loader)
                 yield {
                     "epoch" : self.current_epoch,
-                    "loss"  : loss,
+                    "loss"  : loss if loss != np.nan else sys.float_info.max,
                     "weights" : self.get_weights() 
                 }
                 self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
@@ -322,7 +343,10 @@ class ANN:
         elif dataset == "test":
             loader = self.test_loader
         else:
-            return
+            return None
+
+        if loader is None:
+            return None
         
         actual = [[] for _ in range(self.output_size)]
         predicted = [[] for _ in range(self.output_size)]
@@ -372,10 +396,14 @@ class ANN:
         elif dataset == "test":
             loader = self.test_loader
         else:
-            return
+            return None
+
+        if loader is None:
+            return None
         
         actual = []
         predicted = []
+        prediction_prob = []
         
         self.model.eval()
         
@@ -390,16 +418,17 @@ class ANN:
                 
                 actual.extend([i.index(max(i)) for i in y.tolist()])
                 predicted.extend(y_p.tolist())
+                prediction_prob.extend(scores.tolist())
                 
         self.model.train()
         
         Accuracy         = metrics.accuracy_score(actual, predicted)
         BalancedAccuracy = metrics.balanced_accuracy_score(actual, predicted)
-        Precision        = metrics.precision_score(actual, predicted)
-        Recall           = metrics.recall_score(actual, predicted)
-        F1Score          = metrics.f1_score(actual, predicted)
+        Precision        = metrics.precision_score(actual, predicted, average='micro')
+        Recall           = metrics.recall_score(actual, predicted, average='micro')
+        F1Score          = metrics.f1_score(actual, predicted, average='micro')
         HammingLoss      = metrics.hamming_loss(actual, predicted)
-        CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        CrossEntropyLoss = metrics.log_loss(actual, prediction_prob)
         ConfusionMatrix  = metrics.confusion_matrix(actual, predicted)
         
         return StatisticsClassification(
