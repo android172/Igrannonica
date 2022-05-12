@@ -22,10 +22,11 @@ class MLData:
     
     def __init__(self) -> None:
         self.dataset        = None
-        self.input_columns  = None
-        self.output_columns = None
         self.column_types   = None
         self.column_data_ty = None
+        
+        self.input_columns  = []
+        self.output_columns = []
         
         self.test_col = '_IsATestPoint'
         
@@ -56,8 +57,8 @@ class MLData:
             series = pd.Series([0 for _ in range(self.dataset.shape[0])], name=self.test_col)
             self.dataset = self.dataset.join(series)
         
-        self.input_columns = None
-        self.output_columns = None
+        self.input_columns = []
+        self.output_columns = []
         
         self.column_types = [str(x) for x in self.dataset.dtypes]
         
@@ -97,19 +98,12 @@ class MLData:
         
     # Manage versions
     def save_change(self):
-        new_inputs = None
-        if self.input_columns is not None:
-            new_inputs = [x for x in self.input_columns]
-        new_outputs = None
-        if self.output_columns is not None:
-            new_outputs = [x for x in self.output_columns]
-            
         self.past_states.append({
             'dataset'       : self.dataset.copy(deep=True),
             'column_types'  : [x for x in self.column_types],
             'column_data_ty': [x for x in self.column_data_ty],
-            'input_columns' : new_inputs,
-            'output_columns': new_outputs
+            'input_columns' : [x for x in self.input_columns],
+            'output_columns': [x for x in self.output_columns]
         })
         self.future_states.clear()
     
