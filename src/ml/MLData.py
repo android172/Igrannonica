@@ -196,6 +196,12 @@ class MLData:
                 return False
         return True
     
+    def get_train_count(self):
+        return (self.dataset[self.test_col] == 0).sum()
+    
+    def get_test_count(self):
+        return (self.dataset[self.test_col] == 1).sum()
+    
     def get_train_dataset(self):
         train_data = []
         for row in self.dataset[self.dataset[self.test_col] == 0].values:

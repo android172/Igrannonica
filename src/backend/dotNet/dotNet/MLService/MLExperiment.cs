@@ -533,9 +533,10 @@ namespace dotNet.MLService {
         }
 
         // Working with ANN-s
-        public string ComputeMetrics() {
+        public string ComputeMetrics(int modelId = -1) {
             lock (_lock) {
                 connection.Send(Command.ComputeMetrics);
+                connection.Send(modelId);
                 CheckStatus();
                 return connection.Receive();
             }
@@ -573,6 +574,16 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.Continue);
                 connection.Send(modelId);
+            }
+        }
+
+        public string Predict(string[] inputs, int modelId = -1) {
+            lock (_lock) {
+                connection.Send(Command.Predict);
+                connection.Send(EncodeStringArray(inputs));
+                connection.Send(modelId);
+                CheckStatus();
+                return connection.Receive();
             }
         }
 
@@ -672,6 +683,7 @@ namespace dotNet.MLService {
         SelectTraningData,
         Start,
         Stop,
-        Continue
+        Continue,
+        Predict
     }
 }

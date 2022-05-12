@@ -412,6 +412,18 @@ class ANN:
             CrossEntropyLoss = CrossEntropyLoss,
             ConfusionMatrix  = ConfusionMatrix
         ).__dict__
+        
+    # Prediction
+    def predict(self, inputs):
+        inputs = torch.tensor(inputs).to(device)
+        
+        outputs = self.model(inputs)
+        
+        if self.isRegression:
+            return outputs.tolist()
+        
+        _, y_p = outputs.max(0)
+        return y_p.tolist()
     
 class NN(nn.Module):
     def __init__(self) -> None:

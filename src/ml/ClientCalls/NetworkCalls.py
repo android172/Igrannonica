@@ -9,14 +9,61 @@ from SignalRConnection import SignalRConnection
 from Models.ANNSettings import ANNSettings
 
 def compute_metrics(self):
-    if len(self.network.data.train_indices) == 0:
+    # receive model identifier
+    model_id = int(self.connection.receive())
+    
+    if self.network.data.get_train_count == 0:
         self.report_error("ERROR :: Train dataset not selected.")
         return
-    if len(self.network.data.test_indices) == 0:
+    if self.network.data.get_test_count == 0:
         self.report_error("ERROR :: Test dataset not selected.")
         return
     
-    Thread(target = lambda : compute_metrics(self)).start()
+    if model_id == -1:
+        ann = self.network.create_deep_copy()
+    else:
+        ann = self.active_models.get(model_id, None)
+        if ann is None:
+            self.report_error("ERROR :: Wrong model identifier.")
+            return
+    Thread(target = lambda : compute_metrics_a(self, ann)).start()
+    
+def predict(self):
+    # receive inputs
+    inputs_string = self.connection.receive()
+    inputs = json.loads(inputs_string)["Data"]
+    
+    # receive model identifier
+    model_id = int(self.connection.receive())
+    
+    if model_id == -1:
+        active_network = self.network
+    else:
+        active_network = self.active_models.get(model_id, None)
+        if active_network is None:
+            self.report_error("ERROR :: Wrong model identifier.")
+            return
+    
+    if len(inputs) != active_network.input_size:
+        self.report_error(f"ERROR :: Wrong number of arguments passed ({len(inputs)} insted of {active_network.input_size}).")
+        return
+    
+    if active_network.isRunning.is_set():
+        self.report_error("ERROR :: Network is currently running.")
+        return
+
+    try: parsed_inputs = [float(x) for x in inputs]
+    except:
+        self.report_error(f"ERROR :: All arguments must be convertable to float.")
+        return
+    
+    outputs = active_network.predict(parsed_inputs)
+    
+    self.connection.send("OK")
+    self.connection.send(outputs)
+    
+    print(f"Prediction computed: {inputs} -> {outputs}")
+    
 
 def change_settings(self):
     # Receive settings to change to
@@ -128,19 +175,24 @@ def continue_training(self):
     print("Traning continued.")
     
 # Helper functions #
-def compute_metrics(self):
+def compute_metrics_a(self, network):
+    
+    if network.isRunning.is_set():
+        self.report_error("ERROR :: Network is currently running.")
+        return
+    
     # Setup dataset version
-    if self.network.dataset_version is not None:
-        if not self.network.data.load_dataset_version(self.network.dataset_version):
+    if network.dataset_version is not None:
+        if not network.data.load_dataset_version(network.dataset_version):
             self.report_error("ERROR :: Selected dataset not recognized.")
             return
     
-    if self.network.isRegression:
-        train = self.network.compute_regression_statistics("train")
-        test = self.network.compute_regression_statistics("test")
+    if network.isRegression:
+        train = network.compute_regression_statistics("train")
+        test = network.compute_regression_statistics("test")
     else:
-        train = self.network.compute_classification_statistics("train")
-        test = self.network.compute_classification_statistics("test")
+        train = network.compute_classification_statistics("train")
+        test = network.compute_classification_statistics("test")
         
     self.connection.send("OK")
     self.connection.send(json.dumps({"test": test, "train": train}))

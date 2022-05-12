@@ -208,7 +208,7 @@ namespace dotNet.Controllers {
                 activationFunctions[4] = ActivationFunction.ReLU;
 
                 ANNSettings settings = new(
-                    aNNType: ProblemType.Regression,
+                    aNNType: ProblemType.Classification,
                     learningRate: 0.001f,
                     batchSize: 64,
                     numberOfEpochs: 30,
@@ -237,6 +237,9 @@ namespace dotNet.Controllers {
                 Thread.Sleep(2000);
 
                 experiment.Continue(1);
+
+                //experiment.ComputeMetrics();
+                experiment.Predict(new string[] { "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01" });
                 // Save model / load model
                 //try { experiment.LoadEpoch("2"); }
                 //catch (MLException e) { Console.WriteLine(e.Message); }

@@ -115,7 +115,8 @@ class MLClientInstance(Thread):
             'SelectTraningData' : select_traning_data,
             'Start'             : start,
             'Stop'              : stop,
-            'Continue'          : continue_training
+            'Continue'          : continue_training,
+            'Predict'           : predict
         }
         
         while True:
