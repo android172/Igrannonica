@@ -5,6 +5,7 @@
                 Izaberi snapshot
             </button>
             <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
+                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(0)" (click)="imeS('Default Podaci')">Default Podaci</a></li>  
                 <div *ngFor="let s of snapshots">
                 <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)" (click)="imeS(s.ime)">{{s.ime}}</a></li>   
                 </div>                      
@@ -146,12 +147,12 @@
             
                     <div id="grupaP">
                         <h4> Regularization rate </h4>
-                        <input type="number" id="rr" name="rr">
+                        <input type="number" id="rr" name="rr" value="0.01">
                     </div>
             
                     <div id="grupaP">
                         <h4> Batch size </h4>
-                            <input type="number" id="bs" name="bs">
+                            <input type="number" id="bs" name="bs" value="64">
                     </div>
 
                 </div>
@@ -163,12 +164,12 @@
             <div id="podesavanja2">
                 <div id="grupa">
                     <h4> Number of epochs </h4>
-                    <input type="number" id="noe" name="noe">
+                    <input type="number" id="noe" name="noe" value="15">
                 </div>
         
                 <div id="grupa">
                     <h4> Learning rate </h4>
-                    <input type="number" id="lr" name="lr">
+                    <input type="number" id="lr" name="lr" value="0.03">
                 </div>
             </div>
 
@@ -194,8 +195,8 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-footer" style="border-top: none;">
-                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()" (click)="dajMetriku()">Pokreni bez cuvanja</button>
-                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()" (click)="dajMetriku()">Sačuvaj izmene</button>
+                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Pokreni bez cuvanja</button>
+                          <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button>
                         </div>
                       </div>
                     </div>

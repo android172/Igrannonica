@@ -127,7 +127,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from Eksperiment where id=@id and csv <> ''";
+                string query = "select * from Eksperiment where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -135,8 +135,10 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        Console.WriteLine("OK");
+                        Console.WriteLine("OK"+ reader.GetString("csv") + reader.GetString("Naziv"));
+                        
                         string naziv = reader.GetString("csv");
+                        Console.WriteLine(naziv);
                         return naziv;
                     }
                     return "";

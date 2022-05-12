@@ -223,10 +223,10 @@ namespace dotNet.Controllers
                 }
 
                 string fileName = $"RAW_DATA.{fileExtension}";
-                UploadFile(file, folderEksperiment, fileName);
+                UploadFile(file, folderEksperiment, file.FileName);
 
                 // Ucitaj fajl na ml serveru
-                try { eksperiment.LoadDataset(idEksperimenta, fileName); }
+                try { eksperiment.LoadDataset(idEksperimenta, file.FileName); }
                 catch (MLException) { return BadRequest("File nije ucitan u python."); }
             
                 // upis csv-a u bazu 
@@ -234,7 +234,7 @@ namespace dotNet.Controllers
                 if (!fajlNijeSmesten)
                     return BadRequest("Neuspesan upis fajl-a u bazu");
 
-                db.dbeksperiment.dodajSnapshot(idEksperimenta, "RAW_DATA", fileName);
+                //db.dbeksperiment.dodajSnapshot(idEksperimenta, "SIROVI PODACI", fileName);
 
                 return Ok("Fajl je upisan.");
             }

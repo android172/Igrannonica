@@ -224,7 +224,7 @@ def train(token, id, network):
             'epochRes' : loss
         }
         sr_connection.send_to_front(json.dumps(results))
-        
+    network.isRunning.clear()
     sr_connection.set_method("FinishModelTraining")
     sr_connection.send_to_front(id)
     

@@ -42,7 +42,7 @@ export class ModelComponent implements OnInit {
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
 
-
+  
   public kolone: any[] = [];
   message: any;
   public idModela : any;
@@ -112,8 +112,10 @@ export class ModelComponent implements OnInit {
         console.log(this.idEksperimenta);
       }
     )
+    this.signalR.componentMethodCalled$.subscribe((id:number)=>{
+      this.dajMetriku(id);
+    })
   }
-
   sendMessage():void{
     this.shared.sendUpdate("Update");
   }
@@ -154,6 +156,8 @@ export class ModelComponent implements OnInit {
     {
       this.signalR.startConnection(token);
       this.signalR.LossListener();
+      this.signalR.FinishModelTrainingListener();
+      this.signalR.StartModelTrainingListener();
       //console.log(this.signalR.data);
     }
     this.dajSnapshots();
@@ -164,7 +168,7 @@ export class ModelComponent implements OnInit {
 
     this.dajSnapshots();
     this.selectSnapshot(data);
-    this.imeS("SIROVI PODACI");
+    //this.imeS("SIROVI PODACI");
   }
 
   posaljiZahtev(data:number){
@@ -786,7 +790,7 @@ export class ModelComponent implements OnInit {
     console.log(this.jsonModel);
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        this.idModela = res;
       },
       error =>{
         console.log(error.error);
@@ -828,9 +832,9 @@ export class ModelComponent implements OnInit {
     console.log(this.selectedSS);
   }
 
-  dajMetriku()
+  dajMetriku(modelId:number)
   {
-    this.http.get(url+"/api/Model/metrika?problemType=" + this.selectedPT).subscribe(
+    this.http.get(url+"/api/Model/metrika?modelId="+ modelId).subscribe(
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);

@@ -17,7 +17,11 @@ export class SignalRService {
   public switch: boolean = false;
   public switchChange: Subject<boolean> = new Subject<boolean>();
   private hubConnection!: signalR.HubConnection; 
-
+  private componentMethodCallSource = new Subject<any>();
+  componentMethodCalled$ = this.componentMethodCallSource.asObservable();
+  callComponentMethod(id:number) {
+    this.componentMethodCallSource.next(id);
+  }
   public startConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(url+'/hub').build();
     this.hubConnection.start().then(
@@ -45,13 +49,14 @@ export class SignalRService {
   {
     this.hubConnection.on('Loss', (data) => {
       var res = JSON.parse(data)
-
+      console.log(data)
+      console.log(res)
       var id = res.modelId
 
       var epochRes = res.epochRes
-      var currentEpoch = res.epoch
-      var currentLoss = res.loss
-      if (res.fold !== undefined) {}
+      var currentEpoch = epochRes.epoch
+      var currentLoss = epochRes.loss
+      if (epochRes.fold !== undefined) {}
 
       // this.data.push(data);
       
@@ -68,8 +73,8 @@ export class SignalRService {
 
   public FinishModelTrainingListener() {
     this.hubConnection.on('FinishModelTraining', (modelId) => {
-      const index: number = this.models.indexOf(modelId)
-      this.models.splice(index, 1)
+      console.log("Zavrsio.");
+      this.callComponentMethod(modelId);
     })
   }
 

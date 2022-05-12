@@ -182,8 +182,17 @@ namespace dotNet.Controllers
                     eksperiment.LoadInputs(kolone[0].ToArray());
                     eksperiment.LoadOutputs(kolone[1].ToArray());
                     ANNSettings podesavanja = db.dbmodel.podesavanja(id);
-                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
-                    eksperiment.SelectTraningData(snapshot.csv);
+                    int idSnapshot = db.dbmodel.dajSnapshot(id);
+                    if (idSnapshot == 0)
+                    {
+                        int idEksperimenta = db.dbmodel.model(id).Vlasnik;
+                        eksperiment.SelectTraningData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                    }
+                    else 
+                    {
+                        Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
+                        eksperiment.SelectTraningData(snapshot.csv);
+                    }
                     eksperiment.ApplySettings(podesavanja);
                     eksperiment.Start();
                     return Ok("Pocelo treniranje");
@@ -214,7 +223,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Kolone")]
-        public string uzmiKolone(int idEksperiment,int snapshot)
+        public string uzmiKolone(int idEksperimenta,int snapshot)
         {
             try
             {
@@ -225,7 +234,7 @@ namespace dotNet.Controllers
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                     if(snapshot == 0)
                     {
-                        string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperiment);
+                        string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
                         eksperiment.SelectTraningData(csv);
                         string koloness = eksperiment.GetColumns(csv);
                         return koloness.Replace('\'', '"');
@@ -263,7 +272,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("metrika")]
-        public IActionResult getMetrics(int problemType)
+        public IActionResult getMetrics(int modelId)
         {
             try
             {
@@ -277,35 +286,7 @@ namespace dotNet.Controllers
                 else
                     return BadRequest("GRESKA");
 
-                eksperiment.LoadInputs(new int[] { 3, 7, 8 });
-                eksperiment.LoadOutputs(new int[] { 13, 14 });
-                eksperiment.TrainTestSplit(0.1f);
-                Console.WriteLine(problemType);
-                ProblemType type;
-                if (problemType == 1)
-                    type = ProblemType.Classification;
-                else
-                    type = ProblemType.Regression;
-                ANNSettings settings = new(
-                    aNNType: type,
-                    learningRate: 0.001f,
-                    batchSize: 64,
-                    numberOfEpochs: 10,
-                    inputSize: 3,
-                    outputSize: 2,
-                    hiddenLayers: new int[] { },
-                    currentEpoch: 0,
-                    activationFunctions: new ActivationFunction[] { },
-                    regularization: RegularizationMethod.L1,
-                    regularizationRate: 0.0001f,
-                    lossFunction: LossFunction.CrossEntropyLoss,
-                    optimizer: Optimizer.Adam,
-                    kFoldCV: 0
-                );
-
-                eksperiment.ApplySettings(settings);
-
-                metrika = eksperiment.ComputeMetrics();
+                metrika = eksperiment.ComputeMetrics(modelId);
                 Console.WriteLine(metrika);
                 return Ok(metrika);
             }
@@ -314,7 +295,9 @@ namespace dotNet.Controllers
                 return BadRequest("Nije uspelo");
             }
         }
-        
+
+
+        [Authorize]
         [HttpPost("NoviModel")]
         public IActionResult noviModel(int idEksperimenta,[FromBody]NovModel model)
         {
