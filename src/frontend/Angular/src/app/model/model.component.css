@@ -568,7 +568,7 @@ input
   color: #CED9FF;
 }
 
-#bs1{
+#bs1,#bs2{
   border: 2px solid #bc7ca1;
   background: transparent; 
   border-radius: 8px;
@@ -579,7 +579,7 @@ input
   color: white;
 }
 
-#opisM{
+#opisM,#opisModela{
   border: 2px solid #bc7ca1;
   background: transparent; 
   border-radius: 8px;
@@ -588,7 +588,7 @@ input
   color: white;
 }
 
-#opisM:focus,#bs1:focus{
+#opisM:focus,#opisModela:focus,#bs1:focus,#bs2:focus{
   outline: none;
   border: 2px solid #bc7ca1;
 }

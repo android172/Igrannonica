@@ -36,6 +36,7 @@ export class ModelComponent implements OnInit {
   json1: any;
   jsonSnap: any;
   jsonMetrika: any;
+  jsonModel: any;
   selectedSS: any;
   snapshots: any[] = [];
   public aktFunk: any[] = [];
@@ -282,6 +283,7 @@ export class ModelComponent implements OnInit {
         if(ind1 == 0)
         {
            this.ulazneKolone.push(nizK[i].value);
+           this.izabraneU.push(i);
            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
            this.brojU++;
            if(this.brojU > 0 && this.brojI > 0)
@@ -298,6 +300,7 @@ export class ModelComponent implements OnInit {
           if(this.ulazneKolone[j] === nizK[i].value)
           {
             this.ulazneKolone.splice(j,1);
+            this.izabraneU.slice(j,1);
             (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
             //console.log(nizK[i].value);
              this.brojU--;
@@ -362,6 +365,7 @@ export class ModelComponent implements OnInit {
         if(ind2 == 0)
         {
            this.izlazneKolone.push(nizK[i].value);
+           this.izabraneI.push(i);
            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = true;
            this.brojI++;
            if(this.brojI > 0 && this.brojU > 0)
@@ -378,6 +382,7 @@ export class ModelComponent implements OnInit {
           if(this.izlazneKolone[j] === nizK[i].value)
           {
             this.izlazneKolone.splice(j,1);
+            this.izabraneI.splice(j,1);
             (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
             //console.log(nizK[i].value);
              this.brojI--;
@@ -747,6 +752,46 @@ export class ModelComponent implements OnInit {
   {
     this.napraviModel();
     //this.submit();
+  }
+
+  kreirajModelCuvanje()
+  {
+    this.jsonModel = 
+    {
+        "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
+        "opis": (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+        "snapshot": this.selectedSS,
+        "podesavalja": {  
+        "annType":this.selectedPT,
+        "learningRate": Number((<HTMLInputElement>document.getElementById("lr")).value),
+        "batchSize": Number((<HTMLInputElement>document.getElementById("bs")).value),
+        "numberOfEpochs": Number((<HTMLInputElement>document.getElementById("noe")).value),
+        "currentEpoch":0,
+        "inputSize": this.brojU,
+        "outputSize": this.brojI,
+        "hiddenLayers":this.nizCvorova,
+        "activationFunctions":this.aktFunk,
+        "regularization": this.selectedRM,
+        "regularizationRate": Number((<HTMLInputElement>document.getElementById("rr")).value),
+        "lossFunction": this.selectedLF,
+        "optimizer": this.selectedO,
+        "kFoldCV":Number((<HTMLInputElement>document.getElementById("crossV")).value)
+        },
+        "kolone":{
+          "ulazne":this.izabraneU,
+          "izlazne":this.izabraneI
+        }
+    };
+    console.log((<HTMLInputElement>document.getElementById("bs2")).value);
+    console.log(this.jsonModel);
+    this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
+      res => {
+        console.log(res);
+      },
+      error =>{
+        console.log(error.error);
+      }
+    )
   }
 
   dajSnapshots()
