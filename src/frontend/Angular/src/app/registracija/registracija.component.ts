@@ -4,6 +4,7 @@ import { MeniService } from '../meni.service';
 import {Router} from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { isPlatformBrowser } from '@angular/common';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-registracija',
@@ -143,7 +144,7 @@ export class RegistracijaComponent implements OnInit {
 
     if(pom){
 
-      this.http.post('http://localhost:5008/api/Auth/register',{"KorisnickoIme":korisnickoIme,"Ime":ime,"Sifra":sifra,"Email":email},{responseType: 'text'}).subscribe(
+      this.http.post(url+'/api/Auth/register',{"KorisnickoIme":korisnickoIme,"Ime":ime,"Sifra":sifra,"Email":email},{responseType: 'text'}).subscribe(
         res=>{
           console.log(res);
           //alert("Uspesna registracija");

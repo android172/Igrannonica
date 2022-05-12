@@ -9,8 +9,9 @@ namespace dotNet.Models {
         public ANNSettings(
             ProblemType aNNType, 
             float learningRate, 
-            int batchSize, int 
-            numberOfEpochs, 
+            int batchSize,
+            int numberOfEpochs, 
+            int currentEpoch, 
             int inputSize, 
             int outputSize, 
             int[]? hiddenLayers, 
@@ -18,12 +19,14 @@ namespace dotNet.Models {
             RegularizationMethod regularization,
             float regularizationRate,
             LossFunction lossFunction, 
-            Optimizer optimizer) {
+            Optimizer optimizer,
+            int kFoldCV) {
 
             ANNType = aNNType;
             LearningRate = learningRate;
             BatchSize = batchSize;
             NumberOfEpochs = numberOfEpochs;
+            CurrentEpoch = currentEpoch;
             InputSize = inputSize;
             OutputSize = outputSize;
             HiddenLayers = hiddenLayers;
@@ -32,11 +35,13 @@ namespace dotNet.Models {
             RegularizationRate = regularizationRate;
             LossFunction = lossFunction;
             Optimizer = optimizer;
+            KFoldCV = kFoldCV;
         }
 
         public float LearningRate { get; set;}
         public int BatchSize { get; set; }
         public int NumberOfEpochs { get; set; }
+        public int CurrentEpoch { get; set; }
         // IO
         public int InputSize { get; set; }
         public int OutputSize { get; set; }
@@ -48,6 +53,7 @@ namespace dotNet.Models {
         public float RegularizationRate { get; set; }
         public LossFunction LossFunction { get; set; }
         public Optimizer Optimizer { get; set; }
+        public int KFoldCV { get; set; }
 
         // To JSON string
         public override string ToString() {
@@ -75,7 +81,7 @@ namespace dotNet.Models {
 
     public enum LossFunction {
         L1Loss,
-        MSELoss,
+        L2Loss,
         CrossEntropyLoss
     }
 

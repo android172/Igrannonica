@@ -17,7 +17,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where vlasnik=@id";
+                string query = "select * from Eksperiment where vlasnik=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 List<EksperimentDto> result = new List<EksperimentDto>();
@@ -40,7 +40,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where naziv=@naziv and vlasnik=@id";
+                string query = "select * from Eksperiment where naziv=@naziv and vlasnik=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", naziv);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -61,7 +61,7 @@ namespace dotNet.DBFunkcije
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "insert into eksperiment (`naziv`,`vlasnik`) values (@naziv,@vlasnik)";
+                string query = "insert into Eksperiment (`Naziv`,`vlasnik`) values (@naziv,@vlasnik)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
@@ -76,27 +76,38 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update eksperiment set naziv=@naziv where id=@vlasnik";
+                string query = "update Eksperiment set Naziv=@naziv where id=@vlasnik";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", ime);
                 cmd.Parameters.AddWithValue("@vlasnik", id);
                 connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                if (cmd.ExecuteNonQuery() > 0)
                 {
-                    if (reader.Read())
-                    {
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
+                return false;
             }
         }
-
+        public bool izbrisiEksperiment(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from eksperiment where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         public string uzmi_naziv(int id)
         {
-            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where id=@id";
+                string query = "select * from Eksperiment where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -108,7 +119,7 @@ namespace dotNet.DBFunkcije
                         string naziv = reader.GetString("Naziv");
                         return naziv;
                     }
-                return "";
+                    return "";
                 }
             }
         }
@@ -116,7 +127,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from eksperiment where id=@id";
+                string query = "select * from Eksperiment where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -124,8 +135,10 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        Console.WriteLine("OK");
+                        Console.WriteLine("OK"+ reader.GetString("csv") + reader.GetString("Naziv"));
+                        
                         string naziv = reader.GetString("csv");
+                        Console.WriteLine(naziv);
                         return naziv;
                     }
                     return "";
@@ -137,12 +150,110 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update eksperiment set csv=@naziv where id=@id";
+                string query = "update Eksperiment set csv=@naziv where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@naziv", naziv);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public bool dodajSnapshot(int id, string naziv,string csv)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "insert into Snapshot(`ideksperimenta`,`Ime`,`csv`) values (@id,@ime,@csv);";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", naziv);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@csv", csv);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public int proveriSnapshot(int id, string ime)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where ideksperimenta=@id and Ime=@ime";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@ime",ime);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return reader.GetInt32("id");
+                    }
+                }
+                return -1;
+            }
+        }
+
+        public List<Snapshot> listaSnapshota(int id)
+        {
+            List<Snapshot> lista = new List<Snapshot>();
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where ideksperimenta=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Snapshot snap = new Snapshot();
+                        snap.id = reader.GetInt32("id");
+                        snap.ideksperimenta = reader.GetInt32("ideksperimenta");
+                        snap.Ime = reader.GetString("Ime");
+                        snap.csv = reader.GetString("csv");
+                        lista.Add(snap);
+                        //lista.Add(new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv")));
+                    }
+                }
+            }
+            return lista;
+        }
+
+        public Snapshot dajSnapshot(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from Snapshot where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Snapshot(reader.GetInt32("id"), reader.GetInt32("ideksperimenta"), reader.GetString("Ime"), reader.GetString("csv"));
+                    }
+                }
+            }
+            return null;
+        }
+
+        public bool izbrisiSnapshot(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from Snapshot where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() >= 0)
                 {
                     return true;
                 }

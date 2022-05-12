@@ -11,6 +11,7 @@ class ANNSettings:
         learningRate        = 0.0, 
         batchSize           = 0, 
         numberOfEpochs      = 0, 
+        currentEpoch        = 0,
         inputSize           = 0, 
         outputSize          = 0, 
         hiddenLayers        = None, 
@@ -18,12 +19,14 @@ class ANNSettings:
         regularization      = 0,
         regularizationRate  = 0.0,
         lossFunction        = 0,
-        optimizer           = 0
+        optimizer           = 0,
+        kFoldCV             = 0
         ) -> None:
         
         self.problemType         = problemType
         self.learningRate        = learningRate
         self.batchSize           = batchSize
+        self.currentEpoch        = currentEpoch
         self.numberOfEpochs      = numberOfEpochs
         self.inputSize           = inputSize
         self.outputSize          = outputSize
@@ -33,6 +36,7 @@ class ANNSettings:
         self.regularizationRate  = regularizationRate
         self.lossFunction        = lossFunction
         self.optimizer           = optimizer
+        self.kFoldCV             = kFoldCV
     
     def load(data) -> None:
         jsonObj = json.loads(data)
@@ -41,6 +45,7 @@ class ANNSettings:
             learningRate        = jsonObj["LearningRate"],
             batchSize           = jsonObj["BatchSize"],
             numberOfEpochs      = jsonObj["NumberOfEpochs"],
+            currentEpoch        = jsonObj["CurrentEpoch"],
             inputSize           = jsonObj["InputSize"],
             outputSize          = jsonObj["OutputSize"],
             hiddenLayers        = jsonObj["HiddenLayers"],
@@ -48,7 +53,8 @@ class ANNSettings:
             regularization      = jsonObj["Regularization"],
             regularizationRate  = jsonObj["RegularizationRate"],
             lossFunction        = jsonObj["LossFunction"],
-            optimizer           = jsonObj["Optimizer"]
+            optimizer           = jsonObj["Optimizer"],
+            kFoldCV             = jsonObj["KFoldCV"]
         )
     
     

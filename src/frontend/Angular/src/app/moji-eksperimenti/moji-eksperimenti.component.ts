@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { url } from '../app.module';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'app-moji-eksperimenti',
@@ -12,7 +14,7 @@ export class MojiEksperimentiComponent implements OnInit {
   eksperimenti : any[] = [];
   json: any;
   id: any;
-  constructor(private http: HttpClient,public router: Router) { }
+  constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
     this.ucitajEksp();
@@ -21,7 +23,7 @@ export class MojiEksperimentiComponent implements OnInit {
   ucitajEksp()
   {
   
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperimenti').subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
           console.log(res);
           this.json = res;
@@ -29,9 +31,57 @@ export class MojiEksperimentiComponent implements OnInit {
         }
     );
   }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
 
   otvoriEksperiment(i: any)
   {
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
+  }
+
+  obrisiE(id: number)
+  {
+    if(confirm("Da li ste sigurni da zelite da obrisete ovaj eksperiment?"))
+    {
+      this.http.delete(url+'/api/Eksperiment/Eksperiment/' + id,{responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+          this.ucitajEksp();
+          var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
+          this.onSuccess("Eksperiment je uspesno obrisan");
+        },
+        error=>{
+          console.log(error.error);
+          this.onError("Eksperiment nije obrisan!");
+      }
+      
+      )
+    }
   }
 }

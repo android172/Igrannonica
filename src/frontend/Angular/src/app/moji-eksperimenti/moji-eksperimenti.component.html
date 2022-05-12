@@ -1,8 +1,10 @@
 <div id="divEksperimenti">
-     <div class="tekst">Lista mojih eksperimenata:</div>
         <div id="skrol">
-        <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti"> 
-            <p>  {{ e.name }}  </p>
+        <div id="e" *ngFor="let e of eksperimenti"> 
+            <p type="button" (click)="otvoriEksperiment(e.id)">  {{ e.name }}  </p>
+            <button id="delete" (click)="obrisiE(e.id)"><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
         </div>
     </div>
 </div>
+
+<simple-notifications></simple-notifications>

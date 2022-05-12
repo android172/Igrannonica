@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using dotNet.Models;
 using dotNet.MLService;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace dotNet.Controllers
 {
@@ -18,9 +19,20 @@ namespace dotNet.Controllers
     public class FileController : ControllerBase
     {
         private IConfiguration _config;
-        DB db;
         private int ukupanBrRedovaFajla;
-        //private static MLExperiment? experiment = null;
+        private DB db;
+
+        private readonly string[] supportedExtensions = new string[] {
+            "csv",
+            "json",
+            "xlsx",
+            "xls",
+            "xlsm",
+            "xlsb",
+            "odf",
+            "ods",
+            "odt"
+        };
 
         public FileController(IConfiguration config)
         {
@@ -29,11 +41,31 @@ namespace dotNet.Controllers
             ukupanBrRedovaFajla = 0;
         }
 
+        // Download
+        private ActionResult DownloadFile(string fileName, string filePath, string fileType = "application/octet-stream") {
+            try { return File(System.IO.File.ReadAllBytes(filePath), fileType, fileName); }
+            catch { return NotFound("File not found."); }
+        }
+
         [HttpPost("download/{idEksperimenta}")]
-        public ActionResult Download(int idEksperimenta)
+        public ActionResult Download(int idEksperimenta, string versionName)
         {
-            Console.WriteLine(idEksperimenta);
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+            /// TEMP
+            if (token.Equals("") || token.Equals("st"))
+            {
+                string fileName1 = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+                string path1 = System.IO.Path.Combine(
+                    Directory.GetCurrentDirectory(), 
+                    "Files", "1", 
+                    idEksperimenta.ToString(), versionName
+                );
+
+                return DownloadFile(fileName1, path1);
+            }
+            /// 
+
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
@@ -53,218 +85,417 @@ namespace dotNet.Controllers
                 return BadRequest("Korisnik nije ulogovan.");
 
             string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-
             string path = System.IO.Path.Combine(
-                Directory.GetCurrentDirectory(), "Files", 
-                korisnik.Id.ToString(), idEksperimenta.ToString(), fileName
+                Directory.GetCurrentDirectory(), "Files",
+                korisnik.Id.ToString(), idEksperimenta.ToString(), versionName
                 );
 
-            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
-            catch { return NotFound("File not found."); }
+            return DownloadFile(fileName, path);
         }
 
-        [HttpGet("downloadTest/{idEksperimenta}")]
-        public ActionResult DownloadTest(int idEksperimenta)
+        [HttpPost("downloadModel/{idEksperimenta}")]
+        public ActionResult DownloadModel(int idEksperimenta, string modelName)
         {
-            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-            
-            string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files", "1", idEksperimenta.ToString(), fileName);
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            try { return File(System.IO.File.ReadAllBytes(path), "application/octet-stream", fileName); }
-            catch { return NotFound("File not found."); }
+            /// TEMP
+            if (token.Equals("") || token.Equals("st"))
+            {
+                string fileName1 = modelName + ".pt";
+                string path1 = System.IO.Path.Combine(
+                    Directory.GetCurrentDirectory(), "Files",
+                    "1", idEksperimenta.ToString(), "Models", fileName1
+                    );
+
+                return DownloadFile(fileName1, path1);
+            }
+            ///
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token);
+            var tokenS = jsonToken as JwtSecurityToken;
+            Korisnik korisnik;
+            MLExperiment eksperiment;
+
+            if (tokenS != null)
+            {
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest();
+            }
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            string fileName = modelName + ".pt";
+
+            string path = System.IO.Path.Combine(
+                Directory.GetCurrentDirectory(), "Files",
+                korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", fileName
+                );
+
+            return DownloadFile(fileName, path);
+        }
+        
+        [Authorize]
+        [HttpGet("GetImage")]
+        public IActionResult GetImage(int idEksperimenta)
+        {
+            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            Korisnik korisnik;
+
+            if (new JwtSecurityTokenHandler().ReadToken(token) is JwtSecurityToken tokenS)
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+            else
+                return BadRequest("Korisnik nije ulogovan.");
+
+            string fileName = "requested_image.png";
+            string filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Files",
+                korisnik.Id.ToString(),
+                idEksperimenta.ToString(),
+                fileName
+            );
+            Console.WriteLine(fileName + " " +  filePath);
+            return DownloadFile(fileName, filePath, "image/png") ;
+        }
+
+
+        // Upload
+        private void UploadFile(IFormFile file, string fileDir, string fileName)
+        {
+            if (!Directory.Exists(fileDir))
+                Directory.CreateDirectory(fileDir);
+
+            long length = file.Length;
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+            string path = Path.Combine(fileDir, fileName);
+
+            System.IO.File.WriteAllBytes(path, bytes);
         }
 
         [HttpPost("upload/{idEksperimenta}")]
         public IActionResult Upload(IFormFile file, int idEksperimenta)
         {
-
-            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-            var tokenS = jsonToken as JwtSecurityToken;
-            Korisnik korisnik;
-            MLExperiment eksperiment;
-
-            if (tokenS != null)
+            try
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                Korisnik korisnik;
+                MLExperiment eksperiment;
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
-                else
-                    return BadRequest();
-            }
-            else
-                return BadRequest("Korisnik nije ulogovan.");
-
-            if (file == null)
-                return BadRequest("Fajl nije unet.");
-
-            // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
-
-            if (!System.IO.Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
-
-            if (!System.IO.Directory.Exists(folderEksperiment))
-            {
-                Directory.CreateDirectory(folderEksperiment);
-            }
-
-            // cuvanje fajla - putanja 
-            string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
-
-            string[] lines = { };
-            List<string> lines2 = new List<string>();
-
-            using (TextFieldParser csvParse = new TextFieldParser(file.OpenReadStream()))
-            {
-                csvParse.CommentTokens = new string[] { "#" };
-                csvParse.SetDelimiters(",");
-                csvParse.HasFieldsEnclosedInQuotes = true;
-
-                while (!csvParse.EndOfData)
+                if (tokenS != null)
                 {
-                    string[] line = csvParse.ReadFields();
+                    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    for (var i = 0; i < line.Length; i++)
-                    {
-                        if (line[i].Contains(','))
-                        {
-                            line[i] = "\"" + line[i] + "\"";
-                        }
-                    }
-                    string linija = string.Join(",", line);
-
-                    lines2.Add(linija);
+                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    else
+                        return BadRequest();
                 }
+                else
+                    return BadRequest("Korisnik nije ulogovan.");
+
+                if (file == null)
+                    return BadRequest("Fajl nije unet.");
+
+                // kreiranje foldera 
+                string folderEksperiment = Path.Combine(
+                    Directory.GetCurrentDirectory(), 
+                    "Files", 
+                    korisnik.Id.ToString(),
+                    idEksperimenta.ToString()
+                );
+
+                // upis u fajl
+                string fileExtension = file.FileName.Split(".")[^1];
+
+                if (supportedExtensions.Contains(fileExtension) == false) {
+                    Console.WriteLine("Unet je nedozvoljen tip fajla.");
+                    return BadRequest("Unet nedozvoljen tip fajla.");
+                }
+
+                string fileName = $"RAW_DATA.{fileExtension}";
+                UploadFile(file, folderEksperiment, file.FileName);
+
+                // Ucitaj fajl na ml serveru
+                try { eksperiment.LoadDataset(idEksperimenta, file.FileName); }
+                catch (MLException) { return BadRequest("File nije ucitan u python."); }
+            
+                // upis csv-a u bazu 
+                bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, file.FileName);
+                if (!fajlNijeSmesten)
+                    return BadRequest("Neuspesan upis fajl-a u bazu");
+
+                //db.dbeksperiment.dodajSnapshot(idEksperimenta, "SIROVI PODACI", fileName);
+
+                return Ok("Fajl je upisan.");
             }
-            lines = lines2.ToArray();
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (string line in lines)
+            catch
             {
-                sb.AppendLine(line);
+                return BadRequest("Doslo do greske.");
             }
-
-            // upis u fajl 
-            System.IO.File.WriteAllText(path, sb.ToString());
-            eksperiment.LoadDataset(idEksperimenta, fileName);
-
-            // upis csv-a u bazu 
-            bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
-
-            if (!fajlNijeSmesten)
-            {
-                Console.WriteLine("Fajl nije upisan u bazu");
-                return BadRequest("Neuspesan upis csv-a u bazu");
-            }
-            return Ok("Fajl je upisan.");
         }
-
+        
         [HttpPost("update/{idEksperimenta}")]
         public IActionResult Update(IFormFile file, int idEksperimenta)
         {
+            try{
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
-            var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-            var tokenS = jsonToken as JwtSecurityToken;
-            Korisnik korisnik;
-            MLExperiment eksperiment;
+                /// TEMP
+                if (token.Equals("") || token.Equals("st"))
+                {
+                    if (file == null)
+                        return BadRequest("Fajl nije unet.");
 
-            if (tokenS != null)
+                    // kreiranje foldera 
+                    string folderEksperiment1 = Path.Combine(
+                        Directory.GetCurrentDirectory() , 
+                        "Files","1",
+                        idEksperimenta.ToString()
+                    );
+
+                    // ucitavanje fajla 
+                    UploadFile(file, folderEksperiment1, file.FileName);
+
+                    return Ok("Fajl je upisan.");
+                }
+                /// 
+
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                Korisnik korisnik;
+                MLExperiment eksperiment;
+
+                if (tokenS != null)
+                {
+                    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    else
+                        return BadRequest();
+                }
+                else
+                    return BadRequest("Korisnik nije ulogovan.");
+
+                if (file == null)
+                    return BadRequest("Fajl nije unet.");
+
+                // kreiranje foldera 
+                string folderEksperiment = Path.Combine(
+                    Directory.GetCurrentDirectory() , 
+                    "Files" , 
+                    korisnik.Id.ToString(),
+                    idEksperimenta.ToString()
+                );
+
+                // ucitavanje fajla 
+                UploadFile(file, folderEksperiment, file.FileName);
+
+                return Ok("Fajl je upisan.");
+            }
+            catch
             {
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [HttpPost("uploadModel/{idEksperimenta}")]
+        public IActionResult UploadModel(IFormFile file, int idEksperimenta, string modelName)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+                /// TEMP
+                if (token.Equals("") || token.Equals("st")) {
+                    string folderModeli1 = Path.Combine(
+                        Directory.GetCurrentDirectory() , 
+                        "Files", "1",
+                        idEksperimenta.ToString(),
+                        "Models"
+                    );
+
+                    // upis u fajl
+                    UploadFile(file, folderModeli1, file.FileName);
+
+                    return Ok("Fajl je upisan.");
+                }
+                ///
+
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                Korisnik korisnik;
+                MLExperiment eksperiment;
+
+                if (tokenS != null)
+                {
+                    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    else
+                        return BadRequest();
+                }
+                else
+                    return BadRequest("Korisnik nije ulogovan.");
+
+                if (file == null)
+                    return BadRequest("Fajl nije unet.");
+
+                // kreiranje foldera 
+                string folderModeli = Path.Combine(
+                    Directory.GetCurrentDirectory() , 
+                    "Files" , 
+                    korisnik.Id.ToString(),
+                    idEksperimenta.ToString(),
+                    "Models"
+                );
+
+                // Upis u fajl
+                UploadFile(file, folderModeli, file.FileName);
+
+                return Ok("Fajl je upisan.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
+
+        // Snapshots
+        [Authorize]
+        [HttpGet("ProveriSnapshot")]
+        public IActionResult proveriSnapshot(int idEksperimenta, string naziv)
+        {
+            try
+            {
+                return Ok(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+        [Authorize]
+        [HttpPost("SaveSnapshot")]
+        public IActionResult sacuvajSnapshot(int idEksperimenta,int idSnapshota)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
 
                 if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
                     eksperiment = Korisnik.eksperimenti[token.ToString()];
                 else
-                    return BadRequest();
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                if (!eksperiment.IsDataLoaded(idEksperimenta))
+                    return BadRequest("Nije unet dataset.");
+                Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
+                eksperiment.SaveDataset(snapshot.csv);
+                return Ok("Sacuvan Snapshot.");
             }
-            else
-                return BadRequest("Korisnik nije ulogovan.");
-
-            if (file == null)
-                return BadRequest("Fajl nije unet.");
-
-            // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\" + korisnik.Id;
-
-            if (!System.IO.Directory.Exists(folder))
+            catch
             {
-                Directory.CreateDirectory(folder);
+                return BadRequest("Doslo do greske.");
             }
-
-            // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
-
-            if (!System.IO.Directory.Exists(folderEksperiment))
-            {
-                Directory.CreateDirectory(folderEksperiment);
-            }
-
-            // ucitavanje bilo kog fajla 
-            long length = file.Length;
-            using var fileStream = file.OpenReadStream();
-            byte[] bytes = new byte[length];
-            fileStream.Read(bytes, 0, (int)file.Length);
-
-            // Path
-            string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
-
-            // upis u fajl 
-            System.IO.File.WriteAllBytes(path, bytes);
-
-            return Ok("Fajl je upisan.");
         }
 
-        [HttpGet("updateTest/{idEksperimenta}")]
-        public IActionResult UpdateTest(IFormFile file, int idEksperimenta)
+        [Authorize]
+        [HttpPost("SaveAsSnapshot")]
+        public IActionResult SacuvajSnapshot(int idEksperimenta, string naziv)
         {
-            if (file == null)
-                return BadRequest("Fajl nije unet.");
-
-            // kreiranje foldera 
-            string folder = Directory.GetCurrentDirectory() + "\\Files\\1";
-
-            if (!System.IO.Directory.Exists(folder))
+            try
             {
-                Directory.CreateDirectory(folder);
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                else
+                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                if (!eksperiment.IsDataLoaded(idEksperimenta))
+                    return BadRequest("Nije unet dataset.");
+
+                if (db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv) == -1)
+                {
+                    string extension = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta).Split(".")[^1];
+                    if (!db.dbeksperiment.dodajSnapshot(idEksperimenta, naziv, $"{naziv}.{extension}"))
+                        return BadRequest("Nije unet file.");
+                }
+                else
+                    return BadRequest("Postoji verzija sa tim imenom.");
+                Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
+                eksperiment.SaveDataset(snapshot.csv);
+                return Ok(db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv));
             }
-
-            // kreiranje foldera sa nazivom eksperimenta
-            string folderEksperiment = folder + "\\" + idEksperimenta;
-
-            if (!System.IO.Directory.Exists(folderEksperiment))
+            catch
             {
-                Directory.CreateDirectory(folderEksperiment);
+                return BadRequest("Doslo do greske.");
             }
-
-            // ucitavanje bilo kog fajla 
-            long length = file.Length;
-            using var fileStream = file.OpenReadStream();
-            byte[] bytes = new byte[length];
-            fileStream.Read(bytes, 0, (int)file.Length);
-
-            // Path
-            string fileName = file.FileName;
-            string path = folderEksperiment + "\\" + fileName;
-
-            Console.WriteLine(path);
-
-            // upis u fajl 
-            System.IO.File.WriteAllBytes(path, bytes);
-
-            return Ok("Fajl je upisan.");
         }
+
+        [Authorize]
+        [HttpDelete("Snapshot")]
+        public IActionResult izbrisiSnapshot(int id)
+        {
+            try
+            {
+                if (db.dbeksperiment.izbrisiSnapshot(id))
+                    if (db.dbmodel.zameniSnapshot(id))
+                        return Ok("Izbrisan je model");
+                else
+                        return Ok("Izbrisan snapshot ali nema promenjenih modela");
+                return BadRequest("Nije izbrisan snapshot.");
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske.");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Snapshots")]
+        public IActionResult dajlistuSnapshota(int id)
+        {
+            try
+            {
+                List<Snapshot> lista = db.dbeksperiment.listaSnapshota(id);
+                return Ok(lista);
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Snapshot")]
+        public IActionResult dajSnapshot(int id)
+        {
+            try
+            {
+                int id1 = db.dbmodel.dajSnapshot(id);
+                return Ok(db.dbeksperiment.dajSnapshot(id1));
+            }
+            catch
+            {
+                return BadRequest("Doslo do greske!");
+            }
+        }
+
     }
 }

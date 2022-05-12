@@ -58,8 +58,11 @@ CREATE TABLE IF NOT EXISTS `Baza`.`model` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `naziv` VARCHAR(256) NULL,
   `idEksperimenta` INT UNSIGNED NOT NULL,
+  `snapshot` INT UNSIGNED NOT NULL,
   `napravljen` DATETIME NOT NULL,
   `obnovljen` DATETIME NULL,
+  `opis` VARCHAR(512) NULL,
+  `loss` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `eksperiment_idx` (`idEksperimenta` ASC) VISIBLE,
   CONSTRAINT `eksperiment`
@@ -87,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `RegularizationRate` float null,
   `LossFunction` VARCHAR(256),
   `Optimizer` VARCHAR(256),
+  `CrossValidationK` INT NULL,
   `UlazneKolone` VARCHAR(256),
   `IzlazneKolone` VARCHAR(256),
   PRIMARY KEY (`id`),
@@ -95,6 +99,46 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
     REFERENCES `Baza`.`model` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Baza`.`Snapshot`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Snapshot` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ideksperimenta` VARCHAR(256) NOT NULL,
+  `Ime` VARCHAR(256) NOT NULL,
+  `csv` VARCHAR(256) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Baza`.`Classification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Classification` (
+  `id` INT UNSIGNED NOT NULL,
+  `Accuracy` FLOAT NOT NULL,
+  `BalancedAccuracy` FLOAT NOT NULL,
+  `Precision` FLOAT NOT NULL,
+  `Recall` FLOAT NOT NULL,
+  `F1Score` FLOAT NOT NULL,
+  `HammingLoss` FLOAT NOT NULL,
+  `CrossEntropyLoss` FLOAT NOT NULL,
+  `ConfusionMatrix` VARCHAR(512) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Baza`.`Reggresion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Baza`.`Reggresion` (
+  `id` INT UNSIGNED NOT NULL,
+  `MAE` FLOAT NOT NULL,
+  `MSE` FLOAT NOT NULL,
+  `RSE` FLOAT NOT NULL,
+  `R2` FLOAT NOT NULL,
+  `AdjustedR2` FLOAT NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 

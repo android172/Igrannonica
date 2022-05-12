@@ -4,8 +4,8 @@
 
             <div id="podaci">Naziv eksperimenta:</div>
             <div id="polje">
-            <input  id="ime" type="text" name="ime">
-            <div id="greska" style="color: red;"></div>
+            <input  id="ime" type="text" name="ime" (keyup)="handleKeyUp($event)">
+            <div id="greska" style="color: rgba(243, 48, 95, 0.85);; height: 20px; margin-left: 75px;"></div>
             </div>  
 
             <div>

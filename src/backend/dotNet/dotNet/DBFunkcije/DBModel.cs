@@ -19,7 +19,7 @@ namespace dotNet.DBFunkcije
             List<ModelDto> result = new List<ModelDto>();
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-            string query = "select * from model where ideksperimenta=@id";
+            string query = "select * from model where idEksperimenta=@id";
             MySqlCommand cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -31,13 +31,40 @@ namespace dotNet.DBFunkcije
                         ModelDto ex = new ModelDto();
                         ex.Id = reader.GetInt32("id");
                         ex.Name = reader.GetString("Naziv");
+                        ex.Snap = reader.GetInt32("snapshot");
                         ex.CreatedDate = reader.GetDateTime("napravljen");
                         ex.UpdatedDate = reader.GetDateTime("obnovljen");
+                        ex.Opis = reader.GetString("Opis");
                         result.Add(ex);
                     }
                 }
             }
             return result;
+        }
+        public Model model(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                    if (reader.Read())
+                    {
+                        Model ex = new Model();
+                        ex.Id = reader.GetInt32("id");
+                        ex.Name = reader.GetString("Naziv");
+                        ex.CreatedDate = reader.GetDateTime("napravljen");
+                        ex.UpdatedDate = reader.GetDateTime("obnovljen");
+                        ex.Vlasnik = reader.GetInt32("ideksperimenta");
+                        return ex;
+                    }
+                }
+            }
+            return null;
         }
         public int proveriModel(string ime, int id)
         {
@@ -60,14 +87,16 @@ namespace dotNet.DBFunkcije
                 return -1;
             }
         }
-        public bool dodajModel(string ime, int id)
+        public bool dodajModel(string ime, int id, string opis, int snanpshot)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into model (`naziv`,`ideksperimenta`,`napravljen`,`obnovljen`) values (@ime,@id,now(),now())";
+                string query = "insert into model (`naziv`,`idEksperimenta`,`snapshot`,`napravljen`,`obnovljen`,`opis`) values (@ime,@id,@snapshot,now(),now(),@opis)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ime", ime);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@opis", opis);
+                cmd.Parameters.AddWithValue("@snapshot", snanpshot);
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                 {
@@ -96,6 +125,21 @@ namespace dotNet.DBFunkcije
                 }
             }
         }
+
+        public bool promeniOpisModela(string opis, int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set `opis`=@ime ,`obnovljen`=now() where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", opis);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if(cmd.ExecuteNonQuery()>=0);
+                        return true;
+                    return false;
+            }
+        }
         public bool izbrisiModel(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -111,11 +155,29 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+        public int dajSnapshot(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader read = cmd.ExecuteReader())
+                {
+                    if (read.Read())
+                    {
+                        return read.GetInt32("snapshot");
+                    }
+                    return -1;
+                }
+            }
+        }
         public ANNSettings podesavanja(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from podesavanja where id=@id";
+                string query = "select * from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -131,6 +193,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("LearningRate"),
                             reader.GetInt32("BatchSize"),
                             reader.GetInt32("numberOfEpochs"),
+                            0,
                             reader.GetInt32("inputSize"),
                             reader.GetInt32("OutputSize"),
                             HiddenLayers(reader.GetString("HiddenLayers")),
@@ -138,9 +201,9 @@ namespace dotNet.DBFunkcije
                             Enum.Parse<RegularizationMethod>(reader.GetString("RegularizationMethod")),
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
-                            Enum.Parse<Optimizer>(reader.GetString("Optimizer"))
+                            Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
+                            reader.GetInt32("CrossValidationK")
                             );
-                        Console.WriteLine(fun);
                         return settings;
                     }
                     return null;
@@ -153,13 +216,11 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into podesavanja values(@id,'Classification',0.001,64,10,13,2,'5,7,9,9,7','lr,lr,lr,lr,lr','L1',0.0001,'CrossEntropyLoss','Adam','','');";
+                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 cmd.ExecuteNonQuery();
-
-
             }
         }
 
@@ -167,7 +228,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "delete from podesavanja where id=@id";
+                string query = "delete from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", idp);
                 connection.Open();
@@ -183,7 +244,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `NumberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o where id=@idp";
+                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o ,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
@@ -192,9 +253,9 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@noe", json.NumberOfEpochs);
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
-
+                cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
                 //Console.WriteLine(json.ActivationFunctions[0]);
-
+                
                 for(var i = 0; i < json.HiddenLayers.Length - 1; i++)
                 {
                     s += json.HiddenLayers[i] + ",";
@@ -230,7 +291,7 @@ namespace dotNet.DBFunkcije
                     s += "l";
 
                 cmd.Parameters.AddWithValue("@af", s);
-
+                Console.WriteLine(json.ANNType);
                 if (json.ANNType == ProblemType.Regression)
                 {
                     pom = "Regression";
@@ -243,8 +304,8 @@ namespace dotNet.DBFunkcije
                 {
                     pom = "L1Loss";
                 }
-                else if (json.LossFunction == LossFunction.MSELoss)
-                    pom = "MSELoss";
+                else if (json.LossFunction == LossFunction.L2Loss)
+                    pom = "L2Loss";
                 else
                     pom = "CrossEntropyLoss";
 
@@ -270,14 +331,10 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@rm", pom);
 
                 connection.Open();
-                using (MySqlDataReader read = cmd.ExecuteReader())
-                {
-                    if (read.Read())
-                    {
-                        return true;
-                    }
-                    return false;
-                }
+                if(cmd.ExecuteNonQuery()!=0)
+                    return true;
+                return false;
+                
             }
         }
 
@@ -286,7 +343,8 @@ namespace dotNet.DBFunkcije
             List<int> hiddenLayers = new List<int>();
             foreach (string layer in niz.Split(','))
             {
-                hiddenLayers.Add(int.Parse(layer));
+                if(layer!="")
+                    hiddenLayers.Add(int.Parse(layer));
             }
             return hiddenLayers.ToArray();
         }
@@ -343,7 +401,7 @@ namespace dotNet.DBFunkcije
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 List<List<int>> list = new List<List<int>>();
-                string query = "select * from podesavanja where id=@id";
+                string query = "select * from Podesavanja where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -352,14 +410,16 @@ namespace dotNet.DBFunkcije
                     if (reader.Read())
                     {
                         List<int> list1 = new List<int>();
-                        string kolone = reader.GetString("ulaznekolone");
+                        string kolone = reader.GetString("Ulaznekolone");
+                        if (kolone != "")
                         foreach(string i in kolone.Split(','))
                         {
                             list1.Add(int.Parse(i));
                         }
                         list.Add(list1);
-                        kolone = reader.GetString("izlaznekolone");
                         list1 = new List<int>();
+                        kolone = reader.GetString("Izlaznekolone");
+                        if(kolone !="")
                         foreach (string i in kolone.Split(','))
                         {
                             list1.Add(int.Parse(i));
@@ -368,6 +428,102 @@ namespace dotNet.DBFunkcije
                     }
                 }
                 return list;
+            }
+        }
+        public bool UpisiKolone(int id,Kolone kolone)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update Podesavanja set Ulaznekolone=@kol1 , Izlaznekolone=@kol2,InputSize=@is,OutputSize=@os where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@kol1",KoloneToString(kolone.ulazne));
+                cmd.Parameters.AddWithValue("@is",kolone.ulazne.Length);
+                cmd.Parameters.AddWithValue("@kol2", KoloneToString(kolone.izlazne));
+                cmd.Parameters.AddWithValue("@os", kolone.izlazne.Length);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public List<string> DajSveIzlazneKolone(int id)
+        {
+            return null; 
+        }
+        public string KoloneToString(int[] niz)
+        {
+            string str = "";
+            for(int i = 0; i < niz.Length; i++)
+            {
+                str+=niz[i].ToString();
+                if (i < niz.Length - 1)
+                    str += ",";
+            }
+            return str;
+        }
+
+        public ModelDetaljnije detaljnije(int id)
+        {
+            Console.WriteLine(id.ToString());
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model m left join podesavanja p on m.id=p.id left join snapshot s on m.snapshot=s.id where m.id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {   
+                        ModelDetaljnije model = new ModelDetaljnije();
+                        model.Id = reader.GetInt32("id");
+                        model.Name = reader.GetString("naziv");
+                        model.CreatedDate = reader.GetDateTime("napravljen");
+                        model.UpdatedDate = reader.GetDateTime("obnovljen");
+                        model.Snapshot = reader.GetString("Ime");
+                        model.SnapshotVerzija = reader.GetInt32("snapshot");
+                        model.Opis = reader.GetString("Opis");
+                        model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                        model.Epohe = reader.GetInt32("numberOfEpochs");
+                        model.Optimizacija = reader.GetString("Optimizer");
+                        model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
+                        model.ProblemType = reader.GetString("ProblemType");
+                        return model;
+                    }
+                }
+                return null;
+            }
+        }
+        public bool PostaviSnapshot(int model, int snapshot)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set snapshot=@snapshot where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@snapshot", snapshot);
+                cmd.Parameters.AddWithValue("@id", model);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public bool zameniSnapshot(int id)
+        {
+            using(MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set snapshot=0 where snapshot=@id";
+                MySqlCommand cmd = new MySqlCommand(query,connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
             }
         }
 

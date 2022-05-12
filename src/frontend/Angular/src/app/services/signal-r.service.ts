@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
+import { ChartConfiguration } from 'chart.js';
+import { Subject } from 'rxjs';
+import { url } from '../app.module';
 
 @Injectable({
   providedIn: 'root'
@@ -7,16 +10,24 @@ import * as signalR from "@aspnet/signalr";
 export class SignalRService {
   constructor() { }
   
+  public labels: number[] = [];
+  //public dataSet: number[] = []
   public data:Array<{value:string}> = [];
   public connectionId:any
+  public switch: boolean = false;
+  public switchChange: Subject<boolean> = new Subject<boolean>();
   private hubConnection!: signalR.HubConnection; 
-
+  private componentMethodCallSource = new Subject<any>();
+  componentMethodCalled$ = this.componentMethodCallSource.asObservable();
+  callComponentMethod(id:number) {
+    this.componentMethodCallSource.next(id);
+  }
   public startConnection(token: string) {
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5008/hub').build();
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(url+'/hub').build();
     this.hubConnection.start().then(
       ()=> {
         console.log('povezan')
-        this.LossListener()
+        //this.LossListener()
       }).then(()=>this.getConnectionId(token)).catch(()=>console.log("Doslo do greske"));
   }
   public getConnectionId(token:string) {
@@ -27,26 +38,71 @@ export class SignalRService {
         }
     ); 
   }
-  public ZapocniTreniranje(token:any,id:any){
-      this.hubConnection.invoke('treniraj',token,id)
-      .catch(err => console.error(err));
-    }
-  public ZaustaviTreniranje(){
-    this.hubConnection.invoke('zaustavitreniranje')
-      .catch(err => console.error(err));
-  }
-  public TrenirajListener(){
-    this.hubConnection.on('treniranje', (data) => {
-      if(data=="Treniranje zavrseno")
-        alert("JEEEJ!");
-      else console.log(data);
+
+  public models: Array<number> = []
+  public StartModelTrainingListener() {
+    this.hubConnection.on('StartModelTraining', (modelId) => {
+      this.models.push(modelId)
     })
   }
-  public LossListener(){
-      this.hubConnection.on('loss', (data) => {
-        this.data.push(data);
-        console.log(data);
-      })
+  public LossListener()
+  {
+    this.hubConnection.on('Loss', (data) => {
+      var res = JSON.parse(data)
+      console.log(data)
+      console.log(res)
+      var id = res.modelId
+
+      var epochRes = res.epochRes
+      var currentEpoch = epochRes.epoch
+      var currentLoss = epochRes.loss
+      if (epochRes.fold !== undefined) {}
+
+      // this.data.push(data);
+      
+      console.log(currentEpoch);
+      console.log(currentLoss);
+
+      this.lineChartData.datasets[0].data.push(currentLoss);
+      this.lineChartData.labels?.push(currentEpoch);
+      
+      this.switch = !this.switch;
+      this.switchChange.next(this.switch);
+    })
+  }
+
+  public FinishModelTrainingListener() {
+    this.hubConnection.on('FinishModelTraining', (modelId) => {
+      console.log("Zavrsio.");
+      this.callComponentMethod(modelId);
+    })
+  }
+
+  public lineChartData: ChartConfiguration['data'] = {
+    // labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Loss funkcija',
+        backgroundColor: 'rgba(148,159,177,0.2)',
+        borderColor: '#F45E82',
+        pointBackgroundColor: '#fb9ab0',
+        pointBorderColor: '#fb9ab0',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#F45E82',
+        fill: {
+                target: 'origin',
+                above: '#9f707b32'
+        },
+      }]
+    }
+  
+    public clearChartData()
+    {
+      this.lineChartData.datasets[0].data = [];
+      this.lineChartData.labels = [];
     }
 }
 

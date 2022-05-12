@@ -19,18 +19,23 @@
                     <button id="dgm" type="submit" (click)="prijava()">Prijavi se</button>
                 </div>
             -->
+            <form>
                 <div id="p"></div>
                 <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Korisnicko ime" (keyup)="provera1()">
                 <div id="podaci1"></div>
-
-                <input id="sifra" type="password" name="sifra"  placeholder="Lozinka" (keyup)="provera2()" >
+            
+                <div id="passw">
+                    <input id="sifra" type="password" name="sifra"  placeholder="Lozinka" (keyup)="provera2()" > 
+                    <span (click)="promeniVidljivost()"><i id="eye" class="fa fa-eye" aria-hidden="true"></i></span>
+                </div>
                 <div id="podaci2"></div>
 
                 
                 <div id="divdugme">
                     <div id="poruka"></div>
-                    <button id="dgm" (click)="prijava()">Prijavi se</button> 
+                    <button id="dgm" (click)="prijava()" >Prijavi se</button> 
                 </div>
+            </form>
 
                 <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
             </div>

@@ -1,4 +1,27 @@
-p
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: rgb(70, 98, 186);
+}
+
+.profile-button {
+    border: none;
+}
+
+.labels {
+    font-size: 12px;
+}
+
+
+input{
+    border: 3px solid #A2AFD2;
+    opacity: 0.85;
+}
+
+#podatak1,#podatak2,#podatak3,#podatak4,#podatak5,#podatak6{
+    color: rgba(243, 48, 95, 0.85);
+} 
+/* p
 {
     color:white; 
     padding-top: 10px;
@@ -112,7 +135,6 @@ p
     float: left;
     padding-top: 50px;
     opacity: 1;
-    overflow: hidden;
 }
 
 #sacuvaj{
@@ -123,18 +145,21 @@ p
     color: #fff;
     font-family: 'Roboto';
     font-style: normal;
+    border: none;
+    box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);
 }
 
 #odbaci{
     width: 200px;
     height: 35px;
     background: rgba(229, 229, 229, 0.25);
-  /*  border: 3px solid #E5E5E5;*/
     border-radius: 10px;
     color: #fff;
     margin-top: 20px;
     font-family: 'Roboto';
     font-style: normal;
+    border: none;
+    box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);
 }
 
 #profilnaSlika{
@@ -184,4 +209,4 @@ input[type=text],input[type=password]{
 #podatak1,#podatak2,#podatak3,#podatak4,#podatak5,#podatak6{
     height: 30px;
     color: rgba(243, 48, 95, 0.85);
-}
+} */

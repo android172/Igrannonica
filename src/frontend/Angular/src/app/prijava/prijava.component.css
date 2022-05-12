@@ -68,6 +68,7 @@ input:focus,textarea:focus,select:focus{
     border-radius: 3px;
     box-shadow: 4px 6px 7px 2px rgba(0, 0, 0, 0.25);
     color: #fff;
+    border: none;
 }
 
 
@@ -161,4 +162,27 @@ input:focus,textarea:focus,select:focus{
     width: 100%;
     position: fixed;
     bottom: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+}
+
+span
+{
+    position: absolute;
+    transform: translate(-120%,60%);
+}
+
+#eye{
+    color:white;
+    opacity: 0.8;
+}
+#eye:hover{
+    color:rgb(127, 128, 192); 
+    opacity: 0.8;
 }

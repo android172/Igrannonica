@@ -6,8 +6,16 @@ import { Observable, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { tokenGetter } from '../app.module';
+import { tokenGetter, url } from '../app.module';
 import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { ChartData } from 'chart.js';
+import { ChartOptions } from 'chart.js';
+import { ChartType } from 'chart.js';
+import { ViewChild } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { ModalService } from '../_modal';
+import {Router} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications'; 
 
 @Component({
   selector: 'app-model',
@@ -17,16 +25,24 @@ import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
 export class ModelComponent implements OnInit {
   private eventsSubscription!: Subscription;
 
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
   @Input() mod!: Observable<number>;
+  @Input() index!: Observable<number>; 
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
   json: any;
   json1: any;
-
+  jsonSnap: any;
+  jsonMetrika: any;
+  jsonModel: any;
+  selectedSS: any;
+  snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
 
+  
   public kolone: any[] = [];
   message: any;
   public idModela : any;
@@ -34,8 +50,7 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
-
- // public pom : boolean = false;
+  // public pom : boolean = false;
   //public brHL : number = 0;
   //public niz : any[] = [];
   public brHL : number = 0;
@@ -45,6 +60,24 @@ export class ModelComponent implements OnInit {
   public brCvorova : any;
   public pom : string = "";
   public s: string = "";
+  public broj : number = 0;
+  public crossV : number = 5;
+  public flag: boolean = true;
+
+  public pomocna: boolean = false;
+  public prikazi: boolean = false;
+  public prikazi1: boolean = false;
+  // public testC: any[] = [];
+  // public trainC: any[] = [];
+  public mtest: any[] = [];
+  public mtrain: any[] = [];
+  public nizPoljaTest: any[] = [];
+  public nizPoljaTrain: any[] = [];
+  public maxNizaT: any;
+  public maxNizaTr: any;
+  cv: number = 0;
+
+  buttonDisable : boolean = true;
 
   selectedLF: number = 0;
   selectedO: number = 0;
@@ -53,27 +86,91 @@ export class ModelComponent implements OnInit {
 
   public ulazneKolone : string[] = [];
   public izlazneKolone : string[] = [];
+  public izabraneU : number[] = [];
+  public izabraneI : number[] = [];
+  public pomocni : number[] = [];
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,private signalR:SignalRService) { 
+  public atest: String = "";
+  public atrain: String = "";
+  public btest: String = "";
+  public btrain: String = "";
+  public ctest: String = "";
+  public ctrain: String = "";
+  public ftest: String = "";
+  public ftrain: String = "";
+  public htest: String = "";
+  public htrain: String = "";
+  public ptest: String = "";
+  public ptrain: String = "";
+  public rtest: String = "";
+  public rtrain: String = "";
+
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
         console.log(this.idEksperimenta);
       }
     )
+    this.signalR.componentMethodCalled$.subscribe((id:number)=>{
+      this.dajMetriku(id);
+    })
   }
-
   sendMessage():void{
     this.shared.sendUpdate("Update");
   }
+  onSuccess(message:any)
+  {
+    this.service.success('Uspešno',message,{
+      position: ["top","left"],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+  onError(message:any)
+  {
+    this.service.error('Neuspešno',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
+
+  onInfo(message:any)
+  {
+    this.service.info('Info',message,{
+      position: ['top','left'],
+      timeOut: 2000,
+      animate:'fade',
+      showProgressBar:true
+    });
+  }
 
   ngOnInit(): void {
-    this.ucitajNaziv();
-    this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
+    // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
+    this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
     let token = tokenGetter()
     if (token != null)
+    {
       this.signalR.startConnection(token);
+      this.signalR.LossListener();
+      this.signalR.FinishModelTrainingListener();
+      this.signalR.StartModelTrainingListener();
+      //console.log(this.signalR.data);
+    }
+    this.dajSnapshots();
+    (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
+
+  primiSnapshot(data:number){
+
+    this.dajSnapshots();
+    this.selectSnapshot(data);
+    //this.imeS("SIROVI PODACI");
+  }
+
   posaljiZahtev(data:number){
     //console.log(data);
     this.aktFunk = [];
@@ -92,11 +189,13 @@ export class ModelComponent implements OnInit {
     this.kolone = Object.assign([],this.message);
     this.kolone2 = Object.assign([],this.kolone);
     this.idModela = data;
+    this.uzmiKolone();
     this.ucitajNazivModela(this.idModela);
-    this.http.get("http://localhost:5008/api/Eksperiment/Podesavanja/"+data).subscribe(
+    this.http.get(url+"/api/Eksperiment/Podesavanja/"+data).subscribe(
       res=>{
         console.log(res);
         this.json1=res;
+        (<HTMLInputElement>document.getElementById("dd3")).value = this.json1.annType;
         this.aktFunk =  this.json1['activationFunctions'];
         (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
         (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
@@ -106,13 +205,50 @@ export class ModelComponent implements OnInit {
         {
           this.nizCvorova[i] = this.hiddLay[i];
         }
+        if(this.aktFunk.length==0 && this.hiddLay.length ==0)
+        {
+          
+          this.aktFunk[0] = 1;
+          this.aktFunk[1] = 1;
+          this.hiddLay[0] = 2;
+          this.hiddLay[1] = 2;
+          this.nizCvorova[0] = 2;
+          this.nizCvorova[1] = 2;
+         /* this.hiddLay.push(1);
+          this.aktFunk.push(1);
+          this.nizCvorova.push(1);*/
+          this.brHL = 2;
+        }
+        console.log(this.hiddLay);
+        console.log(this.aktFunk);
         this.brojU = this.json1['inputSize'];
         this.brojI = this.json1['outputSize'];
+        if(this.brojU == 0 || this.brojI == 0)
+        {
+          this.buttonDisable = true;
+        }
+        else
+        {
+          this.buttonDisable = false;
+        }
         (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
         (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
+        this.crossV = this.json1['kFoldCV'];
+        console.log(this.crossV);
+        if(this.crossV == 0)
+        {
+          this.flag = false;
+          (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+        }
+        else{
+          this.flag = true;
+          (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+        }
+        this.onSuccess("Zahtev uspesno poslat!");
       },
       error=>{
         console.log(error);
+        this.onError("Zahtev nije poslat!");
       }
     )
   }
@@ -120,7 +256,7 @@ export class ModelComponent implements OnInit {
 
   ucitajNazivModela(id : any){
 
-  this.http.get("http://localhost:5008/api/Eksperiment/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
+  this.http.get(url+"/api/Model/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
       res=>{
         console.log(res);
         this.nazivModela = res;
@@ -132,20 +268,6 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  ucitajNaziv()
-  {
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
-        res=>{
-          console.log(res);
-          this.nazivEksperimenta = res;
-          var div = (<HTMLInputElement>document.getElementById("nazivE")).value = this.nazivEksperimenta;
-          console.log(this.nazivEksperimenta);
-        },error=>{
-          console.log(error.error);
-        }
-    );
-  }
-
   funkcija(){
     let nizK = <any>document.getElementsByName("ulz"); 
     var ind1;
@@ -153,6 +275,7 @@ export class ModelComponent implements OnInit {
     {
       if(nizK[i].checked)
       {
+
         ind1 = 0;
         for(let j=0; j<this.ulazneKolone.length; j++)
         {
@@ -164,43 +287,68 @@ export class ModelComponent implements OnInit {
         if(ind1 == 0)
         {
            this.ulazneKolone.push(nizK[i].value);
-        }
-        console.log(this.ulazneKolone);
-
-        this.kolone.forEach((element:any,index:any) => { 
-          if(element === nizK[i].value){
-           // console.log(element);
-            this.kolone.splice(index,1);
-            this.brojU++;
+           this.izabraneU.push(i);
+           (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
+           this.brojU++;
+           if(this.brojU > 0 && this.brojI > 0)
+            {
+              this.buttonDisable = false;
+            }
             console.log(this.brojU);
-          }
-        });
-        //console.log(this.kolone);
+        }
       }
       if(!nizK[i].checked)
       {
         for(let j=0; j < this.ulazneKolone.length; j++)
         {
-          if(this.ulazneKolone[j] == nizK[i].value)
+          if(this.ulazneKolone[j] === nizK[i].value)
           {
             this.ulazneKolone.splice(j,1);
+            this.izabraneU.slice(j,1);
+            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
+            //console.log(nizK[i].value);
+             this.brojU--;
+             console.log(this.brojU);
+            if(this.brojU == 0)
+            {
+              this.buttonDisable = true;
+            }
           }
-        }
-        console.log(this.ulazneKolone);
-        var ind = 0;
-        this.kolone.forEach((element:any,index:any) => { 
-          if(element === nizK[i].value){
-           // console.log(element);
-            ind = 1;
-          }
-        });
-        if(ind == 0)
-        {
-          this.kolone.splice(i, 0, nizK[i].value);
-          this.brojU--;
         }
       }
     }
+  }
+
+
+  napraviModel()
+  {
+    console.log(this.idEksperimenta);
+    var ime = (<HTMLInputElement>document.getElementById("bs1")).value;
+    var opis = (<HTMLInputElement>document.getElementById("opisM")).value;
+    var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
+    if(ime === ""){
+      ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="*Polje ne sme biti prazno";
+      return;
+    }
+    if(div === "*Model sa tim nazivom vec postoji"){
+      div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
+    }
+    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.idEksperimenta + "&opis=" + opis + "&snapshot=" + this.selectedSS,null,{responseType: 'text'}).subscribe(
+      res=>{
+        console.log(res);
+        ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
+        this.onSuccess("Model je uspesno napravljen");
+      },
+      error=>{
+        console.log(error.error);
+        this.onError("Model nije napravljen!");
+        if(error.error === "Vec postoji model sa tim imenom")
+        {
+           var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
+        }
+      }
+    );
   }
 
   funkcija2(){
@@ -221,38 +369,33 @@ export class ModelComponent implements OnInit {
         if(ind2 == 0)
         {
            this.izlazneKolone.push(nizK[i].value);
+           this.izabraneI.push(i);
+           (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = true;
+           this.brojI++;
+           if(this.brojI > 0 && this.brojU > 0)
+            {
+              this.buttonDisable = false;
+            }
+            console.log(this.brojI);
         }
-        console.log(this.ulazneKolone);
-
-        this.kolone2.forEach((element:any,index:any) => { 
-          if(element === nizK[i].value){
-           this.kolone2.splice(index,1);
-            this.brojI++;
-            return;
-          }
-        });
       }
       if(!nizK[i].checked)
       {
         for(let j=0; j < this.izlazneKolone.length; j++)
         {
-          if(this.izlazneKolone[j] == nizK[i].value)
+          if(this.izlazneKolone[j] === nizK[i].value)
           {
             this.izlazneKolone.splice(j,1);
+            this.izabraneI.splice(j,1);
+            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
+            //console.log(nizK[i].value);
+             this.brojI--;
+             console.log(this.brojI);
+            if(this.brojI == 0)
+            {
+              this.buttonDisable = true;
+            }
           }
-        }
-        console.log(this.izlazneKolone);
-        var ind = 0;
-        this.kolone2.forEach((element:any,index:any) => { 
-          if(element === nizK[i].value){
-            ind = 1;
-          }
-        });
-        if(ind == 0)
-        {
-          this.kolone2.splice(i, 0, nizK[i].value);
-          this.brojI--;
-          return;
         }
       }
     }
@@ -260,15 +403,11 @@ export class ModelComponent implements OnInit {
 
 
 
-  submit(){
 
+
+  submit(){
     this.izmeniPodesavanja();
-    var nazivEks = (<HTMLInputElement>document.getElementById("nazivE")).value;
-    if(!(nazivEks === this.nazivEksperimenta))
-    {
-       this.proveriE();
-       this.sendMessage();
-    }
+    this.uzmiCekirane();
     var nazivMod = (<HTMLInputElement>document.getElementById("nazivM")).value;
     if(!(nazivMod === this.nazivModela))
     {
@@ -276,26 +415,6 @@ export class ModelComponent implements OnInit {
        this.sendMessage();
     }
 
-  }
-
-  proveriE(){
-
-      var nazivE = (<HTMLInputElement>document.getElementById("nazivE")).value;
-      var div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML;
-      if(div === "*Eksperiment sa tim nazivom vec postoji"){
-        div = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "";
-      }
-      this.http.put("http://localhost:5008/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta, {responseType : "text"}).subscribe(
-        res=>{
-
-        }, error=>{
-          this.ucitajNaziv();
-          if(error.error === "Postoji eksperiment sa tim imenom")
-          {
-             var div1 = (<HTMLDivElement>document.getElementById("poruka1")).innerHTML = "*Eksperiment sa tim nazivom vec postoji";
-          }
-        }
-      )
   }
 
   selectLF(event: any){
@@ -327,19 +446,96 @@ export class ModelComponent implements OnInit {
     }
   }
 
+  uzmiKolone()
+  {
+    console.log(this.idModela);
+    this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
+        res=>{
+          this.pomocni=Object.assign([],res);
+          this.izabraneU=Object.assign([],this.pomocni[0]);
+          this.izabraneI=Object.assign([],this.pomocni[1]);
+          this.cekiraj();
+        },error=>{
+          console.log(error.error);
+        }
+    );
+  }
+
+  uzmiCekirane(){
+    var ulazne=[];
+    var izlazne=[];
+    let nizU = <any>document.getElementsByName("ulz"); 
+    for(let i =0;i<nizU.length;i++){
+      if(nizU[i].checked==true){
+        for(let j =0;j<this.message.length;j++){
+          if(nizU[i].value==this.message[j]){
+            ulazne.push(j);
+          }
+        }
+      }
+    }
+    let nizI = <any>document.getElementsByName("izl");
+    for(let i =0;i<nizI.length;i++){
+      if(nizI[i].checked==true){
+        for(let j =0;j<this.message.length;j++){
+          if(nizI[i].value==this.message[j])
+            izlazne.push(j);
+        }
+      }
+    }
+    this.http.post(url+"/api/Eksperiment/Podesavanja/Kolone?id="+this.idModela,{ulazne,izlazne}).subscribe(
+      res=>{
+        console.log(res);
+      }
+    );
+  }
+
+
+  cekiraj()
+  {
+    for(let i=0;i<this.message.length;i++)
+      for(let j=0;j<this.izabraneU.length;j++)
+        if(i==this.izabraneU[j])
+        {
+          let nizU = <any>document.getElementsByName("ulz"); 
+          for(let p=0;p<nizU.length;p++)
+            if(nizU[p].value===this.message[i])
+            {
+              nizU[p].checked=true;
+            }
+        }
+    for(let i=0;i<this.message.length;i++)
+      for(let j=0;j<this.izabraneI.length;j++)
+        if(i==this.izabraneI[j])
+        {
+          let nizI = <any>document.getElementsByName("izl"); 
+          for(let p=0;p<nizI.length;p++)
+            if(nizI[p].value===this.message[i])
+            {
+              nizI[p].checked=true;
+            }
+          }
+    
+  }
+
   izmeniPodesavanja(){
     this.s = (<HTMLInputElement>document.getElementById("bs")).value;
     var bs = Number(this.s);
     this.s = (<HTMLInputElement>document.getElementById("lr")).value;
     var lr = Number(this.s);
-    this.s = (<HTMLDivElement>document.getElementById("is")).innerHTML;
-    var ins = Number(this.s);
+    var ins = this.brojU;
     this.s = (<HTMLInputElement>document.getElementById("noe")).value;
     var noe = Number(this.s);
-    this.s = (<HTMLDivElement>document.getElementById("os")).innerHTML;
-    var os = Number(this.s);
+    var os = this.brojI;
     this.s = (<HTMLInputElement>document.getElementById("rr")).value;
     var rr = Number(this.s);
+    if(this.flag == true){
+      var str = (<HTMLInputElement>document.getElementById("crossV")).value;
+      this.cv = Number(str);
+    }
+    else{
+      this.cv = 0;
+    }
 
     var jsonPod = 
     {
@@ -354,15 +550,17 @@ export class ModelComponent implements OnInit {
         "Regularization": this.selectedRM,
         "RegularizationRate": rr,
         "HiddenLayers":this.nizCvorova,
-        "ActivationFunctions":this.aktFunk
+        "ActivationFunctions":this.aktFunk,
+        "KFoldCV":this.cv
     };
     
-    this.http.put("http://localhost:5008/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod).subscribe(
+    this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod,{responseType:"text"}).subscribe(
       res=>{
-        
+        this.onSuccess("Podesavanja uspesni izmenjena!");
       },err=>{
         console.log(jsonPod);
         console.log(err.error);
+        this.onError("Podesavanja nisu izmenjena!");
       }
     )
   }
@@ -371,49 +569,68 @@ export class ModelComponent implements OnInit {
   
   proveriM(){
 
-    var nazivE = (<HTMLInputElement>document.getElementById("nazivM")).value;
+    var nazivM = (<HTMLInputElement>document.getElementById("nazivM")).value;
     var div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML;
     if(div === "*Model sa tim nazivom vec postoji"){
       div = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "";
+      this.onError("Model sa tim nazivom vec postoji");
     }
-    this.http.put("http://localhost:5008/api/Eksperiment/Modeli?ime=" + nazivE + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
+    this.http.put(url+"/api/Model/Modeli?ime=" + nazivM + "&id=" + this.idModela +"&ideksperimenta=" + this.idEksperimenta, {responseType : "text"}).subscribe(
       res=>{
-
+          this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{
         this.ucitajNazivModela(this.idModela);
         //console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
+           this.onError("Model sa tim nazivom vec postoji");
         }
       }
     )
   }
 
-  treniraj(){
+  treniraj(broj:number){
     
+    (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
+    
+    if(broj == 1){
+      this.izmeniPodesavanja();
+      this.uzmiCekirane();
+      console.log("sacuvano");
+    }
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
-    this.http.post("http://localhost:5008/api/mltest/train", null).subscribe(
-      res => {}
+    this.signalR.clearChartData();
+    this.chart?.update();
+    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
+      res => {
+        let subscription = this.signalR.switchChange.asObservable().subscribe(
+          value=>{
+            this.chart?.update();
+          }
+        )
+        this.onInfo("Trening je zapocet.");
+      }
     )
   }
 
-  counter1(broj:number){
+  counter1(i:number){
     
-    for(let i=0; i<broj; i++)
-    {
-      this.nizHL[i] = i+1;
-    }
-    return this.nizHL;
+    return new Array(i);
   }
 
   promeni1(br : any){
     if(br == 1)
     {
+      if(this.brHL < 10 ){
         this.brHL++;
         this.hiddLay.push(1);
         this.aktFunk.push(1);
         this.nizCvorova.push(1);
+      }
+      else{
+        this.brHL = 10;
+      }
     }
     else{
 
@@ -437,10 +654,319 @@ export class ModelComponent implements OnInit {
         var x = i;
         this.pom = x.toString();
         var str = (<HTMLInputElement>document.getElementById(this.pom)).value;
-        this.nizCvorova[i]=Number(str);
+
+        if(Number(str) >= 14)
+        {
+           this.broj = 14;
+           (<HTMLInputElement>document.getElementById(this.pom)).value = "14";
+        }
+        else
+          if(Number(str) < 1)
+          {
+            this.broj = 1;
+            (<HTMLInputElement>document.getElementById(this.pom)).value = "1";
+          }
+        else{
+          this.broj = Number(str);
+        }
+        this.nizCvorova[i]=this.broj;
         console.log(this.nizCvorova[i]);
       }
     }
   }
 
+  public chartOptions: any = {
+    scaleShowVerticalLines: true,
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+          font: {
+            size: 18
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: 'Vrednost loss-a',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          beginAtZero: true,
+          color: 'white'
+        },
+      },
+      x:{
+        title: {
+          display: true,
+          text: 'Broj epoha',
+          color: 'white'
+        },
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: 'white'
+        }
+      }
+    }
+  };
+  public chartLabels: string[] = ['Real time data for the chart'];
+  public chartType: string = 'line';
+  public chartLegend: boolean = true;
+
+
+  dugmeCV(){
+
+    if(this.flag == true){
+      this.flag = false;
+      (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+    }
+    else{
+      this.flag = true;
+      (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+    }
+  }
+
+  promeniK(){
+    
+    var str = (<HTMLInputElement>document.getElementById("crossV")).value;
+
+    if(Number(str) > 20)
+    {
+       (<HTMLInputElement>document.getElementById("crossV")).value = "20";
+     /*  (<HTMLInputElement>document.getElementById("crossV")).value = "2";*/
+    }
+    else
+    if(Number(str) < 2)
+    {
+      (<HTMLInputElement>document.getElementById("crossV")).value = "2";
+      /*(<HTMLInputElement>document.getElementById("crossV")).value = "";*/
+    }
+  }
+
+  kreirajModel()
+  {
+    this.napraviModel();
+    //this.submit();
+  }
+
+  kreirajModelCuvanje()
+  {
+    this.jsonModel = 
+    {
+        "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
+        "opis": (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+        "snapshot": this.selectedSS,
+        "podesavalja": {  
+        "annType":this.selectedPT,
+        "learningRate": Number((<HTMLInputElement>document.getElementById("lr")).value),
+        "batchSize": Number((<HTMLInputElement>document.getElementById("bs")).value),
+        "numberOfEpochs": Number((<HTMLInputElement>document.getElementById("noe")).value),
+        "currentEpoch":0,
+        "inputSize": this.brojU,
+        "outputSize": this.brojI,
+        "hiddenLayers":this.nizCvorova,
+        "activationFunctions":this.aktFunk,
+        "regularization": this.selectedRM,
+        "regularizationRate": Number((<HTMLInputElement>document.getElementById("rr")).value),
+        "lossFunction": this.selectedLF,
+        "optimizer": this.selectedO,
+        "kFoldCV":Number((<HTMLInputElement>document.getElementById("crossV")).value)
+        },
+        "kolone":{
+          "ulazne":this.izabraneU,
+          "izlazne":this.izabraneI
+        }
+    };
+    console.log((<HTMLInputElement>document.getElementById("bs2")).value);
+    console.log(this.jsonModel);
+    this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
+      res => {
+        this.idModela = res;
+      },
+      error =>{
+        console.log(error.error);
+      }
+    )
+  }
+
+  dajSnapshots()
+  {
+    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+      res => {
+        this.jsonSnap=res;
+        this.snapshots = Object.values(this.jsonSnap);
+      },
+      error =>{
+        console.log(error.error);
+      }
+    )
+  }
+
+ imeS(ime: string)
+ {
+   (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = ime;
+ }
+
+  selectSnapshot(id: any)
+  {
+     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+     (response: any)=>{
+         console.log(response);
+         this.kolone = Object.assign([],response);
+         this.kolone2 = Object.assign([],this.kolone);
+
+      },error =>{
+       console.log(error.error);
+     }
+    );
+    this.selectedSS=id;
+    console.log(this.selectedSS);
+  }
+
+  dajMetriku(modelId:number)
+  {
+    this.http.get(url+"/api/Model/metrika?modelId="+ modelId).subscribe(
+      res => {
+        console.table(res);
+        this.jsonMetrika = Object.values(res);
+        this.checkType();
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  checkType()
+  {
+    if(this.selectedPT==1)
+    {
+      if(this.pomocna==true)
+        this.pomocna=false;
+      this.setujMetrikuK();
+      this.kreirajMatricuTest();
+      this.kreirajMatricuTrain();
+    }
+    else if(this.selectedPT==0)
+    {
+      this.setujMetrikuR();
+      if(this.pomocna==false)
+        this.pomocna=true;
+    }
+  }
+
+  setujMetrikuK()
+  {
+    this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
+    this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
+    
+    this.btest = (Number(this.jsonMetrika[0]['BalancedAccuracy'])).toFixed(3);
+    this.btrain = (Number(this.jsonMetrika[1]['BalancedAccuracy'])).toFixed(3);
+
+    this.ctest = (Number(this.jsonMetrika[0]['CrossEntropyLoss'])).toFixed(3);
+    this.ctrain = (Number(this.jsonMetrika[1]['CrossEntropyLoss'])).toFixed(3);
+   
+    this.ftest = (Number(this.jsonMetrika[0]['F1Score'])).toFixed(3);
+    this.ftrain = (Number(this.jsonMetrika[1]['F1Score'])).toFixed(3);
+    
+    this.htest = (Number(this.jsonMetrika[0]['HammingLoss'])).toFixed(3);
+    this.htrain = (Number(this.jsonMetrika[1]['HammingLoss'])).toFixed(3);
+    
+    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+    
+    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+
+    this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
+    this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
+
+  }
+
+  setujMetrikuR()
+  {
+    
+  }
+
+  kreirajMatricuTest()
+  {
+    var p=0;
+    this.mtest = this.jsonMetrika[0]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtest.length;i++)
+       for(let j=0;j<this.mtest[i].length;j++)
+       {
+          this.nizPoljaTest[p]=this.mtest[i][j];
+          console.log(this.nizPoljaTest[p]);
+          p++;
+       }
+       this.nadjiMaxTest();
+  }
+
+  nadjiMaxTest()
+  {
+    var t;
+    for(let i=0;i<this.nizPoljaTest.length-1;i++)
+      for(let j=1;j<this.nizPoljaTest.length;j++)
+      {
+        if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
+        {
+          t=this.nizPoljaTest[i];
+          this.nizPoljaTest[i]=this.nizPoljaTest[j];
+          this.nizPoljaTest[j]=t;
+        }
+      }
+      this.maxNizaT= this.nizPoljaTest[0];
+  }
+  
+  kreirajMatricuTrain()
+  {
+    var p=0;
+    this.mtrain = this.jsonMetrika[1]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtrain.length;i++)
+       for(let j=0;j<this.mtrain[i].length;j++)
+       {
+          this.nizPoljaTrain[p]=this.mtrain[i][j];
+          console.log(this.nizPoljaTrain[p]);
+          p++;
+       }
+       this.nadjiMaxTrain();
+  }
+
+  nadjiMaxTrain()
+  {
+    var t;
+    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
+      for(let j=1;j<this.nizPoljaTrain.length;j++)
+      {
+        if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
+        {
+          t=this.nizPoljaTrain[i];
+          this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
+          this.nizPoljaTrain[j]=t;
+        }
+      }
+      this.maxNizaTr= this.nizPoljaTrain[0];
+  }
+
+  colapseLoss()
+  {
+    this.prikazi=true;
+    (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
+  }
+  
+  colapseStatistics()
+  {
+    this.prikazi1=true;
+  }
 }

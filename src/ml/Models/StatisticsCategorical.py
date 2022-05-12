@@ -15,5 +15,5 @@ class StatisticsCategorical:
         self.ValidCount  = int(valid_count)
         self.NaCount     = int(na_count)
         self.UniqueCount = int(unique_count)
-        self.MostCommon  = (str(most_common[0]), float(most_common[1]))
-        self.Frequencies = [(str(a), float(b)) for (a, b) in frequencies]
+        self.MostCommon  = (str(most_common[0]), str(float(most_common[1])))
+        self.Frequencies = [(str(a), str(float(b))) for (a, b) in frequencies]

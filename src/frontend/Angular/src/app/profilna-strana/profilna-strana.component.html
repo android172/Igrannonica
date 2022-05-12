@@ -1,40 +1,148 @@
-<div id="body">
-    <div id="centrirano">
-        <div class="box">
-            <div id="slikaDugme">
-            <img id="profilnaSlika" src="assets/ikonica.png">
-            <div id="submitDugme">
-                <button id="button" routerLink="/profilna-strana-izmena-podataka">Izmenite profil</button> 
-            </div>
-            </div>
-            <div class="divbox">
-
-                <div id="podaci">Ime i prezime:</div>
-                <div id="polje">
-                <div id="ime" type="text" name="ime"></div>
+<div class="container emp-profile mt-0" style="background: rgba(32, 35, 66, 0.9); width: 50%; height: 30%;">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="profile-head">
+                <div style="color: #c4c4c4; font-size: 15px;">Ime i prezime:</div>
+                <div style="color: #fff; font-size: 18px;" class="pt-1">
+                    <div id="ime" type="text" name="ime"></div>
                 </div>
 
-                <div id="podaci">Korisnicko ime:</div>
-                <div id="polje">
-                <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
-                </div>
-
-                <div id="podaci">Email:</div>
-                <div id="polje">
-                <div id="email" type="text" name="email"></div>
-                </div>    
-
-            </div>  
+                <ul class="nav nav-tabs pt-5" id="myTab" role="tablist" *ngIf="flag">
+                    <li class="nav-item">
+                        <a class="nav-link active" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informacije</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Lista eksperimenata</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-tabs pt-5" id="myTab" role="tablist" *ngIf="!flag">
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informacije</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Lista eksperimenata</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        
-        <div id="divEksperimenti">
+        <div class="col-md-3">
+            <button class="btn btn-primary profile-button" type="submit" id="sacuvaj" routerLink="/profilna-strana-izmena-podataka" style=" background: #D74971; box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);  font-size: 14px; border: none;">Izmenite profil</button>
 
-            <div class="tekst">Lista mojih eksperimenata:</div>
-            <div id="skrol">
-                <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti">
-                    <p>  {{ e.name }}  </p>
+            <!-- <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Izmenite profil" routerLink="/profilna-strana-izmena-podataka"/> -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content profile-tab" id="myTabContent"  *ngIf="flag">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row pt-3">
+                                <div class="col-md-6 " style="color: #c4c4c4; font-size: 15px;">
+                                    <label>Korisnicko ime</label>
+                                </div>
+                                <div class="col-md-6 " style="color: #fff; font-size: 16px; font-weight: 500;">
+                                    <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-md-6" style="color: #c4c4c4; font-size: 15px;">
+                                    <label>E-mail</label>
+                                </div>
+                                <div class="col-md-6" style="color: #fff; font-size: 16px; font-weight: 500;">
+                                    <div id="email" type="text" name="email"></div>
+                                </div>
+                            </div>
+                            
                 </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-12" style="color: #c4c4c4; font-size: 15px;">
+                                    <label>Lista mojih eksperimenata:</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="skrol">
+                                    <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti">
+                                        <p>  {{ e.name }}  </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                </div>
+            </div>
+            <div class="tab-content profile-tab" id="myTabContent"  *ngIf="!flag">
+                <div class="tab-pane fade " id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row pt-3">
+                                <div class="col-md-6 " style="color: #c4c4c4; font-size: 15px;">
+                                    <label>Korisnicko ime</label>
+                                </div>
+                                <div class="col-md-6 " style="color: #fff; font-size: 16px; font-weight: 500;">
+                                    <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-md-6" style="color: #c4c4c4; font-size: 15px;">
+                                    <label>E-mail</label>
+                                </div>
+                                <div class="col-md-6" style="color: #fff; font-size: 16px; font-weight: 500;">
+                                    <div id="email" type="text" name="email"></div>
+                                </div>
+                            </div>
+                            
+                </div>
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div id="skrol">
+                                        <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti" class="m-3">
+                                            <p class="p-2" style="color: #fff;">  {{ e.name }}  </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+<!-- 
+<div id="body">
+<div id="centrirano">
+    <div class="box">
+        <div id="slikaDugme">
+        <img id="profilnaSlika" src="assets/ikonica.png">
+        <div id="submitDugme">
+            <button id="button" routerLink="/profilna-strana-izmena-podataka">Izmenite profil</button> 
+        </div>
+        </div>
+        <div class="divbox">
+
+            <div id="podaci">Ime i prezime:</div>
+            <div id="polje">
+            <div id="ime" type="text" name="ime"></div>
+            </div>
+
+            <div id="podaci">Korisnicko ime:</div>
+            <div id="polje">
+            <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
+            </div>
+
+            <div id="podaci">Email:</div>
+            <div id="polje">
+            <div id="email" type="text" name="email"></div>
+            </div>    
+
+        </div>  
+    </div>
+    
+    <div id="divEksperimenti">
+
+        <div class="tekst">Lista mojih eksperimenata:</div>
+        <div id="skrol">
+            <div type="button" (click)="otvoriEksperiment(e.id)" id="e" *ngFor="let e of eksperimenti">
+                <p>  {{ e.name }}  </p>
             </div>
         </div>
     </div>
 </div>
+</div> -->

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient } from '@angular/common/http';
+import { url } from '../app.module';
 
 @Component({
   selector: 'app-profilna-strana',
@@ -15,6 +16,7 @@ export class ProfilnaStranaComponent implements OnInit {
   korisnickoIme: any;
   email: any;
   json: any;
+  flag:boolean = true;
 
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService, private router: Router) { }
 
@@ -26,7 +28,7 @@ export class ProfilnaStranaComponent implements OnInit {
   {
     var dekodiraniToken = this.jwtHelper.decodeToken(this.jwtHelper.tokenGetter());
   
-    this.http.get('http://localhost:5008/api/Eksperiment/Eksperimenti').subscribe(
+    this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
           this.json = res;
           this.eksperimenti = Object.values(this.json);
@@ -48,4 +50,20 @@ export class ProfilnaStranaComponent implements OnInit {
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
 
+  promenaTaba(broj : number){
+
+    
+    if(this.flag == true && broj == 2)
+    {
+      this.ucitajPodatke();
+       this.flag = false;
+    }
+    else
+      if(this.flag == false && broj == 1)
+      {
+        this.ucitajPodatke();
+        this.flag = true;
+      }
+
+  }
 }
