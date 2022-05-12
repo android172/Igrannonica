@@ -3,6 +3,14 @@ import requests
 import os
 
 def save_model(self):
+    # Receive model identification
+    model_id = int(self.connection.receive())
+    
+    network = self.network
+    running_network = self.active_models.get(model_id, None)
+    if running_network is not None:
+        network = running_network
+    
     # Receive model name
     model_name = self.connection.receive()
     
@@ -13,7 +21,7 @@ def save_model(self):
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
     
-    self.network.save_weights(model_path)
+    network.save_weights(model_path)
     
     response = requests.post(
         f"http://localhost:5008/api/file/uploadModel/{experiment_id}", 

@@ -507,9 +507,10 @@ namespace dotNet.MLService {
         // /////// //
 
         // Saving and loading ANN models
-        public void SaveModel(string modelName) {
+        public void SaveModel(string modelName, int modelId = -1) {
             lock (_lock) {
                 connection.Send(Command.SaveModel);
+                connection.Send(modelId);
                 connection.Send(modelName);
                 CheckStatus();
             }

@@ -19,9 +19,20 @@ namespace dotNet.Controllers
     public class FileController : ControllerBase
     {
         private IConfiguration _config;
-        DB db;
         private int ukupanBrRedovaFajla;
-        //private static MLExperiment? experiment = null;
+        private DB db;
+
+        private readonly string[] supportedExtensions = new string[] {
+            "csv",
+            "json",
+            "xlsx",
+            "xls",
+            "xlsm",
+            "xlsb",
+            "odf",
+            "ods",
+            "odt"
+        };
 
         public FileController(IConfiguration config)
         {
@@ -205,7 +216,13 @@ namespace dotNet.Controllers
 
                 // upis u fajl
                 string fileExtension = file.FileName.Split(".")[^1];
-                string fileName = $"SIROVI PODACI.{fileExtension}";
+
+                if (supportedExtensions.Contains(fileExtension) == false) {
+                    Console.WriteLine("Unet je nedozvoljen tip fajla.");
+                    return BadRequest("Unet nedozvoljen tip fajla.");
+                }
+
+                string fileName = $"RAW_DATA.{fileExtension}";
                 UploadFile(file, folderEksperiment, fileName);
 
                 // Ucitaj fajl na ml serveru
@@ -217,7 +234,7 @@ namespace dotNet.Controllers
                 if (!fajlNijeSmesten)
                     return BadRequest("Neuspesan upis fajl-a u bazu");
 
-                db.dbeksperiment.dodajSnapshot(idEksperimenta, "SIROVI PODACI", fileName);
+                db.dbeksperiment.dodajSnapshot(idEksperimenta, "RAW_DATA", fileName);
 
                 return Ok("Fajl je upisan.");
             }
@@ -357,6 +374,8 @@ namespace dotNet.Controllers
             }
         }
 
+
+        // Snapshots
         [Authorize]
         [HttpGet("ProveriSnapshot")]
         public IActionResult proveriSnapshot(int idEksperimenta, string naziv)
@@ -477,5 +496,6 @@ namespace dotNet.Controllers
                 return BadRequest("Doslo do greske!");
             }
         }
+
     }
 }

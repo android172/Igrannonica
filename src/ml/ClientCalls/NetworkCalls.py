@@ -93,9 +93,9 @@ def start(self):
     # Train
     Thread(target= lambda : train(self.token, id, ann)).start()
     
-    running_model = ann.isRunning
-    self.active_models = {id : running_model}
-    running_model.set()
+    running_network = ann
+    self.active_models = {id : running_network}
+    running_network.isRunning.set()
     
     print("Traning commences.")
     
@@ -103,12 +103,12 @@ def stop(self):
     # Receive model identifier
     model_id = int(self.connection.receive())
     
-    running_model = self.active_models.get(model_id, None)
-    if running_model is None:
+    running_network = self.active_models.get(model_id, None)
+    if running_network is None:
         self.report_error("ERROR :: Wrong model identifier.")
         return
 
-    running_model.clear()
+    running_network.isRunning.clear()
 
     self.connection.send("OK")
     print("Traning stopped.")
@@ -117,12 +117,12 @@ def continue_training(self):
     # Receive model identifier
     model_id = int(self.connection.receive())
     
-    running_model = self.active_models.get(model_id, None)
-    if running_model is None:
+    running_network = self.active_models.get(model_id, None)
+    if running_network is None:
         self.report_error("ERROR :: Wrong model identifier.")
         return
 
-    running_model.set()
+    running_network.isRunning.set()
 
     self.connection.send("OK")
     print("Traning continued.")
