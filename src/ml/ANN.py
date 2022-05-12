@@ -193,6 +193,13 @@ class ANN:
             self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
     
     # Weights
+    def get_weights(self):
+        weights = []
+        for layer, layer_weights in self.model.state_dict().items():
+            if layer[-4:] != 'bias':
+                weights.append(layer_weights.tolist())
+        return weights
+    
     def load_weights(self, weights_path):
         state_dict = torch.load(weights_path)
         return self.load_state_dict(state_dict)
@@ -286,7 +293,8 @@ class ANN:
                         "fold"    : fold,
                         "epoch"   : self.current_epoch,
                         "loss"    : loss,
-                        "valLoss" : valLoss
+                        "valLoss" : valLoss,
+                        "weights" : self.get_weights()
                     }
                     self.weights_history[f"{fold}:{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
                     self.current_epoch = self.current_epoch + 1
@@ -298,7 +306,8 @@ class ANN:
                 loss = self.train_epoch(self.train_loader)
                 yield {
                     "epoch" : self.current_epoch,
-                    "loss"  : loss
+                    "loss"  : loss,
+                    "weights" : self.get_weights() 
                 }
                 self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
                 self.current_epoch = self.current_epoch + 1
