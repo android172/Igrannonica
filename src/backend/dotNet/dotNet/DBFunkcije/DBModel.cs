@@ -526,6 +526,88 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+        public bool upisiStatistiku(int id, StatisticsRegression statistica) {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "insert into Reggresion values ( @id ,@MAE , @MSE , @RSE , @R2 , @AR2);";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
+                cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
+                cmd.Parameters.AddWithValue("@RSE" , statistica.RSE);
+                cmd.Parameters.AddWithValue("@R2", statistica.R2);
+                cmd.Parameters.AddWithValue("@AR2", statistica.AdjustedR2);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
+
+        private string confusionMatrix(int[][] Matrix)
+        {
+            Console.WriteLine("Test");
+            string niz = "";
+            for(int i = 0; i < Matrix.Length; i++)
+            {
+                for(int j = 0; j < Matrix[i].Length; j++)
+                {
+                    niz+=Matrix[i][j].ToString();
+                    if (j < Matrix[i].Length - 1)
+                        niz += ",";
+                }
+                if (i < Matrix.Length - 1)
+                    niz += ":";
+            }
+            Console.WriteLine(niz);
+            return niz;
+        }
+        private int[][] Matrix(string matrica)
+        {
+            if(matrica.Length != 0)
+            {
+                int[][] Matrix = new int[matrica.Split(":").Length][];
+                int k = 0;
+                foreach(string i in matrica.Split(':'))
+                {
+                    int x = 0;
+                    Matrix[k] = new int[i.Split(",").Length];
+                    foreach(string j in i.Split(','))
+                    {
+                        Matrix[k][x] = int.Parse(j);
+                        x++;
+                    }
+                    k++;
+                }
+                return Matrix;
+            }        
+            return null;
+        }
+
+
+        public bool upisiStatistiku(int id,StatisticsClassification statistica)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "insert into Classification values ( @id ,@Accuracy , @BalancedAccuracy , @Precision , @Recall , @F1Score, @HammingLoss , @CrossEntropyLoss , @ConfusionMatrix );";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
+                cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
+                cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
+                cmd.Parameters.AddWithValue("@Recall", statistica.Recall);
+                cmd.Parameters.AddWithValue("@F1Score", statistica.F1Score);
+                cmd.Parameters.AddWithValue("@HammingLoss", statistica.HammingLoss);
+                cmd.Parameters.AddWithValue("@CrossEntropyLoss", statistica.CrossEntropyLoss);
+                cmd.Parameters.AddWithValue("@ConfusionMatrix", confusionMatrix( statistica.ConfusionMatrix));
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
+
+
 
     }
 }
