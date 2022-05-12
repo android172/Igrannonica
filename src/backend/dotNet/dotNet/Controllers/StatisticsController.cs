@@ -43,5 +43,41 @@ namespace dotNet.Controllers
                 return null;
             }
         }
+
+        
+        [HttpPost("Upload/Regresija")]
+        public IActionResult novaMetrikaRegresija(int id, [FromBody] StatisticsRegression statistika)
+        {
+            try
+            {
+                if(db.dbmodel.upisiStatistiku(id,statistika))
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("Upload/Klasifikacija")]
+        public IActionResult novaMetrikaRegresija(int id, [FromBody] StatisticsClassification statistika)
+        {
+            try
+            {
+                Console.WriteLine(id.ToString()+" " + statistika.Precision.ToString());
+                if (db.dbmodel.upisiStatistiku(id, statistika))
+                {
+                    return Ok(1);
+                }
+                return BadRequest();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("Doslo do greske.");
+            }
+        }
     }
 }
