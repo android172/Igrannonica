@@ -69,8 +69,8 @@ namespace dotNet.Controllers
 
                 korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Korisnik mora ponovo da se prijavi!");
 
@@ -126,7 +126,7 @@ namespace dotNet.Controllers
 
 
 
-                eksperiment.LoadDataset(idEksperimenta, fileName);
+                eksperiment.LoadDataset(fileName);
                 if (!fajlNijeSmesten)
                 {
                     return BadRequest("Neuspesan upis csv-a u bazu");
@@ -156,8 +156,8 @@ namespace dotNet.Controllers
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                        eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
                         return BadRequest("Korisnik treba ponovo da se prijavi.");
                 }
@@ -193,7 +193,7 @@ namespace dotNet.Controllers
                 // upis u fajl 
                 System.IO.File.WriteAllBytes(path, bytes);
 
-                eksperiment.LoadDataset(idEksperimenta, fileName);
+                eksperiment.LoadDataset(fileName);
 
                 if (!fajlNijeSmesten)
                 {
@@ -252,7 +252,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("paging/{page}/{size}")]
-        public Paging Paging(int page, int size)
+        public Paging Paging(int idEksperimenta, int page, int size)
         {
             try
             {
@@ -260,8 +260,8 @@ namespace dotNet.Controllers
                 Korisnik korisnik;
                 MLExperiment eksperiment;
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return new Paging(null, 1);
                 var j = page * size - size;
@@ -301,8 +301,8 @@ namespace dotNet.Controllers
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                        eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
                         return BadRequest("Korisnik treba ponovo da se prijavi.");
                 }
@@ -328,14 +328,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("setRatio/{ratio}")]
-        public IActionResult setRatio(float ratio)
+        public IActionResult setRatio(int idEksperimenta, float ratio)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
                 if (float.IsNaN(ratio))
@@ -351,14 +351,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("sacuvajIzmene")]
-        public IActionResult SaveChanges()
+        public IActionResult SaveChanges(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
                 //eksperiment.SaveDataset();
@@ -372,14 +372,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("ColumnTypes")]
-        public string ColumnTypes()
+        public string ColumnTypes(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return "greska";
                 string kolone = eksperiment.GetColumnTypes();

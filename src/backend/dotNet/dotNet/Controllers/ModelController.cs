@@ -163,16 +163,16 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Model/Treniraj")]
-        public IActionResult ModelTreniraj(int id)
+        public IActionResult ModelTreniraj(int idEksperimenta, int id)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
                 Model model = db.dbmodel.model(id);
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                 {
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                     /*if (!eksperiment.IsDataLoaded(model.Vlasnik))
                     {
                         string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
@@ -185,7 +185,6 @@ namespace dotNet.Controllers
                     int idSnapshot = db.dbmodel.dajSnapshot(id);
                     if (idSnapshot == 0)
                     {
-                        int idEksperimenta = db.dbmodel.model(id).Vlasnik;
                         eksperiment.SelectTraningData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
                     }
                     else 
@@ -229,9 +228,9 @@ namespace dotNet.Controllers
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                 {
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                     if(snapshot == 0)
                     {
                         string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
@@ -272,16 +271,16 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("metrika")]
-        public IActionResult getMetrics(int modelId)
+        public IActionResult getMetrics(int idEksperimenta, int modelId)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
                 string metrika;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                 {
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else
                     return BadRequest("GRESKA");

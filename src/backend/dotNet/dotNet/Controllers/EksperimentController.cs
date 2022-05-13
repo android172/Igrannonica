@@ -25,7 +25,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Eksperimenti")]
-        public IActionResult Experimenti(int id)
+        public IActionResult Experimenti()
         {
             try
             {
@@ -36,11 +36,28 @@ namespace dotNet.Controllers
                 List<EksperimentDto> eksperimenti = db.dbeksperiment.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
                 if (eksperimenti.Count > 0)
                     return Ok(eksperimenti);
+                
                 return BadRequest();
             }
             catch
             {
                 return BadRequest("Doslo do greske");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("load")]
+        public IActionResult LoadExperiment(int id) {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                if (!Experiment.eksperimenti.ContainsKey(id))
+                    Experiment.eksperimenti[id] = new MLExperiment(_config, token, id);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest("Internal server error.");
             }
         }
 
@@ -63,6 +80,7 @@ namespace dotNet.Controllers
                     int id = db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value));
                     string folder = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString());
                     if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+                    Experiment.eksperimenti[id] = new MLExperiment(_config, token, id);
                     return Ok(id);
                 }
                 return BadRequest("Doslo do greske");
@@ -158,11 +176,11 @@ namespace dotNet.Controllers
                 {
                     var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                     MLExperiment eksperiment;
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    if (Experiment.eksperimenti.ContainsKey(id))
                     {
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
-                        if (!eksperiment.IsDataLoaded(id))
-                            eksperiment.LoadDataset(id, csv);
+                        eksperiment = Experiment.eksperimenti[id];
+                        if (!eksperiment.IsDataLoaded())
+                            eksperiment.LoadDataset(csv);
                         return Ok(csv);
                     }
                     return BadRequest("Doslo do greske.");
@@ -182,19 +200,19 @@ namespace dotNet.Controllers
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                 {
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else return BadRequest("Potrebno ponovno prijavljivanje.");
                 if(idSnapshota == 0)
                 {
-                    eksperiment.LoadDataset(idEksperimenta, db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                    eksperiment.LoadDataset(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
                     return Ok();
                 }
                 Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
                 Console.WriteLine(snapshot.csv);
-                eksperiment.LoadDataset(idEksperimenta, snapshot.csv);
+                eksperiment.LoadDataset(snapshot.csv);
                 return Ok();
                 }
             catch
@@ -273,14 +291,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("Undo")]
-        public IActionResult undoAction()
+        public IActionResult undoAction(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Neka greska");
                 eksperiment.Undo();
@@ -294,14 +312,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("Redo")]
-        public IActionResult redoAction()
+        public IActionResult redoAction(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Neka greska");
                 eksperiment.Redo();

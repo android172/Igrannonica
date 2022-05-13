@@ -6,19 +6,19 @@ namespace dotNet.MLService {
         private readonly MLConnection connection;
         private readonly object _lock = new();
 
-        public MLExperiment(IConfiguration configuration, string token) {
+        public MLExperiment(IConfiguration configuration, string token, int experimentId) {
             connection = new MLConnection(configuration);
-            connection.Send(Command.SetToken);
+            connection.Send(Command.SetupUser);
             connection.Send(token);
+            connection.Send(experimentId);
         }
 
         // ///////////////// //
         // Data introduction //
         // ///////////////// //
-        public bool IsDataLoaded(int experimentId) {
+        public bool IsDataLoaded() {
             lock (_lock) {
                 connection.Send(Command.IsDataLoaded);
-                connection.Send(experimentId);
                 var loaded = connection.Receive();
                 if (loaded != null && loaded.Equals("True"))
                     return true;
@@ -26,10 +26,9 @@ namespace dotNet.MLService {
             }
         }
 
-        public void LoadDataset(int experimentId, string fileName) {
+        public void LoadDataset(string fileName) {
             lock (_lock) {
                 connection.Send(Command.LoadData);
-                connection.Send(experimentId);
                 connection.Send(fileName);
                 CheckStatus();
             }
@@ -612,7 +611,7 @@ namespace dotNet.MLService {
     }
 
     public enum Command {
-        SetToken,
+        SetupUser,
         // Data introduction
         IsDataLoaded,
         LoadData,

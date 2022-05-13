@@ -25,7 +25,7 @@ namespace dotNet.Controllers {
         }
 
         [HttpPost("train")]
-        public IActionResult train() {
+        public IActionResult train(int idEksperimenta) {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -37,8 +37,8 @@ namespace dotNet.Controllers {
             {
                 korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    experiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    experiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest();
             }
@@ -48,9 +48,9 @@ namespace dotNet.Controllers {
 
 
             if (experiment == null)
-                experiment = new(configuration, "st");
+                experiment = new(configuration, "st", 1);
             // Load data
-            experiment.LoadDataset(1, "test_data.csv");
+            experiment.LoadDataset("test_data.csv");
 
             // Get statistics
             var statistics = experiment.ColumnStatistics();
@@ -137,10 +137,10 @@ namespace dotNet.Controllers {
             try
             {
                 if (experiment == null)
-                    experiment = new(configuration, "st");
+                    experiment = new(configuration, "st", 1);
 
                 // Load data
-                experiment.LoadDataset(1, "test_data.csv");
+                experiment.LoadDataset("test_data.csv");
 
                 //experiment.DrawScatterPlot(new int[] { 4, 6, 10 });
 

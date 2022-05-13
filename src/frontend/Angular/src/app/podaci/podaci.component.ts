@@ -221,7 +221,7 @@ export class PodaciComponent implements OnInit {
 
   ucitajTipoveKolona(){
 
-    this.http.get(url+"/api/Upload/ColumnTypes").subscribe(
+    this.http.get(url+"/api/Upload/ColumnTypes?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
 
         console.log(response);
@@ -237,7 +237,7 @@ export class PodaciComponent implements OnInit {
 
   loadDefaultItemsPerPage()
   {      
-    this.http.get(url+"/api/Upload/paging/1/10").subscribe(
+    this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
        (response: any) => {
          this.jsonStatistika = undefined
          this.statistikaCat = []
@@ -306,7 +306,7 @@ dajNaziveHeadera()
 
   dajStatistiku()
   {
-    this.http.get(url+"/api/Statistics/statistika", {responseType: 'text'}).subscribe(
+    this.http.get(url+"/api/Statistics/statistika?idEksperimenta=" + this.idEksperimenta, {responseType: 'text'}).subscribe(
       (response: any) => {
         //console.table(response);
         this.jsonStatistika = JSON.parse(response);
@@ -512,7 +512,7 @@ dajNaziveHeadera()
   promeniBrojRedova(value: any)
   {
     this.itemsPerPage = parseInt(value);
-    this.http.get(url+"/api/Upload/paging/1/" + this.itemsPerPage).subscribe(
+    this.http.get(url+"/api/Upload/paging/1/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -527,7 +527,7 @@ dajNaziveHeadera()
    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
    console.log(this.itemsPerPage);
    console.log(this.page);
-   this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+   this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -535,7 +535,7 @@ dajNaziveHeadera()
   }
   gtyLoadPageWithStatistics(page: any){
     this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
-    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
        (response: any) => {
         this.jsonStatistika = undefined
         this.statistikaCat = []
@@ -593,7 +593,7 @@ dajNaziveHeadera()
       return;
     }
 
-    this.http.post(url+"/api/DataManipulation/oneHotEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/oneHotEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -627,7 +627,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/labelEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -899,7 +899,7 @@ dajNaziveHeadera()
       console.log("Uneta vrednost: "+ ratio);
       return;
     }
-    this.http.post(url+"/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/setRatio/"+ratio + "?idEksperimenta=" + this.idEksperimenta,ratio,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         let dateTime = new Date();
@@ -920,7 +920,7 @@ dajNaziveHeadera()
       //this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -946,7 +946,7 @@ dajNaziveHeadera()
       this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMean?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -972,7 +972,7 @@ dajNaziveHeadera()
       this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMedian?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -997,7 +997,7 @@ dajNaziveHeadera()
       this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMode?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -1023,7 +1023,7 @@ dajNaziveHeadera()
       this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/replaceEmpty?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -1050,7 +1050,7 @@ dajNaziveHeadera()
       this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/replaceZero?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -1172,7 +1172,7 @@ dajNaziveHeadera()
     }
     let redovi = redoviZaBrisanje.sort((n1,n2) => n1 - n2);
 
-    this.http.post(url+"/api/DataManipulation/deleteRows",redovi,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteRows?idEksperimenta=" + this.idEksperimenta,redovi,{responseType: 'text'}).subscribe(
       res => {
         if(res == "Redovi za brisanje nisu izabrani")
         {
@@ -1242,7 +1242,7 @@ dajNaziveHeadera()
       this.proveriE();
     }
 
-    this.http.post(url + "/api/Upload/sacuvajIzmene",null, {responseType: 'text'}).subscribe(
+    this.http.post(url + "/api/Upload/sacuvajIzmene?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
       this.onSuccess("Izmene su sacuvane");
@@ -1268,7 +1268,7 @@ dajNaziveHeadera()
       data.value = "";
     }*/
     console.log(typeof(data.value));
-    this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
+    this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1299,7 +1299,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/absoluteMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1328,7 +1328,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/minMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1357,7 +1357,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/zScoreScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1427,7 +1427,7 @@ dajNaziveHeadera()
        this.onInfo("Nije odabrana nijedna kolona");
        return;
      }
-     this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+     this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
          console.log(res);
          //this.loadDefaultItemsPerPage();
@@ -1455,7 +1455,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1483,7 +1483,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1512,7 +1512,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersIQR", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersIQR?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1540,7 +1540,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersIsolationForest?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1568,7 +1568,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersOneClassSVM", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersOneClassSVM?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1596,7 +1596,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersByLocalFactor?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1739,7 +1739,7 @@ dajNaziveHeadera()
 
   deleteAllRowsWithNA()
   {
-    this.http.post(url+"/api/DataManipulation/deleteAllRowsNA",null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteAllRowsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1758,7 +1758,7 @@ dajNaziveHeadera()
 
   deleteAllColumnsWithNA()
   {
-    this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA",null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1784,7 +1784,7 @@ dajNaziveHeadera()
       return;
     }
 
-    this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1858,7 +1858,7 @@ dajNaziveHeadera()
       this.onInfo("Nije odabrana nijedna kolona iz menija.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -2013,7 +2013,7 @@ dajNaziveHeadera()
 
   getScatterplot(){
 
-    this.http.post(url+"/api/Graph/scatterplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/scatterplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2026,7 +2026,7 @@ dajNaziveHeadera()
 
   getBoxplot(){
 
-    this.http.post(url+"/api/Graph/boxplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/boxplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2039,7 +2039,7 @@ dajNaziveHeadera()
 
   getViolinplot(){
 
-    this.http.post(url+"/api/Graph/violinplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/violinplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2052,7 +2052,7 @@ dajNaziveHeadera()
 
   getBarplot(){
 
-    this.http.post(url+"/api/Graph/barplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/barplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2065,7 +2065,7 @@ dajNaziveHeadera()
 
   getHistogram(){
 
-    this.http.post(url+"/api/Graph/histogram",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/histogram?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2078,7 +2078,7 @@ dajNaziveHeadera()
 
   getHexbin(){
 
-    this.http.post(url+"/api/Graph/hexbin",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/hexbin?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2091,7 +2091,7 @@ dajNaziveHeadera()
 
   getDensityplot(){
 
-    this.http.post(url+"/api/Graph/densityplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/densityplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2196,7 +2196,7 @@ dajNaziveHeadera()
 
   undo(){
 
-    this.http.post(url+"/api/Eksperiment/Undo",null,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Undo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -2226,7 +2226,7 @@ dajNaziveHeadera()
 
   redo(){
 
-    this.http.post(url+"/api/Eksperiment/Redo",null,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Redo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -2514,7 +2514,7 @@ sacuvajKaoNovu(ime:string){
     }
     console.log(uneteVrednosti);
 
-    this.http.post(url+"/api/DataManipulation/addNewRow", uneteVrednosti, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/addNewRow?idEksperimenta=" + this.idEksperimenta, uneteVrednosti, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -2558,7 +2558,7 @@ sacuvajKaoNovu(ime:string){
      }
      else
      {
-      this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost ,null, {responseType: 'text'}).subscribe(
+      this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
         res => {
           console.log(res);
           this.selectedColumns = []; 
@@ -2620,7 +2620,7 @@ zamenaTipaKolone(event:any)
 
   console.log("ID KOLONE type: "+ idKolone);
 
-  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone, null, {responseType: 'text'}).subscribe(
+  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone + "?idEksperimenta=" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
       this.selectedColumns = []; 

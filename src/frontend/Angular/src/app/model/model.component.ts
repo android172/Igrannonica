@@ -602,7 +602,7 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
-    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
+    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
       res => {
         let subscription = this.signalR.switchChange.asObservable().subscribe(
           value=>{
@@ -834,7 +834,7 @@ export class ModelComponent implements OnInit {
 
   dajMetriku(modelId:number)
   {
-    this.http.get(url+"/api/Model/metrika?modelId="+ modelId).subscribe(
+    this.http.get(url+"/api/Model/metrika?modelId="+ modelId + "&idEksperimenta=" + this.idEksperimenta).subscribe(
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);

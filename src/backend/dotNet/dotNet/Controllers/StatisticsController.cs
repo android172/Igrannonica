@@ -25,14 +25,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("statistika")]
-        public string getStat()
+        public string getStat(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return null;
                 string statistika = eksperiment.ColumnStatistics();

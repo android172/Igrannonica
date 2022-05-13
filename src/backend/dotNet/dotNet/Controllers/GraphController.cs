@@ -31,14 +31,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("scatterplot")]
-        public IActionResult getScatterplot(int[] nizKolona)
+        public IActionResult getScatterplot(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawScatterPlot(nizKolona);
@@ -52,14 +52,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("boxplot")]
-        public IActionResult getBoxplot(int[] nizKolona)
+        public IActionResult getBoxplot(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawBoxPlot(nizKolona);
@@ -73,14 +73,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("violinplot")]
-        public IActionResult getViolinplot(int[] nizKolona)
+        public IActionResult getViolinplot(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawViolinPlot(nizKolona);
@@ -94,14 +94,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("barplot")]
-        public IActionResult getBarplot(int[] nizKolona)
+        public IActionResult getBarplot(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawBarPlot(nizKolona);
@@ -115,14 +115,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("histogram")]
-        public IActionResult getHistogram(int[] nizKolona)
+        public IActionResult getHistogram(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawHistogram(nizKolona);
@@ -136,14 +136,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("hexbin")]
-        public IActionResult getHexbin(int[] nizKolona)
+        public IActionResult getHexbin(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawHexbin(nizKolona);
@@ -157,14 +157,14 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("densityplot")]
-        public IActionResult getDensityPlot(int[] nizKolona)
+        public IActionResult getDensityPlot(int idEksperimenta, int[] nizKolona)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("");
                 eksperiment.DrawDensityPlot(nizKolona);

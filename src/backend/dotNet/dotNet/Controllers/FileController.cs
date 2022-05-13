@@ -55,14 +55,13 @@ namespace dotNet.Controllers
             /// TEMP
             if (token.Equals("") || token.Equals("st"))
             {
-                string fileName1 = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
                 string path1 = System.IO.Path.Combine(
                     Directory.GetCurrentDirectory(), 
                     "Files", "1", 
                     idEksperimenta.ToString(), versionName
                 );
 
-                return DownloadFile(fileName1, path1);
+                return DownloadFile(versionName, path1);
             }
             /// 
 
@@ -76,15 +75,17 @@ namespace dotNet.Controllers
             {
                 korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest();
             }
             else
                 return BadRequest("Korisnik nije ulogovan.");
 
-            string fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+            string fileName = versionName;
+            try { fileName = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta); }
+            catch { }
             string path = System.IO.Path.Combine(
                 Directory.GetCurrentDirectory(), "Files",
                 korisnik.Id.ToString(), idEksperimenta.ToString(), versionName
@@ -121,8 +122,8 @@ namespace dotNet.Controllers
             {
                 korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest();
             }
@@ -195,8 +196,8 @@ namespace dotNet.Controllers
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                        eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
                         return BadRequest();
                 }
@@ -226,15 +227,16 @@ namespace dotNet.Controllers
                 UploadFile(file, folderEksperiment, file.FileName);
 
                 // Ucitaj fajl na ml serveru
-                try { eksperiment.LoadDataset(idEksperimenta, file.FileName); }
+                Console.WriteLine(idEksperimenta + " " + file.FileName);
+                try { eksperiment.LoadDataset(file.FileName); }
                 catch (MLException) { return BadRequest("File nije ucitan u python."); }
             
-                // upis csv-a u bazu 
+                // upis csv-a u bazu
                 bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, file.FileName);
                 if (!fajlNijeSmesten)
                     return BadRequest("Neuspesan upis fajl-a u bazu");
 
-                //db.dbeksperiment.dodajSnapshot(idEksperimenta, "SIROVI PODACI", fileName);
+                //db.dbeksperiment.dodajSnapshot(idEksperimenta, "RAW_DATA", fileName);
 
                 return Ok("Fajl je upisan.");
             }
@@ -280,8 +282,8 @@ namespace dotNet.Controllers
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                        eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
                         return BadRequest();
                 }
@@ -343,8 +345,8 @@ namespace dotNet.Controllers
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                        eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
                         return BadRequest();
                 }
@@ -398,11 +400,11 @@ namespace dotNet.Controllers
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (!eksperiment.IsDataLoaded(idEksperimenta))
+                if (!eksperiment.IsDataLoaded())
                     return BadRequest("Nije unet dataset.");
                 Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
                 eksperiment.SaveDataset(snapshot.csv);
@@ -423,11 +425,11 @@ namespace dotNet.Controllers
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (!eksperiment.IsDataLoaded(idEksperimenta))
+                if (!eksperiment.IsDataLoaded())
                     return BadRequest("Nije unet dataset.");
 
                 if (db.dbeksperiment.proveriSnapshot(idEksperimenta, naziv) == -1)

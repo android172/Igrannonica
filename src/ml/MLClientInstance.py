@@ -29,7 +29,7 @@ class MLClientInstance(Thread):
         
         calls = {
             # General calls
-            'SetToken' : select_token,
+            'SetupUser' : setup_user,
             
             # Dataset calls
             'IsDataLoaded'         : is_dataset_loaded,

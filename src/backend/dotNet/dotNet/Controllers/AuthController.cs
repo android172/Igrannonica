@@ -37,7 +37,6 @@ namespace dotNet.Controllers
             if (user != null)
             {
                 var token = Generate(user);
-                Korisnik.eksperimenti[token.ToString()] = new MLExperiment(_config, token);
                 return Ok(token);
             }
             return NotFound("Ne postoji");

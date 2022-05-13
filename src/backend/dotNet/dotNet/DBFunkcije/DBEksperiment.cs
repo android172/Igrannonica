@@ -148,6 +148,7 @@ namespace dotNet.DBFunkcije
 
         public bool dodajCsv(int id, string naziv)
         {
+            Console.WriteLine(id + " " + naziv);
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string query = "update Eksperiment set csv=@naziv where id=@id";

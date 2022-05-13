@@ -62,6 +62,10 @@ export class MojiEksperimentiComponent implements OnInit {
 
   otvoriEksperiment(i: any)
   {
+    this.http.post(url+'/api/Eksperiment/load?id=' + i, null, {responseType: 'text'}).subscribe(
+      res=>{},
+      err=>{}
+    );
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
 
