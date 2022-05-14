@@ -607,6 +607,83 @@ namespace dotNet.DBFunkcije
             }
         }
 
+        public List<Classification> eksperimentKlasifikacija(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<Classification> results = new List<Classification>();
+                string query = "select * from Classification c left join model m on c.id = m.id where m.idEksperimenta = @id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(new Classification(reader.GetInt32("id"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
+                    }
+                }
+                return results;
+            }
+        }
+        public List<Regression> eksperimentRegression(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<Regression> results = new List<Regression>();
+                string query = "select * from Reggresion r left join model m on r.id = m.id where m.idEksperimenta = @id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        results.Add(new Regression(reader.GetInt32("id"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
+                    }
+                }
+                return results;
+            }
+        }
+        public StatisticsRegression modelRegresija(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<Regression> results = new List<Regression>();
+                string query = "select * from Reggresion where id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new StatisticsRegression( reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2"));
+                    }
+                }
+            }
+            return null;
+        }
+        public StatisticsClassification modelKlasifikacija(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                List<Regression> results = new List<Regression>();
+                string query = "select * from Classification where id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new StatisticsClassification(reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix")));
+                    }
+                }
+            }
+            return null;
+        }
+
 
 
     }
