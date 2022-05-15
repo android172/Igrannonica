@@ -90,7 +90,12 @@
                         <select name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
                             <option id="ddp" value="1">L2 loss</option>
-                            <option id="ddp" value="2">Cross-entropy loss</option>
+                            <option id="ddp" value="2">SmoothL1Loss</option>
+                            <option id="ddp" value="3">HuberLoss</option>
+                            <option id="ddp" value="4">NLLLoss</option>
+                            <option id="ddp" value="5">CrossEntropyLoss</option>
+                            <option id="ddp" value="6">KLDivLoss</option>
+                            <option id="ddp" value="7">MultiMarginLoss</option>
                         </select>
                     </div>
             
@@ -98,10 +103,16 @@
                     <div id="grupaP">
                         <h4> Optimizer </h4>
                         <select name="" id="dd3" (change)="selectO($event)">
-                            <option id="ddp" value="0">SGD</option>
+                            <option id="ddp" value="0">AdaDelta</option>
                             <option id="ddp" value="1">AdaGrad</option>
-                            <option id="ddp" value="2">AdaDelta</option>
-                            <option id="ddp" value="3">Adam</option>
+                            <option id="ddp" value="2">Adam</option>
+                            <option id="ddp" value="3">AdamW</option>
+                            <option id="ddp" value="4">Adamax</option>
+                            <option id="ddp" value="5">ASGD</option>
+                            <option id="ddp" value="6">NAdam</option>
+                            <option id="ddp" value="7">RAdam</option>
+                            <option id="ddp" value="8">RMSprop</option>
+                            <option id="ddp" value="9">SGD</option>
                         </select>
                     </div>
 
