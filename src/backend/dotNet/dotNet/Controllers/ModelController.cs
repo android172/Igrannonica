@@ -300,7 +300,6 @@ namespace dotNet.Controllers
         [HttpPost("NoviModel")]
         public IActionResult noviModel(int idEksperimenta,[FromBody]NovModel model)
         {
-            Console.WriteLine("Usao sam");
             try
             {
                 if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot)) {

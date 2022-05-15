@@ -14,12 +14,13 @@ namespace dotNet.Models {
             int currentEpoch, 
             int inputSize, 
             int outputSize, 
-            int[]? hiddenLayers, 
+            int[] hiddenLayers, 
             ActivationFunction[]? activationFunctions,
             RegularizationMethod regularization,
             float regularizationRate,
             LossFunction lossFunction, 
             Optimizer optimizer,
+            float[] optimizationParams,
             int kFoldCV) {
 
             ANNType = aNNType;
@@ -35,6 +36,7 @@ namespace dotNet.Models {
             RegularizationRate = regularizationRate;
             LossFunction = lossFunction;
             Optimizer = optimizer;
+            OptimizationParams = optimizationParams;
             KFoldCV = kFoldCV;
         }
 
@@ -53,6 +55,7 @@ namespace dotNet.Models {
         public float RegularizationRate { get; set; }
         public LossFunction LossFunction { get; set; }
         public Optimizer Optimizer { get; set; }
+        public float[]? OptimizationParams { get; set; }
         public int KFoldCV { get; set; }
 
         // To JSON string
@@ -80,15 +83,28 @@ namespace dotNet.Models {
     }
 
     public enum LossFunction {
+        // Regression
         L1Loss,
         L2Loss,
-        CrossEntropyLoss
+        SmoothL1Loss,
+        HuberLoss,
+        // Classification
+        NLLLoss,
+        CrossEntropyLoss,
+        KLDivLoss,
+        MultiMarginLoss
     }
 
     public enum Optimizer {
-        SGD,
-        Adagrad,
         Adadelta,
-        Adam
+        Adagrad,
+        Adam,
+        AdamW,
+        Adamax,
+        ASGD,
+        NAdam,
+        RAdam,
+        RMSprop,
+        SGD
     }
 }

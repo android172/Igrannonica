@@ -202,6 +202,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
+                            optimizationParams: new float[] { 0f },
                             reader.GetInt32("CrossValidationK")
                             );
                         return settings;

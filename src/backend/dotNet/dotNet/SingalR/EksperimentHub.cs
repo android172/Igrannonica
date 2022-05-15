@@ -1,4 +1,5 @@
-﻿using dotNet.DBFunkcije;
+﻿using dotNet.Controllers;
+using dotNet.DBFunkcije;
 using dotNet.MLService;
 using dotNet.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -16,7 +17,21 @@ namespace dotNet.SingalR
 
         public void ForwardToFrontEnd(string token, string method, string param) {
             try { Clients.Clients(users[token]).SendAsync(method, param); }
-            catch (Exception) { Console.WriteLine(param); }
+            catch (Exception) {
+                //Console.WriteLine(param);
+                if (method.Equals("FinishModelTraining"))
+                {
+                    if (MLTestController.experiment != null)
+                    {
+                        var metrics = MLTestController.experiment.ComputeMetrics(1);
+                        Console.WriteLine(metrics);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(method);
+                }
+            }
         }
 
 

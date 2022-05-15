@@ -35,6 +35,7 @@ class ANN:
         self.input_size    = 0
         self.output_size   = 0
         self.optim_method  = 0
+        self.momentum      = 0
         self.hidden_layers = None
         self.activation_fn = None
         self.model         = None
@@ -70,6 +71,7 @@ class ANN:
         new_ann.cv            = self.cv
         new_ann.cv_k          = self.cv_k
         new_ann.isRegression  = self.isRegression
+        new_ann.momentum      = self.momentum
         
         new_ann.dataset_version = self.dataset_version
         
@@ -147,6 +149,9 @@ class ANN:
         self.hidden_layers = annSettings.hiddenLayers
         self.activation_fn = annSettings.activationFunctions
         self.optim_method  = annSettings.optimizer
+        self.momentum      = 0.0
+        if annSettings.optimizationParams is not None and len(annSettings.optimizationParams) > 0:
+            self.momentum  = annSettings.optimizationParams[0]
         
         # Load problem type
         self.isRegression = annSettings.problemType == 0
@@ -156,12 +161,27 @@ class ANN:
         self.cv   = self.cv_k > 1
         
         # Loss function
-        if   annSettings.lossFunction == 0:
-            self.criterion = nn.L1Loss()
-        elif annSettings.lossFunction == 1:
-            self.criterion = nn.MSELoss()
+        loss_function = annSettings.lossFunction
+        if self.isRegression:
+            if   loss_function == 0:
+                self.criterion = nn.L1Loss()
+            elif loss_function == 1:
+                self.criterion = nn.MSELoss()
+            elif loss_function == 2:
+                self.criterion = nn.SmoothL1Loss()
+            elif annSettings.lossFunction == 3:
+                self.criterion = nn.HuberLoss()
         else:
-            self.criterion = nn.CrossEntropyLoss()
+            loss_function -= 4
+            if   loss_function == 0:
+                self.criterion = nn.NLLLoss()
+            elif loss_function == 1:
+                self.criterion = nn.CrossEntropyLoss()
+            elif loss_function == 2:
+                self.criterion = nn.KLDivLoss()
+            elif loss_function == 3:
+                self.criterion = nn.MultiMarginLoss()
+                
             
         # Regularization
         self.regularization_method = annSettings.regularization
@@ -205,13 +225,25 @@ class ANN:
             
         # Optimization algortham
         if   self.optim_method == 0:
-            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adadelta  (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif self.optim_method == 1:
-            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adagrad   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif self.optim_method == 2:
-            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adam      (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 3:
+            self.optimizer = optim.AdamW     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 4:
+            self.optimizer = optim.Adamax    (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 5:
+            self.optimizer = optim.ASGD      (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 6:
+            self.optimizer = optim.NAdam     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 7:
+            self.optimizer = optim.RAdam     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 8:
+            self.optimizer = optim.RMSprop   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
         else:
-            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.SGD       (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
     
     # Weights
     def get_weights(self):

@@ -15,7 +15,7 @@ namespace dotNet.Controllers {
 
         private readonly IConfiguration configuration;
 
-        private static MLExperiment? experiment = null;
+        public static MLExperiment? experiment = null;
 
         public DB db;
 
@@ -119,7 +119,8 @@ namespace dotNet.Controllers {
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam,
-                0
+                optimizationParams: new float[] {0f},
+                kFoldCV: 0
                 );
 
             experiment.ApplySettings(settings);
@@ -191,7 +192,7 @@ namespace dotNet.Controllers {
                 // Select inputs, outputs and split data
                 experiment.LoadInputs(new int[] { 3, 4, 5, 6, 8, 9, 10, 11, 12, 13 });
                 experiment.LoadOutputs(new int[] { 7 });
-                //experiment.TrainTestSplit(0.1f);
+                experiment.TrainTestSplit(0.1f);
 
                 int[] hiddentLayers = new int[networkSize];
                 hiddentLayers[0] = 5;
@@ -219,8 +220,9 @@ namespace dotNet.Controllers {
                     activationFunctions: activationFunctions,
                     regularization: RegularizationMethod.L1,
                     regularizationRate: 0.0001f,
-                    lossFunction: LossFunction.L1Loss,
+                    lossFunction: LossFunction.NLLLoss,
                     optimizer: Optimizer.SGD,
+                    optimizationParams: new float[] { 0.9f },
                     kFoldCV: 0
                     );
 
@@ -234,11 +236,11 @@ namespace dotNet.Controllers {
 
                 //experiment.Stop(1);
 
-                Thread.Sleep(5000);
+                //Thread.Sleep(5000);
 
                 //experiment.Continue(1);
 
-                experiment.ComputeMetrics(1);
+                //experiment.ComputeMetrics(1);
                 //experiment.Predict(new string[] { "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01" });
                 // Save model / load model
                 //try { experiment.LoadEpoch("2"); }
