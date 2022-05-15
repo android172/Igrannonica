@@ -175,7 +175,7 @@
 
             <div id="boxZT">
                 <div *ngIf="!buttonDisable; else onesposobi">
-                    <a class="play-btn" (click)="modalService.open('modal-1');" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
+                    <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
                 </div>
                 <ng-template #onesposobi>
                     <a class="play-btn-disable"></a>
@@ -351,6 +351,27 @@
                          Pogledaj konfuzionu matricu training skupa
                       </button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divPredikcija">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center align-items-center" id="ulazi">
+            <div *ngFor="let naziv of ulazneKolone; index as i">
+                <div style="color:white">{{naziv}}</div>
+                <input type="text" id="vrednostUlaza{{i}}">
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <button type="button" class="btn btn-outline-primary col-md-2" (click)="predikcija()">Predict</button>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center align-items-center" id="izlazi">
+            <div *ngFor="let naziv of izlazneKolone; index as i">
+                <div style="color:white">{{naziv}}</div>
+                <input type="text" id="vrednostIzlaza{{i}}">
             </div>
         </div>
     </div>

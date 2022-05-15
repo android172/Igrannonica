@@ -325,7 +325,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("predict")]
-        public IActionResult Prediction(int idEksperimenta, string[] inputs, int modelId)
+        public IActionResult Prediction(int idEksperimenta, int modelId, string[] inputs)
         {
             try
             {
@@ -339,6 +339,10 @@ namespace dotNet.Controllers
                 else
                     return BadRequest("GRESKA");
 
+                /*for(int i = 0; i < inputs.Length; i++)
+                {
+                    Console.WriteLine(inputs[i]);
+                }*/
                 predikcija = eksperiment.Predict(inputs,modelId);
                 Console.WriteLine(predikcija);
                 return Ok(predikcija);

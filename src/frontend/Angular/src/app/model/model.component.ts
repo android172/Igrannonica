@@ -116,6 +116,8 @@ export class ModelComponent implements OnInit {
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
+      this.idModela = id;
+      // console.log("ID MODELA: " + this.idModela);
     })
   }
   sendMessage():void{
@@ -969,5 +971,52 @@ export class ModelComponent implements OnInit {
   colapseStatistics()
   {
     this.prikazi1=true;
+  }
+
+  predikcija()
+  {
+    let nizVrednosti: string[] = [];
+    for(let i = 0; i < this.ulazneKolone.length; i++)
+    {
+      let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
+      nizVrednosti.push(vrednost);
+    }
+    console.log(nizVrednosti);
+    console.log(this.idModela);
+    this.http.post(url+"/api/Model/predict?idEksperimenta=" + this.idEksperimenta + "&modelId=" + this.idModela, nizVrednosti, {responseType : "text"}).subscribe(
+      res=>{
+        console.log("USPESNO");
+        console.log(res);
+        if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+        {
+          (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = res;
+        }
+        else
+        {
+          let resPodaci = res.slice(1, res.length-1);
+          console.log(resPodaci);
+          if(resPodaci.indexOf(","))
+          {
+            let podaci = resPodaci.split(", ");
+            console.log(podaci);
+            for(let i = 0; i < res.length; i++)
+            {
+              (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = Number(podaci[i]).toFixed(4) + "";
+            }
+          }
+          else
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = resPodaci;
+          }
+          for(let i = 0; i < res.length; i++)
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = res[i];
+          }
+        }
+      },
+      error => {
+        console.log(error.error);
+      }
+    );
   }
 }
