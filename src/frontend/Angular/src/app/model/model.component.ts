@@ -27,8 +27,10 @@ export class ModelComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
+  @Input() snapshots!: any[];
+
   @Input() mod!: Observable<number>;
-  @Input() index!: Observable<number>; 
+  // @Input() index!: Observable<number>; 
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
@@ -38,7 +40,7 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
-  snapshots: any[] = [];
+  // snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
 
@@ -150,7 +152,7 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
-    this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
+    // this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -160,16 +162,15 @@ export class ModelComponent implements OnInit {
       this.signalR.StartModelTrainingListener();
       //console.log(this.signalR.data);
     }
-    this.dajSnapshots();
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
-  primiSnapshot(data:number){
+  // primiSnapshot(data:number){
 
-    this.dajSnapshots();
-    this.selectSnapshot(data);
-    //this.imeS("SIROVI PODACI");
-  }
+  //   this.dajSnapshots();
+  //   this.selectSnapshot(data);
+  //   //this.imeS("SIROVI PODACI");
+  // }
 
   posaljiZahtev(data:number){
     //console.log(data);
@@ -798,18 +799,18 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  dajSnapshots()
-  {
-    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
-      res => {
-        this.jsonSnap=res;
-        this.snapshots = Object.values(this.jsonSnap);
-      },
-      error =>{
-        console.log(error.error);
-      }
-    )
-  }
+  // dajSnapshots()
+  // {
+  //   this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+  //     res => {
+  //       this.jsonSnap=res;
+  //       this.snapshots = Object.values(this.jsonSnap);
+  //     },
+  //     error =>{
+  //       console.log(error.error);
+  //     }
+  //   )
+  // }
 
  imeS(ime: string)
  {

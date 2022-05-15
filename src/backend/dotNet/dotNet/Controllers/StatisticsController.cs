@@ -44,13 +44,13 @@ namespace dotNet.Controllers
             }
         }
 
-        
+
         [HttpPost("Upload/Regresija")]
         public IActionResult novaMetrikaRegresija(int id, [FromBody] StatisticsRegression statistika)
         {
             try
             {
-                if(db.dbmodel.upisiStatistiku(id,statistika))
+                if (db.dbmodel.upisiStatistiku(id, statistika))
                 {
                     return Ok();
                 }
@@ -66,18 +66,51 @@ namespace dotNet.Controllers
         {
             try
             {
-                Console.WriteLine(id.ToString()+" " + statistika.Precision.ToString());
+                Console.WriteLine(id.ToString() + " " + statistika.Precision.ToString());
                 if (db.dbmodel.upisiStatistiku(id, statistika))
                 {
                     return Ok(1);
                 }
                 return BadRequest();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest("Doslo do greske.");
             }
         }
+        [HttpGet("Eksperiment")]
+        public IActionResult eksperimentStatistika(int id)
+        {
+            try
+            {
+                return Ok(new Statistic(db.dbmodel.eksperimentKlasifikacija(id), db.dbmodel.eksperimentRegression(id)));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest("Doslo do greske.");
+            }
+        }
+        [HttpGet("Model")]
+        public IActionResult modelStatistika(int id)
+        {
+            try
+            {
+                StatisticsClassification sc = db.dbmodel.modelKlasifikacija(id);
+                if(sc !=null)
+                    return Ok(sc);
+                StatisticsRegression sr = db.dbmodel.modelRegresija(id);
+                if(sr !=null)
+                    return Ok(sr);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest();
+            }
+        }
+
     }
 }
