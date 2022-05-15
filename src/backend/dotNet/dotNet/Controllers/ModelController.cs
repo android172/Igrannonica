@@ -323,6 +323,32 @@ namespace dotNet.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("predict")]
+        public IActionResult Prediction(int idEksperimenta, string[] inputs, int modelId)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                string predikcija; 
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                {
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                }
+                else
+                    return BadRequest("GRESKA");
+
+                predikcija = eksperiment.Predict(inputs,modelId);
+                Console.WriteLine(predikcija);
+                return Ok(predikcija);
+            }
+            catch
+            {
+                return BadRequest("Nije uspelo");
+            }
+        }
+
 
     }
 }
