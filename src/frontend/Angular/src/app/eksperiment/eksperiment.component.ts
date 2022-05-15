@@ -19,6 +19,8 @@ export class EksperimentComponent implements OnInit {
   idEksperimenta: any;
   nazivEksperimenta:any;
 
+  snapshotovi : any = [];
+
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -30,6 +32,7 @@ export class EksperimentComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajNaziv();
+    this.ucitajSnapshotove();
   }
 
   ngDoCheck()
@@ -92,5 +95,12 @@ export class EksperimentComponent implements OnInit {
     );
   }
 
+  ucitajSnapshotove(){
+    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+      res=>{
+        this.snapshotovi = res;
+      }
+    );
+  }
 
 }

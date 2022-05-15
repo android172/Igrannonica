@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,6 +11,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
 import { Options, LabelType } from '@angular-slider/ngx-slider';
 import { HtmlParser } from '@angular/compiler';
+import { EventManager } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-podaci',
@@ -19,7 +20,11 @@ import { HtmlParser } from '@angular/compiler';
 })
 export class PodaciComponent implements OnInit {
 
-  @Output() PosaljiDefaultSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  // @Output() PosaljiDefaultSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  @Input() snapshots!: any[];
+
+  @Output() PosaljiPoruku = new EventEmitter();
+
   value: number = 50;
   options: Options = {
     floor: 0,
@@ -33,7 +38,7 @@ export class PodaciComponent implements OnInit {
     //this.getStat();
     this.ucitanipodaci();
     this.ucitajNaziv();
-    this.ucitajSnapshotove();
+    // this.ucitajSnapshotove();
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
   @ViewChild('contentmdl') content:any;
@@ -175,7 +180,7 @@ export class PodaciComponent implements OnInit {
   indikator:boolean = true; // tabela sa podacima
   nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
-  snapshots:any = [];
+  // snapshots:any = [];
 
   closeResult = ''; // Ng Modal 1 
   nazivSnapshot = "";
@@ -195,7 +200,8 @@ export class PodaciComponent implements OnInit {
 
       const upload$ = this.http.post(url+"/api/File/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
@@ -2256,14 +2262,7 @@ dajNaziveHeadera()
     this.nizKomandiUndoRedoTooltip.pop();
   }
 
-  ucitajSnapshotove(){
-    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
-      res=>{
-        this.snapshots = res;
-        this.PosaljiDefaultSnapshot.emit(this.snapshots[0].id);
-      }
-    );
-  }
+
   sacuvajTrenutnuVerziju(){
     var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
     if(id!="0"){
@@ -2284,7 +2283,8 @@ sacuvajKaoNovu(ime:string){
         if(res!="-1"){
           console.log("Sacuvan snapshot.");
           this.onSuccess("Nova verzija je uspesno sacuvana.");
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
         }
       });
     }
@@ -2322,11 +2322,13 @@ sacuvajKaoNovu(ime:string){
     if(id!="0"){
       this.http.delete(url+"/api/File/Snapshot?id="+id).subscribe(
         res=>{
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
           this.ucitajPodatkeSnapshota(0);
         },
         error=>{
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
         }
       )
     }
@@ -2351,7 +2353,8 @@ sacuvajKaoNovu(ime:string){
     //this.sacuvajKaoNovu(this.nazivSnapshotaOverride);
     this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+this.idSnapshotaOverride,null,{responseType:"text"}).subscribe(
       res=>{
-        this.ucitajSnapshotove();
+        // this.ucitajSnapshotove();
+        this.PosaljiPoruku.emit();
         this.ucitajPodatkeSnapshota(Number(this.idSnapshotaOverride));
         (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapshot
       }
