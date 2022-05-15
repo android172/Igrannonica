@@ -2670,6 +2670,11 @@ zamenaTipaKolone(event:any)
    );
  }
 
-  }
+ imeSnapshota(ime : string){
+
+  (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = ime;
+ }
+
+}
 
 
