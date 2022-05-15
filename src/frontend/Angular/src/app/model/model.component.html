@@ -1,25 +1,28 @@
 <div id="body1">
-    <div id="outliers-box">
-        <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; float: left; margin-bottom: 20px;">
-            <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdown" style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
-                Izaberi snapshot
-            </button>
-            <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
-                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(0)" (click)="imeS('Default Podaci')">Default Podaci</a></li>  
-                <div *ngFor="let s of snapshots">
-                <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)" (click)="imeS(s.ime)">{{s.ime}}</a></li>   
-                </div>                      
-            </ul>
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+        <div id="outliers-box">
+            <div ngbDropdown class="dropdown" class="zamena-select" style="width: 200px; margin-bottom: 20px;">
+                <button ngbDropdownToggle class="btn btn-design2 dugme" type="button" id="dropdown" style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
+                    Izaberi snapshot
+                </button>
+                <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownLinReg">
+                    <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(0)" (click)="imeS('Default Podaci')">Default Podaci</a></li>  
+                    <div *ngFor="let s of snapshots">
+                    <li ngbDropdownItem> <a role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id)" (click)="imeS(s.ime)">{{s.ime}}</a></li>   
+                    </div>                      
+                </ul>
+            </div>
         </div>
+        <span id="div1">
+            <button id="sacuvaj" style="margin-top: -20px;" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
+            <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
+            <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
+        </span>
     </div>
-<div id="div1">
-    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
-    <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
-    <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
-</div>
-<div id="centrirano">
-    <div id="div2">
-        <div id="divUI">
+<div class="row">
+<div class=" col-md-12 d-flex justify-content-between align-items-center" id="centrirano">
+    <div class="col-md-5 d-flex justify-content-left align-items-center" id="div2">
+        <div style="margin-right: 5%;" id="divUI">
             <p>Izbor kolona za ulaz</p>
             <div id="ulaziIzlaz">
                 <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
@@ -223,6 +226,7 @@
             -->
         </div>
     </div>
+</div>
 </div>
 
 <div id="centrirano2">
