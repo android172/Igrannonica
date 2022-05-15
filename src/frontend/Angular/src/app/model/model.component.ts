@@ -814,7 +814,7 @@ export class ModelComponent implements OnInit {
 
  imeS(ime: string)
  {
-   (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = ime;
+   (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML = ime;
  }
 
   selectSnapshot(id: any)
