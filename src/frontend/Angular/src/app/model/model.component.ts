@@ -40,6 +40,7 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
+  tip: number=1;
   // snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
@@ -434,6 +435,7 @@ export class ModelComponent implements OnInit {
   selectPT(event: any){
     var str = event.target.value;
     this.selectedPT = Number(str);
+    this.check();
   }
 
   uzmiAK(ind:any, event: any){
@@ -445,6 +447,14 @@ export class ModelComponent implements OnInit {
         this.aktFunk[i] = Number(str);
       }
     }
+  }
+
+  check()
+  {
+    if(this.selectedPT==0)
+      this.tip=0;
+    else
+      this.tip=1;
   }
 
   uzmiKolone()

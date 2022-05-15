@@ -87,16 +87,20 @@
             
                     <div id="grupaP">
                         <h4> Loss function </h4>
-                        <select name="" id="dd2" (change)="selectLF($event)">
+                        <select *ngIf="tip; else regression" name="" id="dd2" (change)="selectLF($event)">
                             <option id="ddp" value="0">L1 loss</option>
                             <option id="ddp" value="1">L2 loss</option>
                             <option id="ddp" value="2">SmoothL1Loss</option>
                             <option id="ddp" value="3">HuberLoss</option>
-                            <option id="ddp" value="4">NLLLoss</option>
-                            <option id="ddp" value="5">CrossEntropyLoss</option>
-                            <option id="ddp" value="6">KLDivLoss</option>
-                            <option id="ddp" value="7">MultiMarginLoss</option>
                         </select>
+                        <ng-template #regression>
+                            <select name="" id="dd2" (change)="selectLF($event)">
+                                <option id="ddp" value="4">NLLLoss</option>
+                                <option id="ddp" value="5">CrossEntropyLoss</option>
+                                <option id="ddp" value="6">KLDivLoss</option>
+                                <option id="ddp" value="7">MultiMarginLoss</option>
+                            </select>
+                        </ng-template>
                     </div>
             
             
