@@ -28,14 +28,17 @@
             <div class="col-md-10 d-flex justify-content-left align-items-center">
                 <div id="tekstSnapshot">Upravljanje verzijama<br>skupa podataka</div>
                 <div class="space">
-                    <select id="verzijaSnapshotaSelect" >
-                        <option value="0" (click)="ucitajPodatkeSnapshota(0)">Default snapshot</option>
-                        <option *ngFor="let i of snapshots;" value={{i.id}} (click)="ucitajPodatkeSnapshota(i.id)">{{i.ime}}</option>
-                        <!---<option>Snapshot 1</option>
-                        <option>Snapshot 2</option>
-                        <option value="{{i.id}}">{{i.ime}}</option>
-                        <option>Snapshot 3</option>-->
-                    </select>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
+                          Izaberi snapshot
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(0)" (click)="imeSnapshota('Default snapshot')">Default snapshot</a></li>
+                            <div *ngFor="let s of snapshots">
+                            <li><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(s.id)" (click)="imeSnapshota(s.ime)">{{s.ime}}</a></li>
+                            </div>
+                        </ul>
+                      </div>
                 </div>
                 <div class="space">
                     <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
