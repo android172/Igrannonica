@@ -202,7 +202,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
-                            optimizationParams: new float[] { 0f },
+                            stringToFloatArray(reader.GetString("OptimizationParams")),
                             reader.GetInt32("CrossValidationK")
                             );
                         return settings;
@@ -217,7 +217,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam',0,'','');";
+                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam','',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -245,7 +245,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o ,`CrossValidationK`=@Kv where id=@idp";
+                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
@@ -302,13 +302,21 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@pt", pom);
 
                 if (json.LossFunction == LossFunction.L1Loss)
-                {
                     pom = "L1Loss";
-                }
                 else if (json.LossFunction == LossFunction.L2Loss)
                     pom = "L2Loss";
-                else
+                else if (json.LossFunction == LossFunction.SmoothL1Loss)
+                    pom = "SmoothL1Loss";
+                else if (json.LossFunction == LossFunction.HuberLoss)
+                    pom = "HuberLoss";
+                else if (json.LossFunction == LossFunction.NLLLoss)
+                    pom = "NLLLoss";
+                else if (json.LossFunction == LossFunction.CrossEntropyLoss)
                     pom = "CrossEntropyLoss";
+                else if (json.LossFunction == LossFunction.KLDivLoss)
+                    pom = "KLDivLoss";
+                else
+                    pom = "MultiMarginLoss";
 
                 cmd.Parameters.AddWithValue("@lf", pom);
 
@@ -318,6 +326,16 @@ namespace dotNet.DBFunkcije
                     pom = "Adam";
                 else if (json.Optimizer == Optimizer.Adagrad)
                     pom = "Adagrad";
+                else if (json.Optimizer == Optimizer.AdamW)
+                    pom = "AdamW";
+                else if (json.Optimizer == Optimizer.Adamax)
+                    pom = "Adamax";
+                else if (json.Optimizer == Optimizer.ASGD)
+                    pom = "ASGD";
+                else if (json.Optimizer == Optimizer.NAdam)
+                    pom = "NAdam";
+                else if (json.Optimizer == Optimizer.RMSprop)
+                    pom = "RMSprop";
                 else
                     pom = "SGD";
 
@@ -328,7 +346,8 @@ namespace dotNet.DBFunkcije
                 else
                     if(json.Regularization == RegularizationMethod.L2)
                         pom = "L2";
-               
+
+                cmd.Parameters.AddWithValue("@op", floatArrayToString(json.OptimizationParams));
                 cmd.Parameters.AddWithValue("@rm", pom);
 
                 connection.Open();
@@ -349,6 +368,33 @@ namespace dotNet.DBFunkcije
             }
             return hiddenLayers.ToArray();
         }
+
+        public float[] stringToFloatArray(string niz)
+        {
+            if(string.IsNullOrEmpty(niz))
+                return new float[0];
+            float[] floatArray = new float[niz.Split(",").Length];
+            for (int i = 0; i < floatArray.Length; i++)
+            {
+                floatArray[i] = float.Parse(niz.Split(",")[i]);
+            }
+            return floatArray;
+        }
+
+        public string floatArrayToString(float[] niz)
+        {
+            string str = "";
+            if(niz != null)
+            for(int i = 0; i < niz.Length; i++)
+            {
+                str += niz[i].ToString();
+                if (i < niz.Length - 1)
+                    str += ",";
+            }
+            return str;
+        }
+
+
         private ActivationFunction[] aktivacionefunkcije(string niz)
         {
             List<ActivationFunction> funkcije = new List<ActivationFunction>();
@@ -471,7 +517,7 @@ namespace dotNet.DBFunkcije
             Console.WriteLine(id.ToString());
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from model m left join podesavanja p on m.id=p.id left join snapshot s on m.snapshot=s.id where m.id=@id";
+                string query = "select * from model m left join Podesavanja p on m.id=p.id left join Snapshot s on m.snapshot=s.id where m.id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -487,7 +533,7 @@ namespace dotNet.DBFunkcije
                         model.Snapshot = reader.GetString("Ime");
                         model.SnapshotVerzija = reader.GetInt32("snapshot");
                         model.Opis = reader.GetString("Opis");
-                        model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                        model.HiddenLayers = HiddenLayers(reader.GetString("HiddenLayers"));
                         model.Epohe = reader.GetInt32("numberOfEpochs");
                         model.Optimizacija = reader.GetString("Optimizer");
                         model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));

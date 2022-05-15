@@ -37,6 +37,7 @@ namespace dotNet.Controllers
             if (user != null)
             {
                 var token = Generate(user);
+                //Osvezi(user.id,token)
                 return Ok(token);
             }
             return NotFound("Ne postoji");
@@ -64,6 +65,15 @@ namespace dotNet.Controllers
             var token = new JwtSecurityToken(_config["Jwt:ValidIssuer"], _config["Jwt:ValidAudience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private void Osvezi(int id,string token)
+        {
+            foreach(var i in db.dbeksperiment.eksperimenti(id))
+            {
+                // Funkcija za postavljanje tokena
+                //Experiment.eksperimenti[id]
+            }
         }
 
         private Korisnik Authenticate(KorisnikDto korisnik)
