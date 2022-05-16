@@ -1305,15 +1305,15 @@ body {
 .greska
 {
   margin-left: 10px;
-  margin-top: 5px;
-  color: rgb(244, 94, 130);
+  margin-top: 2px;
+  color: rgb(209, 168, 255);
   visibility: hidden;
 }
 
 #dugmePredikcija
 {
   margin-top: 15px;
-  background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189));
+  background: rgb(110, 66, 137);
   height: 40px;
   padding: 5px;
   text-align: center;
@@ -1322,16 +1322,18 @@ body {
   display: block;
   max-width: 200px;
   border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
 }
 
 #dugmePredikcija:focus
 {
-  box-shadow: 0 0 0 0.2rem rgb(80, 76, 185);
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
 }
 
 #dugmePredikcija:hover
 {
-  background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202));
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
 }
 
 .inputIzlaz
