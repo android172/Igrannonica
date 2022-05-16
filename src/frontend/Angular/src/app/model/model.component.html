@@ -369,7 +369,7 @@
     </div>
      <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="izlazi">
         <div class="unosVrednosti" *ngFor="let naziv of izlazneKolone; index as i">
-            <div class="nazivKolone">{{naziv}}</div>
+            <div class="nazivKolone" id="nazivIzlaza{{i}}">{{naziv}}</div>
             <input type="text" id="vrednostIzlaza{{i}}" class="inputPolje">
         </div>
     </div>

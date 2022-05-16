@@ -595,6 +595,7 @@ export class ModelComponent implements OnInit {
 
   treniraj(broj:number){
     
+    this.pripremiPredikciju();
     (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
     
     if(broj == 1){
@@ -971,6 +972,20 @@ export class ModelComponent implements OnInit {
   colapseStatistics()
   {
     this.prikazi1=true;
+  }
+
+  pripremiPredikciju()
+  {
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
+      (<HTMLInputElement>document.getElementById("nazivIzlaza0")).innerHTML = "Output";
+      for(let i = 1; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).style.display = "none";
+        (<HTMLInputElement>document.getElementById("nazivIzlaza" + i)).style.display = "none";
+      }
+    }
   }
 
   predikcija()
