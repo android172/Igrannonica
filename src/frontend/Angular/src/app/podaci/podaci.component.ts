@@ -227,6 +227,8 @@ export class PodaciComponent implements OnInit {
         res=>{
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
+          // this.ucitajPodatkeSnapshota(0);
+          // this.imeSnapshota("Default snapshot");
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  

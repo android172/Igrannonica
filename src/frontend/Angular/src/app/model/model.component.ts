@@ -28,7 +28,10 @@ export class ModelComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() idS! : Observable<number>;
+
   @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
+
+  @Output() PosaljiModel = new EventEmitter();
 
   @Input() snapshots!: any[];
 
@@ -819,6 +822,7 @@ export class ModelComponent implements OnInit {
         console.log(res);
         this.idModela=res;
         this.onSuccess("Model was successfully created.");
+        this.PosaljiModel.emit();
       },
       error =>{
         console.log(error.error);
