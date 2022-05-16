@@ -329,7 +329,7 @@ p
 
 h3{
   color: rgb(216, 221, 251);
-  margin-bottom: 5px;
+  margin-bottom: 25px;
   text-align: center;
 }
 
@@ -756,12 +756,14 @@ input
 }
 
 #collapse{
+  height: 423.68px;
   padding-top: 5px;
   width: 35vw;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
   overflow: auto;
+  /* overflow-y: scroll; */
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-left: 25px;

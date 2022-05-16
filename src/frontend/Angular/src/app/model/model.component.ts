@@ -41,6 +41,7 @@ export class ModelComponent implements OnInit {
   jsonModel: any;
   selectedSS: any;
   tip: number=1;
+  imaTestni: boolean = true;
   // snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
@@ -70,8 +71,8 @@ export class ModelComponent implements OnInit {
   public pomocna: boolean = false;
   public prikazi: boolean = false;
   public prikazi1: boolean = false;
-  // public testC: any[] = [];
-  // public trainC: any[] = [];
+  public testR: any[] = [];
+  public trainR: any[] = [];
   public mtest: any[] = [];
   public mtrain: any[] = [];
   public nizPoljaTest: any[] = [];
@@ -108,6 +109,17 @@ export class ModelComponent implements OnInit {
   public rtest: String = "";
   public rtrain: String = "";
   public optimizationParams:number[] = [];
+
+  public MAE1: number[]=[];
+  public Adj1: number[]=[];
+  public MSE1: number[]=[];
+  public R21: number[]=[];
+  public RSE1: number[]=[];
+  public MAE: number[]=[];
+  public Adj: number[]=[];
+  public MSE: number[]=[];
+  public R2: number[]=[];
+  public RSE: number[]=[];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -860,6 +872,8 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        this.trainR=Object.assign([],this.jsonMetrika[1]);
+        this.testR=Object.assign([],this.jsonMetrika[0]);
         this.checkType();
       },
       error => {
@@ -875,19 +889,23 @@ export class ModelComponent implements OnInit {
       if(this.pomocna==true)
         this.pomocna=false;
       this.setujMetrikuK();
-      this.kreirajMatricuTest();
-      this.kreirajMatricuTrain();
+
     }
     else if(this.selectedPT==0)
     {
-      this.setujMetrikuR();
       if(this.pomocna==false)
         this.pomocna=true;
+      this.setujMetrikuR();
     }
   }
 
   setujMetrikuK()
   {
+    if(this.testR.length==0)
+        this.imaTestni=false; 
+      else
+        this.imaTestni==true;
+    console.log(this.imaTestni);   
     this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
     this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
     
@@ -916,7 +934,28 @@ export class ModelComponent implements OnInit {
 
   setujMetrikuR()
   {
-    
+    if(this.testR.length==0)
+        this.imaTestni=false; 
+      else
+        this.imaTestni==true;
+    console.log(this.imaTestni);
+    for(let i=0;i<this.trainR.length;i++)
+    {
+      this.MAE[i]=Number(Number(this.trainR[i]['MAE']).toFixed(3));
+      this.MSE[i]=Number(Number(this.trainR[i]['MSE']).toFixed(3));
+      this.Adj[i]=Number(Number(this.trainR[i]['AdjustedR2']).toFixed(3));;
+      this.R2[i]=Number(Number(this.trainR[i]['R2']).toFixed(3));
+      this.RSE[i]=Number(Number(this.trainR[i]['RSE']).toFixed(3));
+    }
+
+    for(let i=0;i<this.testR.length;i++)
+    {
+      this.MAE1[i]=Number(Number(this.testR[i]['MAE']).toFixed(3));
+      this.MSE1[i]=Number(Number(this.testR[i]['MSE']).toFixed(3));
+      this.Adj1[i]=Number(Number(this.testR[i]['AdjustedR2']).toFixed(3));;
+      this.R21[i]=Number(Number(this.testR[i]['R2']).toFixed(3));
+      this.RSE1[i]=Number(Number(this.testR[i]['RSE']).toFixed(3));
+    }
   }
 
   kreirajMatricuTest()
