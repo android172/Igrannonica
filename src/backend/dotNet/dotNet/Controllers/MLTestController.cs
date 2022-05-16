@@ -127,7 +127,7 @@ namespace dotNet.Controllers {
 
 
             // Start training
-            experiment.Start();
+            experiment.Start(1);
 
             return Ok("");
         }
@@ -230,7 +230,7 @@ namespace dotNet.Controllers {
 
 
                 // Start training
-                experiment.Start();
+                experiment.Start(1);
 
                 //Thread.Sleep(4000);
 

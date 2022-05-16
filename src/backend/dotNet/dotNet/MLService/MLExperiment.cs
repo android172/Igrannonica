@@ -556,9 +556,10 @@ namespace dotNet.MLService {
             }
         }
 
-        public void Start() {
+        public void Start(int modelId = -1) {
             lock (_lock) {
                 connection.Send(Command.Start);
+                connection.Send(modelId);
                 CheckStatus();
             }
         }

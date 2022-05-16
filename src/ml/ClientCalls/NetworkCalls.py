@@ -126,13 +126,13 @@ def select_traning_data(self):
     print("Traning datset selected.")
     
 def start(self):
+    # Receive id
+    id = int(self.connection.receive())
+    
     # Initialize random data if no dataset is selected
     if self.network.data.dataset is None:
         self.network.initialize_random_data()
         
-    self.last_active_id += 1
-    id = self.last_active_id
-    
     # Setup network
     ann = self.network.create_deep_copy()
     

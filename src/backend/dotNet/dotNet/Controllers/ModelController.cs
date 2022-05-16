@@ -193,7 +193,7 @@ namespace dotNet.Controllers
                         eksperiment.SelectTraningData(snapshot.csv);
                     }
                     eksperiment.ApplySettings(podesavanja);
-                    eksperiment.Start();
+                    eksperiment.Start(id);
                     return Ok("Pocelo treniranje");
                 }
                 return BadRequest("Greska");
@@ -328,6 +328,33 @@ namespace dotNet.Controllers
             }
         }
 
+        //[Authorize]
+        [HttpGet("LoadSelectedModel")]
+        public IActionResult LoadSelectedModel(int idEksperimenta, int idModela)
+        {
+            try
+            {
+                var model = db.dbmodel.model(idModela);
+                if (model == null) return BadRequest("Couldn't find a model with given id.");
+                var snapshot = db.dbmodel.dajSnapshot(idModela);
+                if (snapshot == -1) return BadRequest("Couldn't load selected dataset.");
+                var settings = db.dbmodel.podesavanja(idModela);
+                if (settings == null) return BadRequest("Couldn't load model settings.");
+                var kolone = db.dbmodel.Kolone(idModela);
 
+                var result = new Dictionary<string, object> {
+                    { "General", model },
+                    { "Snapshot", snapshot },
+                    { "NetworkSettings", settings },
+                    { "IOColumns", kolone }
+                };
+
+                return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            }
+            catch
+            {
+                return BadRequest("An error has occurred.");
+            }
+        }
     }
 }
