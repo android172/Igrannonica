@@ -40,6 +40,7 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
+  tip: number=1;
   // snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
@@ -434,6 +435,7 @@ export class ModelComponent implements OnInit {
   selectPT(event: any){
     var str = event.target.value;
     this.selectedPT = Number(str);
+    this.check();
   }
 
   uzmiAK(ind:any, event: any){
@@ -445,6 +447,14 @@ export class ModelComponent implements OnInit {
         this.aktFunk[i] = Number(str);
       }
     }
+  }
+
+  check()
+  {
+    if(this.selectedPT==0)
+      this.tip=0;
+    else
+      this.tip=1;
   }
 
   uzmiKolone()
@@ -557,7 +567,7 @@ export class ModelComponent implements OnInit {
     
     this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod,{responseType:"text"}).subscribe(
       res=>{
-        this.onSuccess("Podesavanja uspesni izmenjena!");
+        this.onSuccess("Podesavanja uspesno izmenjena!");
       },err=>{
         console.log(jsonPod);
         console.log(err.error);
@@ -603,7 +613,7 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
-    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
+    this.http.get(url+"/api/Model/Model/Treniraj?id="+ this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
       res => {
         let subscription = this.signalR.switchChange.asObservable().subscribe(
           value=>{
@@ -791,10 +801,18 @@ export class ModelComponent implements OnInit {
     console.log(this.jsonModel);
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
-        this.idModela = res;
+        console.log(res);
+        this.idModela=res;
+        this.onSuccess("Model was successfully created.");
       },
       error =>{
         console.log(error.error);
+        this.onError("Model nije napravljen!");
+        if(error.error === "Model sa tim imenom vec postoji.")
+        {
+          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+          this.onError("Model with that name already exists.");
+        }
       }
     )
   }

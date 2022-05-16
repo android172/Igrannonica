@@ -302,19 +302,25 @@ namespace dotNet.Controllers
         {
             try
             {
-                if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot)) {
-                    int modela = db.dbmodel.proveriModel(model.naziv,idEksperimenta);
-                    if (db.dbmodel.izmeniPodesavanja(modela, model.podesavalja))
+                int modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
+                if(modela == -1)
+                {
+                    if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot))
                     {
-                        if(db.dbmodel.UpisiKolone(modela, model.kolone))
+                        modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
+                        if (db.dbmodel.izmeniPodesavanja(modela, model.podesavalja))
                         {
-                        return Ok(modela);
+                            if (db.dbmodel.UpisiKolone(modela, model.kolone))
+                            {
+                                return Ok(modela);
+                            }
+                            return BadRequest("Doslo do greske prilikom cuvanja kolona.");
                         }
-                        return BadRequest("Doslo do greske prilikom cuvanja kolona.");
+                        return BadRequest("Doslo do greske prilikom cuvanja podesavanja.");
                     }
-                    return BadRequest("Doslo do greske prilikom cuvanja podesavanja.");
+                    return BadRequest("Doslo do greske prilikom pravljenja modela.");
                 }
-                return BadRequest("Doslo do greske prilikom pravljenja modela.");
+                return BadRequest("Model sa tim imenom vec postoji.");
             }
             catch
             {

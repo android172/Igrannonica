@@ -8,7 +8,7 @@ namespace dotNet.DBFunkcije
     {
         private string connectionString;
         private string pom = "";
-        String s;
+       
         public DBModel(string connectionString)
         {
             this.connectionString = connectionString;
@@ -243,6 +243,7 @@ namespace dotNet.DBFunkcije
 
         public bool izmeniPodesavanja(int id, ANNSettings json)
         {
+            String s;
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
@@ -256,50 +257,53 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
                 cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
                 //Console.WriteLine(json.ActivationFunctions[0]);
+
+                s = "";
                 
-                for(var i = 0; i < json.HiddenLayers.Length - 1; i++)
+                if(json.HiddenLayers.Length>0)
                 {
-                    s += json.HiddenLayers[i] + ",";
+                    for (var i = 0; i < json.HiddenLayers.Length - 1; i++)
+                    {
+                        s += json.HiddenLayers[i] + ",";
+                    }
+                    s += json.HiddenLayers[json.HiddenLayers.Length - 1];
                 }
-                s += json.HiddenLayers[json.HiddenLayers.Length - 1];
 
                 cmd.Parameters.AddWithValue("@hl", s);
 
                 s = "";
-
-                for(var i = 0; i < json.ActivationFunctions.Length-1; i++)
+   
+                if(json.ActivationFunctions.Length>0)
                 {
-                    if (json.ActivationFunctions[i] == ActivationFunction.LeakyReLU)
-                        s += "lr,";
-                    if (json.ActivationFunctions[i] == ActivationFunction.Tanh)
-                        s += "t,";
-                    if (json.ActivationFunctions[i] == ActivationFunction.ReLU)
-                        s += "r,";
-                    if (json.ActivationFunctions[i] == ActivationFunction.Sigmoid)
-                        s += "s,";
-                    if (json.ActivationFunctions[i] == ActivationFunction.Linear)
-                        s += "l,";
+                    for (var i = 0; i < json.ActivationFunctions.Length - 1; i++)
+                    {
+                        if (json.ActivationFunctions[i] == ActivationFunction.LeakyReLU)
+                            s += "lr,";
+                        if (json.ActivationFunctions[i] == ActivationFunction.Tanh)
+                            s += "t,";
+                        if (json.ActivationFunctions[i] == ActivationFunction.ReLU)
+                            s += "r,";
+                        if (json.ActivationFunctions[i] == ActivationFunction.Sigmoid)
+                            s += "s,";
+                        if (json.ActivationFunctions[i] == ActivationFunction.Linear)
+                            s += "l,";
+                    }
+                    if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.LeakyReLU)
+                        s += "lr";
+                    else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Tanh)
+                        s += "t";
+                    else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.ReLU)
+                        s += "r";
+                    else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Sigmoid)
+                        s += "s";
+                    else
+                        s += "l";
                 }
-                if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.LeakyReLU)
-                    s += "lr";
-                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Tanh)
-                    s += "t";
-                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.ReLU)
-                    s += "r";
-                else if (json.ActivationFunctions[json.ActivationFunctions.Length - 1] == ActivationFunction.Sigmoid)
-                    s += "s";
-                else
-                    s += "l";
+                
 
                 cmd.Parameters.AddWithValue("@af", s);
-                Console.WriteLine(json.ANNType);
-                if (json.ANNType == ProblemType.Regression)
-                {
-                    pom = "Regression";
-                }
-                else
-                    pom = "Classification";
-                cmd.Parameters.AddWithValue("@pt", pom);
+                
+                cmd.Parameters.AddWithValue("@pt", json.ANNType.ToString());
 
                 if (json.LossFunction == LossFunction.L1Loss)
                     pom = "L1Loss";
@@ -317,8 +321,9 @@ namespace dotNet.DBFunkcije
                     pom = "KLDivLoss";
                 else
                     pom = "MultiMarginLoss";
+                cmd.Parameters.AddWithValue("@lf", json.LossFunction.ToString());
 
-                cmd.Parameters.AddWithValue("@lf", pom);
+                cmd.Parameters.AddWithValue("@o", json.Optimizer.ToString());
 
                 if (json.Optimizer == Optimizer.Adadelta)
                     pom = "Adadelta";
@@ -348,7 +353,7 @@ namespace dotNet.DBFunkcije
                         pom = "L2";
 
                 cmd.Parameters.AddWithValue("@op", floatArrayToString(json.OptimizationParams));
-                cmd.Parameters.AddWithValue("@rm", pom);
+                cmd.Parameters.AddWithValue("@rm", json.Regularization.ToString());
 
                 connection.Open();
                 if(cmd.ExecuteNonQuery()!=0)
@@ -541,6 +546,34 @@ namespace dotNet.DBFunkcije
                         return model;
                     }
                 }
+                else
+                {
+                    string query = "select * from model m left join podesavanja p on m.id=p.id where m.id=@id";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    connection.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            ModelDetaljnije model = new ModelDetaljnije();
+                            model.Id = reader.GetInt32("id");
+                            model.Name = reader.GetString("naziv");
+                            model.CreatedDate = reader.GetDateTime("napravljen");
+                            model.UpdatedDate = reader.GetDateTime("obnovljen");
+                            model.Snapshot = "Default snapshot";
+                            model.SnapshotVerzija = 0;
+                            model.Opis = reader.GetString("Opis");
+                            model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                            model.Epohe = reader.GetInt32("numberOfEpochs");
+                            model.Optimizacija = reader.GetString("Optimizer");
+                            model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
+                            model.ProblemType = reader.GetString("ProblemType");
+                            return model;
+                        }
+                    }
+                }
+                
                 return null;
             }
         }
