@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
 import { SharedService } from '../shared/shared.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -14,7 +14,9 @@ import {NotificationsService} from 'angular2-notifications';
 })
 
 export class ModeliComponent implements OnInit {
+  private eventsSubscription!: Subscription;
   @Output() PosaljiModel = new EventEmitter<number>();
+  @Input() primljenM! : Observable<any>;
   json: any;
   json1: any;
   jsonMetrika: any;
@@ -39,6 +41,7 @@ export class ModeliComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.eventsSubscription = this.primljenM.subscribe((data)=>{this.primiModel(data);});
     this.ucitajImeE();
     this.subscriptionName = this.shared.getUpdate().subscribe
     (
@@ -50,6 +53,11 @@ export class ModeliComponent implements OnInit {
         this.ngOnInit();
       }
     )
+  }
+
+  primiModel(data : any){
+
+    this.ucitajModel();
   }
   onSuccess(message:any)
   {
@@ -122,6 +130,7 @@ export class ModeliComponent implements OnInit {
     );
   }
 
+  // treba da se zove ucitaj model
   ucitajModel()
   {
     this.ActivateAddEdit=true;

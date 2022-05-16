@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -27,10 +27,16 @@ export class ModelComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
+  @Input() idS! : Observable<number>;
+
+  @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
+
+  @Output() PosaljiModel:EventEmitter<number> = new EventEmitter<number>();
+
   @Input() snapshots!: any[];
 
-  @Input() mod!: Observable<number>;
-  // @Input() index!: Observable<number>; 
+   @Input() mod!: Observable<number>;
+
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
@@ -40,6 +46,7 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
+  selectedimeSS : string = "";
   tip: number=1;
   // snapshots: any[] = [];
   public aktFunk: any[] = [];
@@ -154,7 +161,7 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
-    // this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
+    this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -167,12 +174,20 @@ export class ModelComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
-  // primiSnapshot(data:number){
+  primiSnapshot(data:number){
 
-  //   this.dajSnapshots();
-  //   this.selectSnapshot(data);
-  //   //this.imeS("SIROVI PODACI");
-  // }
+    this.selectSnapshotM(data);
+    for(let i=0; i<this.snapshots.length; i++)
+    {
+      if(this.snapshots[i].id == data)
+      {
+        this.imeS(this.snapshots[i].ime);
+        return;
+      }
+    }
+    this.imeS("Default snapshot");
+  }
+
 
   posaljiZahtev(data:number){
     //console.log(data);
@@ -291,6 +306,7 @@ export class ModelComponent implements OnInit {
         {
            this.ulazneKolone.push(nizK[i].value);
            this.izabraneU.push(i);
+           console.log(this.izabraneU);
            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
            this.brojU++;
            if(this.brojU > 0 && this.brojI > 0)
@@ -307,7 +323,8 @@ export class ModelComponent implements OnInit {
           if(this.ulazneKolone[j] === nizK[i].value)
           {
             this.ulazneKolone.splice(j,1);
-            this.izabraneU.slice(j,1);
+            this.izabraneU.splice(j,1);
+            console.log(this.izabraneU);
             (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
             //console.log(nizK[i].value);
              this.brojU--;
@@ -773,6 +790,11 @@ export class ModelComponent implements OnInit {
 
   kreirajModelCuvanje()
   {
+    var crossVK;
+    if(this.flag == false)
+      crossVK = 0;
+    else
+      crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -793,7 +815,7 @@ export class ModelComponent implements OnInit {
         "lossFunction": this.selectedLF,
         "optimizer": this.selectedO,
         "optimizationParams": this.optimizationParams,
-        "kFoldCV":Number((<HTMLInputElement>document.getElementById("crossV")).value)
+        "kFoldCV":crossVK
         },
         "kolone":{
           "ulazne":this.izabraneU,
@@ -807,6 +829,7 @@ export class ModelComponent implements OnInit {
         console.log(res);
         this.idModela=res;
         this.onSuccess("Model was successfully created.");
+        this.PosaljiModel.emit(this.selectedSS);
       },
       error =>{
         console.log(error.error);
@@ -845,13 +868,54 @@ export class ModelComponent implements OnInit {
          console.log(response);
          this.kolone = Object.assign([],response);
          this.kolone2 = Object.assign([],this.kolone);
-
+         this.PosaljiSnapshot2.emit(id);
+         this.izabraneU = [];
+         this.izabraneI = [];
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
+        //  this.nizCvorova = [];
+        //  this.aktFunk = [];
+        //  this.hiddLay = [];
+         let nizK = <any>document.getElementsByName("ulz"); 
+        for(let i=0; i<nizK.length; i++)
+        {
+          if(nizK[i].checked)
+          {
+            nizK[i].checked = false;
+            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
+          }
+        }
+        var nizk = <any>document.getElementsByName("izl");
+        for(let i=0; i<nizk.length; i++)
+        {
+          if(nizk[i].checked)
+          {
+            nizk[i].checked = false;
+            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
+          }
+        }
+        this.brojU = 0;
+        this.brojI = 0;
       },error =>{
        console.log(error.error);
      }
     );
     this.selectedSS=id;
     console.log(this.selectedSS);
+  }
+
+  selectSnapshotM(id: any)
+  {
+     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+     (response: any)=>{
+         console.log(response);
+         this.kolone = Object.assign([],response);
+         this.kolone2 = Object.assign([],this.kolone);
+
+      },error =>{
+       console.log(error.error);
+     }
+    );
   }
 
   dajMetriku(modelId:number)

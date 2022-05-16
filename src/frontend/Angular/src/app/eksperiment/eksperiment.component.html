@@ -14,15 +14,15 @@
   <div id="oblast">
       <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="podaci" role="tabpanel" aria-labelledby="nav-podaci-tab">
-              <app-podaci id="podaci" [snapshots]="snapshotovi" (PosaljiPoruku)="ucitajSnapshotove()"></app-podaci>
+              <app-podaci id="podaci" [snapshots]="snapshotovi" (PosaljiPoruku)="ucitajSnapshotove()" (PosaljiSnapshot)="primiS($event)" [idS2]="eventsSubject.asObservable()"></app-podaci>
           </div>
           <div class="tab-pane fade" id="model" role="tabpanel" aria-labelledby="nav-model-tab">
               <!-- <app-model [mod]="eventsSubject.asObservable()" id="model"></app-model> -->
-              <app-model id="model" [snapshots]="snapshotovi"></app-model>
+              <app-model id="model" [snapshots]="snapshotovi" [idS]="eventsSubject.asObservable()" (PosaljiSnapshot2)="primiS($event)" (PosaljiModel)="primiM($event)"></app-model>
           </div>
           <div class="tab-pane fade" id="modeli" role="tabpanel" aria-labelledby="nav-modeli-tab">
             <!-- <app-modeli (PosaljiModel)="primi($event)" id="modeli"></app-modeli> -->
-            <app-modeli id="modeli"></app-modeli>
+            <app-modeli id="modeli" [primljenM]="eventsSubject.asObservable()" ></app-modeli>
         </div>
         </div>
   </div>

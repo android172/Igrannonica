@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
 import { DatePipe } from '@angular/common';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
@@ -20,7 +20,11 @@ import { EventManager } from '@angular/platform-browser';
 })
 export class PodaciComponent implements OnInit {
 
-  // @Output() PosaljiDefaultSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  private eventsSubscription!: Subscription;
+
+  @Output() PosaljiSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  @Input() idS2! : Observable<number>;
+
   @Input() snapshots!: any[];
 
   @Output() PosaljiPoruku = new EventEmitter();
@@ -36,11 +40,29 @@ export class PodaciComponent implements OnInit {
   
   ngOnInit(): void {
     //this.getStat();
+    this.eventsSubscription = this.idS2.subscribe((data)=>{this.primiSnapshot2(data);});
     this.ucitanipodaci();
     this.ucitajNaziv();
+    this.ucitajPodatkeSnapshota(0);
+    this.imeSnapshota("Default snapshot");
     // this.ucitajSnapshotove();
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
+
+  primiSnapshot2(data : number){
+
+    this.ucitajPodatkeSnapshotaP(data);
+    for(let i=0; i<this.snapshots.length; i++)
+    {
+      if(this.snapshots[i].id == data)
+      {
+        this.imeSnapshota(this.snapshots[i].ime);
+        return;
+      }
+    }
+    this.imeSnapshota("Default snapshot");
+  }
+
   @ViewChild('contentmdl') content:any;
   @ViewChild('btnexit') btnexit:any;
 
@@ -187,6 +209,9 @@ export class PodaciComponent implements OnInit {
   idSnapshotaOverride:string = "";
   nazivSnapshotaOverride:string = "";
 
+  selektovanS : number = -1;
+  selektovanSime : string = "";
+
   onFileSelected(event:any) 
   {
     const file:File = event.target.files[0];
@@ -202,6 +227,8 @@ export class PodaciComponent implements OnInit {
         res=>{
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
+          // this.ucitajPodatkeSnapshota(0);
+          // this.imeSnapshota("Default snapshot");
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
@@ -2662,13 +2689,22 @@ zamenaTipaKolone(event:any)
   });
 
  }
- ucitajPodatkeSnapshota(id:Number){
+ ucitajPodatkeSnapshota(id:number){
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
+      this.PosaljiSnapshot.emit(id);
      }
    );
  }
+
+ ucitajPodatkeSnapshotaP(id:number){
+  this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
+    res=>{
+     this.loadDefaultItemsPerPage();
+    }
+  );
+}
 
  imeSnapshota(ime : string){
 
