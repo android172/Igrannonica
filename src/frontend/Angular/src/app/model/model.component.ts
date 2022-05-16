@@ -107,6 +107,10 @@ export class ModelComponent implements OnInit {
   public rtest: String = "";
   public rtrain: String = "";
 
+  public prikaziPredikciju: boolean = false;
+
+  public klasifikacija: boolean = true;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -436,6 +440,14 @@ export class ModelComponent implements OnInit {
   selectPT(event: any){
     var str = event.target.value;
     this.selectedPT = Number(str);
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    {
+      this.klasifikacija = true;
+    }
+    else
+    {
+      this.klasifikacija = false;
+    }
   }
 
   uzmiAK(ind:any, event: any){
@@ -595,7 +607,6 @@ export class ModelComponent implements OnInit {
 
   treniraj(broj:number){
     
-    this.pripremiPredikciju();
     (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
     
     if(broj == 1){
@@ -972,10 +983,12 @@ export class ModelComponent implements OnInit {
   colapseStatistics()
   {
     this.prikazi1=true;
+    this.prikaziPredikciju = true;
   }
 
   pripremiPredikciju()
   {
+    console.log("PRIPREMI PREDIKCIJU");
     if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
@@ -994,9 +1007,16 @@ export class ModelComponent implements OnInit {
     let ind = 0;
 
     //ciscenje ako su ostale vrednosti od prethodne predikcije
-    for(let i = 0; i < this.izlazneKolone.length; i++)
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
     {
-      (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = "";
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = "";
+    }
+    else
+    {
+      for(let i = 0; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = "";
+      }
     }
 
     for(let i = 0; i < this.ulazneKolone.length; i++)
@@ -1027,7 +1047,7 @@ export class ModelComponent implements OnInit {
         console.log(res);
         if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
         {
-          (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = res;
+          (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
         }
         else
         {
