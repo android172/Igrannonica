@@ -107,6 +107,7 @@ export class ModelComponent implements OnInit {
   public ptrain: String = "";
   public rtest: String = "";
   public rtrain: String = "";
+  public optimizationParams:number[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -613,6 +614,7 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
+    // loading ... 
     this.http.get(url+"/api/Model/Model/Treniraj?id="+ this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
       res => {
         let subscription = this.signalR.switchChange.asObservable().subscribe(
@@ -790,6 +792,7 @@ export class ModelComponent implements OnInit {
         "regularizationRate": Number((<HTMLInputElement>document.getElementById("rr")).value),
         "lossFunction": this.selectedLF,
         "optimizer": this.selectedO,
+        "optimizationParams": this.optimizationParams,
         "kFoldCV":Number((<HTMLInputElement>document.getElementById("crossV")).value)
         },
         "kolone":{

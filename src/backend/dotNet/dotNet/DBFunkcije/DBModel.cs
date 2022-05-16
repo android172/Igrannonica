@@ -300,59 +300,16 @@ namespace dotNet.DBFunkcije
                         s += "l";
                 }
                 
-
                 cmd.Parameters.AddWithValue("@af", s);
                 
                 cmd.Parameters.AddWithValue("@pt", json.ANNType.ToString());
-
-                if (json.LossFunction == LossFunction.L1Loss)
-                    pom = "L1Loss";
-                else if (json.LossFunction == LossFunction.L2Loss)
-                    pom = "L2Loss";
-                else if (json.LossFunction == LossFunction.SmoothL1Loss)
-                    pom = "SmoothL1Loss";
-                else if (json.LossFunction == LossFunction.HuberLoss)
-                    pom = "HuberLoss";
-                else if (json.LossFunction == LossFunction.NLLLoss)
-                    pom = "NLLLoss";
-                else if (json.LossFunction == LossFunction.CrossEntropyLoss)
-                    pom = "CrossEntropyLoss";
-                else if (json.LossFunction == LossFunction.KLDivLoss)
-                    pom = "KLDivLoss";
-                else
-                    pom = "MultiMarginLoss";
+                
                 cmd.Parameters.AddWithValue("@lf", json.LossFunction.ToString());
 
                 cmd.Parameters.AddWithValue("@o", json.Optimizer.ToString());
 
-                if (json.Optimizer == Optimizer.Adadelta)
-                    pom = "Adadelta";
-                else if (json.Optimizer == Optimizer.Adam)
-                    pom = "Adam";
-                else if (json.Optimizer == Optimizer.Adagrad)
-                    pom = "Adagrad";
-                else if (json.Optimizer == Optimizer.AdamW)
-                    pom = "AdamW";
-                else if (json.Optimizer == Optimizer.Adamax)
-                    pom = "Adamax";
-                else if (json.Optimizer == Optimizer.ASGD)
-                    pom = "ASGD";
-                else if (json.Optimizer == Optimizer.NAdam)
-                    pom = "NAdam";
-                else if (json.Optimizer == Optimizer.RMSprop)
-                    pom = "RMSprop";
-                else
-                    pom = "SGD";
-
-                cmd.Parameters.AddWithValue("@o", pom);
-
-                if (json.Regularization == RegularizationMethod.L1)
-                    pom = "L1";
-                else
-                    if(json.Regularization == RegularizationMethod.L2)
-                        pom = "L2";
-
                 cmd.Parameters.AddWithValue("@op", floatArrayToString(json.OptimizationParams));
+
                 cmd.Parameters.AddWithValue("@rm", json.Regularization.ToString());
 
                 connection.Open();
@@ -390,11 +347,13 @@ namespace dotNet.DBFunkcije
         {
             string str = "";
             if(niz != null)
-            for(int i = 0; i < niz.Length; i++)
             {
-                str += niz[i].ToString();
-                if (i < niz.Length - 1)
-                    str += ",";
+                for (int i = 0; i < niz.Length; i++)
+                {
+                    str += niz[i].ToString();
+                    if (i < niz.Length - 1)
+                        str += ",";
+                }
             }
             return str;
         }
@@ -522,28 +481,31 @@ namespace dotNet.DBFunkcije
             Console.WriteLine(id.ToString());
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "select * from model m left join Podesavanja p on m.id=p.id left join Snapshot s on m.snapshot=s.id where m.id=@id";
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("@id", id);
-                connection.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                if (dajSnapshot(id) > 0)
                 {
-                    if (reader.Read())
-                    {   
-                        ModelDetaljnije model = new ModelDetaljnije();
-                        model.Id = reader.GetInt32("id");
-                        model.Name = reader.GetString("naziv");
-                        model.CreatedDate = reader.GetDateTime("napravljen");
-                        model.UpdatedDate = reader.GetDateTime("obnovljen");
-                        model.Snapshot = reader.GetString("Ime");
-                        model.SnapshotVerzija = reader.GetInt32("snapshot");
-                        model.Opis = reader.GetString("Opis");
-                        model.HiddenLayers = HiddenLayers(reader.GetString("HiddenLayers"));
-                        model.Epohe = reader.GetInt32("numberOfEpochs");
-                        model.Optimizacija = reader.GetString("Optimizer");
-                        model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
-                        model.ProblemType = reader.GetString("ProblemType");
-                        return model;
+                    string query = "select * from model m left join podesavanja p on m.id=p.id left join snapshot s on m.snapshot=s.id where m.id=@id";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    connection.Open();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            ModelDetaljnije model = new ModelDetaljnije();
+                            model.Id = reader.GetInt32("id");
+                            model.Name = reader.GetString("naziv");
+                            model.CreatedDate = reader.GetDateTime("napravljen");
+                            model.UpdatedDate = reader.GetDateTime("obnovljen");
+                            model.Snapshot = reader.GetString("Ime");
+                            model.SnapshotVerzija = reader.GetInt32("snapshot");
+                            model.Opis = reader.GetString("Opis");
+                            model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                            model.Epohe = reader.GetInt32("numberOfEpochs");
+                            model.Optimizacija = reader.GetString("Optimizer");
+                            model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
+                            model.ProblemType = reader.GetString("ProblemType");
+                            return model;
+                        }
                     }
                 }
                 else
@@ -573,7 +535,7 @@ namespace dotNet.DBFunkcije
                         }
                     }
                 }
-                
+
                 return null;
             }
         }
