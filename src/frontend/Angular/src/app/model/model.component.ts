@@ -977,6 +977,13 @@ export class ModelComponent implements OnInit {
   {
     let nizVrednosti: string[] = [];
     let ind = 0;
+
+    //ciscenje ako su ostale vrednosti od prethodne predikcije
+    for(let i = 0; i < this.izlazneKolone.length; i++)
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = "";
+    }
+
     for(let i = 0; i < this.ulazneKolone.length; i++)
     {
       let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
