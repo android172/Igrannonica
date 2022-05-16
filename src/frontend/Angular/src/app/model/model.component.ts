@@ -976,11 +976,27 @@ export class ModelComponent implements OnInit {
   predikcija()
   {
     let nizVrednosti: string[] = [];
+    let ind = 0;
     for(let i = 0; i < this.ulazneKolone.length; i++)
     {
       let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
-      nizVrednosti.push(vrednost);
+      // console.log(vrednost.length);
+      let vrednostTrim = vrednost.trim();
+      // console.log(vrednostTrim.length);
+      if(vrednostTrim == "")
+      {
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "visible";
+        ind = 1;
+      }
+      else
+      {
+        nizVrednosti.push(vrednostTrim);
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "hidden";
+      }
     }
+    if(ind == 1)
+      return;
+
     console.log(nizVrednosti);
     console.log(this.idModela);
     this.http.post(url+"/api/Model/predict?idEksperimenta=" + this.idEksperimenta + "&modelId=" + this.idModela, nizVrednosti, {responseType : "text"}).subscribe(
