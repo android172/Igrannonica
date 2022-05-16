@@ -57,7 +57,7 @@ export class EksperimentComponent implements OnInit {
 
   primiM(id:number)
   {
-    this.eventsSubject.next(id);
+     this.eventsSubject.next(id);
   }
 
   boolPodaciPromena()
