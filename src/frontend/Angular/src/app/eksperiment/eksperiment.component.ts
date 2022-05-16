@@ -51,6 +51,10 @@ export class EksperimentComponent implements OnInit {
     this.eventsSubject.next(id);
   }
 
+  primiS(id:number){
+    this.eventsSubject.next(id);
+  }
+
   boolPodaciPromena()
   {
     this.podaci = true;

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -27,10 +27,13 @@ export class ModelComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
+  @Input() idS! : Observable<number>;
+  @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
+
   @Input() snapshots!: any[];
 
-  @Input() mod!: Observable<number>;
-  // @Input() index!: Observable<number>; 
+   @Input() mod!: Observable<number>;
+
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
@@ -40,6 +43,7 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
+  selectedimeSS : string = "";
   tip: number=1;
   // snapshots: any[] = [];
   public aktFunk: any[] = [];
@@ -154,7 +158,7 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
-    // this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
+    this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -167,12 +171,20 @@ export class ModelComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
-  // primiSnapshot(data:number){
+  primiSnapshot(data:number){
 
-  //   this.dajSnapshots();
-  //   this.selectSnapshot(data);
-  //   //this.imeS("SIROVI PODACI");
-  // }
+    this.selectSnapshotM(data);
+    for(let i=0; i<this.snapshots.length; i++)
+    {
+      if(this.snapshots[i].id == data)
+      {
+        this.imeS(this.snapshots[i].ime);
+        return;
+      }
+    }
+    this.imeS("Default snapshot");
+  }
+
 
   posaljiZahtev(data:number){
     //console.log(data);
@@ -845,6 +857,7 @@ export class ModelComponent implements OnInit {
          console.log(response);
          this.kolone = Object.assign([],response);
          this.kolone2 = Object.assign([],this.kolone);
+         this.PosaljiSnapshot2.emit(id);
 
       },error =>{
        console.log(error.error);
@@ -852,6 +865,20 @@ export class ModelComponent implements OnInit {
     );
     this.selectedSS=id;
     console.log(this.selectedSS);
+  }
+
+  selectSnapshotM(id: any)
+  {
+     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+     (response: any)=>{
+         console.log(response);
+         this.kolone = Object.assign([],response);
+         this.kolone2 = Object.assign([],this.kolone);
+
+      },error =>{
+       console.log(error.error);
+     }
+    );
   }
 
   dajMetriku(modelId:number)
