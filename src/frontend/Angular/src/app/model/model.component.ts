@@ -228,6 +228,7 @@ export class ModelComponent implements OnInit {
     if (e.type === 'None'){
       e.type = 'Output';
       this.izlazneKolone.push(e.value);
+      this.brojI++;
       if(this.ulazneKolone.length == 0)
       {
         this.buttonDisable = true;
@@ -244,9 +245,11 @@ export class ModelComponent implements OnInit {
           if(this.izlazneKolone[j] === e.value)
           {
             this.izlazneKolone.splice(j,1);
+            this.brojI--;
           }
         }
       this.ulazneKolone.push(e.value);
+      this.brojU++;
       if(this.izlazneKolone.length == 0)
       {
         this.buttonDisable = true;
@@ -264,6 +267,7 @@ export class ModelComponent implements OnInit {
           if(this.ulazneKolone[j] === e.value)
           {
             this.ulazneKolone.splice(j,1);
+            this.brojU--;
           }
         }
         if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
@@ -817,6 +821,8 @@ export class ModelComponent implements OnInit {
            this.ulazneKolone[i] = this.kolone[i];
          }
          this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+         this.brojU = this.ulazneKolone.length;
+         this.brojI = 1;
          this.buttonDisable = false;
         //  this.nizCvorova = [];
         //  this.aktFunk = [];
@@ -869,6 +875,8 @@ export class ModelComponent implements OnInit {
             this.ulazneKolone[i] = this.kolone[i];
           }
           this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+          this.brojU = this.ulazneKolone.length;
+          this.brojI = 1;
          }
          this.buttonDisable = false;
 
