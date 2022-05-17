@@ -141,6 +141,7 @@ export class ModelComponent implements OnInit {
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
+      this.prikaziPredikciju = true;
       //this.idModela = id;
       // console.log("ID MODELA: " + this.idModela);
     })
@@ -1126,7 +1127,6 @@ export class ModelComponent implements OnInit {
   colapseStatistics()
   {
     this.prikazi1=true;
-    this.prikaziPredikciju = true;
   }
 
   pripremiPredikciju()
