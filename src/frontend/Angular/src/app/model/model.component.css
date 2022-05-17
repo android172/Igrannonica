@@ -32,8 +32,6 @@ p
     box-sizing: border-box;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-
-    float: right;
 }
 
 
@@ -91,10 +89,6 @@ p
     float: right;
 }*/
 
-#div1{
-    float: right;
-    width: 600px;
-}
 
 #div2{
     /* position: relative; */
@@ -103,15 +97,14 @@ p
     height: 420px;
     /* float: left; */
     box-sizing: border-box;
-    max-width: 600px;
+    max-width: 500px;
+    margin-right: 5%;
 }
 
 #div21{
   position: relative;
  /* display: flex;*/
-  width: 848px;
-  height: 350px;
-  float: right;
+  height: 420px;
   box-sizing: border-box;
 }
 
@@ -347,11 +340,11 @@ h4{
 
 #box
 {
-  width: 795px;
   height: 250px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
+  width: 100%;
  /* padding-top: 25px;
   padding-left: 30px;*/
   overflow: auto;
@@ -359,7 +352,7 @@ h4{
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-top: 0px;
  /* margin-right: 50px;*/
-  margin-left: 50px;
+  /* margin-left: 50px; */
   background-color: #272741;
 }
 
@@ -397,9 +390,9 @@ h4{
   height: 90px;
   margin-top: 0px;
   margin-bottom: 20px;
-  margin-left: 50px;
+  /* margin-left: 50px; */
   margin-right: 0px;
-  width: 790px;
+  /* width: 790px; */
 }
 
 #grupa12{
@@ -1241,4 +1234,14 @@ body {
 
 .form-check .form-check-input:active {
   background-color: #C8FFC8; 
+}
+
+#outliers-box
+{
+  width: 20%;
+}
+
+#dropdown
+{
+  margin-top: 11px;
 }
