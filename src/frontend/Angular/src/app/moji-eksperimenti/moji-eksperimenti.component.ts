@@ -18,6 +18,10 @@ export class MojiEksperimentiComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajEksp();
+
+    sessionStorage.removeItem('idSnapshota');
+    sessionStorage.removeItem('idS');
+
   }
 
   ucitajEksp()

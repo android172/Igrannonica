@@ -43,8 +43,8 @@ export class PodaciComponent implements OnInit {
     this.eventsSubscription = this.idS2.subscribe((data)=>{this.primiSnapshot2(data);});
     this.ucitanipodaci();
     this.ucitajNaziv();
-    this.ucitajPodatkeSnapshota(0);
-    this.imeSnapshota("Default snapshot");
+    //this.ucitajPodatkeSnapshota(0);
+    //this.imeSnapshota("Default snapshot");
     // this.ucitajSnapshotove();
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
@@ -85,6 +85,26 @@ export class PodaciComponent implements OnInit {
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
         this.loadDefaultItemsPerPage();
+
+        let snap = sessionStorage.getItem('idSnapshota');
+        let idsnap = sessionStorage.getItem('idS');
+        if(snap == null)
+        { 
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
+        }
+        else
+        {  
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = snap;
+          if(idsnap != null)
+              this.ucitajPodatkeSnapshota(Number(idsnap),snap);
+        }
+      },
+      error=>{
+        //console.log("OVDE----------------");
+        (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Chose default snapshot";
       }
     )
   }
@@ -236,6 +256,12 @@ export class PodaciComponent implements OnInit {
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
           this.onSuccess('Podaci su ucitani!');
+
+          // prvo ucitavanje session tokena 
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
       },error =>{
         console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
@@ -2312,6 +2338,11 @@ sacuvajKaoNovu(ime:string){
           this.onSuccess("Nova verzija je uspesno sacuvana.");
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
+
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML =  ime;
+          sessionStorage.setItem('idSnapshota',ime);
+          sessionStorage.setItem('idS',"" + res);
+          this.ucitajPodatkeSnapshota(Number(res),ime);
         }
       });
     }
@@ -2351,7 +2382,11 @@ sacuvajKaoNovu(ime:string){
         res=>{
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
-          this.ucitajPodatkeSnapshota(0);
+
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
         },
         error=>{
           // this.ucitajSnapshotove();
@@ -2689,11 +2724,23 @@ zamenaTipaKolone(event:any)
   });
 
  }
- ucitajPodatkeSnapshota(id:number){
+ ucitajPodatkeSnapshota(id:number,ime:string = ""){
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
       this.PosaljiSnapshot.emit(id);
+
+      if(id==0)
+      {
+      sessionStorage.setItem('idSnapshota',"Default snapshot");
+      sessionStorage.setItem('idS',"0");
+      }
+      else{ 
+      //var indeks = Number(id);
+      //localStorage.setItem('idSnapshota',this.snapshots[id-1].ime);
+      sessionStorage.setItem('idSnapshota',ime);
+      sessionStorage.setItem('idS',"" + id);
+      }
      }
    );
  }

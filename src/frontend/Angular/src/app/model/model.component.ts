@@ -887,8 +887,18 @@ export class ModelComponent implements OnInit {
    (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML = ime;
  }
 
-  selectSnapshot(id: any)
+  selectSnapshot(id: any,ime:string)
   {
+    if(id==0)
+    {
+      sessionStorage.setItem('idSnapshota',"Default snapshot");
+      sessionStorage.setItem('idS',"0");
+    }
+    else{ 
+      
+      sessionStorage.setItem('idSnapshota',ime);
+      sessionStorage.setItem('idS',id+"");
+    }
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
          console.log(response);

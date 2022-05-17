@@ -33,9 +33,9 @@
                           Izaberi snapshot
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(0)" (click)="imeSnapshota('Default snapshot')">Default snapshot</a></li>
+                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(0,'Default snapshot')" (click)="imeSnapshota('Default snapshot')">Default snapshot</a></li>
                             <div *ngFor="let s of snapshots">
-                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(s.id)" (click)="imeSnapshota(s.ime)">{{s.ime}}</a></li>
+                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(s.id,s.ime)" (click)="imeSnapshota(s.ime)">{{s.ime}}</a></li>
                             </div>
                         </ul>
                       </div>
