@@ -315,7 +315,7 @@
                 <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
                     <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
                         <table id="stat" style="width:100%">
-                            <h4>Naziv kolone</h4>
+                            <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
                             <tr>
                               <th>Parametri</th>
                               <th>Training</th>

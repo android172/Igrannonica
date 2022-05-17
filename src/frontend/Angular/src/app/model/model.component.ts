@@ -822,7 +822,7 @@ export class ModelComponent implements OnInit {
       },
       error =>{
         console.log(error.error);
-        this.onError("Model nije napravljen!");
+        this.onError("Model was not successfully created.");
         if(error.error === "Model sa tim imenom vec postoji.")
         {
           (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
