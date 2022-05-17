@@ -1245,3 +1245,106 @@ body {
 .form-check .form-check-input:active {
   background-color: #C8FFC8; 
 }
+
+/* ---------------------------PREDIKCIJA--------------------------- */
+
+.okvir
+{
+  border: 3px solid #5977DF;
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(39, 39, 65);
+}
+
+#predikcijaNaslov
+{
+  color: rgb(216, 221, 251);
+  text-align: center;
+  font-size: 17px;
+  margin-bottom: 15px; 
+  margin-top: 10px;
+}
+
+#divPredikcija
+{
+  margin-top: 30px;
+}
+
+.nazivKolone
+{
+  color: rgb(216, 221, 251);
+  font-size: 15px;
+  padding: 5px 0px;
+}
+
+.inputPolje
+{
+  background-color: #171f37;
+  border-radius: 10px;
+  width: 100%;
+  height: 35px;
+  font-size: 14px;
+  color: #c1cdff;
+  border: 2px solid rgb(98, 98, 182);
+}
+
+.unosVrednosti
+{
+  margin-right: 3%;
+  float: left;
+  width: 13%;
+  min-width: 120px;
+}
+
+#ulazi, #izlazi
+{
+  padding-left: 5%;
+}
+
+#izlazi
+{
+  margin-top: 20px;
+}
+
+.greska
+{
+  margin-left: 10px;
+  margin-top: 2px;
+  color: rgb(209, 168, 255);
+  visibility: hidden;
+}
+
+#dugmePredikcija
+{
+  margin-top: 15px;
+  background: rgb(110, 66, 137);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: white;
+  display: block;
+  max-width: 200px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+}
+
+#dugmePredikcija:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dugmePredikcija:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+}
+
+.inputIzlaz
+{
+  cursor: default;
+  pointer-events: none;
+  background-color: rgb(53, 53, 114);
+  border: none;
+  border-radius: 2px;
+}

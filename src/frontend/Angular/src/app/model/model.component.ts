@@ -116,6 +116,10 @@ export class ModelComponent implements OnInit {
   public rtrain: String = "";
   public optimizationParams:number[] = [];
 
+  public prikaziPredikciju: boolean = false;
+
+  public klasifikacija: boolean = true;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -125,6 +129,8 @@ export class ModelComponent implements OnInit {
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
+      this.idModela = id;
+      // console.log("ID MODELA: " + this.idModela);
     })
   }
   sendMessage():void{
@@ -454,6 +460,14 @@ export class ModelComponent implements OnInit {
     var str = event.target.value;
     this.selectedPT = Number(str);
     this.check();
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    {
+      this.klasifikacija = true;
+    }
+    else
+    {
+      this.klasifikacija = false;
+    }
   }
 
   uzmiAK(ind:any, event: any){
@@ -1054,5 +1068,98 @@ export class ModelComponent implements OnInit {
   colapseStatistics()
   {
     this.prikazi1=true;
+    this.prikaziPredikciju = true;
+  }
+
+  pripremiPredikciju()
+  {
+    console.log("PRIPREMI PREDIKCIJU");
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
+      (<HTMLInputElement>document.getElementById("nazivIzlaza0")).innerHTML = "Output";
+      for(let i = 1; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).style.display = "none";
+        (<HTMLInputElement>document.getElementById("nazivIzlaza" + i)).style.display = "none";
+      }
+    }
+  }
+
+  predikcija()
+  {
+    let nizVrednosti: string[] = [];
+    let ind = 0;
+
+    //ciscenje ako su ostale vrednosti od prethodne predikcije
+    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = "";
+    }
+    else
+    {
+      for(let i = 0; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = "";
+      }
+    }
+
+    for(let i = 0; i < this.ulazneKolone.length; i++)
+    {
+      let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
+      // console.log(vrednost.length);
+      let vrednostTrim = vrednost.trim();
+      // console.log(vrednostTrim.length);
+      if(vrednostTrim == "")
+      {
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "visible";
+        ind = 1;
+      }
+      else
+      {
+        nizVrednosti.push(vrednostTrim);
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "hidden";
+      }
+    }
+    if(ind == 1)
+      return;
+
+    console.log(nizVrednosti);
+    console.log(this.idModela);
+    this.http.post(url+"/api/Model/predict?idEksperimenta=" + this.idEksperimenta + "&modelId=" + this.idModela, nizVrednosti, {responseType : "text"}).subscribe(
+      res=>{
+        console.log("USPESNO");
+        console.log(res);
+        if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+        {
+          (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
+        }
+        else
+        {
+          let resPodaci = res.slice(1, res.length-1);
+          console.log(resPodaci);
+          if(resPodaci.indexOf(","))
+          {
+            let podaci = resPodaci.split(", ");
+            console.log(podaci);
+            for(let i = 0; i < res.length; i++)
+            {
+              (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = Number(podaci[i]).toFixed(4) + "";
+            }
+          }
+          else
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = resPodaci;
+          }
+          for(let i = 0; i < res.length; i++)
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = res[i];
+          }
+        }
+      },
+      error => {
+        console.log(error.error);
+      }
+    );
   }
 }
