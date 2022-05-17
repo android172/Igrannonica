@@ -283,6 +283,7 @@ export class ModelComponent implements OnInit {
           this.buttonDisable = false;
         }
     }
+    this.drawCanvas();
     // let nizK = <any>document.getElementsByName("ulz"); 
     // var ind1;
     // for(let i=0; i<nizK.length; i++)
@@ -633,6 +634,8 @@ export class ModelComponent implements OnInit {
       var no_nodes_n = 0;
       if (this.brHL > 0)
         no_nodes_n = this.nizCvorova[0];
+      else if(oc > 0)
+        no_nodes_n = oc;
 
       for (let j = 0; j < ic; j++) {
         var node_y = (j + 1) / (ic + 1);
@@ -993,7 +996,7 @@ export class ModelComponent implements OnInit {
           this.brojI = 1;
          }
          this.buttonDisable = false;
-
+         this.drawCanvas();
       },error =>{
        console.log(error.error);
      }
