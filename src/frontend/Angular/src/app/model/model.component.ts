@@ -90,6 +90,7 @@ export class ModelComponent implements OnInit {
   cv: number = 0;
 
   buttonDisable : boolean = true;
+  flagP : boolean = false;
 
   selectedLF: number = 0;
   selectedO: number = 0;
@@ -222,13 +223,62 @@ export class ModelComponent implements OnInit {
   }
 
   funkcija(e: any){
-    if (e.type === 'None')
-      e.type = 'Output'
-    else if (e.type === 'Output')
-      e.type = 'Input'
-    else
-      e.type = 'None'
 
+    this.flagP = true;
+    if (e.type === 'None'){
+      e.type = 'Output';
+      this.izlazneKolone.push(e.value);
+      if(this.ulazneKolone.length == 0)
+      {
+        this.buttonDisable = true;
+      }
+      else
+      {
+        this.buttonDisable = false;
+      }
+    }
+    else if (e.type === 'Output'){
+      e.type = 'Input';
+      for(let j=0; j < this.izlazneKolone.length; j++)
+        {
+          if(this.izlazneKolone[j] === e.value)
+          {
+            this.izlazneKolone.splice(j,1);
+          }
+        }
+      this.ulazneKolone.push(e.value);
+      if(this.izlazneKolone.length == 0)
+      {
+        this.buttonDisable = true;
+      }
+      else
+      {
+        this.buttonDisable = false;
+      }
+    }
+    else
+    {
+      e.type = 'None';
+      for(let j=0; j < this.ulazneKolone.length; j++)
+        {
+          if(this.ulazneKolone[j] === e.value)
+          {
+            this.ulazneKolone.splice(j,1);
+          }
+        }
+        if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
+        {
+          this.buttonDisable = true;
+        }
+        else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
+        {
+          this.buttonDisable = true;
+        }
+        else
+        {
+          this.buttonDisable = false;
+        }
+    }
     // let nizK = <any>document.getElementsByName("ulz"); 
     // var ind1;
     // for(let i=0; i<nizK.length; i++)
@@ -762,8 +812,12 @@ export class ModelComponent implements OnInit {
          }
          this.kolone2[this.kolone2.length - 1].type = "Output";
          this.PosaljiSnapshot2.emit(id);
-         this.ulazneKolone = [];
-         this.izlazneKolone = [];
+         for(let i=0; i<this.kolone.length-1; i++)
+         {
+           this.ulazneKolone[i] = this.kolone[i];
+         }
+         this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+         this.buttonDisable = false;
         //  this.nizCvorova = [];
         //  this.aktFunk = [];
         //  this.hiddLay = [];
@@ -801,10 +855,22 @@ export class ModelComponent implements OnInit {
      (response: any)=>{
          console.log(response);
          this.kolone = Object.assign([],response);
-         for (var kolona of this.kolone) {
-          this.kolone2.push({value : kolona, type : "Input"});
+         if(this.kolone2.length == 0)
+         {
+          for (var kolona of this.kolone) {
+            this.kolone2.push({value : kolona, type : "Input"});
+           }
+           this.kolone2[this.kolone2.length - 1].type = "Output";
          }
-         this.kolone2[this.kolone2.length - 1].type = "Output";
+         if(this.flagP == false) 
+         {
+          for(let i=0; i<this.kolone.length-1; i++)
+          {
+            this.ulazneKolone[i] = this.kolone[i];
+          }
+          this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+         }
+         this.buttonDisable = false;
 
       },error =>{
        console.log(error.error);
