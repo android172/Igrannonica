@@ -5,6 +5,47 @@ p
     font-size: larger;
 }
 
+#ulaziIzlaz{
+  width: 100%;
+  height: 380px;
+  border: 2.5px solid rgba(89, 119, 223, 1);
+  border-radius: 10px 10px 10px 10px;
+  border-right: 2px solid rgba(89, 119, 223, 1);;
+  float: left;
+  padding: 20px 30px;
+  overflow: auto;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
+}
+
+.column-type-none {
+  color: rgb(249, 237, 245);
+  background-color: rgb(92, 106, 141);
+  border: 1px solid rgb(60, 51, 26);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
+.column-type-output{
+  color: rgb(249, 237, 245);
+  background-color: rgb(112, 51, 82);
+  border: 1px solid rgb(60, 26, 47);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
+.column-type-input{
+  color: rgb(216, 221, 251);
+  background-color: rgb(50, 50, 114);
+  border: 1px solid rgb(33, 33, 78);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
 #sacuvaj
 {/*
     width: 150px;
@@ -124,21 +165,7 @@ p
     
 }
 
-#ulaziIzlaz{
 
-    width: 260px;
-    height: 380px;
-    border: 2.5px solid rgba(89, 119, 223, 1);
-    border-radius: 10px 10px 10px 10px;
-    border-right: 2px solid rgba(89, 119, 223, 1);;
-    float: left;
-    padding-top: 25px;
-    padding-left: 30px;
-    overflow: auto;
-    box-sizing: border-box;
-    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
-    background-color: #272741;
-}
 #ulaziIzlaz2{
 
   width: 260px;

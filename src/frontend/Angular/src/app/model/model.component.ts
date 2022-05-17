@@ -207,90 +207,6 @@ export class ModelComponent implements OnInit {
     this.imeS("Default snapshot");
   }
 
-
-  posaljiZahtev(data:number){
-    //console.log(data);
-    this.aktFunk = [];
-    this.hiddLay = [];
-    this.brHL = 0;
-    this.nizHL  = [];
-    this.nizCvorova = [];
-    this.nizCvorovaStr = [];
-    this.selectedLF = 0;
-    this.selectedO = 0;
-    this.selectedRM = 0;
-    this.selectedPT = 1;
-    this.ulazneKolone = [];
-    this.izlazneKolone = [];
-    this.message = this.shared.getMessage();
-    this.kolone = Object.assign([],this.message);
-    this.kolone2 = Object.assign([],this.kolone);
-    this.idModela = data;
-    this.uzmiKolone();
-    this.ucitajNazivModela(this.idModela);
-    this.http.get(url+"/api/Eksperiment/Podesavanja/"+data).subscribe(
-      res=>{
-        console.log(res);
-        this.json1=res;
-        (<HTMLInputElement>document.getElementById("dd3")).value = this.json1.annType;
-        this.aktFunk =  this.json1['activationFunctions'];
-        (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
-        (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
-        this.hiddLay = this.json1['hiddenLayers'];
-        this.brHL = this.hiddLay.length;
-         for(let i=0; i<this.brHL;i++)
-        {
-          this.nizCvorova[i] = this.hiddLay[i];
-        }
-        if(this.aktFunk.length==0 && this.hiddLay.length ==0)
-        {
-          
-          this.aktFunk[0] = 1;
-          this.aktFunk[1] = 1;
-          this.hiddLay[0] = 2;
-          this.hiddLay[1] = 2;
-          this.nizCvorova[0] = 2;
-          this.nizCvorova[1] = 2;
-         /* this.hiddLay.push(1);
-          this.aktFunk.push(1);
-          this.nizCvorova.push(1);*/
-          this.brHL = 2;
-        }
-        console.log(this.hiddLay);
-        console.log(this.aktFunk);
-        this.brojU = this.json1['inputSize'];
-        this.brojI = this.json1['outputSize'];
-        if(this.brojU == 0 || this.brojI == 0)
-        {
-          this.buttonDisable = true;
-        }
-        else
-        {
-          this.buttonDisable = false;
-        }
-        (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
-        (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
-        this.crossV = this.json1['kFoldCV'];
-        console.log(this.crossV);
-        if(this.crossV == 0)
-        {
-          this.flag = false;
-          (<HTMLInputElement>document.getElementById("toggle")).checked = false;
-        }
-        else{
-          this.flag = true;
-          (<HTMLInputElement>document.getElementById("toggle")).checked = true;
-        }
-        this.onSuccess("Zahtev uspesno poslat!");
-      },
-      error=>{
-        console.log(error);
-        this.onError("Zahtev nije poslat!");
-      }
-    )
-  }
-
-
   ucitajNazivModela(id : any){
 
   this.http.get(url+"/api/Model/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
@@ -305,57 +221,64 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  funkcija(){
-    let nizK = <any>document.getElementsByName("ulz"); 
-    var ind1;
-    for(let i=0; i<nizK.length; i++)
-    {
-      if(nizK[i].checked)
-      {
+  funkcija(e: any){
+    if (e.type === 'None')
+      e.type = 'Output'
+    else if (e.type === 'Output')
+      e.type = 'Input'
+    else
+      e.type = 'None'
 
-        ind1 = 0;
-        for(let j=0; j<this.ulazneKolone.length; j++)
-        {
-            if(this.ulazneKolone[j] === nizK[i].value)
-            {
-                ind1 = 1;
-            }
-        }
-        if(ind1 == 0)
-        {
-           this.ulazneKolone.push(nizK[i].value);
-           this.izabraneU.push(i);
-           console.log(this.izabraneU);
-           (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
-           this.brojU++;
-           if(this.brojU > 0 && this.brojI > 0)
-            {
-              this.buttonDisable = false;
-            }
-            console.log(this.brojU);
-        }
-      }
-      if(!nizK[i].checked)
-      {
-        for(let j=0; j < this.ulazneKolone.length; j++)
-        {
-          if(this.ulazneKolone[j] === nizK[i].value)
-          {
-            this.ulazneKolone.splice(j,1);
-            this.izabraneU.splice(j,1);
-            console.log(this.izabraneU);
-            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojU--;
-             console.log(this.brojU);
-            if(this.brojU == 0)
-            {
-              this.buttonDisable = true;
-            }
-          }
-        }
-      }
-    }
+    // let nizK = <any>document.getElementsByName("ulz"); 
+    // var ind1;
+    // for(let i=0; i<nizK.length; i++)
+    // {
+    //   if(nizK[i].checked)
+    //   {
+
+    //     ind1 = 0;
+    //     for(let j=0; j<this.ulazneKolone.length; j++)
+    //     {
+    //         if(this.ulazneKolone[j] === nizK[i].value)
+    //         {
+    //             ind1 = 1;
+    //         }
+    //     }
+    //     if(ind1 == 0)
+    //     {
+    //        this.ulazneKolone.push(nizK[i].value);
+    //        this.izabraneU.push(i);
+    //        console.log(this.izabraneU);
+    //        (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
+    //        this.brojU++;
+    //        if(this.brojU > 0 && this.brojI > 0)
+    //         {
+    //           this.buttonDisable = false;
+    //         }
+    //         console.log(this.brojU);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     for(let j=0; j < this.ulazneKolone.length; j++)
+    //     {
+    //       if(this.ulazneKolone[j] === nizK[i].value)
+    //       {
+    //         this.ulazneKolone.splice(j,1);
+    //         this.izabraneU.splice(j,1);
+    //         console.log(this.izabraneU);
+    //         (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
+    //         //console.log(nizK[i].value);
+    //          this.brojU--;
+    //          console.log(this.brojU);
+    //         if(this.brojU == 0)
+    //         {
+    //           this.buttonDisable = true;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 
 
@@ -389,60 +312,6 @@ export class ModelComponent implements OnInit {
       }
     );
   }
-
-  funkcija2(){
-    let nizK = <any>document.getElementsByName("izl"); 
-    var ind2;
-    for(let i=0; i<nizK.length; i++)
-    {
-      if(nizK[i].checked)
-      {
-        ind2 = 0;
-        for(let j=0; j<this.izlazneKolone.length; j++)
-        {
-            if(this.izlazneKolone[j] === nizK[i].value)
-            {
-                ind2 = 1;
-            }
-        }
-        if(ind2 == 0)
-        {
-           this.izlazneKolone.push(nizK[i].value);
-           this.izabraneI.push(i);
-           (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = true;
-           this.brojI++;
-           if(this.brojI > 0 && this.brojU > 0)
-            {
-              this.buttonDisable = false;
-            }
-            console.log(this.brojI);
-        }
-      }
-      if(!nizK[i].checked)
-      {
-        for(let j=0; j < this.izlazneKolone.length; j++)
-        {
-          if(this.izlazneKolone[j] === nizK[i].value)
-          {
-            this.izlazneKolone.splice(j,1);
-            this.izabraneI.splice(j,1);
-            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojI--;
-             console.log(this.brojI);
-            if(this.brojI == 0)
-            {
-              this.buttonDisable = true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-
-
-
 
   submit(){
     this.izmeniPodesavanja();
@@ -502,20 +371,20 @@ export class ModelComponent implements OnInit {
       this.tip=1;
   }
 
-  uzmiKolone()
-  {
-    console.log(this.idModela);
-    this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
-        res=>{
-          this.pomocni=Object.assign([],res);
-          this.izabraneU=Object.assign([],this.pomocni[0]);
-          this.izabraneI=Object.assign([],this.pomocni[1]);
-          this.cekiraj();
-        },error=>{
-          console.log(error.error);
-        }
-    );
-  }
+  // uzmiKolone()
+  // {
+  //   console.log(this.idModela);
+  //   this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
+  //       res=>{
+  //         this.pomocni=Object.assign([],res);
+  //         this.izabraneU=Object.assign([],this.pomocni[0]);
+  //         this.izabraneI=Object.assign([],this.pomocni[1]);
+  //         this.cekiraj();
+  //       },error=>{
+  //         console.log(error.error);
+  //       }
+  //   );
+  // }
 
   uzmiCekirane(){
     var ulazne=[];
@@ -546,33 +415,6 @@ export class ModelComponent implements OnInit {
     );
   }
 
-
-  cekiraj()
-  {
-    for(let i=0;i<this.message.length;i++)
-      for(let j=0;j<this.izabraneU.length;j++)
-        if(i==this.izabraneU[j])
-        {
-          let nizU = <any>document.getElementsByName("ulz"); 
-          for(let p=0;p<nizU.length;p++)
-            if(nizU[p].value===this.message[i])
-            {
-              nizU[p].checked=true;
-            }
-        }
-    for(let i=0;i<this.message.length;i++)
-      for(let j=0;j<this.izabraneI.length;j++)
-        if(i==this.izabraneI[j])
-        {
-          let nizI = <any>document.getElementsByName("izl"); 
-          for(let p=0;p<nizI.length;p++)
-            if(nizI[p].value===this.message[i])
-            {
-              nizI[p].checked=true;
-            }
-          }
-    
-  }
 
   izmeniPodesavanja(){
     this.s = (<HTMLInputElement>document.getElementById("bs")).value;
@@ -822,6 +664,17 @@ export class ModelComponent implements OnInit {
       crossVK = 0;
     else
       crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
+
+    var inputs = [];
+    var outputs = [];
+    for (let i in this.kolone2) {
+      var kolona = this.kolone2[i];
+      if (kolona.type === 'Input')
+        inputs.push(i);
+      else if (kolona.type === 'Output')
+        outputs.push(i);
+    }
+
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -833,8 +686,8 @@ export class ModelComponent implements OnInit {
         "batchSize": Number((<HTMLInputElement>document.getElementById("bs")).value),
         "numberOfEpochs": Number((<HTMLInputElement>document.getElementById("noe")).value),
         "currentEpoch":0,
-        "inputSize": this.brojU,
-        "outputSize": this.brojI,
+        "inputSize": inputs.length,
+        "outputSize": outputs.length,
         "hiddenLayers":this.nizCvorova,
         "activationFunctions":this.aktFunk,
         "regularization": this.selectedRM,
@@ -845,8 +698,8 @@ export class ModelComponent implements OnInit {
         "kFoldCV":crossVK
         },
         "kolone":{
-          "ulazne":this.izabraneU,
-          "izlazne":this.izabraneI
+          "ulazne":inputs,
+          "izlazne":outputs
         }
     };
     console.log((<HTMLInputElement>document.getElementById("bs2")).value);
@@ -902,12 +755,13 @@ export class ModelComponent implements OnInit {
     }
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
-         console.log(response);
          this.kolone = Object.assign([],response);
-         this.kolone2 = Object.assign([],this.kolone);
+         this.kolone2 = [];
+         for (var kolona of this.kolone) {
+            this.kolone2.push({value : kolona, type : "Input"});
+         }
+         this.kolone2[this.kolone2.length - 1].type = "Output";
          this.PosaljiSnapshot2.emit(id);
-         this.izabraneU = [];
-         this.izabraneI = [];
          this.ulazneKolone = [];
          this.izlazneKolone = [];
         //  this.nizCvorova = [];
@@ -947,7 +801,10 @@ export class ModelComponent implements OnInit {
      (response: any)=>{
          console.log(response);
          this.kolone = Object.assign([],response);
-         this.kolone2 = Object.assign([],this.kolone);
+         for (var kolona of this.kolone) {
+          this.kolone2.push({value : kolona, type : "Input"});
+         }
+         this.kolone2[this.kolone2.length - 1].type = "Output";
 
       },error =>{
        console.log(error.error);
