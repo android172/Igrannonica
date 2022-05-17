@@ -106,7 +106,7 @@
             
                     <div id="grupaP">
                         <h4> Optimizer </h4>
-                        <select name="" id="dd3" (change)="selectO($event)">
+                        <select name="" id="dd3" (change)="selectO($event)" (click)="checkMementum()">
                             <option id="ddp" value="0">AdaDelta</option>
                             <option id="ddp" value="1">AdaGrad</option>
                             <option id="ddp" value="2">Adam</option>
@@ -118,6 +118,7 @@
                             <option id="ddp" value="8">RMSprop</option>
                             <option id="ddp" value="9">SGD</option>
                         </select>
+                        <input *ngIf="mementum==true">
                     </div>
 
                 </div>

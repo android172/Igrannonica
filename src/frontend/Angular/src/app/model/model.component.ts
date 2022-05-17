@@ -74,6 +74,7 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
+  public mementum: boolean=false;
   public pomocna: boolean = false;
   public prikazi: boolean = false;
   public prikazi1: boolean = false;
@@ -946,6 +947,14 @@ export class ModelComponent implements OnInit {
     )
   }
 
+  checkMementum()
+  {
+    if(this.selectedO==8 || this.selectedO==9)
+      this.mementum=true;
+    else
+      this.mementum=false;
+  }
+
   checkType()
   {
     if(this.selectedPT==1)
@@ -989,13 +998,14 @@ export class ModelComponent implements OnInit {
 
     this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
     this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
-
   }
 
   setujMetrikuR()
   {
     
   }
+
+  
 
   kreirajMatricuTest()
   {
