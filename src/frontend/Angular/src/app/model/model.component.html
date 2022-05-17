@@ -292,9 +292,8 @@
     </div>
 </div>
 <div id="centrirano3">
-    <div id="collapse1" style="min-height: 30px;">
-    <h3 id="loss">Graficki prikaz loss funkcije</h3>
-    <div id="div" *ngIf="prikazi==true">
+    <div id="collapse1"  *ngIf="prikazi==true">
+    <div id="div">
         <div id="grafik">
             <div id="canvas">
                 <canvas baseChart
@@ -311,60 +310,91 @@
     </div>
 </div>
     <div>
-        <div id="collapse" style="min-height: 30px;">
-            <h3>Statistika testnog i trening skupa</h3>
-            <div id="metrika" *ngIf="prikazi1==true">
+        <div id="collapse" *ngIf="prikazi1==true">
+            <div id="metrika">
+                <h3>Statistika testnog i trening skupa</h3>
                 <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
-                    <h3 style="color:aliceblue">Regresija</h3>
+                    <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
+                        <table id="stat" style="width:100%">
+                            <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
+                            <tr>
+                              <th>Parametri</th>
+                              <th>Training</th>
+                              <th *ngIf="imaTestni==true">Test</th>
+                            </tr>
+                            <tr>
+                              <td>AdjustedR2</td>
+                              <td id="actest">{{Adj[ind]}}</td>
+                              <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
+                            </tr>
+                            <tr>
+                              <td>MAE</td>
+                              <td id="batest">{{MAE[ind]}}</td>
+                              <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
+                            </tr>
+                            <tr>
+                                <td>MSE</td>
+                                <td id="celtest">{{MSE[ind]}}</td>
+                                <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
+                            </tr>
+                            <tr>
+                                <td>R2</td>
+                                <td id="f1test">{{R2[ind]}}</td>
+                                <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
+                            </tr>
+                            <tr>
+                                <td>RSE</td>
+                                <td id="htest">{{RSE[ind]}}</td>
+                                <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                            </tr>
+                          </table>
+                    </div>
                 </div>
                 <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
                     <table id="stat" style="width:100%">
                         <tr>
                           <th>Parametri</th>
-                          <th>Testni</th>
+                          <th *ngIf="imaTestni==true">Testni</th>
                           <th>Trening</th>
                         </tr>
                         <tr>
                           <td>Accuracy</td>
-                          <td id="actest">{{atest}}</td>
+                          <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
                           <td id="actrain">{{atrain}}</td>
                         </tr>
                         <tr>
                           <td>Balanced Accuracy</td>
-                          <td id="batest">{{btest}}</td>
+                          <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
                           <td id="batrain">{{btrain}}</td>
                         </tr>
                         <tr>
                             <td>CrossEntropyLoss</td>
-                            <td id="celtest">{{ctest}}</td>
+                            <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
                             <td id="celtrain">{{ctrain}}</td>
                         </tr>
                         <tr>
                             <td>F1Score</td>
-                            <td id="f1test">{{ftest}}</td>
+                            <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
                             <td id="f1train">{{ftrain}}</td>
                         </tr>
                         <tr>
                             <td>HammingLoss</td>
-                            <td id="htest">{{htest}}</td>
+                            <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
                             <td id="htrain">{{htrain}}</td>
                         </tr>
                         <tr>
                             <td>Precision</td>
-                            <td id="ptest">{{atest}}</td>
-                            <td id="ptrain">{{atest}}</td>
+                            <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
+                            <td id="ptrain">{{ptrain}}</td>
                         </tr>
                         <tr>
                             <td>Recall</td>
-                            <td id="rtest">{{rtest}}</td>
+                            <td *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
                             <td id="rtrain">{{rtrain}}</td>
                         </tr>
                       </table>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 95px;">
-                        Pogledaj konfuzionu matricu testnog skupa
-                      </button>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM1" style="margin-left: 95px; margin-top: 10px; margin-bottom: 10px;">
-                         Pogledaj konfuzionu matricu training skupa
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                        Show confusion matrix for training and test dataset
                       </button>
                 </div>
             </div>
