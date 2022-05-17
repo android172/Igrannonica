@@ -524,7 +524,7 @@ export class ModelComponent implements OnInit {
       if(this.brHL < 10 ){
         this.brHL++;
         this.hiddLay.push(1);
-        this.aktFunk.push(1);
+        this.aktFunk.push(0);
         this.nizCvorova.push(1);
       }
       else{
@@ -542,7 +542,121 @@ export class ModelComponent implements OnInit {
       this.aktFunk.pop();
       this.nizCvorova.pop();
     }
+    this.drawCanvas()
   }
+
+  drawCanvas() {
+    var canvas = <HTMLCanvasElement>document.getElementById("model-canvas");
+    console.log(canvas.getAttribute('width'));
+    console.log(canvas.getAttribute('height'));
+    const width  = 1920;
+    const height = 1080;
+    canvas.width = width;
+    canvas.height = height;
+
+    var ctx = canvas.getContext("2d");
+    if (ctx == null) return;
+
+    var ic = 0;
+    var oc = 0;
+    for (let kolona of this.kolone2) {
+      if      (kolona.type === 'Input')  ic += 1;
+      else if (kolona.type === 'Output') oc += 1;
+    }
+
+    var node_count = this.brHL + 1;
+    var bonus = 1;
+    if (ic > 0) {
+      node_count++;
+      bonus = 2;
+    }
+    if (oc > 0) node_count++;
+
+    // Draw input layer
+    if (ic > 0) {
+      var node_x = 1 / (node_count);
+      var node_x1 = 2 / (node_count);
+      var no_nodes_n = 0;
+      if (this.brHL > 0)
+        no_nodes_n = this.nizCvorova[0];
+
+      for (let j = 0; j < ic; j++) {
+        var node_y = (j + 1) / (ic + 1);
+
+        // Draw connections
+        for (let k = 0; k < no_nodes_n; k++) {
+          var node_y1 = (k + 1) / (no_nodes_n + 1);
+          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, width, height);
+        }
+
+        // Draw circle
+        this.draw_node(ctx, node_x, node_y, width, height);
+      }
+    }
+
+    // Draw hidden layers
+    for (let i = 0; i < this.brHL; i++) {
+      var node_x = (i + bonus) / (node_count);
+      var node_x1 = (i + 1 + bonus) / (node_count);
+      
+      var no_nodes_c = this.nizCvorova[i];
+      var no_nodes_n = 0;
+      if (i != this.brHL - 1)
+        no_nodes_n = this.nizCvorova[i + 1];
+      else if (oc > 0)
+        no_nodes_n = oc
+
+      for (let j = 0; j < no_nodes_c; j++) {
+        var node_y = (j + 1) / (no_nodes_c + 1);
+
+        // Draw connections
+        for (let k = 0; k < no_nodes_n; k++) {
+          var node_y1 = (k + 1) / (no_nodes_n + 1);
+          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, width, height);
+        }
+
+        // Draw circle
+        this.draw_node(ctx, node_x, node_y, width, height);
+      }
+    }
+
+    // Draw output layer
+    if (oc > 0) {
+      node_x = (this.brHL + bonus) / (node_count);
+      for (let j = 0; j < oc; j++) {
+        var node_y = (j + 1) / (oc + 1);
+        
+        // Draw circle
+        this.draw_node(ctx, node_x, node_y, width, height);
+      }
+    }
+  }
+
+  draw_node(ctx: any, node_x: number, node_y: number, width: number, height: number) {
+    ctx.strokeStyle = "#ffffff";
+    ctx.fillStyle = "#ffffff";
+
+    ctx.beginPath();
+    ctx.arc(node_x * width, node_y  * height, 30, 0,2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  draw_connection(ctx: any, node_x1: number, node_y1: number, node_x2: number, node_y2: number, width: number, height: number) {
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+    ctx.moveTo(node_x1 * width, node_y1 * height);
+    const middle_point = node_x1 + (node_x2 - node_x1) / 2;
+    ctx.bezierCurveTo(
+      middle_point * width, node_y1 * height,
+      middle_point * width, node_y2 * height,
+      node_x2 * width, node_y2 * height
+    );
+    ctx.stroke()
+  }
+
 
   brojCvorova(ind:number){
 
@@ -569,7 +683,7 @@ export class ModelComponent implements OnInit {
           this.broj = Number(str);
         }
         this.nizCvorova[i]=this.broj;
-        console.log(this.nizCvorova[i]);
+        this.drawCanvas();
       }
     }
   }
