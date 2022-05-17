@@ -129,7 +129,7 @@ export class ModelComponent implements OnInit {
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
-      this.idModela = id;
+      //this.idModela = id;
       // console.log("ID MODELA: " + this.idModela);
     })
   }
