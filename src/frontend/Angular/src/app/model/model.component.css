@@ -347,7 +347,7 @@ h4{
   width: 100%;
  /* padding-top: 25px;
   padding-left: 30px;*/
-  overflow: auto;
+  /* overflow: auto; */
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-top: 0px;
@@ -379,10 +379,11 @@ h4{
 #grupaUI
 {
   float: left;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   margin-right: 10px;
   min-width: 130px;
   margin-bottom: 20px;
+  /* width: 150%; */
 }
 
 #grupa1{
@@ -396,16 +397,18 @@ h4{
 }
 
 #grupa12{
-  float: left;
-  height: 80px;
-  width: 200px;
+  /* float: left; */
+  height: 100px;
+  display: block;
+  /* width: 200px; */
+  width: 40%;
 }
 
 #podesavanja{
 
  /* height: 270px;*/
-  margin-left: 20px;
-  margin-top: 20px;
+  margin-left: 3%;
+  margin-top: 3%;
 }
 
 #podesavanja2{
@@ -592,10 +595,10 @@ input
   border: 2px solid rgb(37, 164, 214) ;
   background: rgb(33, 79, 138);
   border-radius: 8px;
-  width: 170px;
+  /* width: 170px; */
   height: 29px;
   color: #CED9FF;
-
+  width: 100%;
 }
 
 #is img{
@@ -873,7 +876,8 @@ td{
   border: 2px solid  rgb(46, 132, 189);;
   background: rgba(176, 167, 234, 0.3);
   border-radius: 8px;
-  width: 150px;
+  /* width: 150px; */
+  width: 90%;
   height: 28px;
   color: #CED9FF;
   margin-top: 10px;
@@ -925,9 +929,9 @@ td{
 #grupaCV
 {
   float: left;
-  margin-left: 20px;
+  /* margin-left: 20px; */
   margin-right: 20px;
-  width: 150px;
+  /* width: 150px; */
   margin-bottom: 20px;
   margin-top: 0px;
 }
@@ -1007,7 +1011,7 @@ input:checked + .slider:before {
 #tekstCV{
 
   color: white;
-  width: 70px;
+  /* width: 70px; */
   float: left;
 }
 
@@ -1245,3 +1249,4 @@ body {
 {
   margin-top: 11px;
 }
+

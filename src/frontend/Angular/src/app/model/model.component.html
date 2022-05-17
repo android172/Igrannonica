@@ -60,25 +60,58 @@
         </div>
         <div id="box">
             <div id="podesavanja">
-                
-                <div id="grupa12">
-                
-                    <div id="grupaUI">
-                        <div type="text" id="is" >
-                            <img src="assets/input.png" alt="">
-                            <h3 id="inout"> Input size: {{brojU}}</h3>
-                        </div>
-                    </div>
-                    <div id="grupaUI">
-                        <div type="text" id="is" >
-                            <img src="assets/output.png" alt="">
-                            <h3 id="inout1"> Output size: {{brojI}}</h3>
-                        </div>
-                    </div>
 
+                <div class="col-md-4 d-block">
+                    <div id="grupa12">
+                    
+                        <div id="grupaUI">
+                            <div type="text" id="is" >
+                                <img src="assets/input.png" alt="">
+                                <h3 id="inout"> Input size: {{brojU}}</h3>
+                            </div>
+                        </div>
+                        <div id="grupaUI">
+                            <div type="text" id="is" >
+                                <img src="assets/output.png" alt="">
+                                <h3 id="inout1"> Output size: {{brojI}}</h3>
+                            </div>
+                        </div>
+    
+                    </div>
+    
+                    <div id="grupa12">
+    
+                        <div id="grupaCV">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 id="tekstCV">Cross<br> validation</h4>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle" (click)="dugmeCV()">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div style="width: 100%;" *ngIf="flag; else onemoguceno">
+                                <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
+                            </div>
+                            <ng-template #onemoguceno>
+                                <input id="crossVd" disabled>
+                            </ng-template>
+                            <!--
+                            <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
+                            <div *ngIf="!flag; else onemoguceno">
+                                <input id="crossV" min="2" max="20" [defaultValue]="crossV">
+                            </div>
+                            <ng-template #onemoguceno>
+                                <input id="crossVd" disabled>
+                              </ng-template>
+                            -->
+                        </div>
+        
+                        
+                    </div>
                 </div>
+                
 
-                <div id="grupaP2">
+                <!-- <div id="grupaP2">
 
                     <div id="grupaP">
                         <h4> Problem type </h4>
@@ -110,34 +143,6 @@
 
                 </div>
 
-                <div id="grupa12">
-
-                    <div id="grupaCV">
-                        <h4 id="tekstCV">Cross<br> validation</h4>
-                        <label class="switch">
-                            <input type="checkbox" id="toggle" (click)="dugmeCV()">
-                            <span class="slider round"></span>
-                          </label>
-                          <div *ngIf="flag; else onemoguceno">
-                            <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
-                        </div>
-                        <ng-template #onemoguceno>
-                            <input id="crossVd" disabled>
-                        </ng-template>
-                        <!--
-                        <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
-                        <div *ngIf="!flag; else onemoguceno">
-                            <input id="crossV" min="2" max="20" [defaultValue]="crossV">
-                        </div>
-                        <ng-template #onemoguceno>
-                            <input id="crossVd" disabled>
-                          </ng-template>
-                        -->
-                    </div>
-    
-                    
-                </div>
-
                 <div id="grupaP2">
 
                     <div id="grupaP">
@@ -158,7 +163,7 @@
                             <input type="number" id="bs" name="bs" value="64">
                     </div>
 
-                </div>
+                </div> -->
                 
             </div>
         </div>
