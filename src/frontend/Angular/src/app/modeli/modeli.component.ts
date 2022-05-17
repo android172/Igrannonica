@@ -15,8 +15,12 @@ import {NotificationsService} from 'angular2-notifications';
 
 export class ModeliComponent implements OnInit {
   private eventsSubscription!: Subscription;
-  @Output() PosaljiModel = new EventEmitter<number>();
+ // @Output() PosaljiModel = new EventEmitter<number>();
+
   @Input() primljenM! : Observable<any>;
+
+  @Output() PosaljiIzabranModel:EventEmitter<number> = new EventEmitter<number>();
+  
   json: any;
   json1: any;
   jsonMetrika: any;
@@ -29,7 +33,7 @@ export class ModeliComponent implements OnInit {
   ActivateAddEdit: boolean = false;
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
-  izabranId: any;
+  izabranId: number = -1;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -92,9 +96,9 @@ export class ModeliComponent implements OnInit {
     this.ucitajImeE();
   }
 
-  send(id:number){
-    this.PosaljiModel.emit(id);
-  }
+  // send(id:number){
+  //   this.PosaljiModel.emit(id);
+  // }
 
   ocisti(){
     (<HTMLInputElement>document.getElementById("imeM")).value='';
@@ -256,7 +260,7 @@ export class ModeliComponent implements OnInit {
     }
   }
 
-  uzmiId(id: any)
+  uzmiId(id: number)
   {
     this.izabranId=id;
   }
@@ -283,5 +287,11 @@ export class ModeliComponent implements OnInit {
       }
     }
   }
+
+  nastaviTreniranje(){
+
+    this.PosaljiIzabranModel.emit(this.izabranId);
+  }
 }
+
 

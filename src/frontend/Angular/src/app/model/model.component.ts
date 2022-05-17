@@ -29,6 +29,8 @@ export class ModelComponent implements OnInit {
 
   @Input() idS! : Observable<number>;
 
+  @Input() idM! : Observable<number>;
+
   @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
 
   @Output() PosaljiModel:EventEmitter<number> = new EventEmitter<number>();
@@ -182,6 +184,7 @@ export class ModelComponent implements OnInit {
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
+    this.eventsSubscription = this.idM.subscribe((data)=>{this.ucitajModel(data);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -192,6 +195,11 @@ export class ModelComponent implements OnInit {
       //console.log(this.signalR.data);
     }
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+  }
+
+  ucitajModel(id: number){
+
+
   }
 
   primiSnapshot(data:number){
