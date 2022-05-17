@@ -810,6 +810,7 @@ export class ModelComponent implements OnInit {
        console.log(error.error);
      }
     );
+    this.selectedSS=id;
   }
 
   dajMetriku(modelId:number)
