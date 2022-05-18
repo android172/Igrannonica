@@ -978,7 +978,7 @@ class MLData:
             return False
         
         _, ax = plt.subplots()
-        data = self.dataset[column].value_counts()
+        data = self.dataset.iloc[:, column].value_counts()
         
         colors = self._generate_colors(len(data))
 
