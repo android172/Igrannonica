@@ -51,16 +51,22 @@ export class PodaciComponent implements OnInit {
 
   primiSnapshot2(data : number){
 
-    this.ucitajPodatkeSnapshotaP(data);
-    for(let i=0; i<this.snapshots.length; i++)
+    let snap = sessionStorage.getItem('idSnapshota');
+    let idsnap = sessionStorage.getItem('idS');
+    if((<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML != snap)
     {
-      if(this.snapshots[i].id == data)
+      this.ucitajPodatkeSnapshotaP(data);
+      for(let i=0; i<this.snapshots.length; i++)
       {
-        this.imeSnapshota(this.snapshots[i].ime);
-        return;
+        if(this.snapshots[i].id == data)
+        {
+          this.imeSnapshota(this.snapshots[i].ime);
+          return;
+        }
       }
+      this.imeSnapshota("Default snapshot");
     }
-    this.imeSnapshota("Default snapshot");
+ 
   }
 
   @ViewChild('contentmdl') content:any;
@@ -2728,7 +2734,7 @@ zamenaTipaKolone(event:any)
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
-      this.PosaljiSnapshot.emit(id);
+      // this.PosaljiSnapshot.emit(id);
 
       if(id==0)
       {
@@ -2741,6 +2747,7 @@ zamenaTipaKolone(event:any)
       sessionStorage.setItem('idSnapshota',ime);
       sessionStorage.setItem('idS',"" + id);
       }
+      this.PosaljiSnapshot.emit(id);
      }
    );
  }

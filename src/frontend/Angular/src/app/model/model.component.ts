@@ -208,7 +208,7 @@ export class ModelComponent implements OnInit {
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
-    this.eventsSubscription = this.idM.subscribe((data)=>{this.ucitajModel(data);});
+    this.eventsSubscription = this.idM.subscribe((data2)=>{this.ucitajModel(data2);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -221,29 +221,42 @@ export class ModelComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
-  ucitajModel(id: number){
-    this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + id, {responseType: 'text'}).subscribe(
-      res=>{
-        console.log(res);
-      },
-      error=>{
-        console.log(error.error);
-      }
-    )
+  ucitajModel(data2: number){
+
+    let idmodela = sessionStorage.getItem('idModela');
+    if(Number(idmodela) != -1)
+    {
+      this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+        },
+        error=>{
+          console.log(error.error);
+        }
+      )
+    }
+    
   }
 
   primiSnapshot(data:number){
 
-    this.selectSnapshotM(data);
-    for(let i=0; i<this.snapshots.length; i++)
+    let snap = sessionStorage.getItem('idSnapshota');
+    let idsnap = sessionStorage.getItem('idS');
+    console.log(snap);
+    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+    if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
     {
-      if(this.snapshots[i].id == data)
+      this.selectSnapshotM(data);
+      for(let i=0; i<this.snapshots.length; i++)
       {
-        this.imeS(this.snapshots[i].ime);
-        return;
+        if(this.snapshots[i].id == data)
+        {
+          this.imeS(this.snapshots[i].ime);
+          return;
+        }
       }
+      this.imeS("Default snapshot");
     }
-    this.imeS("Default snapshot");
   }
 
   ucitajNazivModela(id : any){
@@ -1074,8 +1087,10 @@ export class ModelComponent implements OnInit {
   {
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
+        console.log("SELECT SNAPSHOT M");
          console.log(response);
          this.kolone = Object.assign([],response);
+         this.kolone2 = [];
          if(this.kolone2.length == 0)
          {
           for (var kolona of this.kolone) {

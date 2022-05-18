@@ -15,6 +15,8 @@ export class EksperimentComponent implements OnInit {
   model: boolean = false;
   modeli: boolean = false;
   eventsSubject: Subject<number> = new Subject<number>();
+  eventsSubjectModel : Subject<number> = new Subject<number>();
+  eventsSubjectM : Subject<number> = new Subject<number>();
 
   idEksperimenta: any;
   nazivEksperimenta:any;
@@ -40,16 +42,13 @@ export class EksperimentComponent implements OnInit {
   }
 
   primi(id:number){
-    this.eventsSubject.next(id);
+    this.eventsSubjectModel.next(id);
     (<HTMLAnchorElement>document.getElementById("nav-modeli-tab")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("nav-model-tab")).classList.add("active","show");
     (<HTMLAnchorElement>document.getElementById("modeli")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("model")).classList.add("active","show");
   }
 
-  primi2(id:number){
-    this.eventsSubject.next(id);
-  }
 
   primiS(id:number){
     this.eventsSubject.next(id);
@@ -57,7 +56,7 @@ export class EksperimentComponent implements OnInit {
 
   primiM(id:number)
   {
-     this.eventsSubject.next(id);
+     this.eventsSubjectM.next(id);
   }
 
   boolPodaciPromena()
