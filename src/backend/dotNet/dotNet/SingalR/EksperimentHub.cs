@@ -29,7 +29,7 @@ namespace dotNet.SingalR
                 }
                 else
                 {
-                    Console.WriteLine(method);
+                    Console.WriteLine(param);
                 }
             }
         }

@@ -55,6 +55,9 @@ export class ModelComponent implements OnInit {
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
 
+
+  private weights: number[][][] = [];
+
   
   public kolone: any[] = [];
   message: any;
@@ -147,7 +150,12 @@ export class ModelComponent implements OnInit {
       this.prikaziPredikciju = true;
       //this.idModela = id;
       // console.log("ID MODELA: " + this.idModela);
-    })
+    });
+    this.signalR.componentMethodLossCalled$.subscribe((weights: [][][]) => {
+      this.weights = weights;
+      console.log(weights);
+      this.drawCanvas();
+    });
   }
   sendMessage():void{
     this.shared.sendUpdate("Update");
@@ -297,7 +305,7 @@ export class ModelComponent implements OnInit {
           this.buttonDisable = false;
         }
     }
-    this.drawCanvas();
+    this.recreateNetwork();
     // let nizK = <any>document.getElementsByName("ulz"); 
     // var ind1;
     // for(let i=0; i<nizK.length; i++)
@@ -611,13 +619,51 @@ export class ModelComponent implements OnInit {
       this.aktFunk.pop();
       this.nizCvorova.pop();
     }
-    this.drawCanvas()
+    this.recreateNetwork();
+  }
+
+  recreateNetwork() {
+    var ic = 0;
+    var oc = 0;
+    for (let kolona of this.kolone2) {
+      if      (kolona.type === 'Input')  ic += 1;
+      else if (kolona.type === 'Output') oc += 1;
+    }
+
+    var counts = [];
+    counts.push(ic);
+    for (let i = 0; i < this.brHL; i++)
+      counts.push(this.nizCvorova[i]);
+    counts.push(oc);
+    
+    this.weights = [];
+    for (let i = 0; i < counts.length - 1; i++) {
+      const count_c = counts[i];
+      const count_n = counts[i + 1];
+      
+      this.weights.push([]);
+      for (let j = 0; j < count_n; j++) {
+        this.weights[i].push([]);
+        for (let k = 0; k < count_c; k++) {
+          this.weights[i][j].push(this.sampleNormalDistribution(0, 1));
+        }
+      }
+    }
+
+    this.drawCanvas();
+  }
+
+  sampleNormalDistribution(mean: number, std: number) {
+    const u = Math.random();
+    const v = Math.random();
+
+    const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * u);
+    
+    return z * std + mean;
   }
 
   drawCanvas() {
     var canvas = <HTMLCanvasElement>document.getElementById("model-canvas");
-    console.log(canvas.getAttribute('width'));
-    console.log(canvas.getAttribute('height'));
     const width  = 1920;
     const height = 1080;
     canvas.width = width;
@@ -657,11 +703,12 @@ export class ModelComponent implements OnInit {
         // Draw connections
         for (let k = 0; k < no_nodes_n; k++) {
           var node_y1 = (k + 1) / (no_nodes_n + 1);
-          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, width, height);
+          var weight = this.weights[0][k][j]
+          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, weight, width, height);
         }
 
         // Draw circle
-        this.draw_node(ctx, node_x, node_y, width, height);
+        this.draw_node(ctx, 'i', node_x, node_y, width, height);
       }
     }
 
@@ -683,11 +730,12 @@ export class ModelComponent implements OnInit {
         // Draw connections
         for (let k = 0; k < no_nodes_n; k++) {
           var node_y1 = (k + 1) / (no_nodes_n + 1);
-          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, width, height);
+          var weight = this.weights[i + bonus - 1][k][j]
+          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, weight, width, height);
         }
 
         // Draw circle
-        this.draw_node(ctx, node_x, node_y, width, height);
+        this.draw_node(ctx, 'd', node_x, node_y, width, height);
       }
     }
 
@@ -696,26 +744,43 @@ export class ModelComponent implements OnInit {
       node_x = (this.brHL + bonus) / (node_count);
       for (let j = 0; j < oc; j++) {
         var node_y = (j + 1) / (oc + 1);
-        
+
         // Draw circle
-        this.draw_node(ctx, node_x, node_y, width, height);
+        this.draw_node(ctx, 'o', node_x, node_y, width, height);
       }
     }
   }
 
-  draw_node(ctx: any, node_x: number, node_y: number, width: number, height: number) {
-    ctx.strokeStyle = "#ffffff";
-    ctx.fillStyle = "#ffffff";
+  draw_node(ctx: any, kind: string, node_x: number, node_y: number, width: number, height: number) {
+    ctx.strokeStyle = "#5C6A8D42";
+    ctx.lineWidth = 3;
+
+    if (kind === "i")
+      ctx.fillStyle = "#323272";
+    else if (kind === "o")
+      ctx.fillStyle = "#703352";
+    else
+      ctx.fillStyle = "#5C6A8D";
 
     ctx.beginPath();
-    ctx.arc(node_x * width, node_y  * height, 30, 0,2*Math.PI);
+    ctx.arc(node_x * width, node_y  * height, 20, 0,2*Math.PI);
     ctx.fill();
     ctx.stroke();
   }
 
-  draw_connection(ctx: any, node_x1: number, node_y1: number, node_x2: number, node_y2: number, width: number, height: number) {
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 5;
+  draw_connection(ctx: any, node_x1: number, node_y1: number, node_x2: number, node_y2: number, weight: number, width: number, height: number) {
+    var r = 255;
+    var g = 255;
+    var b = 255;
+    if (weight > 0) { r = 202; g = 42;  b = 80;  }
+    else            { r = 0;   g = 133; b = 190; }
+
+    var x = Math.abs(weight);
+    var alpha = 1 - 1 / Math.exp(x);
+    alpha *= alpha;
+
+    ctx.strokeStyle = `rgb(${r},${g},${b},${alpha})`;
+    ctx.lineWidth = 4 * alpha;
 
     ctx.beginPath();
     ctx.moveTo(node_x1 * width, node_y1 * height);
@@ -754,7 +819,7 @@ export class ModelComponent implements OnInit {
           this.broj = Number(str);
         }
         this.nizCvorova[i]=this.broj;
-        this.drawCanvas();
+        this.recreateNetwork();
       }
     }
   }
@@ -1010,7 +1075,7 @@ export class ModelComponent implements OnInit {
           this.brojI = 1;
          }
          this.buttonDisable = false;
-         this.drawCanvas();
+         this.recreateNetwork();
       },error =>{
        console.log(error.error);
      }
