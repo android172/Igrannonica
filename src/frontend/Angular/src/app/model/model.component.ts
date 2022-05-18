@@ -67,6 +67,7 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
+  public pomocniNizKolone: any[] = [];
   // public pom : boolean = false;
   //public brHL : number = 0;
   //public niz : any[] = [];
@@ -128,6 +129,7 @@ export class ModelComponent implements OnInit {
   public prikaziPredikciju: boolean = false;
 
   public klasifikacija: boolean = true;
+
   public MAE1: number[]=[];
   public Adj1: number[]=[];
   public MSE1: number[]=[];
@@ -138,6 +140,12 @@ export class ModelComponent implements OnInit {
   public MSE: number[]=[];
   public R2: number[]=[];
   public RSE: number[]=[];
+
+  public modelData: any;
+
+  public snapshot: number = -1;
+  public annSettings: any;
+  public ioColumns: any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -228,7 +236,114 @@ export class ModelComponent implements OnInit {
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
-          console.log(res);
+          this.modelData =  JSON.parse(res);
+          // console.log(this.modelData);
+          this.snapshot = this.modelData.Snapshot;
+          this.annSettings = this.modelData.NetworkSettings;
+          this.ioColumns = this.modelData.IOColumns;
+          console.log(this.snapshot);
+          console.log(this.annSettings);
+          console.log(this.ioColumns);
+          if(this.snapshot == 0)
+          {
+            this.imeS("Default snapshot");
+            sessionStorage.setItem('idSnapshota',"Default snapshot");
+            sessionStorage.setItem('idS',"0");
+          }
+          else
+          {
+            for(let i = 0; i < this.snapshots.length; i++)
+            {
+              if(this.snapshot == this.snapshots[i].id)
+              {
+                this.imeS(this.snapshots[i].ime);
+                sessionStorage.setItem('idSnapshota', this.snapshots[i].ime);
+                sessionStorage.setItem('idS', this.snapshot + "");
+                break;
+              }
+            }
+          }
+
+          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
+            (response: any)=>{
+                this.kolone = Object.assign([],response);   //imena kolona
+                this.kolone2 = [];
+                this.pomocniNizKolone = [];
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
+                let nizUlazi = this.ioColumns[0];
+                let nizIzlazi = this.ioColumns[1];
+                for(let j = 0; j < nizUlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizUlazi[j] == i)
+                    {
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Input"});
+                    }
+                  }
+                }
+                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
+                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
+                for(let j = 0; j < nizIzlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizIzlazi[j] == i)
+                    {
+                      // console.log("******************" + this.kolone[i]);
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Output"});
+                    }
+                  }
+                }
+                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
+                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!" + this.kolone);
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  let ind = 0;
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                      ind=1;
+                  }
+                  if(ind == 0)
+                  {
+                    this.pomocniNizKolone.push({value : this.kolone[i], type : "None"});
+                  }
+                }
+                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
+                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
+
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                    {
+                      this.kolone2.push(this.pomocniNizKolone[j]);
+                    }
+                  }
+                }
+
+                for(let i=0; i<this.kolone.length-1; i++)
+                {
+                  this.ulazneKolone[i] = this.kolone[i];
+                }
+                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+                this.brojU = this.ulazneKolone.length;
+                this.brojI = 1;
+                console.log(this.brojU);
+                this.buttonDisable = false;
+                this.PosaljiSnapshot2.emit(this.snapshot);
+                this.recreateNetwork();
+              },error =>{
+              console.log(error.error);
+            }
+            );
+            this.selectedSS=this.snapshot;
+            console.log(this.selectedSS);
         },
         error=>{
           console.log(error.error);
@@ -1042,8 +1157,9 @@ export class ModelComponent implements OnInit {
     }
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
-         this.kolone = Object.assign([],response);
+         this.kolone = Object.assign([],response);   //imena kolona
          this.kolone2 = [];
+         console.log("----------------------" + this.kolone);
          this.ulazneKolone = [];
          this.izlazneKolone = [];
          for (var kolona of this.kolone) {
@@ -1078,6 +1194,10 @@ export class ModelComponent implements OnInit {
          console.log(response);
          this.kolone = Object.assign([],response);
          this.kolone2 = [];
+         this.brojI = 0;
+         this.brojU = 0;
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
          if(this.kolone2.length == 0)
          {
           for (var kolona of this.kolone) {
