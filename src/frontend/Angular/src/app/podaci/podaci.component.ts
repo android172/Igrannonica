@@ -247,9 +247,10 @@ export class PodaciComponent implements OnInit {
         labels: {
           color: "white",
           font: {
-            size: 10
+            size: 12
           }
-        }
+        },
+        position: 'right'
       }
     }
   };
@@ -2808,36 +2809,32 @@ zamenaTipaKolone(event:any)
 }
 
 
-pieChartFunction()
-{
-
-this.lineDatas = [];
-  for(let j of this.statistikaCat)
+  pieChartFunction()
   {
-    var unutra = [];
-       var naslovi = [];
-        //unutra.push(j.data[2].UniqueCount);  Object.values(j.data[3])[1];
-        var pomm = j.data[3].Frequencies;
-        var pp = j.data[0].ValidCount;
+    this.lineDatas = [];
+    for(let j of this.statistikaCat)
+    {
+      var unutra = [];
+      var naslovi = [];
+      var pomm = j.data[3].Frequencies;
+          
+      for(let ii of pomm)
+      {
+        unutra.push(Number((Number(ii[1])*100).toFixed(2)));
+        naslovi.push(ii[0]);
+      }
+    
+      var lineData11 : ChartData<'pie', number[], string | string[]> = {
+        labels: naslovi,
+        datasets: [ {
+          data: unutra
+        } ]
+      };
         
-        for(let ii of pomm)
-        {
-          //unutra.push(ii[1]);
-          unutra.push(Number((Number(ii[1])*100).toFixed(2)));
-          naslovi.push(ii[0]);
-        }
-      
-        var lineData11 : ChartData<'pie', number[], string | string[]> = {
-          labels: naslovi,
-          datasets: [ {
-            data: unutra
-          } ]
-        };
-      
-        this.lineDatas.push(lineData11);
+      this.lineDatas.push(lineData11);
+    }
+    //console.log(unutra);
   }
-  //console.log(unutra);
-}
   
 
 }
