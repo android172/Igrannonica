@@ -57,6 +57,7 @@ export class ModeliComponent implements OnInit {
         this.ngOnInit();
       }
     )
+    console.log("Zovem se sad!!!");
   }
 
   primiModel(data : any){
@@ -140,7 +141,6 @@ export class ModeliComponent implements OnInit {
     this.ActivateAddEdit=true;
     this.http.get(url+'/api/Model/Modeli/' + this.id).subscribe(
         res=>{
-          console.log(res);
           this.json = res;
           this.modeli = Object.values(this.json);
           this.formatirajDatum();
