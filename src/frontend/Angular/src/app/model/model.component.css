@@ -532,7 +532,6 @@ input
 .model-content-wrapper{
   position: relative;
   width: 100%;
-
   height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
@@ -695,11 +694,13 @@ input
   width: 28px;
   height: 28px;
   color: #CED9FF;
-  margin-bottom: 20px;
+  /* margin-top: 20px; */
   float: left;
-  text-align: center;
+  text-align: left;
   padding-top: 1px;
-  padding-right: 6px;
+  padding-right: 3px;
+  padding-left: 6px;
+  /* padding-right: 20px; */
   font-size: 20px;
 }
 
