@@ -1153,8 +1153,8 @@ body {
 .play-btn:before {
   content: "";
   position: absolute;
-  width: 150%;
-  height: 150%;
+  width: 150px;
+  height: 150px;
   -webkit-animation-delay: 0s;
   animation-delay: 0s;
   -webkit-animation: pulsate1 2s;
@@ -1168,8 +1168,8 @@ body {
   opacity: 1;
   border-radius: 50%;
   border: 5px solid rgba(255, 255, 255, .75);
-  top: -30%;
-  left: -30%;
+  top: -25px;
+  left: -25px;
   background: rgba(198, 16, 0, 0);
 }
 
