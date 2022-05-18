@@ -198,8 +198,14 @@ export class ModelComponent implements OnInit {
   }
 
   ucitajModel(id: number){
-
-
+    this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + id, {responseType: 'text'}).subscribe(
+      res=>{
+        console.log(res);
+      },
+      error=>{
+        console.log(error.error);
+      }
+    )
   }
 
   primiSnapshot(data:number){

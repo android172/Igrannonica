@@ -159,10 +159,8 @@ p
 {
     position: relative;
     display: flex;
-    
  /*  justify-content: center;*/
     clear: both;
-    
 }
 
 
@@ -500,8 +498,8 @@ input
 
 #lista{
 
-  width: 320px;
-  height: 500px;
+  /* width: 320px; */
+  height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -514,7 +512,7 @@ input
 
 #div3{
   position: relative;
-  width: 320px;
+  /* width: 320px; */
   float: left;
   box-sizing: border-box;
   justify-content: center;
@@ -535,7 +533,7 @@ input
   position: relative;
   width: 100%;
 
-  height: 500px;
+  height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -548,9 +546,9 @@ input
   background-color: #272741;
 }
 
-.sixteen-by-nine.aspect-ratio {
+/* .sixteen-by-nine.aspect-ratio {
   padding-bottom: 56.25%;
-}
+} */
 
 .model-content {
   position: absolute;
@@ -566,6 +564,18 @@ input
   width: 99%;
   margin: auto;
   min-height: 60vh;
+}
+
+.okvir
+{
+  border: 2.5px solid rgba(89, 119, 223, 1);
+  border-radius: 10px;
+  float: left;
+  padding-top: 15px;
+  overflow: auto;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
 }
 
 #centrirano2
@@ -724,7 +734,7 @@ input
 
   height: 35px;
   float: left;
-  width: 250px;
+  /* width: 250px; */
   margin-left: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
