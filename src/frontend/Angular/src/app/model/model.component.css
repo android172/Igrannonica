@@ -620,11 +620,11 @@ input
   border: 2px solid #bc7ca1;
   background: transparent; 
   border-radius: 8px;
-  min-width: 402px;
   height: 40px;
   color: #CED9FF;
   padding: 10px;
   color: white;
+  width:100%;
 }
 
 #opisM,#opisModela{
@@ -634,6 +634,7 @@ input
   color: #CED9FF;
   padding: 10px;
   color: white;
+  width: 100%;
 }
 
 #opisM:focus,#opisModela:focus,#bs1:focus,#bs2:focus{

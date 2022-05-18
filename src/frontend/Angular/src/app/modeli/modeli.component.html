@@ -7,18 +7,18 @@
 
     <div id="divModeli">
         <div id="skrol">
-        <div id=naslov>Lista istreniranih modela</div>
-        <div id="sk">
-            <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
-              <ng-template #unselectedModel>
-              </ng-template>
-                <div class="model-selected-{{'p' + i === this.selektovanModel}}" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)">
-                  <div class="name" id="p{{i}}">{{ m.name }}</div>
-                  <div class="date" id="p{{i}}">{{m.createdDate}}</div>
-                  <div class="o" id="p{{i}}">{{m.opis}}</div>
-                </div>
-            </div>
-        </div>
+          <div id=naslov>Lista istreniranih modela</div>
+          <div id="sk">
+              <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
+                <ng-template #unselectedModel>
+                </ng-template>
+                  <div class="model-selected-{{'p' + i === this.selektovanModel}}" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)">
+                    <div class="name" id="p{{i}}">{{ m.name }}</div>
+                    <div class="date" id="p{{i}}">{{m.createdDate}}</div>
+                    <div class="o" id="p{{i}}">{{m.opis}}</div>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
     <div id="info">
