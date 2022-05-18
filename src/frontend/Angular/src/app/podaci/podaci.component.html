@@ -404,12 +404,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <div *ngIf="item.imeKljucF">
-                                                {{item.imeKljucF}}:
-                                                <div class="uvucenoBezMB" *ngFor="let freq of item.Frequencies">
-                                                    <div>{{freq[0]}}: &nbsp; {{freq[1]}} </div>
+                                                <div style="width: 220px; ">
+                                                    <canvas baseChart
+                                                    [data]="lineDatas[i]"
+                                                    [options]="chartOptions"
+                                                    [type]="pieChartType"
+                                                >
+                                                </canvas>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </div>
 
                                         <!-- <div style="width: 10%; height: 10%; " *ngIf="pieplot"><img [src]="pieplot" class="img-fluid " alt="Responsive image"></div> -->
@@ -793,6 +798,8 @@
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="histogram" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Histogram</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="hexbin" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Hexbin</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="densityplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Densityplot</button> </div> </div>
+                <!-- <div class="row p-2"> <div class="col-md-12 text-center"> <button  (click)="getPieplot(4)" id="densityplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Pieplot</button> </div> </div> -->
+
             </div>
         </div>
     </div>

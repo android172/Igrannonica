@@ -12,6 +12,7 @@ import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
 import { Options, LabelType } from '@angular-slider/ngx-slider';
 import { HtmlParser } from '@angular/compiler';
 import { EventManager } from '@angular/platform-browser';
+import { ChartData, ChartDataset, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-podaci',
@@ -237,6 +238,31 @@ export class PodaciComponent implements OnInit {
 
   selektovanS : number = -1;
   selektovanSime : string = "";
+
+  // Pie plot 
+  public chartOptions: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+          font: {
+            size: 10
+          }
+        }
+      }
+    }
+  };
+
+  public pieChartType: ChartType = 'pie';
+  public chartLegend: boolean = true;
+
+pieChartImage: any; 
+
+lineDatas :any = [
+    // this.lineData
+
+  ];
 
   onFileSelected(event:any) 
   {
@@ -2026,6 +2052,8 @@ dajNaziveHeadera()
     element.style.borderBottom = "1px solid rgb(160, 181, 189)";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
+
+    this.pieChartFunction();
   }
 
   dajNaziveKolonaStatistikeNum()
@@ -2764,6 +2792,53 @@ zamenaTipaKolone(event:any)
 
   (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = ime;
  }
+
+ getPieplot(id:number){
+
+  console.log(this.selectedColumns[0]); // this.selectedColumns[0]
+      this.http.post(url+"/api/Graph/piePlot/"+this.idEksperimenta+"/"+id,null,{responseType:"text"}).subscribe(
+        res=>{
+          console.log(res);
+          this.preuzmiSliku();
+        },
+        error=>{
+          console.log(error.error);
+        }
+      )
+}
+
+
+pieChartFunction()
+{
+
+this.lineDatas = [];
+  for(let j of this.statistikaCat)
+  {
+    var unutra = [];
+       var naslovi = [];
+        //unutra.push(j.data[2].UniqueCount);  Object.values(j.data[3])[1];
+        var pomm = j.data[3].Frequencies;
+        var pp = j.data[0].ValidCount;
+        
+        for(let ii of pomm)
+        {
+          //unutra.push(ii[1]);
+          unutra.push(Number((Number(ii[1])*100).toFixed(2)));
+          naslovi.push(ii[0]);
+        }
+      
+        var lineData11 : ChartData<'pie', number[], string | string[]> = {
+          labels: naslovi,
+          datasets: [ {
+            data: unutra
+          } ]
+        };
+      
+        this.lineDatas.push(lineData11);
+  }
+  //console.log(unutra);
+}
+  
 
 }
 
