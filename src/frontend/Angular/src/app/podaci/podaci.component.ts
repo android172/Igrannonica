@@ -1137,7 +1137,7 @@ dajNaziveHeadera()
   }
   selectAllColumns(event:any)
   {
-    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve kolone")
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Columns")
     { 
       for(var i = 0;i<this.kolone.length;i++)
       {
@@ -1150,17 +1150,17 @@ dajNaziveHeadera()
       }
       this.EnableDisableGrafik();
      console.log(this.selectedColumns);
-     (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj kolone";
+     (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Columns";
     }
     else{
 
         this.izbrisiSelektovaneKolone();
-        (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve kolone";
+        (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Select All Columns";
     }
   }
   selectAllRows(event:any)
   {
-    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve redove")
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Rows")
     {
       for(var i = 0;i<this.itemsPerPage;i++)
       {
@@ -1168,12 +1168,12 @@ dajNaziveHeadera()
         this.isSelectedRow(i);
       }
       console.log(this.rowsAndPages);
-      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj redove";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Rows";
     }
     else{
 
       this.izbrisiSelektovaneRedove();
-      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve redove";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Select All Rows";
   }
   }
 
@@ -1793,7 +1793,7 @@ dajNaziveHeadera()
       this.removeOutliersByLocalFactor();
     }
     this.selectedOutlier = "";
-    (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Izbacivanje izuzetaka";
+    (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Detection method";
     (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
     (<HTMLInputElement>document.getElementById("threshold")).value = "";
     (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
@@ -1876,11 +1876,11 @@ dajNaziveHeadera()
 
     if(this.selectedData == "izbaci-selekt-vrste")
     {
-      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane vrste";
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Rows";
     }
     if(this.selectedData == "izbaci-selekt-kolone")
     {
-      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane kolone";
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Columns";
     }
   }
   primeniNaPodatke()
