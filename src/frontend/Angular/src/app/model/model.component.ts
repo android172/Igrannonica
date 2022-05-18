@@ -1033,6 +1033,7 @@ export class ModelComponent implements OnInit {
         this.jsonMetrika = Object.values(res);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
+        console.log(this.testR);
         this.checkType();
       },
       error => {
@@ -1074,37 +1075,37 @@ export class ModelComponent implements OnInit {
       else
         this.imaTestni==true;
     console.log(this.imaTestni);   
-    this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
-    this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
+    this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+    this.atrain = (Number(this.jsonMetrika[1][0]['Accuracy'])).toFixed(3);
     
-    this.btest = (Number(this.jsonMetrika[0]['BalancedAccuracy'])).toFixed(3);
-    this.btrain = (Number(this.jsonMetrika[1]['BalancedAccuracy'])).toFixed(3);
+    this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
+    this.btrain = (Number(this.jsonMetrika[1][0]['BalancedAccuracy'])).toFixed(3);
 
-    this.ctest = (Number(this.jsonMetrika[0]['CrossEntropyLoss'])).toFixed(3);
-    this.ctrain = (Number(this.jsonMetrika[1]['CrossEntropyLoss'])).toFixed(3);
+    this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
+    this.ctrain = (Number(this.jsonMetrika[1][0]['CrossEntropyLoss'])).toFixed(3);
    
-    this.ftest = (Number(this.jsonMetrika[0]['F1Score'])).toFixed(3);
-    this.ftrain = (Number(this.jsonMetrika[1]['F1Score'])).toFixed(3);
+    this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
+    this.ftrain = (Number(this.jsonMetrika[1][0]['F1Score'])).toFixed(3);
     
-    this.htest = (Number(this.jsonMetrika[0]['HammingLoss'])).toFixed(3);
-    this.htrain = (Number(this.jsonMetrika[1]['HammingLoss'])).toFixed(3);
+    this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
+    this.htrain = (Number(this.jsonMetrika[1][0]['HammingLoss'])).toFixed(3);
     
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+    this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
     
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+    this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
 
-    this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
-    this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
+    this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
+    this.rtrain = (Number(this.jsonMetrika[1][0]['Recall'])).toFixed(3);
 
-    this.matTrainData = this.jsonMetrika[1]['ConfusionMatrix'];
+    this.matTrainData = this.jsonMetrika[1][0]['ConfusionMatrix'];
 
     console.log(max);
     var nizJson = [];
-    for(let i=this.outputCol.length-1; i>=0; i--)
+    for(let i=this.matTrainData.length-1; i>=0; i--)
     {
-      for(let j=this.outputCol.length-1; j>=0; j--)
+      for(let j=this.matTrainData.length-1; j>=0; j--)
         this.matTrainData[i][j]=Number(Number(this.matTrainData[i][j]/max).toFixed(3));
       this.indeksiData[i]=i;  
       nizJson.push({name: this.indeksiData[i] + '', data: this.matTrainData[i]});
@@ -1209,7 +1210,7 @@ export class ModelComponent implements OnInit {
   {
     var p=0;
     var t;
-    this.mtrain = this.jsonMetrika[1]['ConfusionMatrix'];
+    this.mtrain = this.jsonMetrika[1][0]['ConfusionMatrix'];
     // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)
