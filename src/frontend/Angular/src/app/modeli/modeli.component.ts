@@ -215,19 +215,15 @@ export class ModeliComponent implements OnInit {
   promeni(event:any){
 
     if(this.selektovanModel != ""){
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
-      this.selektovanModel = event.target.id;
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
+      (<HTMLDivElement>document.getElementById(this.selektovanModel)).className = "model-selected-false";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
     }
-    else{
-      this.selektovanModel = event.target.id;
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
-    }
-
+    this.selektovanModel = event.target.id;
+    (<HTMLDivElement>document.getElementById(event.target.id)).className = "model-selected-true";
+    // (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
+    // (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
   }
 
   Izmeni()

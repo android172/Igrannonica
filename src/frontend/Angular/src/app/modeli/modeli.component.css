@@ -12,36 +12,61 @@
   color: #CED9FF;
 }
 
-.p
-{
-    color:white;
-    font-size: large;
-    padding-top: 15px;
-    padding-left: 10px;
-    text-align: center;
-    float: left;
-    width: 295px;
-    height: 70px;
-    background-color: #c4c4c4;
-    border-radius: 15px;
-    margin-left: 15px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-
+.model-selected-false {
+  color:black;
+  font-size: large;
+  padding-top: 15px;
+  padding-left: 10px;
+  text-align: center;
+  float: left;
+  width: 295px;
+  height: 70px;
+  background-color: #c4c4c4;
+  border-radius: 15px;
+  margin-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  transform: scale(1);
 }
 
-.p:hover{
+.model-selected-false:hover{
+background:linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%);
+color: #C4C4C4;
+transform: scale(1.04);
+}
+
+.model-selected-true {
+  font-size: large;
+  padding-top: 15px;
+  padding-left: 10px;
+  text-align: center;
+  float: left;
+  width: 295px;
+  height: 70px;
+  border-radius: 15px;
+  margin-left: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   background:linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%);
   color: #C4C4C4;
   transform: scale(1.04);
- }
+}
  
-.name{
+ .model-selected-false > .name{
   float: left;
   font-weight: bolder;
   width: 170px;
   text-align: left;
   color:#d94f6f ;
+  font-size: 19px;
+}
+
+.model-selected-true > .name, .model-selected-false:hover > .name {
+  float: left;
+  font-weight: bolder;
+  width: 170px;
+  text-align: left;
+  color:white ;
   font-size: 19px;
 }
 
@@ -51,7 +76,7 @@
   font-size: 17px;
 }
 
-.o{
+.model-selected-false > .o{
   font-size: smaller;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,6 +87,19 @@
   text-align: left;
   margin-top: 5px;
   color: #696868;
+}
+
+.model-selected-true > .o, .model-selected-false:hover > .o {
+  font-size: smaller;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+  max-width: 280px;
+  height: 20px;
+  text-align: left;
+  margin-top: 5px;
+  color: #969696;
 }
 
 #greska{
