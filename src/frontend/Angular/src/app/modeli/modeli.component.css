@@ -154,7 +154,8 @@ transform: scale(1.04);
 }
 
 #sk{
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 330px;
   height: 450px;
 }

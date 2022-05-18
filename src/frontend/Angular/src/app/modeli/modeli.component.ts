@@ -21,6 +21,8 @@ export class ModeliComponent implements OnInit {
 
   @Output() PosaljiIzabranModel:EventEmitter<number> = new EventEmitter<number>();
   
+  bla: string = 'p0';
+
   json: any;
   json1: any;
   jsonMetrika: any;
@@ -56,12 +58,11 @@ export class ModeliComponent implements OnInit {
        // this.ocisti();
         this.ngOnInit();
       }
-    )
+    );
     console.log("Zovem se sad!!!");
   }
 
   primiModel(data : any){
-
     this.ucitajModel();
   }
   onSuccess(message:any)
@@ -144,6 +145,13 @@ export class ModeliComponent implements OnInit {
           this.json = res;
           this.modeli = Object.values(this.json);
           this.formatirajDatum();
+          
+          if (this.modeli.length > 0) {
+            var id = this.modeli[0].id;
+            this.modelDetaljnije(id);
+            this.uzmiId(id);
+            this.selektovanModel = 'p0';
+          }
         },
         error=>{
           console.log(error.error);
@@ -213,7 +221,6 @@ export class ModeliComponent implements OnInit {
   }
 
   promeni(event:any){
-
     if(this.selektovanModel != ""){
       (<HTMLDivElement>document.getElementById(this.selektovanModel)).className = "model-selected-false";
       // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
