@@ -389,7 +389,7 @@
                             <td id="rtrain">{{rtrain}}</td>
                         </tr>
                       </table>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                      <button (click)="this.charts.render()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
                         Show confusion matrix for training and test dataset
                       </button>
                 </div>
@@ -453,15 +453,12 @@
         <div class="modal-dialog">
           <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
             <div class="modal-header" style="border: none;">
-              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Konfuziona matrica testnog skupa</h5>
+              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Confusion matrixes</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style=" text-align: center;">
-                <div *ngFor="let m of mtest; let ind = index" style="margin-left: 180px">
-                    <div style="color: white;" id="conMat" *ngFor="let i of mtest[ind]">
-                        <div style="width: 50px; height: 50px; float: left; border: 1px solid white; padding-top: 15px; text-align: center;">{{(i/maxNizaT).toFixed(3)}}</div>
-                    </div>
-                    <div style="width: 100px; height: 50px"></div>
+                <div id="chart">
+                    
                 </div>
             </div>
             
