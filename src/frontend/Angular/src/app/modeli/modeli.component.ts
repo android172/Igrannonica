@@ -259,6 +259,7 @@ export class ModeliComponent implements OnInit {
   uzmiId(id: number)
   {
     this.izabranId=id;
+    sessionStorage.setItem('idModela',id+"");
   }
 
   obrisiModel()

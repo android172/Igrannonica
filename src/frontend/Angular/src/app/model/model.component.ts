@@ -208,7 +208,7 @@ export class ModelComponent implements OnInit {
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
     this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
-    this.eventsSubscription = this.idM.subscribe((data)=>{this.ucitajModel(data);});
+    this.eventsSubscription = this.idM.subscribe((data2)=>{this.ucitajModel(data2);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -221,29 +221,42 @@ export class ModelComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
   }
 
-  ucitajModel(id: number){
-    this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + id, {responseType: 'text'}).subscribe(
-      res=>{
-        console.log(res);
-      },
-      error=>{
-        console.log(error.error);
-      }
-    )
+  ucitajModel(data2: number){
+
+    let idmodela = sessionStorage.getItem('idModela');
+    if(Number(idmodela) != -1)
+    {
+      this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
+        res=>{
+          console.log(res);
+        },
+        error=>{
+          console.log(error.error);
+        }
+      )
+    }
+    
   }
 
   primiSnapshot(data:number){
 
-    this.selectSnapshotM(data);
-    for(let i=0; i<this.snapshots.length; i++)
+    let snap = sessionStorage.getItem('idSnapshota');
+    let idsnap = sessionStorage.getItem('idS');
+    console.log(snap);
+    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+    if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
     {
-      if(this.snapshots[i].id == data)
+      this.selectSnapshotM(data);
+      for(let i=0; i<this.snapshots.length; i++)
       {
-        this.imeS(this.snapshots[i].ime);
-        return;
+        if(this.snapshots[i].id == data)
+        {
+          this.imeS(this.snapshots[i].ime);
+          return;
+        }
       }
+      this.imeS("Default snapshot");
     }
-    this.imeS("Default snapshot");
   }
 
   ucitajNazivModela(id : any){
@@ -311,6 +324,7 @@ export class ModelComponent implements OnInit {
         if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
         {
           this.buttonDisable = true;
+          console.log("TRUE-------------------------------");
         }
         else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
         {
@@ -619,6 +633,7 @@ export class ModelComponent implements OnInit {
         this.hiddLay.push(1);
         this.aktFunk.push(0);
         this.nizCvorova.push(1);
+        this.recreateNetwork();
       }
       else{
         this.brHL = 10;
@@ -626,8 +641,10 @@ export class ModelComponent implements OnInit {
     }
     else{
 
-      if(this.brHL >= 1)
+      if(this.brHL >= 1){
         this.brHL--;
+        this.recreateNetwork();
+      }
       else{
         this.brHL = 0;
       }
@@ -635,7 +652,7 @@ export class ModelComponent implements OnInit {
       this.aktFunk.pop();
       this.nizCvorova.pop();
     }
-    this.recreateNetwork();
+    //this.recreateNetwork();
   }
 
   recreateNetwork() {
@@ -829,16 +846,17 @@ export class ModelComponent implements OnInit {
            (<HTMLInputElement>document.getElementById(this.pom)).value = "14";
         }
         else
-          if(Number(str) < 1)
+          if(Number(str) <= 1)
           {
             this.broj = 1;
             (<HTMLInputElement>document.getElementById(this.pom)).value = "1";
           }
         else{
           this.broj = Number(str);
+          this.recreateNetwork();
         }
         this.nizCvorova[i]=this.broj;
-        this.recreateNetwork();
+        //this.recreateNetwork();
       }
     }
   }
@@ -1026,11 +1044,13 @@ export class ModelComponent implements OnInit {
      (response: any)=>{
          this.kolone = Object.assign([],response);
          this.kolone2 = [];
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
          for (var kolona of this.kolone) {
             this.kolone2.push({value : kolona, type : "Input"});
          }
          this.kolone2[this.kolone2.length - 1].type = "Output";
-         this.PosaljiSnapshot2.emit(id);
+        // this.PosaljiSnapshot2.emit(id);
          for(let i=0; i<this.kolone.length-1; i++)
          {
            this.ulazneKolone[i] = this.kolone[i];
@@ -1038,30 +1058,10 @@ export class ModelComponent implements OnInit {
          this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
          this.brojU = this.ulazneKolone.length;
          this.brojI = 1;
+         console.log(this.brojU);
          this.buttonDisable = false;
-        //  this.nizCvorova = [];
-        //  this.aktFunk = [];
-        //  this.hiddLay = [];
-         let nizK = <any>document.getElementsByName("ulz"); 
-        for(let i=0; i<nizK.length; i++)
-        {
-          if(nizK[i].checked)
-          {
-            nizK[i].checked = false;
-            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
-          }
-        }
-        var nizk = <any>document.getElementsByName("izl");
-        for(let i=0; i<nizk.length; i++)
-        {
-          if(nizk[i].checked)
-          {
-            nizk[i].checked = false;
-            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
-          }
-        }
-        this.brojU = 0;
-        this.brojI = 0;
+         this.PosaljiSnapshot2.emit(id);
+         this.recreateNetwork();
       },error =>{
        console.log(error.error);
      }
@@ -1074,8 +1074,10 @@ export class ModelComponent implements OnInit {
   {
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
+        console.log("SELECT SNAPSHOT M");
          console.log(response);
          this.kolone = Object.assign([],response);
+         this.kolone2 = [];
          if(this.kolone2.length == 0)
          {
           for (var kolona of this.kolone) {
