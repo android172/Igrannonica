@@ -57,6 +57,7 @@ export class ModelComponent implements OnInit {
 
 
   private weights: number[][][] = [];
+  private absoluteWeightMean: number[] = [];
 
   
   public kolone: any[] = [];
@@ -152,8 +153,23 @@ export class ModelComponent implements OnInit {
       // console.log("ID MODELA: " + this.idModela);
     });
     this.signalR.componentMethodLossCalled$.subscribe((weights: [][][]) => {
-      this.weights = weights;
       console.log(weights);
+      this.weights = weights;
+      
+      this.absoluteWeightMean = []
+      for (let a of this.weights) {
+        var sum = 0.0;
+        var count = 0;
+        for (let b of a) {
+          for (let weight of b) {
+            sum += Math.abs(weight);
+            count++;
+          }
+        }
+        this.absoluteWeightMean.push(count / sum)
+      }
+
+
       this.drawCanvas();
     });
   }
@@ -637,6 +653,7 @@ export class ModelComponent implements OnInit {
     counts.push(oc);
     
     this.weights = [];
+    this.absoluteWeightMean = []
     for (let i = 0; i < counts.length - 1; i++) {
       const count_c = counts[i];
       const count_n = counts[i + 1];
@@ -648,7 +665,9 @@ export class ModelComponent implements OnInit {
           this.weights[i][j].push(this.sampleNormalDistribution(0, 1));
         }
       }
+      this.absoluteWeightMean.push(1.0)
     }
+
 
     this.drawCanvas();
   }
@@ -704,7 +723,7 @@ export class ModelComponent implements OnInit {
         for (let k = 0; k < no_nodes_n; k++) {
           var node_y1 = (k + 1) / (no_nodes_n + 1);
           var weight = this.weights[0][k][j]
-          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, weight, width, height);
+          this.draw_connection(ctx, 0, node_x, node_y, node_x1, node_y1, weight, width, height);
         }
 
         // Draw circle
@@ -731,7 +750,7 @@ export class ModelComponent implements OnInit {
         for (let k = 0; k < no_nodes_n; k++) {
           var node_y1 = (k + 1) / (no_nodes_n + 1);
           var weight = this.weights[i + bonus - 1][k][j]
-          this.draw_connection(ctx, node_x, node_y, node_x1, node_y1, weight, width, height);
+          this.draw_connection(ctx, i + bonus - 1, node_x, node_y, node_x1, node_y1, weight, width, height);
         }
 
         // Draw circle
@@ -768,7 +787,7 @@ export class ModelComponent implements OnInit {
     ctx.stroke();
   }
 
-  draw_connection(ctx: any, node_x1: number, node_y1: number, node_x2: number, node_y2: number, weight: number, width: number, height: number) {
+  draw_connection(ctx: any, i:number, node_x1: number, node_y1: number, node_x2: number, node_y2: number, weight: number, width: number, height: number) {
     var r = 255;
     var g = 255;
     var b = 255;
@@ -776,7 +795,7 @@ export class ModelComponent implements OnInit {
     else            { r = 0;   g = 133; b = 190; }
 
     var x = Math.abs(weight);
-    var alpha = 1 - 1 / Math.exp(x);
+    var alpha = 1 - 1 / Math.exp(this.absoluteWeightMean[i] * x);
     alpha *= alpha;
 
     ctx.strokeStyle = `rgb(${r},${g},${b},${alpha})`;
