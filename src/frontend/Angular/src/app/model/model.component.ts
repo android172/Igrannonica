@@ -99,7 +99,7 @@ export class ModelComponent implements OnInit {
   buttonDisable : boolean = true;
   flagP : boolean = false;
 
-  selectedLF: number = 0;
+  selectedLF: number = 4;
   selectedO: number = 0;
   selectedRM: number = 0;
   selectedPT: number = 1;
@@ -146,6 +146,7 @@ export class ModelComponent implements OnInit {
   public snapshot: number = -1;
   public annSettings: any;
   public ioColumns: any;
+  public nizAnnSettings : any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -237,13 +238,14 @@ export class ModelComponent implements OnInit {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
           this.modelData =  JSON.parse(res);
-          // console.log(this.modelData);
+           console.log(res);
           this.snapshot = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns = this.modelData.IOColumns;
           console.log(this.snapshot);
           console.log(this.annSettings);
           console.log(this.ioColumns);
+          /*  SNAPSHOT  */
           if(this.snapshot == 0)
           {
             this.imeS("Default snapshot");
@@ -271,9 +273,9 @@ export class ModelComponent implements OnInit {
                 this.pomocniNizKolone = [];
                 this.ulazneKolone = [];
                 this.izlazneKolone = [];
-                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
                 let nizUlazi = this.ioColumns[0];
                 let nizIzlazi = this.ioColumns[1];
+                /* ULAZNE/IZLAZNE KOLONE */
                 for(let j = 0; j < nizUlazi.length; j++)
                 {
                   for(let i = 0; i < this.kolone.length; i++)
@@ -284,22 +286,16 @@ export class ModelComponent implements OnInit {
                     }
                   }
                 }
-                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
-                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
                 for(let j = 0; j < nizIzlazi.length; j++)
                 {
                   for(let i = 0; i < this.kolone.length; i++)
                   {
                     if(nizIzlazi[j] == i)
                     {
-                      // console.log("******************" + this.kolone[i]);
                       this.pomocniNizKolone.push({value : this.kolone[i], type : "Output"});
                     }
                   }
                 }
-                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
-                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!" + this.kolone);
                 for(let i = 0; i < this.kolone.length; i++)
                 {
                   let ind = 0;
@@ -313,9 +309,6 @@ export class ModelComponent implements OnInit {
                     this.pomocniNizKolone.push({value : this.kolone[i], type : "None"});
                   }
                 }
-                console.log("KOLONE 2 PROBA: " + this.pomocniNizKolone);
-                console.log("KOLONE 2 LENGTH: " + this.pomocniNizKolone.length);
-
                 for(let i = 0; i < this.kolone.length; i++)
                 {
                   for(let j = 0; j < this.pomocniNizKolone.length; j++)
@@ -336,8 +329,61 @@ export class ModelComponent implements OnInit {
                 this.brojI = 1;
                 console.log(this.brojU);
                 this.buttonDisable = false;
-                this.PosaljiSnapshot2.emit(this.snapshot);
+                /* ANN SETTINGS */
+                
+                this.nizAnnSettings = Object.values(this.annSettings);
+                console.log(this.nizAnnSettings);
+                (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
+                (<HTMLInputElement>document.getElementById("lr")).value = this.nizAnnSettings[1]+"";
+                (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
+                (<HTMLInputElement>document.getElementById("noe")).value = this.nizAnnSettings[3]+"";
+                // current epoch - 4
+                this.brojU = this.nizAnnSettings[5];
+                this.brojI = this.nizAnnSettings[6];
+                this.hiddLay = [];
+                this.aktFunk = [];
+                this.nizCvorova = [];
+                this.brHL = 0;
+                this.hiddLay =  this.nizAnnSettings[7];
+                this.nizCvorova = Object.assign([], this.hiddLay);
+                this.brHL = this.nizCvorova.length;
+                console.log("CVOROVI: " + this.nizCvorova);
+                console.log("BR HL : " + this.brHL);
                 this.recreateNetwork();
+                this.aktFunk = this.nizAnnSettings[8];
+                (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
+                (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
+                if(this.nizAnnSettings[0] == 1)
+                {
+                  this.tip = 1;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                else
+                {
+                  this.tip = 0;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
+                if(this.nizAnnSettings[13].length != 0)
+                {
+                  (<HTMLInputElement>document.getElementById("mementum")).value = this.nizAnnSettings[13]+"";
+                }
+                if(this.nizAnnSettings[14] == 0){
+                  this.flag = false;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+                }
+                else{
+                  this.flag = true;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+                  (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
+                }
+                this.PosaljiSnapshot2.emit(this.snapshot);
               },error =>{
               console.log(error.error);
             }
@@ -564,13 +610,15 @@ export class ModelComponent implements OnInit {
     var str = event.target.value;
     this.selectedPT = Number(str);
     this.check();
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       this.klasifikacija = true;
+      this.selectedLF = 4;
     }
     else
     {
       this.klasifikacija = false;
+      this.selectedLF = 0;
     }
   }
 
@@ -1401,7 +1449,7 @@ export class ModelComponent implements OnInit {
   pripremiPredikciju()
   {
     console.log("PRIPREMI PREDIKCIJU");
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
       (<HTMLInputElement>document.getElementById("nazivIzlaza0")).innerHTML = "Output";
@@ -1419,7 +1467,7 @@ export class ModelComponent implements OnInit {
     let ind = 0;
 
     //ciscenje ako su ostale vrednosti od prethodne predikcije
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = "";
     }
@@ -1457,7 +1505,7 @@ export class ModelComponent implements OnInit {
       res=>{
         console.log("USPESNO");
         console.log(res);
-        if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+        if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
         {
           (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
         }

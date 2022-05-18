@@ -71,7 +71,7 @@
 
                             <div id="grupaP">
                                 <h4> Problem type </h4>
-                                <select name="" id="dd3" (change)="selectPT($event)">
+                                <select name="" id="dd4" (change)="selectPT($event)">
                                     <option id="ddp" value="1">Classification</option>
                                     <option id="ddp" value="0">Regression</option>
                                 </select>
@@ -110,7 +110,7 @@
                                     <option id="ddp" value="8">RMSprop</option>
                                     <option id="ddp" value="9">SGD</option>
                                 </select>
-                                <input *ngIf="mementum==true">
+                                <input id="mementum" *ngIf="mementum==true">
                             </div>
 
                         </div>
