@@ -855,16 +855,16 @@ export class ModelComponent implements OnInit {
     }
     else{
 
-      if(this.brHL >= 1){
+      if(this.brHL >= 2){
         this.brHL--;
+        this.hiddLay.pop();
+        this.aktFunk.pop();
+        this.nizCvorova.pop();
         this.recreateNetwork();
       }
       else{
-        this.brHL = 0;
+        this.brHL = 1;
       }
-      this.hiddLay.pop();
-      this.aktFunk.pop();
-      this.nizCvorova.pop();
     }
     //this.recreateNetwork();
   }
@@ -1280,6 +1280,11 @@ export class ModelComponent implements OnInit {
          this.brojI = 1;
          console.log(this.brojU);
          this.buttonDisable = false;
+         this.buttonDisable = false;
+         this.hiddLay = [3,3,3,3,3];
+         this.nizCvorova = [3,3,3,3,3];
+         this.brHL = 5;
+         this.aktFunk = [0,0,0,0,0];
          this.PosaljiSnapshot2.emit(id);
          this.recreateNetwork();
       },error =>{
@@ -1320,6 +1325,10 @@ export class ModelComponent implements OnInit {
           this.brojI = 1;
          }
          this.buttonDisable = false;
+         this.hiddLay = [3,3,3,3,3];
+         this.nizCvorova = [3,3,3,3,3];
+         this.brHL = 5;
+         this.aktFunk = [0,0,0,0,0];
          this.recreateNetwork();
       },error =>{
        console.log(error.error);
