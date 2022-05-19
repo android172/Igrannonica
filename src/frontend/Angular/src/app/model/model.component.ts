@@ -1302,6 +1302,7 @@ export class ModelComponent implements OnInit {
         console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
+        console.log(this.jsonMetrika[0]);
         console.log(this.testR);
         this.checkType();
       },
@@ -1527,7 +1528,7 @@ export class ModelComponent implements OnInit {
         }
   
       }
-      this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
     
     this.charts = new ApexCharts(document.querySelector("#chart"), options);
   }

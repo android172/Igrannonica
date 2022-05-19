@@ -388,9 +388,9 @@
                                 <td id="rtrain">{{rtrain}}</td>
                             </tr>
                         </table>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                        <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
                             Show confusion matrix for training and test dataset
-                        </button>
+                        </button>    
                     </div>
                 </div>
             </div>
@@ -454,23 +454,27 @@
 
         <div class="modal fade" id="exampleModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-            <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                <div class="modal-header" style="border: none;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Konfuziona matrica testnog skupa</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                <div class="modal-header" style="border: none; padding-bottom: 0px;">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style=" text-align: center;">
-                    <div *ngFor="let m of mtest; let ind = index" style="margin-left: 180px">
-                        <div style="color: white;" id="conMat" *ngFor="let i of mtest[ind]">
-                            <div style="width: 50px; height: 50px; float: left; border: 1px solid white; padding-top: 15px; text-align: center;">{{(i/maxNizaT).toFixed(3)}}</div>
-                        </div>
-                        <div style="width: 100px; height: 50px"></div>
+                    <h6 class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Training dataset's confusion matrix</h6>
+                    <div id="chart">
+                        
+                    </div>
+                    <br>
+                    <br>
+                    <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6>
+                    <div id="chart1" *ngIf="imaTestni==true">
+                        
                     </div>
                 </div>
                 
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
+    
         <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
