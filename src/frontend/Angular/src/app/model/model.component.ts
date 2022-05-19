@@ -147,6 +147,8 @@ export class ModelComponent implements OnInit {
   public annSettings: any;
   public ioColumns: any;
   public nizAnnSettings : any;
+  public general: any;
+  public nizGeneral : any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -242,6 +244,11 @@ export class ModelComponent implements OnInit {
           this.snapshot = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns = this.modelData.IOColumns;
+          this.general = this.modelData.General;
+          this.nizGeneral = Object.values(this.general);
+          (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
+          (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
+          console.log(this.nizGeneral[1]);
           console.log(this.snapshot);
           console.log(this.annSettings);
           console.log(this.ioColumns);
