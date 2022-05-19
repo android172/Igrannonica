@@ -20,7 +20,7 @@
                 <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
             </div>
         </div>
-        <div class="row d-flex justify-content-center">
+        <div class="row d-flex justify-content-between">
             <div class="col-md-4" id="div2">
                 <div id="divUI">
                     <p>Select I/O Columns</p>
@@ -49,7 +49,7 @@
                     <div id="poruka1"></div>
                     <div id="poruka2"></div>
                 </div>
-                <div id="box">
+                <div class="row" id="box">
                     <div id="podesavanja">
                         
                         <div id="grupa12">
@@ -167,90 +167,93 @@
                         
                     </div>
                 </div>
-                <div id="grupa1">
 
-                    <div id="podesavanja2">
-                        <div id="grupa">
-                            <h4> Number of epochs </h4>
-                            <input type="number" id="noe" name="noe" value="15">
+                <div class="row">
+                    <div id="grupa1" class="col-md-12 d-flex">
+    
+                        <div class="col-md-6" id="podesavanja2">
+                            <div id="grupa">
+                                <h4> Number of epochs </h4>
+                                <input type="number" id="noe" name="noe" value="15">
+                            </div>
+                    
+                            <div id="grupa">
+                                <h4> Learning rate </h4>
+                                <input type="number" id="lr" name="lr" value="0.03">
+                            </div>
                         </div>
-                
-                        <div id="grupa">
-                            <h4> Learning rate </h4>
-                            <input type="number" id="lr" name="lr" value="0.03">
+    
+                        <div class="d-flex justify-content-center" id="boxZT">
+
+                            <h4 id="tekstZT">Započni treniranje</h4>
+                            <ng-template [ngIf]="buttonPlay">
+                                <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
+                            </ng-template>
+    
+                            <ng-template [ngIf]="buttonPause">
+                                <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                                        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+                                      </svg>
+                                </a>
+                            </ng-template>
+    
+                            <!-- <ng-template [ngIf]="buttonDisable == false">
+                                <a class="play-btn-disable"></a>
+                            </ng-template> -->
+    
+                            <ng-template [ngIf]="buttonContinue">
+                                <a class="play-btn-continue" (click)="nastaviTrening()" ></a>
+                            </ng-template>
+                            
+                            <!-- stari kod -->
+                            <!-- <div *ngIf="!buttonDisable; else onesposobi">
+                                <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
+                            </div>
+                            <ng-template #onesposobi>
+                                <a class="play-btn-disable"></a>
+                            </ng-template> -->
+                            
+                            <!--
+                            <button id="pokreniM" (click)="modalService.open('modal-1');">
+                                <img id="playbutton" src="assets/play-button.png">
+                            </button>
+                            -->
+                            <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                                    <div class="modal-header pt-4" style="border-bottom: none;">
+                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Da li zelite prvo da sacuvate izmene?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer" style="border-top: none;">
+                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Pokreni bez cuvanja</button>
+                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- <jw-modal id="modal-1">
+                                <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
+                                <p>
+                                    <br>
+                                    <br>
+                                    Da li zelite prvo da sacuvate izmene?
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <button id="popupDugme1" (click)="treniraj(1);" (click)="modalService.close('modal-1');">Sacuvaj izmene</button>
+                                    <button id="popupDugme2" (click)="treniraj(2);" (click)="modalService.close('modal-1');">Pokreni bez cuvanja</button>
+                                </p>
+                            </jw-modal> -->
                         </div>
-                    </div>
-
-                    <div id="boxZT">
-
-                        <ng-template [ngIf]="buttonPlay">
-                            <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
-                        </ng-template>
-
-                        <ng-template [ngIf]="buttonPause">
-                            <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()" >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
-                                    <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
-                                  </svg>
-                            </a>
-                        </ng-template>
-
-                        <!-- <ng-template [ngIf]="buttonDisable == false">
-                            <a class="play-btn-disable"></a>
-                        </ng-template> -->
-
-                        <ng-template [ngIf]="buttonContinue">
-                            <a class="play-btn-continue" (click)="nastaviTrening()" ></a>
-                        </ng-template>
-                        
-                        <!-- stari kod -->
-                        <!-- <div *ngIf="!buttonDisable; else onesposobi">
-                            <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
-                        </div>
-                        <ng-template #onesposobi>
-                            <a class="play-btn-disable"></a>
-                        </ng-template> -->
-                        
                         <!--
-                        <button id="pokreniM" (click)="modalService.open('modal-1');">
+                        <button id="pokreniM" (click)="treniraj()">
                             <img id="playbutton" src="assets/play-button.png">
                         </button>
-                        -->
                         <h4 id="tekstZT">Započni treniranje</h4>
-                        <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                            <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                                <div class="modal-header pt-4" style="border-bottom: none;">
-                                <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Da li zelite prvo da sacuvate izmene?</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-footer" style="border-top: none;">
-                                <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Pokreni bez cuvanja</button>
-                                <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        <!-- <jw-modal id="modal-1">
-                            <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
-                            <p>
-                                <br>
-                                <br>
-                                Da li zelite prvo da sacuvate izmene?
-                                <br>
-                                <br>
-                                <br>
-                                <button id="popupDugme1" (click)="treniraj(1);" (click)="modalService.close('modal-1');">Sacuvaj izmene</button>
-                                <button id="popupDugme2" (click)="treniraj(2);" (click)="modalService.close('modal-1');">Pokreni bez cuvanja</button>
-                            </p>
-                        </jw-modal> -->
+                        -->
                     </div>
-                    <!--
-                    <button id="pokreniM" (click)="treniraj()">
-                        <img id="playbutton" src="assets/play-button.png">
-                    </button>
-                    <h4 id="tekstZT">Započni treniranje</h4>
-                    -->
                 </div>
             </div>
         </div>
