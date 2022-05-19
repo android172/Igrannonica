@@ -151,7 +151,6 @@ p
  /* display: flex;*/
   /* width: 848px; */
   height: 350px;
-  /* float: right; */
   box-sizing: border-box;
 }
 
@@ -373,11 +372,11 @@ h4{
 
 #box
 {
-  width: 100%;
+  width: 95%;
   height: 250px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  /* float: left; */
+  float: right;
  /* padding-top: 25px;
   padding-left: 30px;*/
   overflow: none;
@@ -387,6 +386,7 @@ h4{
  /* margin-right: 50px;*/
   /* margin-left: 50px; */
   background-color: #272741;
+  margin-right: 0%;
 }
 
 #grupa
@@ -419,13 +419,13 @@ h4{
 }
 
 #grupa1{
-  /* float: left; */
   height: 90px;
   margin-top: 0px;
   margin-bottom: 20px;
   /* margin-left: 50px; */
   /* margin-right: 0px; */
-  /* width: 790px; */
+  width: 95%;
+  margin-left: 5%;
 }
 
 #grupa12{
@@ -457,6 +457,7 @@ h4{
   margin-top: 20px;
  /* margin-right: 50px;*/
   background-color: #272741;
+  float: right;
  }
 
  #boxZT{
