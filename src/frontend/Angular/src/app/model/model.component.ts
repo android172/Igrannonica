@@ -83,7 +83,7 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
-  public mementum: boolean=false;
+  public momentum: boolean=false;
   public pomocna: boolean = false;
   public prikazi: boolean = false;
   public prikazi1: boolean = false;
@@ -129,7 +129,7 @@ export class ModelComponent implements OnInit {
   public ptrain: String = "";
   public rtest: String = "";
   public rtrain: String = "";
-  public optimizationParams:number[] = [];
+  public optimizationParams: any;
 
   public prikaziPredikciju: boolean = false;
 
@@ -399,7 +399,7 @@ export class ModelComponent implements OnInit {
                 (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
                 if(this.nizAnnSettings[13].length != 0)
                 {
-                  (<HTMLInputElement>document.getElementById("mementum")).value = this.nizAnnSettings[13]+"";
+                  (<HTMLInputElement>document.getElementById("momentum")).value = this.nizAnnSettings[13]+"";
                 }
                 if(this.nizAnnSettings[14] == 0){
                   this.flag = false;
@@ -1181,6 +1181,9 @@ export class ModelComponent implements OnInit {
     this.inputCol=inputs;
     this.outputCol=outputs;
 
+    if(this.momentum==true)
+      this.optimizationParams=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -1354,12 +1357,12 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  checkMementum()
+  checkMomentum()
   {
     if(this.selectedO==8 || this.selectedO==9)
-      this.mementum=true;
+      this.momentum=true;
     else
-      this.mementum=false;
+      this.momentum=false;
   }
 
   checkType()

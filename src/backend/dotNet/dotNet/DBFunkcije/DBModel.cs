@@ -228,7 +228,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("RegularizationRate"),
                             Enum.Parse<LossFunction>(reader.GetString("LossFunction")),
                             Enum.Parse<Optimizer>(reader.GetString("Optimizer")),
-                            stringToFloatArray(reader.GetString("OptimizationParams")),
+                            reader.GetFloat("OptimizationParams"),
                             reader.GetInt32("CrossValidationK")
                             );
                         return settings;
@@ -282,6 +282,7 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
                 cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
+                cmd.Parameters.AddWithValue("@op", json.OptimizationParams);
                 //Console.WriteLine(json.ActivationFunctions[0]);
 
                 s = "";
@@ -334,7 +335,7 @@ namespace dotNet.DBFunkcije
 
                 cmd.Parameters.AddWithValue("@o", json.Optimizer.ToString());
 
-                cmd.Parameters.AddWithValue("@op", floatArrayToString(json.OptimizationParams));
+                //cmd.Parameters.AddWithValue("@op", floatArrayToString(json.OptimizationParams));
 
                 cmd.Parameters.AddWithValue("@rm", json.Regularization.ToString());
 

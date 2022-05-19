@@ -100,7 +100,7 @@
                     
                             <div id="grupaP">
                                 <h4> Optimizer </h4>
-                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMementum()">
+                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
                                     <option id="ddp" value="0">AdaDelta</option>
                                     <option id="ddp" value="1">AdaGrad</option>
                                     <option id="ddp" value="2">Adam</option>
@@ -112,7 +112,7 @@
                                     <option id="ddp" value="8">RMSprop</option>
                                     <option id="ddp" value="9">SGD</option>
                                 </select>
-                                <input id="mementum" *ngIf="mementum==true">
+                                <input id="momentum" *ngIf="momentum==true">
                             </div>
 
                         </div>
@@ -506,7 +506,7 @@
             </div>
           </div>
     
-        <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border: none;">
@@ -524,7 +524,7 @@
                 
             </div>
             </div>
-        </div>
+        </div> -->
         <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
