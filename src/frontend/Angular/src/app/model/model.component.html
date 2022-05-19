@@ -410,9 +410,10 @@
                                 <td id="rtrain">{{rtrain}}</td>
                             </tr>
                         </table>
-                        <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                        <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
                             Show confusion matrix for training and test dataset
-                        </button>    
+                        </button> -->
+                        <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalM">Show confusion matrix</button>  
                     </div>
                 </div>
             </div>
@@ -487,7 +488,7 @@
                     </div>
                     <br>
                     <br>
-                    <!-- <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6> -->
+                    <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6>
                     <div id="chart1">
                         
                     </div>
@@ -520,21 +521,21 @@
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border-bottom: none; padding: 30px;">
-                <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: bisque; margin: 0px;">Čuvanje modela</h5>
+                <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: bisque; margin: 0px;">Save model</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
                 <!-- <div style="color: beige;">Ime modela</div> -->
                 <!-- <div style="color: bisque;">Ime modela</div> -->
-                <input type="text" id="bs2" autocomplete="off" placeholder="Unesite naziv modela">
+                <input type="text" id="bs2" autocomplete="off" placeholder="Enter modal name">
                 <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
                 <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
                 <!-- <div style="color: bisque;">Opis modela</div> -->
-                <textarea rows="5" cols="50" id="opisModela" placeholder="Unesite opis modela"></textarea>
+                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter modal description"></textarea>
                 <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
                 </div>
                 <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
-                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Sačuvaj</button>
+                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Save</button>
                 </div>
             </div>
             </div>
