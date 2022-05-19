@@ -137,11 +137,13 @@ export class ModelComponent implements OnInit {
   public RSE: number[]=[];
 
   public charts: any;
+  public charts1: any;
   public inputCol: any[]=[];
   public outputCol: any[]=[];
   public matTrainData: any[] = [];
-  public grafTrainData: any[]=[];
+  public matTestData: any[] = [];
   public indeksiData: any[]=[];
+  public indeksiData1: any[]=[];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -1031,6 +1033,7 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
         console.log(this.testR);
@@ -1069,34 +1072,36 @@ export class ModelComponent implements OnInit {
 
   setujMetrikuK()
   {
-    var max = this.nadjiMaxTrain();
     if(this.testR.length==0)
         this.imaTestni=false; 
-      else
-        this.imaTestni==true;
+    else if(this.testR.length==1)
+        this.imaTestni=true;
+    
     console.log(this.imaTestni);   
-    this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+    console.log(this.testR.length);
+
+    var max = this.nadjiMaxTrain();
+    
+      var max1 = this.nadjiMaxTest();
+
+    
+      this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+      this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
+      this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
+      this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
+      this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
+      this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+      this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
+
+      this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
+    
+
     this.atrain = (Number(this.jsonMetrika[1][0]['Accuracy'])).toFixed(3);
-    
-    this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
     this.btrain = (Number(this.jsonMetrika[1][0]['BalancedAccuracy'])).toFixed(3);
-
-    this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
     this.ctrain = (Number(this.jsonMetrika[1][0]['CrossEntropyLoss'])).toFixed(3);
-   
-    this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
     this.ftrain = (Number(this.jsonMetrika[1][0]['F1Score'])).toFixed(3);
-    
-    this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
     this.htrain = (Number(this.jsonMetrika[1][0]['HammingLoss'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
     this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
-
-    this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
     this.rtrain = (Number(this.jsonMetrika[1][0]['Recall'])).toFixed(3);
 
     this.matTrainData = this.jsonMetrika[1][0]['ConfusionMatrix'];
@@ -1174,10 +1179,101 @@ export class ModelComponent implements OnInit {
               color: '#490661'
             }]
         }}
-  }
+      }
 
     }
+
+    
+      var nizJson1 = [];
+      for(let i=this.matTestData.length-1; i>=0; i--)
+      {
+        for(let j=this.matTestData.length-1; j>=0; j--)
+          this.matTestData[i][j]=Number(Number(this.matTestData[i][j]/max1).toFixed(3));
+        this.indeksiData1[i]=i;  
+        nizJson1.push({name: this.indeksiData1[i] + '', data: this.matTestData[i]});
+      }
+      var options1 = {
+        chart: {
+          type: 'heatmap',
+          foreColor: '#ffffff'
+        },
+        series: nizJson1,
+        xaxis: {
+          categories: this.indeksiData1
+        },
+        legend: {
+          labels: {
+              colors: '#ffffff',
+              useSeriesColors: false
+          },
+        onItemHover: {
+            highlightDataSeries: false
+        }
+        },
+        title: {
+          text: undefined,
+          align: 'left',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize:  '14px',
+            fontWeight:  'bold',
+            fontFamily:  undefined,
+            color:  '#ffffff'
+          },
+      },
+        theme: {
+          mode: 'light', 
+          palette: 'palette10', 
+          monochrome: {
+              enabled: true,
+              color: '#1c0e5c',
+              shadeTo: '#fca2ac',
+              shadeIntensity: 0.25
+          }
+      },
+      plotOptions: {
+        heatmap: {
+          colorScale: {
+            ranges: [{
+                from: 0,
+                to: 0.25,
+                color: '#ff70a7'
+              },
+              {
+                from: 0.26,
+                to: 0.50,
+                color: '#bd21ba'
+              },
+              {
+                from: 0.51,
+                to: 0.75,
+                color: '#630584'
+              },
+              {
+                from: 0.76,
+                to: 1,
+                color: '#490661'
+              }]
+          }}
+        }
+  
+      }
+      this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    
     this.charts = new ApexCharts(document.querySelector("#chart"), options);
+  }
+
+  prikaziMatrice()
+  {
+    this.charts.render();
+    if(this.imaTestni==true)
+    {
+      this.charts1.render();
+      console.log("Prikazao sam obe");
+    }
   }
 
   setujMetrikuR()
@@ -1235,10 +1331,39 @@ export class ModelComponent implements OnInit {
      return this.maxNizaTr; 
   }
 
+  nadjiMaxTest()
+  {
+    var p=0;
+    var t;
+    this.mtest = this.jsonMetrika[0][0]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtest.length;i++)
+       for(let j=0;j<this.mtest[i].length;j++)
+       {
+          this.nizPoljaTest[p]=this.mtest[i][j];
+          p++;
+       }
+
+    for(let i=0;i<this.nizPoljaTest.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTest.length;j++)
+       {
+         if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
+         {
+           t=this.nizPoljaTest[i];
+           this.nizPoljaTest[i]=this.nizPoljaTest[j];
+           this.nizPoljaTest[j]=t;
+         }
+       }
+    }
+     this.maxNizaT=this.nizPoljaTest[0];
+     return this.maxNizaT; 
+  }
+
   colapseLoss()
   {
     this.prikazi=true;
-    (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
+    // (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
   }
   
   colapseStatistics()
