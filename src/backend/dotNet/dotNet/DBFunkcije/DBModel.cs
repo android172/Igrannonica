@@ -66,6 +66,32 @@ namespace dotNet.DBFunkcije
             }
             return null;
         }
+        public Model modelFull(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "select * from model where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                    if (reader.Read())
+                    {
+                        Model ex = new Model();
+                        ex.Id = reader.GetInt32("id");
+                        ex.Name = reader.GetString("Naziv");
+                        ex.CreatedDate = reader.GetDateTime("napravljen");
+                        ex.UpdatedDate = reader.GetDateTime("obnovljen");
+                        ex.Vlasnik = reader.GetInt32("ideksperimenta");
+                        ex.Opis = reader.GetString("opis");
+                        return ex;
+                    }
+                }
+            }
+            return null;
+        }
         public int proveriModel(string ime, int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))

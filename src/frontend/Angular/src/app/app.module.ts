@@ -32,6 +32,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ModalModule } from './_modal';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -78,6 +79,7 @@ export const url = "http://localhost:5008";
     NgbModule,
     NgChartsModule,
     ModalModule,
+    NgApexchartsModule,
     SimpleNotificationsModule.forRoot()
   ],
   providers: [

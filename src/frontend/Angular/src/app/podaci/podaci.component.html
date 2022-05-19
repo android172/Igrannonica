@@ -1,3 +1,4 @@
+
 <div id="body1">
 
 
@@ -42,7 +43,12 @@
                 </div>
                 <div class="space">
                     <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
-                    <button id="deleteSnap" (click)="izbrisiSnapshot()" ><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
+                    <button id="deleteSnap" (click)="izbrisiSnapshot()">
+                        <span class='text'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/></svg>
+                        </span>
+                    </button>
                 </div>
                 <div class="space">
                     <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Save</button>
@@ -97,8 +103,14 @@
                     </button>
                </div>
                 <div class="col-sm-5 d-flex justify-content-center">        
-                    <button id="undoRedoDugme"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme"><i (click)="tryRedoAction()" class="fa fa-redo mt-1" style="font-size:22px;color:#CED9FF;"></i></button> 
+                    <button id="undoRedoDugme" (click)="tryUndoAction()" style="font-size:22px;color:#CED9FF;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                      </svg></button>  
+                    <button id="undoRedoDugme" (click)="tryRedoAction()" style="font-size:22px;color:#CED9FF;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                      </svg></button> 
                 </div>   
             </div>
         </div>
@@ -324,6 +336,98 @@
         </div>
     </div> -->
 
+    <!-- Tooltips -->
+    <span id="tooltip-test" class="hovertext" (mouseleave)="hideTooltip('test')" data-tooltip=
+        "       Create test dataset
+
+        Test dataset can be defined in 2 ways:
+        1) Random train-test split - Rows of currently 
+          loaded dataset divided into train and test sections. 
+          Each section share determined by ratio parameter.
+        2) Load from file - Load test rows from file. All
+          previously loaded rows will be labeled fortraining. 
+          Supported file formats: CSV, Excel, JSON.
+        ">
+    </span>
+    <span id="tooltip-encoding" class="hovertext" (mouseleave)="hideTooltip('encoding')" data-tooltip=
+        "      Encode selected columns
+
+        Only categorical columns can be encoded.
+        
+        Supported methods:
+        1) Label encoding - Encodes column categories into
+          natural numbers from [0] to [number of classes - 1] 
+        2) One-hot encoding - Creates a new column for each
+          category. A column of a class will be set to 1 only
+          for rows of that class, 0 otherwise.
+        ">
+    </span>
+    <span id="tooltip-outlier" class="hovertext" (mouseleave)="hideTooltip('outlier')" data-tooltip=
+        "     Remove outliers
+        
+        Remove outlier rows for selected columns.
+        Only applicable to numerical columns.
+        Which rows are classified as outliers
+        is determined by the detection method.
+
+        The following methods require threshold
+        hyperparameter (positive real numbers):
+        1) Standard Deviation - Usually around 2. 
+        2) Quantiles - Must be smaller than one.
+          Typical values range from 0.1 to 0.25.
+        3) Z-score - Usually 3 or larger.
+        ">
+    </span>
+    <span id="tooltip-normalization" class="hovertext" (mouseleave)="hideTooltip('normalization')" data-tooltip=
+        "     Data normalization
+        
+        Scales selected numerical columns.
+        Supported methods:
+        1) Absolute max scaling - Scales columns
+          from (-max, +max) to (-1, 1), where
+          `max` is absolute maximum of a column. 
+        2) Min-Max scaling - Scales columns
+          from(min, max) to (0, 1).
+        3) Z-score scaling - Scales columns in
+          accordance to their z-score.
+        ">
+    </span>
+    <span id="tooltip-na" class="hovertext" (mouseleave)="hideTooltip('na')" data-tooltip=
+        "     Missing values handling
+
+        Empty and zero fields of selected columns
+        can be automatically categorized as NA values.
+
+        Methods for dropping missing values:
+        1) Row wise - Drops all NA rows from dataset
+        2) Column wise - Drops all NA columns from
+          dataset
+        3) Pair wise - Drops all NA rows of from
+          selected columns
+
+        Methods for imputing NA values:
+        1) Mean, Median, Mode - Computes said metric
+          and replacesNA fields with it.
+        2) Value - Replaces NA fields with given value
+        3) Regression - creates linear regression
+          between selected columns and one NA column. 
+        ">
+    </span>
+    <span id="tooltip-plot" class="hovertext" (mouseleave)="hideTooltip('plot')" data-tooltip=
+        "        Data Visualization
+
+        Draws selected diagram for selected columns.
+
+        Supported plots:
+        1) Scatter    - up to 6 numerical columns
+        2) Box    - 1 numerical + 1 categorical (optional)
+        3) Violin    - 1 numerical + 1 categorical (optional) 
+        4) Bar     - up to 2 categorical columns
+        5) Histogram - up to 4 numerical columns
+        6) Density    - up to 6 numerical columns
+        ">
+    </span>
+
     <div class="row d-flex align-items-center justify-content-between p-1" id="tabela-podesavanja">
         <div page class="col-md-9">
             <div class="okvir" id="table">
@@ -445,23 +549,8 @@
                         </button>
                         <div class="collapse" id="collapseTestniSkup">
                             <div id="header-help">
-                                <div id="helper"> 
-                                    <span class="hovertext" data-tooltip=
-                                        "
-                                        Create test dataset:
-
-                                        Test dataset can be defined in 2 ways:
-
-                                        1) Random train-test split -> Rows of currently 
-                                           loaded dataset divided into train and test sections. 
-                                           Each section share determined by ratio parameter.
-
-                                        2) Load from file -> Load test rows from file. 
-                                           All previously loaded rows will be labeled for training. 
-                                           Supported file formats: CSV, Excel, JSON.
-                                        ">
-                                    &#63;
-                                    </span>
+                                <div id="helper-test" class="helper" (mouseenter)="showTooltip('test')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                             <div ngbDropdown class="d-inline-block" style="width: 100%;">
@@ -522,11 +611,8 @@
                         </button>
                         <div class="collapse" id="collapseEnkodiranje">
                             <div id="header-help">
-                                <div id="helper"> 
-                                    <span  class="hovertext" data-tooltip="- Selektovati željene kategorijske kolone 
-                                        - Kliknuti na željeni tip enkodiranja">
-                                    &#63;
-                                    </span>
+                                <div id="helper-encoding" class="helper" (mouseenter)="showTooltip('encoding')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                             <div id="enkodiranjeHolder">
@@ -541,15 +627,8 @@
                         </button>
                         <div class="collapse" id="collapseOutlieri">
                             <div id="header-help">
-                                <div id="helper"> 
-                                    <span class="hovertext" data-tooltip="Uobičajene vrednosti praga:
-                
-                                        Standard Deviation: 2
-                                        Quantiles: ( 0.1, 0.25 )
-                                        Z-score: ( -3, +3 ) 
-                                        ">
-                                        &#63;
-                                      </span>
+                                <div id="helper-outlier" class="helper" (mouseenter)="showTooltip('outlier')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                             <div id="outliers-box">
@@ -579,12 +658,8 @@
                         </button>
                         <div class="collapse" id="collapseNormalizacija">
                             <div id="header-help">
-                                <div id="helper"> 
-                                    <span  class="hovertext" data-tooltip="- Odabrati željeni tip normalizacije
-                                        - Selektovati željene kolone 
-                                        - Primenite podešene vrednosti ">
-                                    &#63;
-                                    </span>
+                                <div id="helper-normalization" class="helper" (mouseenter)="showTooltip('normalization')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                             <div id="norm-box">
@@ -608,14 +683,8 @@
                         </button>
                         <div class="collapse" id="collapseNedVr">
                             <div id="header-help">
-                                <div id="helper"> 
-                                    <span  class="hovertext" data-tooltip="Zamena praznih stringova sa NA:
-                                          - Za odabrane kategorije (kolone)
-                                          Zamena 0 sa NA:
-                                          - Za odabrane kolone sa numerickim
-                                          vrednostima">
-                                    &#63;
-                                    </span>
+                                <div id="helper-na" class="helper" (mouseenter)="showTooltip('na')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                             <div id="select-elements">
@@ -674,7 +743,7 @@
                                 </div>
                                 <div id="regresija-nv">
                                     <input type="text" id="regresija-input" placeholder="Regression:" readonly>
-                                    <button class="btn btn-primary" id="btn-reg" (click)="primeniZaRegression()">apply</button> 
+                                    <button class="btn btn-primary" id="btn-reg" (click)="primeniZaRegression()">Apply</button> 
                                 </div>
                                 </div>
                                 </div>
@@ -777,19 +846,10 @@
             <div class="okvir visinaVizuelizacije ">
                     <div class="naslov p-0 m-0">Data visualization method</div>
                     <div id="header-help">
-                        <div id="helper"> 
-                            <span  class="hovertext" data-tooltip=" Dozvoljen broj i tip kolona:
-                                * Scatterplot - maksimum 6 kolona samo numerickog tipa
-                                * Boxplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
-                                * Violinplot - samo 1 numericka ili 1 numericka i 1 kategoricka kolona
-                                * Barplot - maksimum 2 kolone samo kategorickog tipa
-                                * Histogram - maksimum 4 kolone samo numerickog tipa
-                                * Hexbin- tacno 2 kolone numerickog tipa
-                                * Densityplot- maksimum 6 kolona samo numerickog tipa">
-                            &#63;
-                            </span>
+                        <div id="helper-plot" class="helper" (mouseenter)="showTooltip('plot')">
+                            <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                         </div>
-                </div>
+                    </div>
                     <!-- scatterplot , boxplot, barplot, histogram, frequencyplot-->
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="scatterplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Scatterplot</button> </div> </div>
                 <div class="row p-2"> <div class="col-md-12 text-center"> <button (click)="promena($event)" (click)="ucitajGrafik($event)" id="boxplot" type="button" class="btn btn-secondary dugmiciG" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);">Boxplot</button> </div> </div>
@@ -811,9 +871,23 @@
     <div class="modal-dialog">
       <div class="modal-content" style="background-color: #484864; color:#CED9FF;" >
         <div class="modal-header d-flex align-items-center justify-content-between">
-          <button id="undoRedoDugmeIstorija" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:14px;color:#CED9FF;"></i></button>  
-          <button id="undoRedoDugmeIstorija" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:14px;color:#CED9FF;"></i></button> 
-          <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px;" (click)="obrisiIstoriju()"><i class="fas fa-trash" style="font-size:16px;color:#CED9FF;"></i></button>
+          <button id="undoRedoDugmeIstorija" style="font-size:14px;color:#CED9FF;" (click)="tryUndoAction()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+              </svg>
+          </button>  
+          <button id="undoRedoDugmeIstorija" style="font-size:14px;color:#CED9FF;" (click)="tryRedoAction()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+              </svg>
+          </button> 
+          <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px; font-size:16px;color:#CED9FF;" (click)="obrisiIstoriju()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+              </svg>
+          </button>
           <h3 class="modal-title pt-2 mb-2 mt-0 m-5 p-5 pt-0 pb-0" id="exampleModalLabel">History</h3>
           <!-- <h4><button type="button" id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button></h4> -->
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -6,7 +6,7 @@
                 Izaberi snapshot
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                    <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default Podaci')">Default snapshot</a></li>
+                    <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
                     <div *ngFor="let s of snapshots">
                     <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
                     </div>
@@ -180,12 +180,34 @@
                     </div>
 
                     <div id="boxZT">
-                        <div *ngIf="!buttonDisable; else onesposobi">
+
+                        <ng-template [ngIf]="buttonPlay">
+                            <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
+                        </ng-template>
+
+                        <ng-template [ngIf]="buttonPause">
+                            <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                                    <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+                                  </svg>
+                            </a>
+                        </ng-template>
+
+                        <!-- <ng-template [ngIf]="buttonDisable == false">
+                            <a class="play-btn-disable"></a>
+                        </ng-template> -->
+
+                        <ng-template [ngIf]="buttonContinue">
+                            <a class="play-btn-continue" (click)="nastaviTrening()" ></a>
+                        </ng-template>
+                        
+                        <!-- stari kod -->
+                        <!-- <div *ngIf="!buttonDisable; else onesposobi">
                             <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
                         </div>
                         <ng-template #onesposobi>
                             <a class="play-btn-disable"></a>
-                        </ng-template>
+                        </ng-template> -->
                         
                         <!--
                         <button id="pokreniM" (click)="modalService.open('modal-1');">
@@ -388,9 +410,9 @@
                                 <td id="rtrain">{{rtrain}}</td>
                             </tr>
                         </table>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                        <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
                             Show confusion matrix for training and test dataset
-                        </button>
+                        </button>    
                     </div>
                 </div>
             </div>
@@ -454,23 +476,27 @@
 
         <div class="modal fade" id="exampleModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-            <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                <div class="modal-header" style="border: none;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large">Konfuziona matrica testnog skupa</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                <div class="modal-header" style="border: none; padding-bottom: 0px;">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style=" text-align: center;">
-                    <div *ngFor="let m of mtest; let ind = index" style="margin-left: 180px">
-                        <div style="color: white;" id="conMat" *ngFor="let i of mtest[ind]">
-                            <div style="width: 50px; height: 50px; float: left; border: 1px solid white; padding-top: 15px; text-align: center;">{{(i/maxNizaT).toFixed(3)}}</div>
-                        </div>
-                        <div style="width: 100px; height: 50px"></div>
+                <div id="bodymodal" class="modal-body" style=" text-align: center;">
+                    <h6 class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Training dataset's confusion matrix</h6>
+                    <div id="chart">
+                        
+                    </div>
+                    <br>
+                    <br>
+                    <!-- <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6> -->
+                    <div id="chart1">
+                        
                     </div>
                 </div>
                 
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
+    
         <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
