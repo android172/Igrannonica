@@ -33,15 +33,15 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik mora ponovo da se prijavi!");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (niz == null)
-                    return BadRequest("Nisu unete kolone");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.OneHotEncoding(niz);
                 return Ok("OneHotEncoding izvrseno");
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -56,15 +56,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return Ok("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (niz == null)
-                    return BadRequest("Nisu unete kolone");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.LabelEncoding(niz);
                 return Ok("LabelEncoding izvrseno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -78,15 +82,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (niz.Length == 0)
-                    return BadRequest("Prazan niz");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                if (niz == null)
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.DeleteColumns(niz);
                 return Ok("Obrisane zeljene kolone");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -101,13 +109,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.FillNAWithMean(niz);
                 return Ok("Mean");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [HttpPost("fillWithMedian")]
@@ -120,13 +132,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.FillNAWithMedian(niz);
                 return Ok("Median");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [HttpPost("fillWithMode")]
@@ -139,13 +155,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.FillNAWithMode(niz);
                 return Ok("Mode");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [HttpPost("replaceEmpty")]
@@ -158,15 +178,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (niz.Length == 0)
-                    return BadRequest("Vrednosti za zamenu ne postoje");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.ReplaceEmptyWithNA(niz);
                 return Ok("Zamenjene string vrednosti sa NA");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -181,15 +205,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (niz.Length == 0)
-                    return BadRequest("Vrednosti za zamenu ne postoje");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.ReplaceZeroWithNA(niz);
                 return Ok("Zamenjene 0 vrednosti sa NA");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -204,16 +232,20 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik nije pronadjen"); //BadRequest
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded); //BadRequest
                 if (niz.Length == 0)
-                    return BadRequest("Redovi za brisanje nisu izabrani");
+                    return BadRequest(ErrorMessages.RowNotSelected);
                 eksperiment.DeleteRows(niz);
                 // Ukupan broj redova ucitanog fajla
                 return Ok(eksperiment.GetRowCount().ToString());
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -228,13 +260,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.UpdataValue(row, column, data);
                 return Ok("Polje je izmenjeno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         //ovde
@@ -249,15 +285,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.ScaleAbsoluteMax(kolone);
                 return Ok("Absolute Max Scaling izvrseno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -272,15 +312,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.ScaleMinMax(kolone);
                 return Ok("Min-Max Scaling izvrseno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -295,15 +339,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.ScaleZScore(kolone);
                 return Ok("Z-Score Scaling izvrseno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -318,15 +366,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersStandardDeviation(kolone, threshold);
                 return Ok("Standard Deviation");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -341,15 +393,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersQuantiles(kolone, threshold);
                 return Ok("Quantiles");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -364,15 +420,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersZScore(kolone, threshold);
                 return Ok("ZScore izvresno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -387,15 +447,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersIQR(kolone);
                 return Ok("Z-Score Scaling izvrseno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -410,15 +474,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersIsolationForest(kolone);
                 return Ok("Forest Isolation");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -433,15 +501,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersOneClassSVM(kolone);
                 return Ok("One Class SVM");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -456,15 +528,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije odabrana nijedna kolona.");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.RemoveOutliersByLocalFactor(kolone);
                 return Ok("Local Factor");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -479,13 +555,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DropNAColumns();
                 return Ok("Kolone sa NA vrednostima su obrisane");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -500,13 +580,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DropNAListwise();
                 return Ok("Redovi sa NA vrednostima su obrisani");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -521,15 +605,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if (kolone == null)
-                    return BadRequest("Nije uneta nijedna kolona");
+                    return BadRequest(ErrorMessages.ColumnsNotSelected);
                 eksperiment.DropNAPairwise(kolone);
                 return Ok("Redovi sa NA vrednostima su obrisani za date kolone");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -543,13 +631,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.FillNAWithRegression(idKolone, niz);
                 return Ok("Linearna regresija - uspesno");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -563,18 +655,22 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 if(red == null)
                 {
-                    return BadRequest("Podaci nisu uneti.");
+                    return BadRequest(ErrorMessages.RowNotFilled);
                 }
                 eksperiment.AddRow(red);
                 return Ok("Dodat novi red.");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -588,11 +684,11 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 if (value == "")
                 {
-                    return BadRequest("Podaci nisu uneti.");
+                    return BadRequest(ErrorMessages.FieldNotFilled);
                 }
                 //Console.WriteLine(column + " -- " + value);
                 eksperiment.FillNAWithValue(column, value);
@@ -600,9 +696,13 @@ namespace dotNet.Controllers
                 
                 return Ok("NA vrednosti su zamenjene.");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -616,15 +716,19 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.ToggleColumnsType(idColumn);
 
                 return Ok("Tip kolone je zamenjen");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
