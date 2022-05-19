@@ -1302,8 +1302,6 @@ export class ModelComponent implements OnInit {
         console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
-        console.log(this.jsonMetrika[0]);
-        console.log(this.testR);
         this.checkType();
       },
       error => {
@@ -1348,19 +1346,6 @@ export class ModelComponent implements OnInit {
     console.log(this.testR.length);
 
     var max = this.nadjiMaxTrain();
-    
-      var max1 = this.nadjiMaxTest();
-
-    
-      this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
-      this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
-      this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
-      this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
-      this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
-      this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
-      this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
-
-      this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
     
 
     this.atrain = (Number(this.jsonMetrika[1][0]['Accuracy'])).toFixed(3);
@@ -1449,8 +1434,11 @@ export class ModelComponent implements OnInit {
       }
 
     }
-
-    
+    this.charts = new ApexCharts(document.querySelector("#chart"), options);
+  
+   
+      this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
+      var max1 = this.nadjiMaxTest();
       var nizJson1 = [];
       for(let i=this.matTestData.length-1; i>=0; i--)
       {
@@ -1528,18 +1516,29 @@ export class ModelComponent implements OnInit {
         }
   
       }
+      this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+      this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
+      this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
+      this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
+      this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
+      this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+      this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
+
     this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
     
-    this.charts = new ApexCharts(document.querySelector("#chart"), options);
   }
 
   prikaziMatrice()
   {
-    this.charts.render();
     if(this.imaTestni==true)
     {
+      this.charts.render();
       this.charts1.render();
       console.log("Prikazao sam obe");
+    }
+    else
+    {
+      this.charts.render();
     }
   }
 
