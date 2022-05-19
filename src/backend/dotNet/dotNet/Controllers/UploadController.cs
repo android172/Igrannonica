@@ -55,8 +55,8 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpPost("upload/{idEksperimenta}")]
-        public IActionResult Upload(IFormFile file, int idEksperimenta)
+        [HttpPost("uploadTest/{idEksperimenta}")]
+        public IActionResult UploadTest(IFormFile file, int idEksperimenta)
         {
             try
             {
@@ -66,92 +66,6 @@ namespace dotNet.Controllers
                 var tokenS = jsonToken as JwtSecurityToken;
                 Korisnik korisnik;
                 MLExperiment eksperiment;
-
-                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
-
-                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
-                    eksperiment = Experiment.eksperimenti[idEksperimenta];
-                else
-                    return BadRequest("Korisnik mora ponovo da se prijavi!");
-
-
-                if (file == null)
-                    return BadRequest("Fajl nije unet.");
-
-
-                // cuvanje fajla - putanja 
-                string folder = kreirajFoldere(korisnik.Id, idEksperimenta);
-                if (folder == null)
-                    return BadRequest("Folderi nisu kreirani.");
-                string fileName = file.FileName;
-                string path = Path.Combine(folder, fileName);
-
-                string[] lines = { };
-                List<string> lines2 = new List<string>();
-
-                using (TextFieldParser csvParse = new TextFieldParser(file.OpenReadStream()))
-                {
-                    csvParse.CommentTokens = new string[] { "#" };
-                    csvParse.SetDelimiters(",");
-                    csvParse.HasFieldsEnclosedInQuotes = true;
-
-                    while (!csvParse.EndOfData)
-                    {
-                        string[] line = csvParse.ReadFields();
-
-                        for (var i = 0; i < line.Length; i++)
-                        {
-                            if (line[i].Contains(','))
-                            {
-                                line[i] = "\"" + line[i] + "\"";
-                            }
-                        }
-                        string linija = string.Join(",", line);
-
-                        lines2.Add(linija);
-                    }
-                }
-                lines = lines2.ToArray();
-
-                StringBuilder sb = new StringBuilder();
-
-                foreach (string line in lines)
-                {
-                    sb.AppendLine(line);
-                }
-                // upis u fajl 
-                System.IO.File.WriteAllText(path, sb.ToString());
-                // upis csv-a u bazu 
-                bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
-
-
-
-                eksperiment.LoadDataset(fileName);
-                if (!fajlNijeSmesten)
-                {
-                    return BadRequest("Neuspesan upis csv-a u bazu");
-                }
-                return Ok("Fajl je upisan.");
-            }
-            catch
-            {
-                return BadRequest("Doslo do greske");
-            }
-        }
-
-        [Authorize]
-        [HttpPost("fileUpload/{idEksperimenta}")]
-        public IActionResult UploadAnyFile(IFormFile file, int idEksperimenta)
-        {
-            try
-            {
-                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadToken(token);
-                var tokenS = jsonToken as JwtSecurityToken;
-                Korisnik korisnik;
-                MLExperiment eksperiment;
-
                 if (tokenS != null)
                 {
                     korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
@@ -159,95 +73,57 @@ namespace dotNet.Controllers
                     if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                         eksperiment = Experiment.eksperimenti[idEksperimenta];
                     else
-                        return BadRequest("Korisnik treba ponovo da se prijavi.");
+                        return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 }
                 else
-                    return BadRequest("Korisnik nije ulogovan.");
-
+                    return BadRequest(ErrorMessages.Unauthorized);
                 if (file == null)
-                    return BadRequest("Fajl nije unet.");
-
-                if (CheckFileType(file.FileName))
-                {
-                    Console.WriteLine("Unet je nedozvoljen tip fajla.");
-                    return BadRequest("Unet nedozvoljen tip fajla.");
-                }
-
+                    return BadRequest(ErrorMessages.FileNotGiven);
                 // kreiranje foldera 
                 string folder = kreirajFoldere(korisnik.Id, idEksperimenta);
-                if (folder == null)
-                    return BadRequest("Folderi nisu kreirani.");
-                // cuvanje fajla - putanja 
-                string fileName = file.FileName;
-                string path = Path.Combine(folder, fileName);
-
-                // citanje fajla 
+                // ucitavanje bilo kog fajla 
                 long length = file.Length;
                 using var fileStream = file.OpenReadStream();
                 byte[] bytes = new byte[length];
                 fileStream.Read(bytes, 0, (int)file.Length);
-
-                // upis csv-a u bazu 
-                bool fajlNijeSmesten = db.dbeksperiment.dodajCsv(idEksperimenta, fileName);
-
-                // upis u fajl 
-                System.IO.File.WriteAllBytes(path, bytes);
-
-                eksperiment.LoadDataset(fileName);
-
-                if (!fajlNijeSmesten)
-                {
-                    return BadRequest("Neuspesan upis csv-a u bazu");
-                }
-                return Ok("Fajl je upisan.");
+                eksperiment.LoadDatasetTest(bytes, file.FileName);
+                return Ok("Testni skup ucitan.");
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
-        private static bool CheckFileType(string filename)
+
+        [Authorize]
+        [HttpPost("setRatio/{ratio}")]
+        public IActionResult setRatio(int idEksperimenta, float ratio)
         {
-            string extension = System.IO.Path.GetExtension(filename);
-
-            if (String.Compare(extension, ".csv", true) == 0)
+            try
             {
-                return false;
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                else
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                if (float.IsNaN(ratio))
+                    return BadRequest(ErrorMessages.RatioNotGiven);
+                eksperiment.TrainTestSplit(ratio);
+                return Ok("Dodat ratio.");
             }
-            if (String.Compare(extension, ".json", true) == 0)
+            catch (MLException e)
             {
-                return false;
+                return BadRequest(e.Message);
             }
-            if (String.Compare(extension, ".xlsx", true) == 0)
+            catch
             {
-                return false;
+                return StatusCode(500);
             }
-            if (String.Compare(extension, ".xls", true) == 0)
-            {
-                return false;
-            }
-            if (String.Compare(extension, ".xlsm", true) == 0)
-            {
-                return false;
-            }
-            if (String.Compare(extension, ".xlsb", true) == 0)
-            {
-                return false;
-            }
-            if (String.Compare(extension, ".odf", true) == 0)
-            {
-                return false;
-            }
-            if (String.Compare(extension, ".ods", true) == 0)
-            {
-                return false;
-            }
-            if (String.Compare(extension, ".odt", true) == 0)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         [Authorize]
@@ -286,93 +162,8 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpPost("uploadTest/{idEksperimenta}")]
-        public IActionResult UploadTest(IFormFile file, int idEksperimenta)
-        {
-            try
-            {
-                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadToken(token);
-                var tokenS = jsonToken as JwtSecurityToken;
-                Korisnik korisnik;
-                MLExperiment eksperiment;
-                if (tokenS != null)
-                {
-                    korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
-
-                    if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
-                        eksperiment = Experiment.eksperimenti[idEksperimenta];
-                    else
-                        return BadRequest("Korisnik treba ponovo da se prijavi.");
-                }
-                else
-                    return BadRequest("Korisnik nije ulogovan.");
-                if (file == null)
-                    return BadRequest("Fajl nije unet.");
-                // kreiranje foldera 
-                string folder = kreirajFoldere(korisnik.Id, idEksperimenta);
-                // ucitavanje bilo kog fajla 
-                long length = file.Length;
-                using var fileStream = file.OpenReadStream();
-                byte[] bytes = new byte[length];
-                fileStream.Read(bytes, 0, (int)file.Length);
-                eksperiment.LoadDatasetTest(bytes, file.FileName);
-                return Ok("Testni skup ucitan.");
-            }
-            catch
-            {
-                return BadRequest("Doslo do greske.");
-            }
-        }
-
-        [Authorize]
-        [HttpPost("setRatio/{ratio}")]
-        public IActionResult setRatio(int idEksperimenta, float ratio)
-        {
-            try
-            {
-                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                MLExperiment eksperiment;
-                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
-                    eksperiment = Experiment.eksperimenti[idEksperimenta];
-                else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
-                if (float.IsNaN(ratio))
-                    return BadRequest("Nije unet ratio.");
-                eksperiment.TrainTestSplit(ratio);
-                return Ok("Dodat ratio.");
-            }
-            catch
-            {
-                return BadRequest("Doslo do greske.");
-            }
-        }
-
-        [Authorize]
-        [HttpPost("sacuvajIzmene")]
-        public IActionResult SaveChanges(int idEksperimenta)
-        {
-            try
-            {
-                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                MLExperiment eksperiment;
-                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
-                    eksperiment = Experiment.eksperimenti[idEksperimenta];
-                else
-                    return BadRequest("Korisnik treba ponovo da se prijavi.");
-                //eksperiment.SaveDataset();
-                return Ok("Izmene sacuvane");
-            }
-            catch
-            {
-                return BadRequest("Doslo do greske.");
-            }
-        }
-
-        [Authorize]
         [HttpGet("ColumnTypes")]
-        public string ColumnTypes(int idEksperimenta)
+        public IActionResult ColumnTypes(int idEksperimenta)
         {
             try
             {
@@ -381,13 +172,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return "greska";
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 string kolone = eksperiment.GetColumnTypes();
-                return kolone;
+                return Ok(kolone);
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return "Nisu vraceni tipovi";
+                return StatusCode(500);
             }
         }
     }

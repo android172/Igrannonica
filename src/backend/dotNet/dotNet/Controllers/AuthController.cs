@@ -33,18 +33,18 @@ namespace dotNet.Controllers
         {
             try
             {
-            var user = Authenticate(korisnik);
-            if (user != null)
-            {
-                var token = Generate(user);
-                //Osvezi(user.id,token)
-                return Ok(token);
-            }
-            return NotFound("Ne postoji");
+                var user = Authenticate(korisnik);
+                if (user != null)
+                {
+                    var token = Generate(user);
+                    //Osvezi(user.id,token)
+                    return Ok(token);
+                }
+                return NotFound("ERROR :: Requested user doesn't exist.");
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
 
         }
@@ -85,34 +85,34 @@ namespace dotNet.Controllers
         public IActionResult Register(KorisnikRegister request) {
             try
             {
-            KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
+                KorisnikValid korisnikValid = db.dbkorisnik.dodajKorisnika(new Korisnik(0, request.KorisnickoIme, request.Ime, request.Sifra, request.Email));
             
-            if(korisnikValid.korisnickoIme && korisnikValid.email)
-            {
-                Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
+                if(korisnikValid.korisnickoIme && korisnikValid.email)
+                {
+                    Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
 
-                string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
-                if(!Directory.Exists(putanja))
-                    Directory.CreateDirectory(putanja);
-                return Ok("Registrovan korisnik");
-            }
-            if(!korisnikValid.korisnickoIme)
-            {
-                if(!korisnikValid.email)
-                {
-                    return BadRequest("1");  // Korisnicko ime i email vec postoje
+                    string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
+                    if(!Directory.Exists(putanja))
+                        Directory.CreateDirectory(putanja);
+                    return Ok("Registrovan korisnik");
                 }
-                else
+                if(!korisnikValid.korisnickoIme)
                 {
-                    return BadRequest("2"); // email ispravan // Korisnicko ime vec postoji
+                    if(!korisnikValid.email)
+                    {
+                        return BadRequest("1");  // Korisnicko ime i email vec postoje
+                    }
+                    else
+                    {
+                        return BadRequest("2"); // email ispravan // Korisnicko ime vec postoji
+                    }
                 }
-            }
         
-            return BadRequest("3"); // username ispravan //Email vec postoji
+                return BadRequest("3"); // username ispravan //Email vec postoji
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 

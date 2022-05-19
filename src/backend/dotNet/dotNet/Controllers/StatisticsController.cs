@@ -25,7 +25,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("statistika")]
-        public string getStat(int idEksperimenta)
+        public IActionResult getStat(int idEksperimenta)
         {
             try
             {
@@ -34,13 +34,18 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return null;
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 string statistika = eksperiment.ColumnStatistics();
-                return statistika;
+                return Ok(statistika);
+                
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return null;
+                return StatusCode(500);
             }
         }
 
@@ -54,11 +59,11 @@ namespace dotNet.Controllers
                 {
                     return Ok();
                 }
-                return BadRequest();
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest();
+                return StatusCode(500);
             }
         }
         [HttpPost("Upload/Klasifikacija")]
@@ -71,12 +76,11 @@ namespace dotNet.Controllers
                 {
                     return Ok(1);
                 }
-                return BadRequest();
+                return StatusCode(500);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [HttpGet("Eksperiment")]
@@ -86,10 +90,9 @@ namespace dotNet.Controllers
             {
                 return Ok(new Statistic(db.dbmodel.eksperimentKlasifikacija(id), db.dbmodel.eksperimentRegression(id)));
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [HttpGet("Model")]
@@ -105,10 +108,9 @@ namespace dotNet.Controllers
                     return Ok(sr);
                 return Ok();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
-                return BadRequest();
+                return StatusCode(500);
             }
         }
 

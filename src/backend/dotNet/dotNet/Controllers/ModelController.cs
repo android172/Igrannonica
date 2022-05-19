@@ -32,11 +32,11 @@ namespace dotNet.Controllers
                 List<ModelDto> modeli = db.dbmodel.modeli(id);
                 if (modeli.Count > 0)
                     return Ok(modeli);
-                return BadRequest("Nema modela");
+                return BadRequest(ErrorMessages.ModelNotFound);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -52,7 +52,7 @@ namespace dotNet.Controllers
                 var tokenS = jsonToken as JwtSecurityToken;
                 if (db.dbmodel.proveriModel(ime, id) != -1)
                 {
-                    return BadRequest("Vec postoji model sa tim imenom");
+                    return BadRequest(ErrorMessages.ModelExists);
                 }
                 if (db.dbmodel.dodajModel(ime, id, opis,snapshot))
                 {
@@ -61,11 +61,11 @@ namespace dotNet.Controllers
                         Directory.CreateDirectory(path);
                     return Ok(db.dbmodel.proveriModel(ime,id));
                 }
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -77,15 +77,15 @@ namespace dotNet.Controllers
             {
                 if (db.dbmodel.proveriModel(ime, ideksperimenta) != -1)
                 {
-                    return BadRequest("Vec postoji model sa tim imenom");
+                    return BadRequest(ErrorMessages.ModelExists);
                 }
                 if (db.dbmodel.promeniImeModela(ime, id))
                     return Ok("Promenjeno ime modela");
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -99,11 +99,11 @@ namespace dotNet.Controllers
                 {
                     return Ok("Opis promenjen");
                 }
-                return BadRequest("Opis nije promenjen");
+                return StatusCode(500);
             }
             catch 
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -117,11 +117,11 @@ namespace dotNet.Controllers
                     db.dbmodel.izbrisiModel(id);
                     return Ok("Model izbrisan");
                 }
-                return BadRequest("Model nije izbrisan");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -138,12 +138,12 @@ namespace dotNet.Controllers
                 }
                 else
                 {
-                    return BadRequest("Greska");
+                    return StatusCode(500);
                 }
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -157,7 +157,7 @@ namespace dotNet.Controllers
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -170,37 +170,41 @@ namespace dotNet.Controllers
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
                 Model model = db.dbmodel.model(id);
-                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+
+                if (!Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+
+                eksperiment = Experiment.eksperimenti[idEksperimenta];
+                /*if (!eksperiment.IsDataLoaded(model.Vlasnik))
                 {
-                    eksperiment = Experiment.eksperimenti[idEksperimenta];
-                    /*if (!eksperiment.IsDataLoaded(model.Vlasnik))
-                    {
-                        string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
-                        eksperiment.LoadDataset(model.Vlasnik, csv);
-                    }*/
-                    List<List<int>> kolone = db.dbmodel.Kolone(id);
-                    eksperiment.LoadInputs(kolone[0].ToArray());
-                    eksperiment.LoadOutputs(kolone[1].ToArray());
-                    ANNSettings podesavanja = db.dbmodel.podesavanja(id);
-                    int idSnapshot = db.dbmodel.dajSnapshot(id);
-                    if (idSnapshot == 0)
-                    {
-                        eksperiment.SelectTraningData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
-                    }
-                    else 
-                    {
-                        Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
-                        eksperiment.SelectTraningData(snapshot.csv);
-                    }
-                    eksperiment.ApplySettings(podesavanja);
-                    eksperiment.Start(id);
-                    return Ok("Pocelo treniranje");
+                    string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
+                    eksperiment.LoadDataset(model.Vlasnik, csv);
+                }*/
+                List<List<int>> kolone = db.dbmodel.Kolone(id);
+                eksperiment.LoadInputs(kolone[0].ToArray());
+                eksperiment.LoadOutputs(kolone[1].ToArray());
+                ANNSettings podesavanja = db.dbmodel.podesavanja(id);
+                int idSnapshot = db.dbmodel.dajSnapshot(id);
+                if (idSnapshot == 0)
+                {
+                    eksperiment.SelectTraningData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
                 }
-                return BadRequest("Greska");
+                else 
+                {
+                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
+                    eksperiment.SelectTraningData(snapshot.csv);
+                }
+                eksperiment.ApplySettings(podesavanja);
+                eksperiment.Start(id);
+                return Ok("Pocelo treniranje");
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -212,45 +216,46 @@ namespace dotNet.Controllers
             {
                 if(db.dbmodel.PostaviSnapshot(model, snapshot))
                     return Ok(snapshot);
-                return BadRequest("Nije sacuvan.");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
         [Authorize]
         [HttpGet("Kolone")]
-        public string uzmiKolone(int idEksperimenta,int snapshot)
+        public IActionResult uzmiKolone(int idEksperimenta,int snapshot)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+
+                if (!Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+
+                eksperiment = Experiment.eksperimenti[idEksperimenta];
+                if(snapshot == 0)
                 {
-                    eksperiment = Experiment.eksperimenti[idEksperimenta];
-                    if(snapshot == 0)
-                    {
-                        string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-                        eksperiment.SelectTraningData(csv);
-                        string koloness = eksperiment.GetColumns(csv);
-                        return koloness.Replace('\'', '"');
-                    }
-                    Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
-                    eksperiment.SelectTraningData(snapshot1.csv);
-                    string kolones = eksperiment.GetColumns(snapshot1.csv);
-                    return kolones.Replace('\'', '"');
-                    //return kolones;
+                    string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
+                    eksperiment.SelectTraningData(csv);
+                    string koloness = eksperiment.GetColumns(csv);
+                    return Ok(koloness.Replace('\'', '"'));
                 }
-                return null;
-                //return BadRequest("Ponovo se prijavi.");
+                Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
+                eksperiment.SelectTraningData(snapshot1.csv);
+                string kolones = eksperiment.GetColumns(snapshot1.csv);
+                return Ok(kolones.Replace('\'', '"'));
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return null;
-             //   return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -265,7 +270,7 @@ namespace dotNet.Controllers
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -283,15 +288,19 @@ namespace dotNet.Controllers
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else
-                    return BadRequest("GRESKA");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 metrika = eksperiment.ComputeMetrics(modelId);
                 Console.WriteLine(metrika);
                 return Ok(metrika);
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Nije uspelo");
+                return StatusCode(500);
             }
         }
 
@@ -314,17 +323,17 @@ namespace dotNet.Controllers
                             {
                                 return Ok(modela);
                             }
-                            return BadRequest("Doslo do greske prilikom cuvanja kolona.");
+                            return StatusCode(500);
                         }
-                        return BadRequest("Doslo do greske prilikom cuvanja podesavanja.");
+                        return StatusCode(500);
                     }
-                    return BadRequest("Doslo do greske prilikom pravljenja modela.");
+                    return StatusCode(500);
                 }
-                return BadRequest("Model sa tim imenom vec postoji.");
+                return BadRequest(ErrorMessages.ModelExists);
             }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -335,11 +344,11 @@ namespace dotNet.Controllers
             try
             {
                 var model = db.dbmodel.modelFull(idModela);
-                if (model == null) return BadRequest("Couldn't find a model with given id.");
+                if (model == null) return BadRequest(ErrorMessages.ModelNotFound);
                 var snapshot = db.dbmodel.dajSnapshot(idModela);
-                if (snapshot == -1) return BadRequest("Couldn't load selected dataset.");
+                if (snapshot == -1) return StatusCode(500);
                 var settings = db.dbmodel.podesavanja(idModela);
-                if (settings == null) return BadRequest("Couldn't load model settings.");
+                if (settings == null) return StatusCode(500);
                 var kolone = db.dbmodel.Kolone(idModela);
 
                 var result = new Dictionary<string, object> {
@@ -353,7 +362,7 @@ namespace dotNet.Controllers
             }
             catch
             {
-                return BadRequest("An error has occurred.");
+                return StatusCode(500);
             }
         }
 
@@ -371,19 +380,22 @@ namespace dotNet.Controllers
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else
-                    return BadRequest("GRESKA");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 /*for(int i = 0; i < inputs.Length; i++)
                 {
                     Console.WriteLine(inputs[i]);
                 }*/
                 predikcija = eksperiment.Predict(inputs,modelId);
-                Console.WriteLine(predikcija);
                 return Ok(predikcija);
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return BadRequest("Nije uspelo");
+                return StatusCode(500);
             }
         }
 
@@ -401,15 +413,19 @@ namespace dotNet.Controllers
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else
-                    return BadRequest("GRESKA");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.Stop(idModela);
 
                 return Ok("Pauza");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Nije uspelo");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -426,15 +442,19 @@ namespace dotNet.Controllers
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
                 else
-                    return BadRequest("GRESKA");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.Continue(idModela);
 
                 return Ok("Nastavak treniranja");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Nije uspelo");
+                return StatusCode(500);
             }
         }
     }

@@ -40,13 +40,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawScatterPlot(nizKolona);
                 return Ok("Scatterplot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -61,13 +65,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawBoxPlot(nizKolona);
                 return Ok("BoxPlot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -82,13 +90,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawViolinPlot(nizKolona);
                 return Ok("Violinplot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -103,13 +115,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawBarPlot(nizKolona);
                 return Ok("Barplot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -124,13 +140,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawHistogram(nizKolona);
                 return Ok("Histogram");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -145,13 +165,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawHexbin(nizKolona);
                 return Ok("Hexbin");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -166,13 +190,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawDensityPlot(nizKolona);
                 return Ok("DensityPlot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 
@@ -187,13 +215,17 @@ namespace dotNet.Controllers
                 if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.DrawPiePlot(kolona);
                 return Ok("PiePlot");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Greska");
+                return StatusCode(500);
             }
         }
 

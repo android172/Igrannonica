@@ -414,9 +414,8 @@ dajNaziveHeadera()
   {
     this.http.get(url+"/api/Statistics/statistika?idEksperimenta=" + this.idEksperimenta, {responseType: 'text'}).subscribe(
       (response: any) => {
-        //console.table(response);
+        console.log(response);
         this.jsonStatistika = JSON.parse(response);
-        console.log(this.jsonStatistika);
         this.ucitajStatistiku();
         
         this.tabelaStatistika();
