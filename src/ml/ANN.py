@@ -463,7 +463,8 @@ class ANN:
         CrossEntropyLoss = metrics.log_loss(actual, prediction_prob)
         ConfusionMatrix  = metrics.confusion_matrix(actual, predicted)
         
-        return StatisticsClassification(
+        statistics = {}
+        statistics[0] = StatisticsClassification(
             Accuracy         = Accuracy,
             BalancedAccuracy = BalancedAccuracy,
             Precision        = Precision,
@@ -473,6 +474,7 @@ class ANN:
             CrossEntropyLoss = CrossEntropyLoss,
             ConfusionMatrix  = ConfusionMatrix
         ).__dict__
+        return statistics
         
     # Prediction
     def predict(self, inputs):
