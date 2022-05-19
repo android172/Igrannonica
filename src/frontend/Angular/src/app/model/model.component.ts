@@ -1067,10 +1067,10 @@ export class ModelComponent implements OnInit {
           }
         else{
           this.broj = Number(str);
-          this.recreateNetwork();
+          //this.recreateNetwork();
         }
         this.nizCvorova[i]=this.broj;
-        //this.recreateNetwork();
+        this.recreateNetwork();
       }
     }
   }
