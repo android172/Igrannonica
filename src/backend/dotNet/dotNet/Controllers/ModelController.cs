@@ -7,6 +7,8 @@ using dotNet.Models;
 using dotNet.MLService;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
 
 namespace dotNet.Controllers
 {
@@ -386,5 +388,38 @@ namespace dotNet.Controllers
                 return BadRequest("Nije uspelo");
             }
         }
+        [HttpPost("Save")]
+        public IActionResult sacuvajModel(int ideksperimenta ,int idmodela)
+        {
+            try
+            {
+                MLExperiment eksperiment = Experiment.eksperimenti[ideksperimenta];
+                Model model = db.dbmodel.model(idmodela);
+                eksperiment.SaveModel(model.Name,idmodela);
+                string metrika = eksperiment.ComputeMetrics(idmodela);
+                if(db.dbmodel.podesavanja(idmodela).ANNType == ProblemType.Regression)
+                {
+                    JObject met = JObject.Parse(metrika);
+                    StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
+                    db.dbmodel.upisiStatistiku(idmodela,rg);
+                    return Ok("Model sacuvan");
+                }
+                else if (db.dbmodel.podesavanja(idmodela).ANNType == ProblemType.Classification)
+                {
+                    JObject met = JObject.Parse(metrika);
+                    StatisticsClassification rg = met.GetValue("train").ToObject<StatisticsClassification>();
+                    db.dbmodel.upisiStatistiku(idmodela, rg);
+                    return Ok("Model sacuvan");
+                }
+                return BadRequest("Doslo do greske");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
     }
 }
