@@ -22,13 +22,26 @@
         </div>
     </div>
     <div id="info">
-        <div id="naslov1"><div style="width: 400px; float: left; margin-left: 280px;">Informacije i podesavanja o izabranom modelu</div><i data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" class='fa fa-trash-alt' style='font-size:20px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'></i></div>
+        <div id="naslov1">
+          <div style="width: 400px; float: left; margin-left: 280px;">Informacije i podesavanja o izabranom modelu</div>
+          <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+            </svg>
+          </div>
+        </div>
         <div id="osnovneI">
             <div id="nm">Naziv modela</div>
             <div id="n"></div>
             <div id="nm">Datum kreiranja modela</div>
             <div id="d"></div>
-            <div id="nmo">Opis modela</div><i (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" class='fas fa-pencil-alt' style='font-size:15px;cursor: pointer;'></i>
+            <div id="nmo">Opis modela</div>
+            <div (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" style='font-size:30px;cursor: pointer; color: #f0859e;'>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+            </div>
             <div id="opis"></div>
         </div>
         <div id="pod">
@@ -54,7 +67,7 @@
               <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: x-large;">Opis modela</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div placeholder="" contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
+            <div placeholder="" contenteditable="true" id="bodyc" class="modal-body" style="width: 90%; margin: auto; color: beige; border: 2px solid #bc7ca1; border-radius: 10px;">
               
             </div>
             <div class="modal-footer" style="border: none;">

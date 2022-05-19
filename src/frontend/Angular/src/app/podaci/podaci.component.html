@@ -43,7 +43,12 @@
                 </div>
                 <div class="space">
                     <!-- <button id="deleteSnap"><span class='text'><i style="font-size:24px" class="fa">&#xf014;</i></span></button> -->
-                    <button id="deleteSnap" (click)="izbrisiSnapshot()" ><span class='text'><i style="font-size:20px" class="fas fa-trash-alt"></i></span></button>
+                    <button id="deleteSnap" (click)="izbrisiSnapshot()">
+                        <span class='text'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/></svg>
+                        </span>
+                    </button>
                 </div>
                 <div class="space">
                     <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Save</button>
@@ -98,8 +103,14 @@
                     </button>
                </div>
                 <div class="col-sm-5 d-flex justify-content-center">        
-                    <button id="undoRedoDugme"><i (click)="tryUndoAction()" class="fa fa-undo mt-1" style="font-size:22px;color:#CED9FF;"></i></button>  
-                    <button id="undoRedoDugme"><i (click)="tryRedoAction()" class="fa fa-redo mt-1" style="font-size:22px;color:#CED9FF;"></i></button> 
+                    <button id="undoRedoDugme" (click)="tryUndoAction()" style="font-size:22px;color:#CED9FF;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                      </svg></button>  
+                    <button id="undoRedoDugme" (click)="tryRedoAction()" style="font-size:22px;color:#CED9FF;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                      </svg></button> 
                 </div>   
             </div>
         </div>
@@ -860,9 +871,23 @@
     <div class="modal-dialog">
       <div class="modal-content" style="background-color: #484864; color:#CED9FF;" >
         <div class="modal-header d-flex align-items-center justify-content-between">
-          <button id="undoRedoDugmeIstorija" (click)="tryUndoAction()"><i class="fa fa-undo" style="font-size:14px;color:#CED9FF;"></i></button>  
-          <button id="undoRedoDugmeIstorija" (click)="tryRedoAction()"><i class='fa fa-redo' style="font-size:14px;color:#CED9FF;"></i></button> 
-          <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px;" (click)="obrisiIstoriju()"><i class="fas fa-trash" style="font-size:16px;color:#CED9FF;"></i></button>
+          <button id="undoRedoDugmeIstorija" style="font-size:14px;color:#CED9FF;" (click)="tryUndoAction()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+              </svg>
+          </button>  
+          <button id="undoRedoDugmeIstorija" style="font-size:14px;color:#CED9FF;" (click)="tryRedoAction()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+              </svg>
+          </button> 
+          <button data-toggle="tooltip" title="Obrisi istoriju" id="kantica" style="margin-left: 12px; font-size:16px;color:#CED9FF;" (click)="obrisiIstoriju()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+              </svg>
+          </button>
           <h3 class="modal-title pt-2 mb-2 mt-0 m-5 p-5 pt-0 pb-0" id="exampleModalLabel">History</h3>
           <!-- <h4><button type="button" id="clear-tracker" (click)="obrisiIstoriju()">Obrisi istoriju</button></h4> -->
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
