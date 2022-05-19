@@ -1,22 +1,24 @@
 <div class="container-fluid">
     <div id="body1">
-        <div id="outliers-box">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
-                Izaberi snapshot
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                    <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
-                    <div *ngFor="let s of snapshots">
-                    <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
-                    </div>
-                </ul>
+        <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
+            <div id="outliers-box">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
+                    Izaberi snapshot
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
+                        <div *ngFor="let s of snapshots">
+                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
+                        </div>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div id="div1">
-            <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
-            <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
-            <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
+            <div>
+                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
+                <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
+                <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
+            </div>
         </div>
         <div id="centrirano">
             <div id="div2">
