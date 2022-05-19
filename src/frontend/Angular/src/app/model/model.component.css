@@ -372,7 +372,7 @@ h4{
 
 #box
 {
-  width: 95%;
+  width: 98%;
   height: 250px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
@@ -424,8 +424,8 @@ h4{
   margin-bottom: 20px;
   /* margin-left: 50px; */
   /* margin-right: 0px; */
-  width: 95%;
-  margin-left: 5%;
+  width: 98%;
+  margin-left: 2%;
 }
 
 #grupa12{
@@ -540,7 +540,7 @@ input
   height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
+  /* float: left; */
   overflow: auto;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
