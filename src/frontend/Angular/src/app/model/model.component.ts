@@ -98,6 +98,10 @@ export class ModelComponent implements OnInit {
   cv: number = 0;
 
   buttonDisable : boolean = true;
+  buttonPlay:boolean = true;
+  buttonPause: boolean = false;
+  buttonContinue: boolean= false;
+
   flagP : boolean = false;
 
   selectedLF: number = 4;
@@ -169,6 +173,10 @@ export class ModelComponent implements OnInit {
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
       this.prikaziPredikciju = true;
+
+      this.buttonPlay = true;
+      this.buttonPause = false;
+      this.buttonContinue= false;
       //this.idModela = id;
       // console.log("ID MODELA: " + this.idModela);
     });
@@ -796,6 +804,10 @@ export class ModelComponent implements OnInit {
           }
         )
         this.onInfo("Trening je zapocet.");
+        // pauza   
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
       }
     )
   }
@@ -1727,5 +1739,41 @@ export class ModelComponent implements OnInit {
         console.log(error.error);
       }
     );
+  }
+
+  pauzirajTrening()
+  {
+    this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+
+        // nastavi trening 
+        this.buttonContinue = true;
+        this.buttonPause = false;
+        this.buttonPlay = false; 
+        this.onInfo("Training is paused.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  nastaviTrening()
+  {
+    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+        console.log("Nastavljam"); 
+
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
+        this.onInfo("Training continues.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
   }
 }
