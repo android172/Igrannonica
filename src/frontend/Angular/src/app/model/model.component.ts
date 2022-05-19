@@ -262,6 +262,7 @@ export class ModelComponent implements OnInit {
           this.snapshot = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns = this.modelData.IOColumns;
+          console.log(this.modelData.IOColumns);
           this.general = this.modelData.General;
           this.nizGeneral = Object.values(this.general);
           (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
@@ -269,7 +270,6 @@ export class ModelComponent implements OnInit {
           console.log(this.nizGeneral[1]);
           console.log(this.snapshot);
           console.log(this.annSettings);
-          console.log(this.ioColumns);
           /*  SNAPSHOT  */
           if(this.snapshot == 0)
           {
@@ -380,6 +380,7 @@ export class ModelComponent implements OnInit {
                 (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
                 if(this.nizAnnSettings[0] == 1)
                 {
+                  this.klasifikacija = true;
                   this.tip = 1;
                   this.selectedLF = this.nizAnnSettings[11];
                   console.log(this.selectedLF);
@@ -388,6 +389,7 @@ export class ModelComponent implements OnInit {
                 }
                 else
                 {
+                  this.klasifikacija = false;
                   this.tip = 0;
                   this.selectedLF = this.nizAnnSettings[11];
                   console.log(this.selectedLF);
@@ -408,6 +410,26 @@ export class ModelComponent implements OnInit {
                   (<HTMLInputElement>document.getElementById("toggle")).checked = true;
                   (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
                 }
+                // console.log("ULAZNE KOLONE: " + this.ulazneKolone);
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizUlazi.length; j++)
+                  {
+                    if(i == nizUlazi[j])
+                      this.ulazneKolone.push(this.kolone[i]);
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizIzlazi.length; j++)
+                  {
+                    if(i == nizIzlazi[j])
+                      this.izlazneKolone.push(this.kolone[i]);
+                  }
+                }
+                this.prikaziPredikciju = true;
                 this.PosaljiSnapshot2.emit(this.snapshot);
               },error =>{
               console.log(error.error);
@@ -1138,6 +1160,7 @@ export class ModelComponent implements OnInit {
 
   kreirajModelCuvanje()
   {
+    this.prikaziPredikciju = false;
     var crossVK;
     if(this.flag == false)
       crossVK = 0;
