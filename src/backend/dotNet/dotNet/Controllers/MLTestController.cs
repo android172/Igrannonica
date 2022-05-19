@@ -119,7 +119,7 @@ namespace dotNet.Controllers {
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam,
-                optimizationParams: 0f,
+                 optimizationParams: new float[] { 0f },
                 kFoldCV: 0
                 );
 
@@ -222,7 +222,7 @@ namespace dotNet.Controllers {
                     regularizationRate: 0.0001f,
                     lossFunction: LossFunction.NLLLoss,
                     optimizer: Optimizer.SGD,
-                    optimizationParams: 0.9f,
+                    optimizationParams: new float[] { 0.9f },
                     kFoldCV: 0
                     );
 

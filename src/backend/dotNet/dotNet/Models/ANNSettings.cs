@@ -20,7 +20,7 @@ namespace dotNet.Models {
             float regularizationRate,
             LossFunction lossFunction, 
             Optimizer optimizer,
-            float optimizationParams,
+            float[] optimizationParams,
             int kFoldCV) {
 
             ANNType = aNNType;
@@ -55,7 +55,7 @@ namespace dotNet.Models {
         public float RegularizationRate { get; set; }
         public LossFunction LossFunction { get; set; }
         public Optimizer Optimizer { get; set; }
-        public float OptimizationParams { get; set; }
+        public float[]? OptimizationParams { get; set; }
         public int KFoldCV { get; set; }
 
         // To JSON string

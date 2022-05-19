@@ -129,7 +129,7 @@ export class ModelComponent implements OnInit {
   public ptrain: String = "";
   public rtest: String = "";
   public rtrain: String = "";
-  public optimizationParams: any;
+  public optimizationParams: any[] = [];
 
   public prikaziPredikciju: boolean = false;
 
@@ -1182,7 +1182,7 @@ export class ModelComponent implements OnInit {
     this.outputCol=outputs;
 
     if(this.momentum==true)
-      this.optimizationParams=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+      this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
     this.jsonModel = 
     {
