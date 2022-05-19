@@ -855,16 +855,16 @@ export class ModelComponent implements OnInit {
     }
     else{
 
-      if(this.brHL >= 1){
+      if(this.brHL >= 2){
         this.brHL--;
+        this.hiddLay.pop();
+        this.aktFunk.pop();
+        this.nizCvorova.pop();
         this.recreateNetwork();
       }
       else{
-        this.brHL = 0;
+        this.brHL = 1;
       }
-      this.hiddLay.pop();
-      this.aktFunk.pop();
-      this.nizCvorova.pop();
     }
     //this.recreateNetwork();
   }
