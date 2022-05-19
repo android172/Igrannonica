@@ -1470,8 +1470,10 @@ export class ModelComponent implements OnInit {
 
     }
     this.charts = new ApexCharts(document.querySelector("#chart"), options);
-  
-   
+    
+    if(this.imaTestni==false)
+      return;
+    
       this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
       var max1 = this.nadjiMaxTest();
       var nizJson1 = [];
@@ -1569,11 +1571,15 @@ export class ModelComponent implements OnInit {
     {
       this.charts.render();
       this.charts1.render();
+      (<HTMLDivElement>document.getElementById("chart1")).style.visibility = "visible";
+      (<HTMLDivElement>document.getElementById("bodymodal")).style.height = '680px';
       console.log("Prikazao sam obe");
     }
     else
     {
       this.charts.render();
+      (<HTMLDivElement>document.getElementById("chart1")).style.visibility = "hidden";
+      (<HTMLDivElement>document.getElementById("bodymodal")).style.height = '340px';
     }
   }
 
