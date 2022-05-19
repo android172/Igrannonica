@@ -334,7 +334,7 @@ namespace dotNet.Controllers
         {
             try
             {
-                var model = db.dbmodel.model(idModela);
+                var model = db.dbmodel.modelFull(idModela);
                 if (model == null) return BadRequest("Couldn't find a model with given id.");
                 var snapshot = db.dbmodel.dajSnapshot(idModela);
                 if (snapshot == -1) return BadRequest("Couldn't load selected dataset.");
