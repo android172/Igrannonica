@@ -14,6 +14,7 @@ export class MojiEksperimentiComponent implements OnInit {
   eksperimenti : any[] = [];
   json: any;
   id: any;
+  izabranId: number = -1;
   constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
@@ -73,23 +74,32 @@ export class MojiEksperimentiComponent implements OnInit {
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }
 
-  obrisiE(id: number)
+  obrisiE()
   {
-    if(confirm("Da li ste sigurni da zelite da obrisete ovaj eksperiment?"))
+    
+    for(let i=0;i<this.eksperimenti.length;i++)
     {
-      this.http.delete(url+'/api/Eksperiment/Eksperiment/' + id,{responseType: 'text'}).subscribe(
-        res=>{
-          console.log(res);
-          this.ucitajEksp();
-          var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
-          this.onSuccess("Eksperiment je uspesno obrisan");
-        },
-        error=>{
-          console.log(error.error);
-          this.onError("Eksperiment nije obrisan!");
-      }
-      
-      )
+      if(this.eksperimenti[i].id==this.izabranId)
+      {
+        this.http.delete(url+'/api/Eksperiment/Eksperiment/' + this.eksperimenti[i].id,{responseType: 'text'}).subscribe(
+          res=>{
+            console.log(res);
+            this.ucitajEksp();
+            var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
+            this.onSuccess("Eksperiment je uspesno obrisan");
+          },
+          error=>{
+            console.log(error.error);
+            this.onError("Eksperiment nije obrisan!");
+        }
+        
+        )
     }
+  }
+}
+
+  uzmiId(id: number)
+  {
+    this.izabranId=id;
   }
 }
