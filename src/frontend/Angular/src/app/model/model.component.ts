@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, withLatestFrom } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -16,6 +16,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications'; 
+import * as ApexCharts from 'apexcharts';
 
 @Component({
   selector: 'app-model',
@@ -67,6 +68,7 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
+  public pomocniNizKolone: any[] = [];
   // public pom : boolean = false;
   //public brHL : number = 0;
   //public niz : any[] = [];
@@ -96,9 +98,13 @@ export class ModelComponent implements OnInit {
   cv: number = 0;
 
   buttonDisable : boolean = true;
+  buttonPlay:boolean = true;
+  buttonPause: boolean = false;
+  buttonContinue: boolean= false;
+
   flagP : boolean = false;
 
-  selectedLF: number = 0;
+  selectedLF: number = 4;
   selectedO: number = 0;
   selectedRM: number = 0;
   selectedPT: number = 1;
@@ -128,6 +134,7 @@ export class ModelComponent implements OnInit {
   public prikaziPredikciju: boolean = false;
 
   public klasifikacija: boolean = true;
+
   public MAE1: number[]=[];
   public Adj1: number[]=[];
   public MSE1: number[]=[];
@@ -139,6 +146,23 @@ export class ModelComponent implements OnInit {
   public R2: number[]=[];
   public RSE: number[]=[];
 
+  public modelData: any;
+
+  public snapshot: number = -1;
+  public annSettings: any;
+  public ioColumns: any;
+  public nizAnnSettings : any;
+  public general: any;
+  public nizGeneral : any;
+  public charts: any;
+  public charts1: any;
+  public inputCol: any[]=[];
+  public outputCol: any[]=[];
+  public matTrainData: any[] = [];
+  public matTestData: any[] = [];
+  public indeksiData: any[]=[];
+  public indeksiData1: any[]=[];
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -149,6 +173,10 @@ export class ModelComponent implements OnInit {
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
       this.prikaziPredikciju = true;
+
+      this.buttonPlay = true;
+      this.buttonPause = false;
+      this.buttonContinue= false;
       //this.idModela = id;
       // console.log("ID MODELA: " + this.idModela);
     });
@@ -219,6 +247,7 @@ export class ModelComponent implements OnInit {
       //console.log(this.signalR.data);
     }
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+
   }
 
   ucitajModel(data2: number){
@@ -228,7 +257,186 @@ export class ModelComponent implements OnInit {
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
-          console.log(res);
+          this.modelData =  JSON.parse(res);
+           console.log(res);
+          this.snapshot = this.modelData.Snapshot;
+          this.annSettings = this.modelData.NetworkSettings;
+          this.ioColumns = this.modelData.IOColumns;
+          console.log(this.modelData.IOColumns);
+          this.general = this.modelData.General;
+          this.nizGeneral = Object.values(this.general);
+          (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
+          (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
+          console.log(this.nizGeneral[1]);
+          console.log(this.snapshot);
+          console.log(this.annSettings);
+          /*  SNAPSHOT  */
+          if(this.snapshot == 0)
+          {
+            this.imeS("Default snapshot");
+            sessionStorage.setItem('idSnapshota',"Default snapshot");
+            sessionStorage.setItem('idS',"0");
+          }
+          else
+          {
+            for(let i = 0; i < this.snapshots.length; i++)
+            {
+              if(this.snapshot == this.snapshots[i].id)
+              {
+                this.imeS(this.snapshots[i].ime);
+                sessionStorage.setItem('idSnapshota', this.snapshots[i].ime);
+                sessionStorage.setItem('idS', this.snapshot + "");
+                break;
+              }
+            }
+          }
+
+          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
+            (response: any)=>{
+                this.kolone = Object.assign([],response);   //imena kolona
+                this.kolone2 = [];
+                this.pomocniNizKolone = [];
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                let nizUlazi = this.ioColumns[0];
+                let nizIzlazi = this.ioColumns[1];
+                /* ULAZNE/IZLAZNE KOLONE */
+                for(let j = 0; j < nizUlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizUlazi[j] == i)
+                    {
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Input"});
+                    }
+                  }
+                }
+                for(let j = 0; j < nizIzlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizIzlazi[j] == i)
+                    {
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Output"});
+                    }
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  let ind = 0;
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                      ind=1;
+                  }
+                  if(ind == 0)
+                  {
+                    this.pomocniNizKolone.push({value : this.kolone[i], type : "None"});
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                    {
+                      this.kolone2.push(this.pomocniNizKolone[j]);
+                    }
+                  }
+                }
+
+                for(let i=0; i<this.kolone.length-1; i++)
+                {
+                  this.ulazneKolone[i] = this.kolone[i];
+                }
+                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+                this.brojU = this.ulazneKolone.length;
+                this.brojI = 1;
+                console.log(this.brojU);
+                this.buttonDisable = false;
+                /* ANN SETTINGS */
+                
+                this.nizAnnSettings = Object.values(this.annSettings);
+                console.log(this.nizAnnSettings);
+                (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
+                (<HTMLInputElement>document.getElementById("lr")).value = this.nizAnnSettings[1]+"";
+                (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
+                (<HTMLInputElement>document.getElementById("noe")).value = this.nizAnnSettings[3]+"";
+                // current epoch - 4
+                this.brojU = this.nizAnnSettings[5];
+                this.brojI = this.nizAnnSettings[6];
+                this.hiddLay = [];
+                this.aktFunk = [];
+                this.nizCvorova = [];
+                this.brHL = 0;
+                this.hiddLay =  this.nizAnnSettings[7];
+                this.nizCvorova = Object.assign([], this.hiddLay);
+                this.brHL = this.nizCvorova.length;
+                console.log("CVOROVI: " + this.nizCvorova);
+                console.log("BR HL : " + this.brHL);
+                this.recreateNetwork();
+                this.aktFunk = this.nizAnnSettings[8];
+                (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
+                (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
+                if(this.nizAnnSettings[0] == 1)
+                {
+                  this.klasifikacija = true;
+                  this.tip = 1;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                else
+                {
+                  this.klasifikacija = false;
+                  this.tip = 0;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
+                if(this.nizAnnSettings[13].length != 0)
+                {
+                  (<HTMLInputElement>document.getElementById("mementum")).value = this.nizAnnSettings[13]+"";
+                }
+                if(this.nizAnnSettings[14] == 0){
+                  this.flag = false;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+                }
+                else{
+                  this.flag = true;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+                  (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
+                }
+                // console.log("ULAZNE KOLONE: " + this.ulazneKolone);
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizUlazi.length; j++)
+                  {
+                    if(i == nizUlazi[j])
+                      this.ulazneKolone.push(this.kolone[i]);
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizIzlazi.length; j++)
+                  {
+                    if(i == nizIzlazi[j])
+                      this.izlazneKolone.push(this.kolone[i]);
+                  }
+                }
+                this.prikaziPredikciju = true;
+                this.PosaljiSnapshot2.emit(this.snapshot);
+              },error =>{
+              console.log(error.error);
+            }
+            );
+            this.selectedSS=this.snapshot;
+            console.log(this.selectedSS);
         },
         error=>{
           console.log(error.error);
@@ -449,13 +657,15 @@ export class ModelComponent implements OnInit {
     var str = event.target.value;
     this.selectedPT = Number(str);
     this.check();
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       this.klasifikacija = true;
+      this.selectedLF = 4;
     }
     else
     {
       this.klasifikacija = false;
+      this.selectedLF = 0;
     }
   }
 
@@ -616,6 +826,10 @@ export class ModelComponent implements OnInit {
           }
         )
         this.onInfo("Trening je zapocet.");
+        // pauza   
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
       }
     )
   }
@@ -946,6 +1160,7 @@ export class ModelComponent implements OnInit {
 
   kreirajModelCuvanje()
   {
+    this.prikaziPredikciju = false;
     var crossVK;
     if(this.flag == false)
       crossVK = 0;
@@ -954,6 +1169,7 @@ export class ModelComponent implements OnInit {
 
     var inputs = [];
     var outputs = [];
+
     for (let i in this.kolone2) {
       var kolona = this.kolone2[i];
       if (kolona.type === 'Input')
@@ -961,6 +1177,9 @@ export class ModelComponent implements OnInit {
       else if (kolona.type === 'Output')
         outputs.push(i);
     }
+
+    this.inputCol=inputs;
+    this.outputCol=outputs;
 
     this.jsonModel = 
     {
@@ -1042,8 +1261,9 @@ export class ModelComponent implements OnInit {
     }
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
-         this.kolone = Object.assign([],response);
+         this.kolone = Object.assign([],response);   //imena kolona
          this.kolone2 = [];
+         console.log("----------------------" + this.kolone);
          this.ulazneKolone = [];
          this.izlazneKolone = [];
          for (var kolona of this.kolone) {
@@ -1078,6 +1298,10 @@ export class ModelComponent implements OnInit {
          console.log(response);
          this.kolone = Object.assign([],response);
          this.kolone2 = [];
+         this.brojI = 0;
+         this.brojU = 0;
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
          if(this.kolone2.length == 0)
          {
           for (var kolona of this.kolone) {
@@ -1110,6 +1334,7 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
         this.checkType();
@@ -1149,32 +1374,207 @@ export class ModelComponent implements OnInit {
   {
     if(this.testR.length==0)
         this.imaTestni=false; 
-      else
-        this.imaTestni==true;
+    else if(this.testR.length==1)
+        this.imaTestni=true;
+    
     console.log(this.imaTestni);   
-    this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
-    this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
-    
-    this.btest = (Number(this.jsonMetrika[0]['BalancedAccuracy'])).toFixed(3);
-    this.btrain = (Number(this.jsonMetrika[1]['BalancedAccuracy'])).toFixed(3);
+    console.log(this.testR.length);
 
-    this.ctest = (Number(this.jsonMetrika[0]['CrossEntropyLoss'])).toFixed(3);
-    this.ctrain = (Number(this.jsonMetrika[1]['CrossEntropyLoss'])).toFixed(3);
+    var max = this.nadjiMaxTrain();
+    
+
+    this.atrain = (Number(this.jsonMetrika[1][0]['Accuracy'])).toFixed(3);
+    this.btrain = (Number(this.jsonMetrika[1][0]['BalancedAccuracy'])).toFixed(3);
+    this.ctrain = (Number(this.jsonMetrika[1][0]['CrossEntropyLoss'])).toFixed(3);
+    this.ftrain = (Number(this.jsonMetrika[1][0]['F1Score'])).toFixed(3);
+    this.htrain = (Number(this.jsonMetrika[1][0]['HammingLoss'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
+    this.rtrain = (Number(this.jsonMetrika[1][0]['Recall'])).toFixed(3);
+
+    this.matTrainData = this.jsonMetrika[1][0]['ConfusionMatrix'];
+
+    console.log(max);
+    var nizJson = [];
+    for(let i=this.matTrainData.length-1; i>=0; i--)
+    {
+      for(let j=this.matTrainData.length-1; j>=0; j--)
+        this.matTrainData[i][j]=Number(Number(this.matTrainData[i][j]/max).toFixed(3));
+      this.indeksiData[i]=i;  
+      nizJson.push({name: this.indeksiData[i] + '', data: this.matTrainData[i]});
+    }
+
+    var options = {
+      chart: {
+        type: 'heatmap',
+        foreColor: '#ffffff'
+      },
+      series: nizJson,
+      xaxis: {
+        categories: this.indeksiData
+      },
+      legend: {
+        labels: {
+            colors: '#ffffff',
+            useSeriesColors: false
+        }
+      },
+      title: {
+        text: undefined,
+        align: 'left',
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize:  '14px',
+          fontWeight:  'bold',
+          fontFamily:  undefined,
+          color:  '#ffffff'
+        },
+    },
+      theme: {
+        mode: 'light', 
+        palette: 'palette10', 
+        monochrome: {
+            enabled: true,
+            color: '#1c0e5c',
+            shadeTo: '#fca2ac',
+            shadeIntensity: 0.25
+        }
+    },
+    plotOptions: {
+      heatmap: {
+        colorScale: {
+          ranges: [{
+              from: 0,
+              to: 0.25,
+              color: '#ff70a7'
+            },
+            {
+              from: 0.26,
+              to: 0.50,
+              color: '#bd20ba'
+            },
+            {
+              from: 0.51,
+              to: 0.75,
+              color: '#630585'
+            },
+            {
+              from: 0.76,
+              to: 1,
+              color: '#490661'
+            }]
+        }}
+      }
+
+    }
+    this.charts = new ApexCharts(document.querySelector("#chart"), options);
+  
    
-    this.ftest = (Number(this.jsonMetrika[0]['F1Score'])).toFixed(3);
-    this.ftrain = (Number(this.jsonMetrika[1]['F1Score'])).toFixed(3);
-    
-    this.htest = (Number(this.jsonMetrika[0]['HammingLoss'])).toFixed(3);
-    this.htrain = (Number(this.jsonMetrika[1]['HammingLoss'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
+      this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
+      var max1 = this.nadjiMaxTest();
+      var nizJson1 = [];
+      for(let i=this.matTestData.length-1; i>=0; i--)
+      {
+        for(let j=this.matTestData.length-1; j>=0; j--)
+          this.matTestData[i][j]=Number(Number(this.matTestData[i][j]/max1).toFixed(3));
+        this.indeksiData1[i]=i;  
+        nizJson1.push({name: this.indeksiData1[i] + '', data: this.matTestData[i]});
+      }
+      var options1 = {
+        chart: {
+          type: 'heatmap',
+          foreColor: '#ffffff'
+        },
+        series: nizJson1,
+        xaxis: {
+          categories: this.indeksiData1
+        },
+        legend: {
+          labels: {
+              colors: '#ffffff',
+              useSeriesColors: false
+          },
+        onItemHover: {
+            highlightDataSeries: false
+        }
+        },
+        title: {
+          text: undefined,
+          align: 'left',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize:  '14px',
+            fontWeight:  'bold',
+            fontFamily:  undefined,
+            color:  '#ffffff'
+          },
+      },
+        theme: {
+          mode: 'light', 
+          palette: 'palette10', 
+          monochrome: {
+              enabled: true,
+              color: '#1c0e5c',
+              shadeTo: '#fca2ac',
+              shadeIntensity: 0.25
+          }
+      },
+      plotOptions: {
+        heatmap: {
+          colorScale: {
+            ranges: [{
+                from: 0,
+                to: 0.25,
+                color: '#ff70a7'
+              },
+              {
+                from: 0.26,
+                to: 0.50,
+                color: '#bd21ba'
+              },
+              {
+                from: 0.51,
+                to: 0.75,
+                color: '#630584'
+              },
+              {
+                from: 0.76,
+                to: 1,
+                color: '#490661'
+              }]
+          }}
+        }
+  
+      }
+      this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+      this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
+      this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
+      this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
+      this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
+      this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+      this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
 
-    this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
-    this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
+    this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    
+  }
+
+  prikaziMatrice()
+  {
+    if(this.imaTestni==true)
+    {
+      this.charts.render();
+      this.charts1.render();
+      console.log("Prikazao sam obe");
+    }
+    else
+    {
+      this.charts.render();
+    }
   }
 
   setujMetrikuR()
@@ -1202,75 +1602,69 @@ export class ModelComponent implements OnInit {
       this.RSE1[i]=Number(Number(this.testR[i]['RSE']).toFixed(3));
     }
   }
-
   
-
-  kreirajMatricuTest()
+  nadjiMaxTrain()
   {
     var p=0;
-    this.mtest = this.jsonMetrika[0]['ConfusionMatrix'];
-    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
-    for(let i=0;i<this.mtest.length;i++)
-       for(let j=0;j<this.mtest[i].length;j++)
-       {
-          this.nizPoljaTest[p]=this.mtest[i][j];
-          console.log(this.nizPoljaTest[p]);
-          p++;
-       }
-       this.nadjiMaxTest();
-  }
-
-  nadjiMaxTest()
-  {
     var t;
-    for(let i=0;i<this.nizPoljaTest.length-1;i++)
-      for(let j=1;j<this.nizPoljaTest.length;j++)
-      {
-        if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
-        {
-          t=this.nizPoljaTest[i];
-          this.nizPoljaTest[i]=this.nizPoljaTest[j];
-          this.nizPoljaTest[j]=t;
-        }
-      }
-      this.maxNizaT= this.nizPoljaTest[0];
-  }
-  
-  kreirajMatricuTrain()
-  {
-    var p=0;
-    this.mtrain = this.jsonMetrika[1]['ConfusionMatrix'];
+    this.mtrain = this.jsonMetrika[1][0]['ConfusionMatrix'];
     // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)
        {
           this.nizPoljaTrain[p]=this.mtrain[i][j];
-          console.log(this.nizPoljaTrain[p]);
           p++;
        }
-       this.nadjiMaxTrain();
+
+    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTrain.length;j++)
+       {
+         if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
+         {
+           t=this.nizPoljaTrain[i];
+           this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
+           this.nizPoljaTrain[j]=t;
+         }
+       }
+    }
+     this.maxNizaTr=this.nizPoljaTrain[0];
+     return this.maxNizaTr; 
   }
 
-  nadjiMaxTrain()
+  nadjiMaxTest()
   {
+    var p=0;
     var t;
-    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
-      for(let j=1;j<this.nizPoljaTrain.length;j++)
-      {
-        if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
-        {
-          t=this.nizPoljaTrain[i];
-          this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
-          this.nizPoljaTrain[j]=t;
-        }
-      }
-      this.maxNizaTr= this.nizPoljaTrain[0];
+    this.mtest = this.jsonMetrika[0][0]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtest.length;i++)
+       for(let j=0;j<this.mtest[i].length;j++)
+       {
+          this.nizPoljaTest[p]=this.mtest[i][j];
+          p++;
+       }
+
+    for(let i=0;i<this.nizPoljaTest.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTest.length;j++)
+       {
+         if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
+         {
+           t=this.nizPoljaTest[i];
+           this.nizPoljaTest[i]=this.nizPoljaTest[j];
+           this.nizPoljaTest[j]=t;
+         }
+       }
+    }
+     this.maxNizaT=this.nizPoljaTest[0];
+     return this.maxNizaT; 
   }
 
   colapseLoss()
   {
     this.prikazi=true;
-    (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
+    // (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
   }
   
   colapseStatistics()
@@ -1281,7 +1675,7 @@ export class ModelComponent implements OnInit {
   pripremiPredikciju()
   {
     console.log("PRIPREMI PREDIKCIJU");
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
       (<HTMLInputElement>document.getElementById("nazivIzlaza0")).innerHTML = "Output";
@@ -1299,7 +1693,7 @@ export class ModelComponent implements OnInit {
     let ind = 0;
 
     //ciscenje ako su ostale vrednosti od prethodne predikcije
-    if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = "";
     }
@@ -1337,7 +1731,7 @@ export class ModelComponent implements OnInit {
       res=>{
         console.log("USPESNO");
         console.log(res);
-        if((<HTMLSelectElement>document.getElementById("dd3")).value == "1")
+        if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
         {
           (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
         }
@@ -1368,5 +1762,41 @@ export class ModelComponent implements OnInit {
         console.log(error.error);
       }
     );
+  }
+
+  pauzirajTrening()
+  {
+    this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+
+        // nastavi trening 
+        this.buttonContinue = true;
+        this.buttonPause = false;
+        this.buttonPlay = false; 
+        this.onInfo("Training is paused.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  nastaviTrening()
+  {
+    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+        console.log("Nastavljam"); 
+
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
+        this.onInfo("Training continues.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
   }
 }

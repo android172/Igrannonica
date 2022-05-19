@@ -386,5 +386,56 @@ namespace dotNet.Controllers
                 return BadRequest("Nije uspelo");
             }
         }
+
+        [Authorize]
+        [HttpPost("Model/Pauziraj")]
+        public IActionResult ModelPauziraj(int idEksperimenta, int idModela)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                {
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                }
+                else
+                    return BadRequest("GRESKA");
+
+                eksperiment.Stop(idModela);
+
+                return Ok("Pauza");
+            }
+            catch
+            {
+                return BadRequest("Nije uspelo");
+            }
+        }
+        [Authorize]
+        [HttpPost("Model/NastaviTrening")]
+        public IActionResult ModelNastaviTrening(int idEksperimenta, int idModela)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                {
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                }
+                else
+                    return BadRequest("GRESKA");
+
+                eksperiment.Continue(idModela);
+
+                return Ok("Nastavak treniranja");
+            }
+            catch
+            {
+                return BadRequest("Nije uspelo");
+            }
+        }
     }
 }

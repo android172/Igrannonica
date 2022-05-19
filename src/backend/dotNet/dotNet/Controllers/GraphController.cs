@@ -176,5 +176,26 @@ namespace dotNet.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("piePlot/{idEksperimenta}/{kolona}")]
+        public IActionResult getPiePlot(int idEksperimenta, int kolona)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                else
+                    return BadRequest("");
+                eksperiment.DrawPiePlot(kolona);
+                return Ok("PiePlot");
+            }
+            catch
+            {
+                return BadRequest("Greska");
+            }
+        }
+
     }
 }
