@@ -238,6 +238,23 @@ export class PodaciComponent implements OnInit {
   selektovanS : number = -1;
   selektovanSime : string = "";
 
+
+  // Tooltip
+  showTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    var helper = (<HTMLDivElement>document.getElementById(`helper-${tooltipType}`));
+    tooltip.style.left = `${helper.getBoundingClientRect().left}px`;
+    tooltip.style.top = `${helper.getBoundingClientRect().top}px`;
+    tooltip.style.display = 'unset';
+  }
+
+  hideTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    tooltip.style.display = 'none';
+  }
+
+
+
   onFileSelected(event:any) 
   {
     const file:File = event.target.files[0];
@@ -1480,7 +1497,7 @@ dajNaziveHeadera()
       this.zScoreScaling();
     }
     this.selectedNorm = ""; 
-    (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Izaberite tip normalizacije"; 
+    (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Scaling method"; 
   }
    // OUTLIERS 
 
