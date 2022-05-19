@@ -20,8 +20,8 @@
                 <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
             </div>
         </div>
-        <div id="centrirano">
-            <div id="div2">
+        <div class="row d-flex">
+            <div class="col-md-5" id="div2">
                 <div id="divUI">
                     <p>Select I/O Columns</p>
                     <div id="ulaziIzlaz">
@@ -31,20 +31,20 @@
                         </label> -->
                         <div class="pb-3" *ngFor="let e of kolone2; let i = index" style="color: #fff; font-size: 15px;">
                             <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
-                            <button class="column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
+                            <button class="kolona column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
                                 {{e.value}}
                             </button>
-                            <button class="column-type-none" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 2rem;" *ngIf="e.type==='None'">
+                            <button class="kolona column-type-none" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 25%;" *ngIf="e.type==='None'">
                                 {{e.value}}
                             </button>
-                            <button class="column-type-output" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 4rem;" *ngIf="e.type==='Output'">
+                            <button class="kolona column-type-output" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 50%;" *ngIf="e.type==='Output'">
                                 {{e.value}}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="div21">
+            <div class="col-md-7" id="div21">
                 <div id="poruke">
                     <div id="poruka1"></div>
                     <div id="poruka2"></div>
