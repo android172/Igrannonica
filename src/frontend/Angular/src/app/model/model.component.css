@@ -561,7 +561,9 @@ input
 }
 
 #model-canvas{
-  width: 90%;
+  width: 100%;
+  max-width: 978px;
+  max-height: 550px;
 }
 
 #body1{
