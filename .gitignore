@@ -45,3 +45,5 @@ bin/Debug
 bin/Release
 src/frontend/Angular/node_modules/.bin/cssesc
 src/frontend/Angular/.angular/cache/13.2.5/angular-webpack/717d70062af0e8064064c762c51167b8ecd8f15c/0.pack
+data/
+*.ipynb
