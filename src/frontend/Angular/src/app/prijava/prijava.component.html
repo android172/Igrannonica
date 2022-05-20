@@ -1,13 +1,13 @@
 <div id="body">
     <div id="divDugmePocetna">
-        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
+        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Back</button>
     </div>
     <div id="centrirano">
         <div class="box">
             <div id="divbox">
                 <div id="divdugmad">
-                <button id="dugmepr">Prijava</button> 
-                <button id="dugmerg" routerLink="/registracija">Registracija</button> 
+                <button id="dugmepr">Login</button> 
+                <button id="dugmerg" routerLink="/registracija">Register</button> 
                 <hr id="l1"><hr id="l2">
                 </div>
 <!--
@@ -21,11 +21,11 @@
             -->
             <form>
                 <div id="p"></div>
-                <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Korisnicko ime" (keyup)="provera1()">
+                <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Username" (keyup)="provera1()">
                 <div id="podaci1"></div>
             
                 <div id="passw">
-                    <input id="sifra" type="password" name="sifra"  placeholder="Lozinka" (keyup)="provera2()" > 
+                    <input id="sifra" type="password" name="sifra"  placeholder="Password" (keyup)="provera2()" > 
                     <span (click)="promeniVidljivost()"><i id="eye" class="fa fa-eye" aria-hidden="true"></i></span>
                 </div>
                 <div id="podaci2"></div>
@@ -33,11 +33,11 @@
                 
                 <div id="divdugme">
                     <div id="poruka"></div>
-                    <button id="dgm" (click)="prijava()" >Prijavi se</button> 
+                    <button id="dgm" (click)="prijava()" >Login</button> 
                 </div>
             </form>
 
-                <p>Nemate nalog?<a routerLink="/registracija">Registrujte se</a> sada.</p>
+                <p>Don't have an accound yet?<a routerLink="/registracija">Register</a> now.</p>
             </div>
         </div>
     </div>

@@ -77,8 +77,8 @@ input:focus, textarea:focus, select:focus{
     color: #fff;
     background: none;
     border: none;
-    padding-right: 18px;
-    padding-left: 22px;
+    padding-left: 38px;
+    padding-right: 42px;
     opacity: 1;
 }
 

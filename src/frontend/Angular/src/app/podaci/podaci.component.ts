@@ -1,16 +1,18 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../shared/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications'; 
 import { DatePipe } from '@angular/common';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { saveAs } from 'file-saver';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRef, ViewChild,ElementRef } from '@angular/core';
 import { Options, LabelType } from '@angular-slider/ngx-slider';
 import { HtmlParser } from '@angular/compiler';
+import { EventManager } from '@angular/platform-browser';
+import { ChartData, ChartDataset, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-podaci',
@@ -19,7 +21,15 @@ import { HtmlParser } from '@angular/compiler';
 })
 export class PodaciComponent implements OnInit {
 
-  @Output() PosaljiDefaultSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  private eventsSubscription!: Subscription;
+
+  @Output() PosaljiSnapshot:EventEmitter<number> = new EventEmitter<number>();
+  @Input() idS2! : Observable<number>;
+
+  @Input() snapshots!: any[];
+
+  @Output() PosaljiPoruku = new EventEmitter();
+
   value: number = 50;
   options: Options = {
     floor: 0,
@@ -31,11 +41,35 @@ export class PodaciComponent implements OnInit {
   
   ngOnInit(): void {
     //this.getStat();
+    this.eventsSubscription = this.idS2.subscribe((data)=>{this.primiSnapshot2(data);});
     this.ucitanipodaci();
     this.ucitajNaziv();
-    this.ucitajSnapshotove();
+    //this.ucitajPodatkeSnapshota(0);
+    //this.imeSnapshota("Default snapshot");
+    // this.ucitajSnapshotove();
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
+
+  primiSnapshot2(data : number){
+
+    let snap = sessionStorage.getItem('idSnapshota');
+    let idsnap = sessionStorage.getItem('idS');
+    if((<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML != snap)
+    {
+      this.ucitajPodatkeSnapshotaP(data);
+      for(let i=0; i<this.snapshots.length; i++)
+      {
+        if(this.snapshots[i].id == data)
+        {
+          this.imeSnapshota(this.snapshots[i].ime);
+          return;
+        }
+      }
+      this.imeSnapshota("Default snapshot");
+    }
+ 
+  }
+
   @ViewChild('contentmdl') content:any;
   @ViewChild('btnexit') btnexit:any;
 
@@ -58,6 +92,26 @@ export class PodaciComponent implements OnInit {
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
         this.loadDefaultItemsPerPage();
+
+        let snap = sessionStorage.getItem('idSnapshota');
+        let idsnap = sessionStorage.getItem('idS');
+        if(snap == null)
+        { 
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
+        }
+        else
+        {  
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = snap;
+          if(idsnap != null)
+              this.ucitajPodatkeSnapshota(Number(idsnap),snap);
+        }
+      },
+      error=>{
+        //console.log("OVDE----------------");
+        (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Chose default snapshot";
       }
     )
   }
@@ -73,7 +127,7 @@ export class PodaciComponent implements OnInit {
 
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -82,7 +136,7 @@ export class PodaciComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -175,12 +229,55 @@ export class PodaciComponent implements OnInit {
   indikator:boolean = true; // tabela sa podacima
   nizRedovaStatistika:string[][] = []; // statistika numerickih vrednosti
 
-  snapshots:any = [];
+  // snapshots:any = [];
 
   closeResult = ''; // Ng Modal 1 
   nazivSnapshot = "";
   idSnapshotaOverride:string = "";
   nazivSnapshotaOverride:string = "";
+
+  selektovanS : number = -1;
+  selektovanSime : string = "";
+
+  // Pie plot 
+  public chartOptions: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+          font: {
+            size: 12
+          }
+        },
+        position: 'right'
+      }
+    }
+  };
+
+  public pieChartType: ChartType = 'pie';
+  public chartLegend: boolean = true;
+
+pieChartImage: any; 
+
+lineDatas :any = [
+    // this.lineData
+
+  ];
+  
+  // Tooltip
+  showTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    var helper = (<HTMLDivElement>document.getElementById(`helper-${tooltipType}`));
+    tooltip.style.left = `${helper.getBoundingClientRect().left}px`;
+    tooltip.style.top = `${helper.getBoundingClientRect().top}px`;
+    tooltip.style.display = 'unset';
+  }
+
+  hideTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    tooltip.style.display = 'none';
+  }
 
   onFileSelected(event:any) 
   {
@@ -195,14 +292,23 @@ export class PodaciComponent implements OnInit {
 
       const upload$ = this.http.post(url+"/api/File/upload/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
+          // this.ucitajPodatkeSnapshota(0);
+          // this.imeSnapshota("Default snapshot");
           this.loadDefaultItemsPerPage();
           (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
           (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
           //(<HTMLDivElement>document.getElementById("pagingControls")).style.color = "white";
           (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "visible";
           (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "visible";
-          this.onSuccess('Podaci su ucitani!');
+          this.onSuccess('Dataset loaded');
+
+          // prvo ucitavanje session tokena 
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
       },error =>{
         console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
@@ -210,7 +316,7 @@ export class PodaciComponent implements OnInit {
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
-        this.onError("Podaci nisu ucitani");
+        this.onError(error.error);
 
         if(error.error === "Unet nedozvoljen tip fajla."){
           console.log("Nedozvoljeno");
@@ -221,7 +327,7 @@ export class PodaciComponent implements OnInit {
 
   ucitajTipoveKolona(){
 
-    this.http.get(url+"/api/Upload/ColumnTypes").subscribe(
+    this.http.get(url+"/api/Upload/ColumnTypes?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
 
         console.log(response);
@@ -237,7 +343,7 @@ export class PodaciComponent implements OnInit {
 
   loadDefaultItemsPerPage()
   {      
-    this.http.get(url+"/api/Upload/paging/1/10").subscribe(
+    this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
        (response: any) => {
          this.jsonStatistika = undefined
          this.statistikaCat = []
@@ -269,15 +375,15 @@ export class PodaciComponent implements OnInit {
       const upload$ = this.http.post(url+"/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Ucitan testni skup ");
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset loaded");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-          this.onSuccess('Testni skup je ucitan!');
+          this.onSuccess('Test dataset loaded.');
       },error =>{
         console.log(error.error);	
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Fajl nije ucitan ");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset is not loaded");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onError("Testni skup nije ucitan!");
+        this.onError(error.error);
         
       });
     }
@@ -306,11 +412,10 @@ dajNaziveHeadera()
 
   dajStatistiku()
   {
-    this.http.get(url+"/api/Statistics/statistika", {responseType: 'text'}).subscribe(
+    this.http.get(url+"/api/Statistics/statistika?idEksperimenta=" + this.idEksperimenta, {responseType: 'text'}).subscribe(
       (response: any) => {
-        //console.table(response);
+        console.log(response);
         this.jsonStatistika = JSON.parse(response);
-        console.log(this.jsonStatistika);
         this.ucitajStatistiku();
         
         this.tabelaStatistika();
@@ -512,13 +617,13 @@ dajNaziveHeadera()
   promeniBrojRedova(value: any)
   {
     this.itemsPerPage = parseInt(value);
-    this.http.get(url+"/api/Upload/paging/1/" + this.itemsPerPage).subscribe(
+    this.http.get(url+"/api/Upload/paging/1/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
         this.page = 1;
 
-        this.onInfo("Broj redova za prikaz: "+this.itemsPerPage);
+        this.onInfo("Number of rows displayed: "+this.itemsPerPage);
     })
   }
 
@@ -527,7 +632,7 @@ dajNaziveHeadera()
    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
    console.log(this.itemsPerPage);
    console.log(this.page);
-   this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+   this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
         this.totalItems = response.totalItems;
@@ -535,7 +640,7 @@ dajNaziveHeadera()
   }
   gtyLoadPageWithStatistics(page: any){
     this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
-    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage).subscribe(
+    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
        (response: any) => {
         this.jsonStatistika = undefined
         this.statistikaCat = []
@@ -589,11 +694,11 @@ dajNaziveHeadera()
     {
 
      // this.dodajKomandu("OneHotEncoding nije izvršeno");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
 
-    this.http.post(url+"/api/DataManipulation/oneHotEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/oneHotEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -604,16 +709,16 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding izvrseno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.ucitajTipoveKolona();
-        this.onSuccess('OneHot Encoding izvrsen');
+        this.onSuccess('OneHot Encoding is performed.');
     },error=>{
       console.log(error.error);
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding nije izvršeno");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is not performed.");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onError("OneHot Encoding nije izvrsen!");
+      this.onError(error.error);
     })
   }
 
@@ -624,10 +729,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length < 1)
     {
       //this.dodajKomandu("LabelEncoding nije izvršeno");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/labelEncoding",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/labelEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.selectedColumns = [];
@@ -638,17 +743,17 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         //this.loadDefaultItemsPerPage();
         this.ucitajTipoveKolona(); 
-        this.onSuccess('Label Encoding izvrsen');
+        this.onSuccess('Label Encoding is performed.');
     },error=>{
       console.log(error.error);
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding nije izvršeno");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is not performed");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onError("Label Encoding nije izvrsen!");
+      this.onError(error.error);
     })
   }
 
@@ -899,17 +1004,17 @@ dajNaziveHeadera()
       console.log("Uneta vrednost: "+ ratio);
       return;
     }
-    this.http.post(url+"/api/Upload/setRatio/"+ratio,ratio,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/Upload/setRatio/"+ratio + "?idEksperimenta=" + this.idEksperimenta,ratio,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Dodat ratio: "+ ratio);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Ratio added: "+ ratio);
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Dodat ratio');
+        this.onSuccess('Ratio added.');
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Ratio nije dodat");
-      this.onError("Ratio nije unet!");
+     this.onError(error.error);
     })
 
   }
@@ -920,7 +1025,7 @@ dajNaziveHeadera()
       //this.onInfo("Kolone nisu selektovane");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/deleteColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -931,11 +1036,11 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
        // this.dodajKomandu("Uspesno obrisane kolone");
-        this.onSuccess('Kolone su obrisane');
+        this.onSuccess('Columns are deleted.');
     },error=>{
       console.log(error.error);
     //  this.dodajKomandu("Kolone nisu obrisane");
-      this.onError('Kolone nisu obrisane');
+    this.onError(error.error);
     })
   }
 
@@ -943,10 +1048,10 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMean",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMean?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -957,9 +1062,9 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate Mean vrednosti");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mean values added");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Dodate mean vrednosti!');
+        this.onSuccess('Mean values added.');
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Vrednosti nisu dodate");
@@ -969,10 +1074,10 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMedian",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMedian?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -981,23 +1086,23 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate median vrednosti");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Median values added");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Dodate median vrednosti!');
+        this.onSuccess('Median values added.');
     },error=>{
       console.log(error.error);
     //  this.dodajKomandu("Vrednosti nisu dodate");
-      this.onError("Vrednosti nisu dodate!");
+       this.onError(error.error);
     })
   }
   fillWithMode()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/fillWithMode",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/fillWithMode?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
@@ -1006,13 +1111,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodate mode vrednosti");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mode values added");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Dodate Mode vrednosti!');
+        this.onSuccess('Mode values added.');
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Vrednosti nisu dodate");
-      this.onError("Vrednosti nisu dodate!");
+     this.onError(error.error);
     })
   }
 
@@ -1020,10 +1125,10 @@ dajNaziveHeadera()
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/replaceEmpty",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/replaceEmpty?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -1034,23 +1139,23 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene kategoricke vrednosti");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Categorical values are changed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Zamenjene kategoricke vrednosti');
+        this.onSuccess('Categorical values are changed.');
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Vrednosti nisu zamenjene");
-      this.onError("Vrednosti nisu zamenjene!");
+      this.onError(error.error);
     })
   }
   replaceZeroWithNA(){
 
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Kolone nisu selektovane");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/replaceZero",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/replaceZero?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -1061,18 +1166,18 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene prazne numeričke vrednosti");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Numerical values are changed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess('Zamenjene numericke vrendosti');
+        this.onSuccess('Numerical values are changed.');
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Vrednosti nisu zamenjene");
-      this.onError("Nisu zamenjene numericke vrednosti!");
+      this.onError(error.error);
     })
   }
   selectAllColumns(event:any)
   {
-    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve kolone")
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Columns")
     { 
       for(var i = 0;i<this.kolone.length;i++)
       {
@@ -1085,17 +1190,17 @@ dajNaziveHeadera()
       }
       this.EnableDisableGrafik();
      console.log(this.selectedColumns);
-     (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj kolone";
+     (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Columns";
     }
     else{
 
         this.izbrisiSelektovaneKolone();
-        (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve kolone";
+        (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Select All Columns";
     }
   }
   selectAllRows(event:any)
   {
-    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Selektuj sve redove")
+    if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Rows")
     {
       for(var i = 0;i<this.itemsPerPage;i++)
       {
@@ -1103,12 +1208,12 @@ dajNaziveHeadera()
         this.isSelectedRow(i);
       }
       console.log(this.rowsAndPages);
-      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselektuj redove";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Rows";
     }
     else{
 
       this.izbrisiSelektovaneRedove();
-      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Selektuj sve redove";
+      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Select All Rows";
   }
   }
 
@@ -1172,18 +1277,18 @@ dajNaziveHeadera()
     }
     let redovi = redoviZaBrisanje.sort((n1,n2) => n1 - n2);
 
-    this.http.post(url+"/api/DataManipulation/deleteRows",redovi,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteRows?idEksperimenta=" + this.idEksperimenta,redovi,{responseType: 'text'}).subscribe(
       res => {
         if(res == "Redovi za brisanje nisu izabrani")
         {
-          this.onInfo("Redovi za brisanje nisu odabrani.");
+          this.onInfo("No rows selected.");
         }
         else if(res == "Korisnik nije pronadjen" || res == "Token nije setovan")
         {
           this.rowsAndPages = []; // deselekcija redova 
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " " + res);
-          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+         // this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " " + res);
+         // this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.onInfo("");
         }
         else 
@@ -1194,11 +1299,11 @@ dajNaziveHeadera()
           this.brojacAkcija++;
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
-          this.onSuccess("Redovi su obrisani");
+          this.onSuccess("Rows are deleted.");
         }
     },error=>{
      // this.dodajKomandu("Brisanje redova nije izvršeno");
-      this.onError("Brisanje nije izvrseno!");
+     this.onError(error.error);
     })
   }
   ucitajNaziv()
@@ -1222,13 +1327,13 @@ dajNaziveHeadera()
     this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta,null, {responseType : "text"}).subscribe(
       res=>{
         console.log(res);
-        this.onSuccess("Naziv eksperimenta uspesno promenjen!");
+        this.onSuccess("Experiment name changed successfully!");
       }, error=>{
         this.ucitajNaziv();
         if(error.error === "Postoji eksperiment sa tim imenom")
         {
           //alert("Postoji eksperiment sa tim imenom.");
-          this.onInfo("Postoji eksperiment s tim imenom");
+          this.onInfo("Experiment with that name already exists.");
         }
         
       }
@@ -1242,19 +1347,19 @@ dajNaziveHeadera()
       this.proveriE();
     }
 
-    this.http.post(url + "/api/Upload/sacuvajIzmene",null, {responseType: 'text'}).subscribe(
+    this.http.post(url + "/api/Upload/sacuvajIzmene?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
-      this.onSuccess("Izmene su sacuvane");
+      this.onSuccess("All changes have been saved.");
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Sve izmene su sacuvane ");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All changes have been saved");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
     },error=>{
       console.log(error.error);
      /* let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Izmene nisu sacuvane");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");*/
-      this.onError("Izmene nisu sacuvane!");
+      this.onError(error.error);
     })
     
   }
@@ -1268,7 +1373,7 @@ dajNaziveHeadera()
       data.value = "";
     }*/
     console.log(typeof(data.value));
-    this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value,null, {responseType: 'text'}).subscribe(
+    this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1280,14 +1385,14 @@ dajNaziveHeadera()
         this.EnableDisableGrafik();
         this.rowsAndPages = [];
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Polje izmenjeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Added row value: " + data.value);
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Dodata vrednost polja: "+ data.value);
+        this.onSuccess("Added row value: "+ data.value);
     },error=>{
       console.log(error.error);
       this.rowsAndPages = [];
       //this.dodajKomandu("Polje nije izmenjeno");
-      this.onError("Vrednost " + data.value + " nije dodata!");
+      this.onError(error.error);
     })
   }
 
@@ -1296,10 +1401,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
      // this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/absoluteMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/absoluteMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1310,13 +1415,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling izvrseno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Absolute Max Scaling izvrseno!");
+        this.onSuccess("Absolute Max Scaling is performed.");
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
-      this.onError("Absolute Max Scaling nije izvrseno!");
+      this.onError(error.error);
     })
   }
 
@@ -1325,10 +1430,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/minMaxScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/minMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1339,13 +1444,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Min-Max Scaling izvrseno!");
+        this.onSuccess("Min-Max Scaling is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Min-Max Scaling nije izvrseno");
-      this.onError("Min-Max Scaling nije izvrseno!");
+     this.onError(error.error);
     })
   }
 
@@ -1354,10 +1459,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/zScoreScaling", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/zScoreScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1368,13 +1473,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Z-score Scaling izvrseno!");
+        this.onSuccess("Z-score Scaling is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Z-score Scaling nije izvrseno");
-      this.onError("Z-score Scaling nije izvrseno!");
+     this.onError(error.error);
     })
   }
 
@@ -1400,7 +1505,7 @@ dajNaziveHeadera()
   {
     if(this.selectedNorm == "")
     {
-      this.onInfo("Opcija iz menija nije odabrana.");
+      this.onInfo("Option from menu is not selected.");
     }
     if(this.selectedNorm == "absolute-max" )
     {
@@ -1415,7 +1520,7 @@ dajNaziveHeadera()
       this.zScoreScaling();
     }
     this.selectedNorm = ""; 
-    (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Izaberite tip normalizacije"; 
+    (<HTMLButtonElement>document.getElementById("norm-btn")).innerHTML = "Scaling method"; 
   }
    // OUTLIERS 
 
@@ -1424,10 +1529,10 @@ dajNaziveHeadera()
      if(this.selectedColumns.length == 0)
      {
        //this.dodajKomandu("Nije odabrana nijedna kolona!");
-       this.onInfo("Nije odabrana nijedna kolona");
+       this.onInfo("No columns selected.");
        return;
      }
-     this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+     this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
          console.log(res);
          //this.loadDefaultItemsPerPage();
@@ -1438,13 +1543,13 @@ dajNaziveHeadera()
          this.nizNumerickihKolona = [];
          this.EnableDisableGrafik();
          let dateTime = new Date();
-         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation izvršeno");
+         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation is performed");
          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-         this.onSuccess("Standard Deviation izvrseno");
+         this.onSuccess("Standard Deviation is performed.");
      },error=>{
        console.log(error.error);
        //this.dodajKomandu("Standard Deviation nije izvrseno");
-       this.onError("Standard Deviation nije izvrseno");
+       this.onError(error.error);
      })
    }
    removeOutliersQuantiles()
@@ -1452,10 +1557,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
      // this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1466,13 +1571,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Quantiles izvrseno");
+        this.onSuccess("Quantiles is performed.");
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Quantiles nije izvrseno");
-      this.onError("Quantiles nije izvrseno");
+      this.onError(error.error);
     })
   }
   removeOutliersZScore()
@@ -1480,10 +1585,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
      // this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1494,13 +1599,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  "Z-Sore izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-Sore is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Z-Sore izvrseno");
+        this.onSuccess("Z-Sore is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("ZScore nije izvrseno");
-      this.onError("Z-Score nije izvrseno");
+     this.onError(error.error);
     })
   }
   
@@ -1509,10 +1614,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersIQR", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersIQR?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1523,13 +1628,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("IQR izvrseno");
+        this.onSuccess("IQR is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("IQR nije izvrseno");
-      this.onError("IQR nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersIsolationForest()
@@ -1537,10 +1642,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersIsolationForest", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersIsolationForest?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1551,13 +1656,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Isolation Forest izvrseno");
+        this.onSuccess("Isolation Forest is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Isolaton Forest nije izvrseno");
-      this.onError("Isolation Forest nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersOneClassSVM()
@@ -1565,10 +1670,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersOneClassSVM", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersOneClassSVM?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1579,13 +1684,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("One Class SVM izvrseno");
+        this.onSuccess("One Class SVM is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("One Class SVM nije izvrseno");
-      this.onError("One Class SVM nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersByLocalFactor()
@@ -1593,10 +1698,10 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/outliersByLocalFactor", this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/outliersByLocalFactor?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1607,13 +1712,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Local factor izvrseno");
+        this.onSuccess("Local factor is performed.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Local Factor nije izvrseno");
-      this.onError("Local factor nije izvrseno");
+     this.onError(error.error);
     })
   }
   selectOutliers(event:any)
@@ -1693,7 +1798,7 @@ dajNaziveHeadera()
   {
     if(this.selectedOutlier == "")
     {
-      this.onInfo("Opcija iz menija nije odabrana.");
+      this.onInfo("Option from menu is not selected.");
     }
     if(this.selectedOutlier == "option-sd")
     {
@@ -1728,7 +1833,7 @@ dajNaziveHeadera()
       this.removeOutliersByLocalFactor();
     }
     this.selectedOutlier = "";
-    (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Izbacivanje izuzetaka";
+    (<HTMLButtonElement>document.getElementById("outlier-btn")).innerHTML = "Detection method";
     (<HTMLInputElement>document.getElementById("threshold")).setAttribute("readOnly","");
     (<HTMLInputElement>document.getElementById("threshold")).value = "";
     (<HTMLInputElement>document.getElementById("threshold")).style.border = "2px solid rgb(121, 121, 121)";
@@ -1739,39 +1844,39 @@ dajNaziveHeadera()
 
   deleteAllRowsWithNA()
   {
-    this.http.post(url+"/api/DataManipulation/deleteAllRowsNA",null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteAllRowsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani svi NA redovi");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA rows are removed successfully");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Uspesno obrisani svi NA redovi");
+        this.onSuccess("NA rows are removed successfully.");
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("NA redovi nisu obrisani");
-      this.onError("NA redovi nisu obrisani");
+     this.onError(error.error);
     });
   }
 
   deleteAllColumnsWithNA()
   {
-    this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA",null,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisane kolone sa NA vrednostima");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All columns with NA values are removed successfully");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Uspesno obrisane sve kolone sa NA vrednostima");
+        this.onSuccess("All columns with NA values are removed successfully.");
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Kolone nisu obrisane");
-      this.onError("Kolone sa NA vrednostima nisu obrisane!");
+      this.onError(error.error);
     });
   }
 
@@ -1780,11 +1885,11 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
 
-    this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns",this.selectedColumns,{responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1795,13 +1900,13 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Uspešno obrisani NA redovi");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All rows with NA values are removed successfully");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Uspesno su obrisani svi redovi sa NA vrednostima");
+        this.onSuccess("All rows with NA values are removed successfully.");
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Redovi nisu obrisani");
-      this.onError("Redovi nisu obrisani!");
+      this.onError(error.error);
     });
   }
 
@@ -1811,18 +1916,18 @@ dajNaziveHeadera()
 
     if(this.selectedData == "izbaci-selekt-vrste")
     {
-      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane vrste";
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Rows";
     }
     if(this.selectedData == "izbaci-selekt-kolone")
     {
-      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Izbaci selektovane kolone";
+      (<HTMLButtonElement>document.getElementById("select-data")).innerHTML = "Columns";
     }
   }
   primeniNaPodatke()
   {
     if(this.selectedData == "")
     {
-      this.onInfo("Opcija iz menija nije odabrana.");
+      this.onInfo("Option from menu is not selected.");
     }
     if(this.selectedData == "izbaci-selekt-vrste")
     {
@@ -1849,16 +1954,16 @@ dajNaziveHeadera()
     if(this.selectedColumns.length == 0)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona");
+      this.onInfo("No columns selected.");
       return;
     }
     if(this.selectedForRegression == -1)
     {
       //this.dodajKomandu("Nije odabrana nijedna kolona!");
-      this.onInfo("Nije odabrana nijedna kolona iz menija.");
+      this.onInfo("No columns selected from menu.");
       return;
     }
-    this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression, this.selectedColumns, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         //this.loadDefaultItemsPerPage();
@@ -1870,15 +1975,15 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamena vrednosti NA sa vrednostima dobijenih regresijom izvršeno");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Regression is performed");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Regression - uspesno!");
+        this.onSuccess("Regression is performed.");
         (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     },error=>{
       console.log(error.error);
       this.selectedForRegression = -1;
      // this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
-      this.onError("Regression - neuspesno!");
+     this.onError(error.error);
       (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     });
   }
@@ -1961,6 +2066,8 @@ dajNaziveHeadera()
     element.style.borderBottom = "1px solid rgb(160, 181, 189)";
     disableElement.style.backgroundColor = "";
     disableElement.style.border = "";
+
+    this.pieChartFunction();
   }
 
   dajNaziveKolonaStatistikeNum()
@@ -1986,10 +2093,10 @@ dajNaziveHeadera()
         var blob = new Blob([res], {type: 'text/csv' })
         saveAs(blob, "dataset_"+this.fileName);
 
-        this.onSuccess("Podaci tabele preuzeti!");
+        this.onSuccess("Dataset are downloaded successfully.");
     },error=>{
       console.log(error.error);
-      this.onError("Podaci nisu preuzeti!");
+      this.onError(error.error);
     });
   }
 
@@ -2013,7 +2120,7 @@ dajNaziveHeadera()
 
   getScatterplot(){
 
-    this.http.post(url+"/api/Graph/scatterplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/scatterplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2026,7 +2133,7 @@ dajNaziveHeadera()
 
   getBoxplot(){
 
-    this.http.post(url+"/api/Graph/boxplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/boxplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2039,7 +2146,7 @@ dajNaziveHeadera()
 
   getViolinplot(){
 
-    this.http.post(url+"/api/Graph/violinplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/violinplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2052,7 +2159,7 @@ dajNaziveHeadera()
 
   getBarplot(){
 
-    this.http.post(url+"/api/Graph/barplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/barplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2065,7 +2172,7 @@ dajNaziveHeadera()
 
   getHistogram(){
 
-    this.http.post(url+"/api/Graph/histogram",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/histogram?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2078,7 +2185,7 @@ dajNaziveHeadera()
 
   getHexbin(){
 
-    this.http.post(url+"/api/Graph/hexbin",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/hexbin?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2091,7 +2198,7 @@ dajNaziveHeadera()
 
   getDensityplot(){
 
-    this.http.post(url+"/api/Graph/densityplot",this.selectedColumns,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Graph/densityplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
         console.log(res);
         this.preuzmiSliku();
@@ -2196,7 +2303,7 @@ dajNaziveHeadera()
 
   undo(){
 
-    this.http.post(url+"/api/Eksperiment/Undo",null,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Undo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -2226,7 +2333,7 @@ dajNaziveHeadera()
 
   redo(){
 
-    this.http.post(url+"/api/Eksperiment/Redo",null,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Eksperiment/Redo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
         console.log(res);
        // this.loadDefaultItemsPerPage();
@@ -2256,14 +2363,7 @@ dajNaziveHeadera()
     this.nizKomandiUndoRedoTooltip.pop();
   }
 
-  ucitajSnapshotove(){
-    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
-      res=>{
-        this.snapshots = res;
-        this.PosaljiDefaultSnapshot.emit(this.snapshots[0].id);
-      }
-    );
-  }
+
   sacuvajTrenutnuVerziju(){
     var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
     if(id!="0"){
@@ -2283,8 +2383,14 @@ sacuvajKaoNovu(ime:string){
         console.log(res);
         if(res!="-1"){
           console.log("Sacuvan snapshot.");
-          this.onSuccess("Nova verzija je uspesno sacuvana.");
-          this.ucitajSnapshotove();
+          this.onSuccess("New data version is saved successfully.");
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
+
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML =  ime;
+          sessionStorage.setItem('idSnapshota',ime);
+          sessionStorage.setItem('idS',"" + res);
+          this.ucitajPodatkeSnapshota(Number(res),ime);
         }
       });
     }
@@ -2322,11 +2428,17 @@ sacuvajKaoNovu(ime:string){
     if(id!="0"){
       this.http.delete(url+"/api/File/Snapshot?id="+id).subscribe(
         res=>{
-          this.ucitajSnapshotove();
-          this.ucitajPodatkeSnapshota(0);
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
+
+          sessionStorage.setItem('idSnapshota',"Default snapshot");
+          sessionStorage.setItem('idS',"0");
+          (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Default snapshot";
+          this.ucitajPodatkeSnapshota(0,'Default snapshot');
         },
         error=>{
-          this.ucitajSnapshotove();
+          // this.ucitajSnapshotove();
+          this.PosaljiPoruku.emit();
         }
       )
     }
@@ -2351,7 +2463,8 @@ sacuvajKaoNovu(ime:string){
     //this.sacuvajKaoNovu(this.nazivSnapshotaOverride);
     this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+this.idSnapshotaOverride,null,{responseType:"text"}).subscribe(
       res=>{
-        this.ucitajSnapshotove();
+        // this.ucitajSnapshotove();
+        this.PosaljiPoruku.emit();
         this.ucitajPodatkeSnapshota(Number(this.idSnapshotaOverride));
         (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapshot
       }
@@ -2508,25 +2621,25 @@ sacuvajKaoNovu(ime:string){
       else
       {
         console.log("Niste uneli sva polja!"); 
-        this.onInfo("Niste uneli sva potrebna polja.");
+        this.onInfo("You have not entered all required fields.");
         return; 
       }
     }
     console.log(uneteVrednosti);
 
-    this.http.post(url+"/api/DataManipulation/addNewRow", uneteVrednosti, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/DataManipulation/addNewRow?idEksperimenta=" + this.idEksperimenta, uneteVrednosti, {responseType: 'text'}).subscribe(
       res => {
         console.log(res);
         this.loadDefaultItemsPerPage();
         //this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Dodat novi red.");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " New row added");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onSuccess("Dodat je novi red.");
+        this.onSuccess("New row added.");
     },error=>{
       console.log(error.error);
-      this.onError("Dodavanje reda nije izvrseno.");
+      this.onError(error.error);
     });
   }
 
@@ -2534,12 +2647,12 @@ sacuvajKaoNovu(ime:string){
   {
     if(this.selectedColumns.length == 0)
     {
-      this.onInfo("Niste odabrali kolonu.");
+      this.onInfo("Column is not selected.");
       return;
     }
     if(this.selectedColumns.length > 1)
     {
-      this.onInfo("Odaberite jednu kolonu.");
+      this.onInfo("Select one column.");
       return;
     }
     this.openModalDelete(this.modalValue);
@@ -2554,23 +2667,23 @@ sacuvajKaoNovu(ime:string){
      if(isNaN(Number(vrednost)) && this.nizTipova[this.selectedColumns[0]] == "Numerical")
      {
     //   (<HTMLDivElement>document.getElementById("checkNumerical")).style.visibility = "visible";
-         this.onInfo("Unet je pogresan tip polja.");
+         this.onInfo("Wrong field type is entered.");
      }
      else
      {
-      this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost ,null, {responseType: 'text'}).subscribe(
+      this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
         res => {
           console.log(res);
           this.selectedColumns = []; 
           this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjene NA vrendosti novom vrednoscu.");
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-          this.onSuccess("Zamenjene NA vrednosti novom vrednoscu.");
+          this.onSuccess("NA values are replaced by new values.");
       },error=>{
         console.log(error.error);
-        this.onError("Zamena NA nije izvrsena.");
+        this.onError(error.error);
       });
       // close modal 
     }
@@ -2620,7 +2733,7 @@ zamenaTipaKolone(event:any)
 
   console.log("ID KOLONE type: "+ idKolone);
 
-  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone, null, {responseType: 'text'}).subscribe(
+  this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone + "?idEksperimenta=" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
     res => {
       console.log(res);
       this.selectedColumns = []; 
@@ -2630,9 +2743,9 @@ zamenaTipaKolone(event:any)
       this.nizKategorickihKolona = [];
       this.EnableDisableGrafik();
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Zamenjen tip kolone.");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Column type is changed");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onSuccess("Tip kolone zamenjen.");
+      this.onSuccess("Column type is changed.");
 
       if(type[0] == 'C')
       {
@@ -2654,19 +2767,89 @@ zamenaTipaKolone(event:any)
   },error=>{
     console.log(error.error);
     this.selectedColumns = [];  
-    this.onInfo("Tip odabrane kolone nije moguce zameniti.");
+    this.onInfo("Column type cannot be changed.");
     //this.onError("Tip kolone nije zamenjen.");
   });
 
  }
- ucitajPodatkeSnapshota(id:Number){
+ ucitajPodatkeSnapshota(id:number,ime:string = ""){
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
+      // this.PosaljiSnapshot.emit(id);
+
+      if(id==0)
+      {
+      sessionStorage.setItem('idSnapshota',"Default snapshot");
+      sessionStorage.setItem('idS',"0");
+      }
+      else{ 
+      //var indeks = Number(id);
+      //localStorage.setItem('idSnapshota',this.snapshots[id-1].ime);
+      sessionStorage.setItem('idSnapshota',ime);
+      sessionStorage.setItem('idS',"" + id);
+      }
+      this.PosaljiSnapshot.emit(id);
      }
    );
  }
 
+ ucitajPodatkeSnapshotaP(id:number){
+  this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
+    res=>{
+     this.loadDefaultItemsPerPage();
+    }
+  );
+}
+
+ imeSnapshota(ime : string){
+
+  (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = ime;
+ }
+
+ getPieplot(id:number){
+
+  console.log(this.selectedColumns[0]); // this.selectedColumns[0]
+      this.http.post(url+"/api/Graph/piePlot/"+this.idEksperimenta+"/"+id,null,{responseType:"text"}).subscribe(
+        res=>{
+          console.log(res);
+          this.preuzmiSliku();
+        },
+        error=>{
+          console.log(error.error);
+        }
+      )
+}
+
+
+  pieChartFunction()
+  {
+    this.lineDatas = [];
+    for(let j of this.statistikaCat)
+    {
+      var unutra = [];
+      var naslovi = [];
+      var pomm = j.data[3].Frequencies;
+          
+      for(let ii of pomm)
+      {
+        unutra.push(Number((Number(ii[1])*100).toFixed(2)));
+        naslovi.push(ii[0]);
+      }
+    
+      var lineData11 : ChartData<'pie', number[], string | string[]> = {
+        labels: naslovi,
+        datasets: [ {
+          data: unutra
+        } ]
+      };
+        
+      this.lineDatas.push(lineData11);
+    }
+    //console.log(unutra);
   }
+  
+
+}
 
 

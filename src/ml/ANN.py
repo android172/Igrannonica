@@ -1,7 +1,9 @@
 
 from math import sqrt
 import random
+import sys
 import threading
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -33,6 +35,7 @@ class ANN:
         self.input_size    = 0
         self.output_size   = 0
         self.optim_method  = 0
+        self.momentum      = 0
         self.hidden_layers = None
         self.activation_fn = None
         self.model         = None
@@ -68,6 +71,7 @@ class ANN:
         new_ann.cv            = self.cv
         new_ann.cv_k          = self.cv_k
         new_ann.isRegression  = self.isRegression
+        new_ann.momentum      = self.momentum
         
         new_ann.dataset_version = self.dataset_version
         
@@ -87,9 +91,8 @@ class ANN:
         
         new_ann.create_new_network()
         
-        new_ann.model.load_state_dict(self.model.state_dict())
-        
-        new_ann.weights_history = {}
+        if self.model is not None:
+            new_ann.model.load_state_dict(self.model.state_dict())
         
         return new_ann
         
@@ -111,6 +114,26 @@ class ANN:
         if len(test_dataset) > 0:
             self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
     
+    def setup_output_columns(self):
+        if self.output_size > 1:
+            return True
+        if self.output_size < 1:
+            return False
+        
+        output_column = self.data.output_columns[0]
+        number_of_unique = self.data.dataset.iloc[:, output_column].nunique()
+        if number_of_unique < 2:
+            return False
+        
+        res = self.data.one_hot_encode_columns([output_column])
+        if  res > 0:
+            return False
+        self.output_size = number_of_unique
+        
+        self.create_new_network()
+        
+        return True
+    
     # #################### #
     # Working with a model #
     # #################### #
@@ -126,6 +149,9 @@ class ANN:
         self.hidden_layers = annSettings.hiddenLayers
         self.activation_fn = annSettings.activationFunctions
         self.optim_method  = annSettings.optimizer
+        self.momentum      = 0.0
+        if annSettings.optimizationParams is not None and len(annSettings.optimizationParams) > 0:
+            self.momentum  = annSettings.optimizationParams[0]
         
         # Load problem type
         self.isRegression = annSettings.problemType == 0
@@ -135,12 +161,27 @@ class ANN:
         self.cv   = self.cv_k > 1
         
         # Loss function
-        if   annSettings.lossFunction == 0:
-            self.criterion = nn.L1Loss()
-        elif annSettings.lossFunction == 1:
-            self.criterion = nn.MSELoss()
+        loss_function = annSettings.lossFunction
+        if self.isRegression:
+            if   loss_function == 0:
+                self.criterion = nn.L1Loss()
+            elif loss_function == 1:
+                self.criterion = nn.MSELoss()
+            elif loss_function == 2:
+                self.criterion = nn.SmoothL1Loss()
+            elif annSettings.lossFunction == 3:
+                self.criterion = nn.HuberLoss()
         else:
-            self.criterion = nn.CrossEntropyLoss()
+            loss_function -= 4
+            if   loss_function == 0:
+                self.criterion = nn.NLLLoss()
+            elif loss_function == 1:
+                self.criterion = nn.CrossEntropyLoss()
+            elif loss_function == 2:
+                self.criterion = nn.KLDivLoss()
+            elif loss_function == 3:
+                self.criterion = nn.MultiMarginLoss()
+                
             
         # Regularization
         self.regularization_method = annSettings.regularization
@@ -184,20 +225,32 @@ class ANN:
             
         # Optimization algortham
         if   self.optim_method == 0:
-            self.optimizer = optim.SGD(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adadelta  (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif self.optim_method == 1:
-            self.optimizer = optim.Adagrad(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adagrad   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
         elif self.optim_method == 2:
-            self.optimizer = optim.Adadelta(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.Adam      (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 3:
+            self.optimizer = optim.AdamW     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 4:
+            self.optimizer = optim.Adamax    (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 5:
+            self.optimizer = optim.ASGD      (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 6:
+            self.optimizer = optim.NAdam     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 7:
+            self.optimizer = optim.RAdam     (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+        elif self.optim_method == 8:
+            self.optimizer = optim.RMSprop   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
         else:
-            self.optimizer = optim.Adam(model.parameters(), lr=self.learning_rate, weight_decay=weight_decay)
+            self.optimizer = optim.SGD       (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
     
     # Weights
     def get_weights(self):
         weights = []
         for layer, layer_weights in self.model.state_dict().items():
             if layer[-4:] != 'bias':
-                weights.append(layer_weights.tolist())
+                weights.append([x if x != np.nan else 0 for x in layer_weights.tolist()])
         return weights
     
     def load_weights(self, weights_path):
@@ -292,7 +345,7 @@ class ANN:
                     yield {
                         "fold"    : fold,
                         "epoch"   : self.current_epoch,
-                        "loss"    : loss,
+                        "loss"    : loss if loss != np.nan else sys.float_info.max,
                         "valLoss" : valLoss,
                         "weights" : self.get_weights()
                     }
@@ -306,7 +359,7 @@ class ANN:
                 loss = self.train_epoch(self.train_loader)
                 yield {
                     "epoch" : self.current_epoch,
-                    "loss"  : loss,
+                    "loss"  : loss if loss != np.nan else sys.float_info.max,
                     "weights" : self.get_weights() 
                 }
                 self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
@@ -322,7 +375,10 @@ class ANN:
         elif dataset == "test":
             loader = self.test_loader
         else:
-            return
+            return None
+
+        if loader is None:
+            return None
         
         actual = [[] for _ in range(self.output_size)]
         predicted = [[] for _ in range(self.output_size)]
@@ -372,10 +428,14 @@ class ANN:
         elif dataset == "test":
             loader = self.test_loader
         else:
-            return
+            return None
+
+        if loader is None:
+            return None
         
         actual = []
         predicted = []
+        prediction_prob = []
         
         self.model.eval()
         
@@ -390,19 +450,21 @@ class ANN:
                 
                 actual.extend([i.index(max(i)) for i in y.tolist()])
                 predicted.extend(y_p.tolist())
+                prediction_prob.extend(scores.tolist())
                 
         self.model.train()
         
         Accuracy         = metrics.accuracy_score(actual, predicted)
         BalancedAccuracy = metrics.balanced_accuracy_score(actual, predicted)
-        Precision        = metrics.precision_score(actual, predicted)
-        Recall           = metrics.recall_score(actual, predicted)
-        F1Score          = metrics.f1_score(actual, predicted)
+        Precision        = metrics.precision_score(actual, predicted, average='micro')
+        Recall           = metrics.recall_score(actual, predicted, average='micro')
+        F1Score          = metrics.f1_score(actual, predicted, average='micro')
         HammingLoss      = metrics.hamming_loss(actual, predicted)
-        CrossEntropyLoss = metrics.log_loss(actual, predicted)
+        CrossEntropyLoss = metrics.log_loss(actual, prediction_prob)
         ConfusionMatrix  = metrics.confusion_matrix(actual, predicted)
         
-        return StatisticsClassification(
+        statistics = {}
+        statistics[0] = StatisticsClassification(
             Accuracy         = Accuracy,
             BalancedAccuracy = BalancedAccuracy,
             Precision        = Precision,
@@ -412,6 +474,7 @@ class ANN:
             CrossEntropyLoss = CrossEntropyLoss,
             ConfusionMatrix  = ConfusionMatrix
         ).__dict__
+        return statistics
         
     # Prediction
     def predict(self, inputs):

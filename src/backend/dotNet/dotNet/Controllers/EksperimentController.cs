@@ -25,7 +25,7 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpGet("Eksperimenti")]
-        public IActionResult Experimenti(int id)
+        public IActionResult Experimenti()
         {
             try
             {
@@ -36,11 +36,28 @@ namespace dotNet.Controllers
                 List<EksperimentDto> eksperimenti = db.dbeksperiment.eksperimenti(int.Parse(tokenS.Claims.ToArray<Claim>()[0].Value));
                 if (eksperimenti.Count > 0)
                     return Ok(eksperimenti);
-                return BadRequest();
+                
+                return BadRequest(ErrorMessages.NoExperiments);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("load")]
+        public IActionResult LoadExperiment(int id) {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                if (!Experiment.eksperimenti.ContainsKey(id))
+                    Experiment.eksperimenti[id] = new MLExperiment(_config, token, id);
+                return Ok();
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -56,20 +73,21 @@ namespace dotNet.Controllers
                 var tokenS = jsonToken as JwtSecurityToken;
                 if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
                 {
-                    return BadRequest("Postoji eksperiment sa tim imenom");
+                    return BadRequest(ErrorMessages.ExperimentNameExists);
                 }
                 if (db.dbeksperiment.dodajEksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)))
                 {
                     int id = db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value));
                     string folder = Path.Combine(Directory.GetCurrentDirectory(), "Files", tokenS.Claims.ToArray()[0].Value.ToString(), id.ToString());
                     if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+                    Experiment.eksperimenti[id] = new MLExperiment(_config, token, id);
                     return Ok(id);
                 }
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -85,16 +103,16 @@ namespace dotNet.Controllers
                 var tokenS = jsonToken as JwtSecurityToken;
                 if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
                 {
-                    return BadRequest("Postoji eksperiment sa tim imenom");
+                    return BadRequest(ErrorMessages.ExperimentNameExists);
                 }
 
                 if (db.dbeksperiment.updateEksperient(id, ime))
                     return Ok("Promenjeno ime");
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -111,17 +129,17 @@ namespace dotNet.Controllers
                     {
                         if (!db.dbmodel.izbrisiModel(model.Id))
                         {
-                            return BadRequest("Model nije izbrisan");
+                            return BadRequest(ErrorMessages.CantDeleteModel);
                         }
                     }
                 }
                 if (db.dbeksperiment.izbrisiEksperiment(id))
                     return Ok("Eksperiment obrisan");
-                return BadRequest("Eksperiment nije obrisan");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -138,12 +156,12 @@ namespace dotNet.Controllers
                 }
                 else
                 {
-                    return BadRequest("Greska");
+                    return StatusCode(500);
                 }
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -158,20 +176,24 @@ namespace dotNet.Controllers
                 {
                     var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                     MLExperiment eksperiment;
-                    if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                    if (Experiment.eksperimenti.ContainsKey(id))
                     {
-                        eksperiment = Korisnik.eksperimenti[token.ToString()];
-                        if (!eksperiment.IsDataLoaded(id))
-                            eksperiment.LoadDataset(id, csv);
+                        eksperiment = Experiment.eksperimenti[id];
+                        if (!eksperiment.IsDataLoaded())
+                            eksperiment.LoadDataset(csv);
                         return Ok(csv);
                     }
-                    return BadRequest("Doslo do greske.");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 }
-                return NotFound("Nema csv!");
+                return NotFound(ErrorMessages.FileNotFound);
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
         [Authorize]
@@ -182,24 +204,28 @@ namespace dotNet.Controllers
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
                 {
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 }
-                else return BadRequest("Potrebno ponovno prijavljivanje.");
+                else return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 if(idSnapshota == 0)
                 {
-                    eksperiment.LoadDataset(idEksperimenta, db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                    eksperiment.LoadDataset(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
                     return Ok();
                 }
                 Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshota);
                 Console.WriteLine(snapshot.csv);
-                eksperiment.LoadDataset(idEksperimenta, snapshot.csv);
+                eksperiment.LoadDataset(snapshot.csv);
                 return Ok();
                 }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("Doslo do greske.");
+                return StatusCode(500);
             }
         }
 
@@ -217,11 +243,11 @@ namespace dotNet.Controllers
                 {
                     return Ok(podesavanje);
                 }
-                return BadRequest("Ne postoje podesavanja za ovaj model");
+                return BadRequest(ErrorMessages.SettingsNotFound);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -235,7 +261,7 @@ namespace dotNet.Controllers
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -247,11 +273,11 @@ namespace dotNet.Controllers
             {
                 if (db.dbmodel.UpisiKolone(id, kolone))
                     return Ok(kolone);
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
@@ -263,53 +289,61 @@ namespace dotNet.Controllers
             {
                 if (db.dbmodel.izmeniPodesavanja(id, json))
                     return Ok("Izmenjena podesavanja.");
-                return BadRequest("Doslo je do greske");
+                return StatusCode(500);
             }
             catch
             {
-                return BadRequest("Doslo do greske");
+                return StatusCode(500);
             }
         }
 
         [Authorize]
         [HttpPost("Undo")]
-        public IActionResult undoAction()
+        public IActionResult undoAction(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Neka greska");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.Undo();
                 return Ok("undo uradjen");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("undo nije uradjen");
+                return StatusCode(500);
             }
         }
 
         [Authorize]
         [HttpPost("Redo")]
-        public IActionResult redoAction()
+        public IActionResult redoAction(int idEksperimenta)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    eksperiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
                 else
-                    return BadRequest("Neka greska");
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 eksperiment.Redo();
                 return Ok("redo uradjen");
             }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
             catch
             {
-                return BadRequest("redo nije uradjen");
+                return StatusCode(500);
             }
         }
     }

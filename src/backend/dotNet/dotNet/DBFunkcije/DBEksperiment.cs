@@ -92,7 +92,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "delete from eksperiment where id=@id";
+                string query = "delete from Eksperiment where id=@id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -148,6 +148,7 @@ namespace dotNet.DBFunkcije
 
         public bool dodajCsv(int id, string naziv)
         {
+            Console.WriteLine(id + " " + naziv);
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string query = "update Eksperiment set csv=@naziv where id=@id";

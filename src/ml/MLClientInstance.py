@@ -20,7 +20,6 @@ class MLClientInstance(Thread):
         self.experiment_id = 1
         
         self.active_models = {}
-        self.last_active_id = 0
     
     def run(self) -> None:
         super().run()
@@ -29,7 +28,7 @@ class MLClientInstance(Thread):
         
         calls = {
             # General calls
-            'SetToken' : select_token,
+            'SetupUser' : setup_user,
             
             # Dataset calls
             'IsDataLoaded'         : is_dataset_loaded,

@@ -7,53 +7,79 @@
 
     <div id="divModeli">
         <div id="skrol">
-        <div id=naslov>Lista istreniranih modela</div>
-        <div id="sk">
-            <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
-                <div class="p" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)"><div class="name" id="p{{i}}">{{ m.name }}</div><div class="date" id="p{{i}}">{{m.createdDate}}</div><div class="o" id="p{{i}}">{{m.opis}}</div></div>
+          <div class="d-flex justify-content-center" style="width: 100%;">
+            <div id=naslov>List of models</div>
+            <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisiSve" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-left: 20px; margin-top: 10px;'>
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+              </svg> -->
             </div>
-        </div>
+          </div>
+          <div id="sk">
+              <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
+                <ng-template #unselectedModel>
+                </ng-template>
+                  <div class="model-selected-{{'p' + i === this.selektovanModel}}" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)">
+                    <div class="name" id="p{{i}}">{{ m.name }}</div>
+                    <div class="date" id="p{{i}}">{{m.createdDate}}</div>
+                    <div class="o" id="p{{i}}">{{m.opis}}</div>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
     <div id="info">
-        <div id="naslov1"><div style="width: 400px; float: left; margin-left: 280px;">Informacije i podesavanja o izabranom modelu</div><i data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" class='fa fa-trash-alt' style='font-size:20px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'></i></div>
+        <div id="naslov1">
+          <div style="width: 400px; float: left; margin-left: 280px;">Informations and settings of selected model</div>
+          <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+            </svg>
+          </div>
+        </div>
         <div id="osnovneI">
-            <div id="nm">Naziv modela</div>
+            <div id="nm">Model name</div>
             <div id="n"></div>
-            <div id="nm">Datum kreiranja modela</div>
+            <div id="nm">Creation date</div>
             <div id="d"></div>
-            <div id="nmo">Opis modela</div><i (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" class='fas fa-pencil-alt' style='font-size:15px;cursor: pointer;'></i>
+            <div id="nmo">Model description</div>
+            <div (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" style='font-size:30px;cursor: pointer; color: #f0859e;'>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+            </div>
             <div id="opis"></div>
         </div>
         <div id="pod">
-            <div id="nm">Tip problema</div>
+            <div id="nm">Problem type</div>
             <div id="ann"></div>
-            <div id="nm">Verzija snapshot-a</div>
+            <div id="nm">Snapshot version</div>
             <div id="snap"></div>
-            <div id="nm">Metoda optimizacija</div>
+            <div id="nm">Optimizer</div>
             <div id="opt"></div>
-            <div id="nm">Epoha</div>
+            <div id="nm">Number of epochs</div>
             <div id="eph"></div>
             <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
-            <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal4">Nastavi treniranje</button>
+            <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
         </div>
-        <div id="matrica">
+        <!-- <div id="matrica">
 
-        </div>
+        </div> -->
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
             <div class="modal-header" style="border: none;">
-              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: x-large;">Opis modela</h5>
+              <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large;">Model description</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div placeholder="" contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
+            <div placeholder="" contenteditable="true" id="bodyc" class="modal-body" style="width: 90%; margin: auto; color: beige; border: 2px solid #bc7ca1; border-radius: 10px;">
               
             </div>
             <div class="modal-footer" style="border: none;">
               <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-              <button type="button" id="edit" (click)="izmeniOpis()" data-bs-dismiss="modal">Sačuvaj izmene</button>
+              <button type="button" id="edit" (click)="izmeniOpis()" data-bs-dismiss="modal">Save</button>
             </div>
           </div>
         </div>
@@ -62,15 +88,15 @@
         <div class="modal-dialog">
             <div class="modal-content" style= "background: rgba(36, 38, 74, 0.95);">
               <div class="modal-header" style="border: none;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: x-large;">Brisanje modela</h5>
+                <h5 class="modal-title" id="exampleModalLabel" style="color: bisque; font-size: large;">Delete model</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div contenteditable="true" id="bodyc" class="modal-body" style="color: beige; border: none;">
-                Da li ste sigurni da želite da izbrišete ovaj model?
+                Are you sure you want to delete selected model?
               </div>
               <div class="modal-footer" style="border: none;">
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="button" id="edit" data-bs-dismiss="modal" (click)="obrisiModel()">Izbriši</button>
+                <button type="button" id="edit" data-bs-dismiss="modal" (click)="obrisiModel()">Delete</button>
               </div>
             </div>
           </div>

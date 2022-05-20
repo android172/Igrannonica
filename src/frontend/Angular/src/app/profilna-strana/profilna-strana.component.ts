@@ -26,6 +26,7 @@ export class ProfilnaStranaComponent implements OnInit {
 
   ucitajPodatke()
   {
+    console.log("HERE TOO")
     var dekodiraniToken = this.jwtHelper.decodeToken(this.jwtHelper.tokenGetter());
   
     this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
@@ -46,6 +47,10 @@ export class ProfilnaStranaComponent implements OnInit {
 
   otvoriEksperiment(i: any)
   {
+    this.http.post(url+'/api/Eksperiment/load?id=' + i, null, {responseType: 'text'}).subscribe(
+      res=>{},
+      err=>{}
+    );
     console.log(i);
     this.router.navigate(['/eksperiment'],{ queryParams: { id: i } });
   }

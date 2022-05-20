@@ -22,10 +22,11 @@ class MLData:
     
     def __init__(self) -> None:
         self.dataset        = None
-        self.input_columns  = None
-        self.output_columns = None
         self.column_types   = None
         self.column_data_ty = None
+        
+        self.input_columns  = []
+        self.output_columns = []
         
         self.test_col = '_IsATestPoint'
         
@@ -55,6 +56,9 @@ class MLData:
         if self.test_col not in self.dataset.columns:
             series = pd.Series([0 for _ in range(self.dataset.shape[0])], name=self.test_col)
             self.dataset = self.dataset.join(series)
+        
+        self.input_columns = []
+        self.output_columns = []
         
         self.column_types = [str(x) for x in self.dataset.dtypes]
         
@@ -97,7 +101,9 @@ class MLData:
         self.past_states.append({
             'dataset'       : self.dataset.copy(deep=True),
             'column_types'  : [x for x in self.column_types],
-            'column_data_ty': [x for x in self.column_data_ty]
+            'column_data_ty': [x for x in self.column_data_ty],
+            'input_columns' : [x for x in self.input_columns],
+            'output_columns': [x for x in self.output_columns]
         })
         self.future_states.clear()
     
@@ -107,12 +113,16 @@ class MLData:
         self.future_states.append({
             'dataset'       : self.dataset,
             'column_types'  : self.column_types,
-            'column_data_ty': self.column_data_ty
+            'column_data_ty': self.column_data_ty,
+            'input_columns' : self.input_columns,
+            'output_columns': self.output_columns
         })
         past_state = self.past_states.pop()
         self.dataset        = past_state['dataset']
         self.column_types   = past_state['column_types']
         self.column_data_ty = past_state['column_data_ty']
+        self.input_columns  = past_state['input_columns']
+        self.output_columns = past_state['output_columns']
         return True
     
     def redo_change(self):
@@ -121,12 +131,16 @@ class MLData:
         self.past_states.append({
             'dataset'       : self.dataset,
             'column_types'  : self.column_types,
-            'column_data_ty': self.column_data_ty
+            'column_data_ty': self.column_data_ty,
+            'input_columns' : self.input_columns,
+            'output_columns': self.output_columns
         })
         future_state = self.future_states.pop()
         self.dataset        = future_state['dataset']
         self.column_types   = future_state['column_types']
         self.column_data_ty = future_state['column_data_ty']
+        self.input_columns  = future_state['input_columns']
+        self.output_columns = future_state['output_columns']
         return True
     
     def clear_change_history(self):
@@ -334,6 +348,8 @@ class MLData:
         for col in columns:
             self.column_types.pop(col)
             self.column_data_ty.pop(col)
+            self.input_columns  = [j - 1 if j > col else j for j in self.input_columns  if j != col]
+            self.output_columns = [j - 1 if j > col else j for j in self.output_columns if j != col]
             
     # Handeling NA values
     def replace_value_with_na(self, columns, value):
@@ -346,7 +362,17 @@ class MLData:
     
     def drop_na_columns(self):
         self.save_change()
+        old_cols = self.dataset.columns.tolist()
         self.dataset.dropna(axis=1, inplace=True)
+        
+        deleted_cols = [i for i, col in enumerate(old_cols) if col not in self.dataset.columns.tolist()]
+        deleted_cols.reverse
+        
+        for col in deleted_cols:
+            self.column_types.pop(col)
+            self.column_data_ty.pop(col)
+            self.input_columns  = [j - 1 if j > col else j for j in self.input_columns  if j != col]
+            self.output_columns = [j - 1 if j > col else j for j in self.output_columns if j != col]
 
     def drop_na_pairwise(self, columns):
         self.save_change()
@@ -408,6 +434,10 @@ class MLData:
             return False
         
         na_rows = self.dataset.iloc[:, column].isna()
+        
+        if na_rows.sum() == 0:
+            return True
+        
         not_na_rows = [not x for x in na_rows]
         try: 
             inputs = self.dataset[not_na_rows].iloc[:, input_columns].astype('float64')
@@ -448,7 +478,9 @@ class MLData:
                 return 2
             
         self.save_change()
-            
+        
+        last_col_i = self.dataset.shape[1] - 1
+        
         encoder = OneHotEncoder()
         result = encoder.fit_transform(self.dataset.iloc[:, columns]).astype('int64').toarray()
         new_columns = [self.dataset.columns[columns[i]] + str(group) 
@@ -457,9 +489,25 @@ class MLData:
         self.dataset[new_columns] = result
         self.dataset = self.dataset[[col for col in self.dataset if col != self.test_col] + [self.test_col]]
         
-        for col in columns:
+        old_columns = [(i, x) for i,x in enumerate(columns)]
+        old_columns.sort(reverse=True)
+        for i, col in old_columns:
             self.column_types.pop(col)
             self.column_data_ty.pop(col)
+            
+            # Sortout input and output columns
+            no_new_columns = len(encoder.categories_[i])
+            
+            if col in self.input_columns:
+                self.input_columns.extend([j for j in range(last_col_i, last_col_i + no_new_columns)])
+            if col in self.output_columns:
+                self.output_columns.extend([j for j in range(last_col_i, last_col_i + no_new_columns)])
+                
+            self.input_columns  = [j - 1 if j > col else j for j in self.input_columns  if j != col]
+            self.output_columns = [j - 1 if j > col else j for j in self.output_columns if j != col]
+            
+            last_col_i += no_new_columns - 1
+            
         for col in new_columns:
             self.column_types.insert(-1, 'int64')
             self.column_data_ty.insert(-1, 'Categorical')
@@ -930,7 +978,7 @@ class MLData:
             return False
         
         _, ax = plt.subplots()
-        data = self.dataset[column].value_counts()
+        data = self.dataset.iloc[:, column].value_counts()
         
         colors = self._generate_colors(len(data))
 

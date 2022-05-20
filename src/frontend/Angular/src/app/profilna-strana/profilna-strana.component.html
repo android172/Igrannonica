@@ -2,31 +2,31 @@
     <div class="row">
         <div class="col-md-9">
             <div class="profile-head">
-                <div style="color: #c4c4c4; font-size: 15px;">Ime i prezime:</div>
+                <div style="color: #c4c4c4; font-size: 15px;">Full name:</div>
                 <div style="color: #fff; font-size: 18px;" class="pt-1">
                     <div id="ime" type="text" name="ime"></div>
                 </div>
 
                 <ul class="nav nav-tabs pt-5" id="myTab" role="tablist" *ngIf="flag">
                     <li class="nav-item">
-                        <a class="nav-link active" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informacije</a>
+                        <a class="nav-link active" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informations</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Lista eksperimenata</a>
+                        <a class="nav-link" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">List of experiments</a>
                     </li>
                 </ul>
                 <ul class="nav nav-tabs pt-5" id="myTab" role="tablist" *ngIf="!flag">
                     <li class="nav-item">
-                        <a class="nav-link" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informacije</a>
+                        <a class="nav-link" style="cursor: pointer;" id="home-tab" (click)="promenaTaba(1)" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Informations</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">Lista eksperimenata</a>
+                        <a class="nav-link active" id="profile-tab"  style="cursor: pointer;"  (click)="promenaTaba(2)" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false">List of experiments</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-md-3">
-            <button class="btn btn-primary profile-button" type="submit" id="sacuvaj" routerLink="/profilna-strana-izmena-podataka" style=" background: #D74971; box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);  font-size: 14px; border: none;">Izmenite profil</button>
+            <button class="btn btn-primary profile-button" type="submit" id="sacuvaj" routerLink="/profilna-strana-izmena-podataka" style=" background: #D74971; box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);  font-size: 14px; border: none;">Change profile</button>
 
             <!-- <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Izmenite profil" routerLink="/profilna-strana-izmena-podataka"/> -->
         </div>
@@ -37,7 +37,7 @@
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row pt-3">
                                 <div class="col-md-6 " style="color: #c4c4c4; font-size: 15px;">
-                                    <label>Korisnicko ime</label>
+                                    <label>Username</label>
                                 </div>
                                 <div class="col-md-6 " style="color: #fff; font-size: 16px; font-weight: 500;">
                                     <div id="korisnickoIme" type="text" name="korisnickoIme"></div>
@@ -53,10 +53,10 @@
                             </div>
                             
                 </div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row">
                                 <div class="col-md-12" style="color: #c4c4c4; font-size: 15px;">
-                                    <label>Lista mojih eksperimenata:</label>
+                                    <label>List of my experiments:</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -67,13 +67,13 @@
                                 </div>
                             </div>
                             
-                </div>
+                </div> -->
             </div>
             <div class="tab-content profile-tab" id="myTabContent"  *ngIf="!flag">
                 <div class="tab-pane fade " id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row pt-3">
                                 <div class="col-md-6 " style="color: #c4c4c4; font-size: 15px;">
-                                    <label>Korisnicko ime</label>
+                                    <label>Username</label>
                                 </div>
                                 <div class="col-md-6 " style="color: #fff; font-size: 16px; font-weight: 500;">
                                     <div id="korisnickoIme" type="text" name="korisnickoIme"></div>

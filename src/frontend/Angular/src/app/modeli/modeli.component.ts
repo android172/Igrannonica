@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
 import { SharedService } from '../shared/shared.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications';
 
@@ -14,7 +14,15 @@ import {NotificationsService} from 'angular2-notifications';
 })
 
 export class ModeliComponent implements OnInit {
-  @Output() PosaljiModel = new EventEmitter<number>();
+  private eventsSubscription!: Subscription;
+ // @Output() PosaljiModel = new EventEmitter<number>();
+
+  @Input() primljenM! : Observable<any>;
+
+  @Output() PosaljiIzabranModel:EventEmitter<number> = new EventEmitter<number>();
+  
+  bla: string = 'p0';
+
   json: any;
   json1: any;
   jsonMetrika: any;
@@ -27,7 +35,7 @@ export class ModeliComponent implements OnInit {
   ActivateAddEdit: boolean = false;
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
-  izabranId: any;
+  izabranId: number = -1;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -39,6 +47,7 @@ export class ModeliComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.eventsSubscription = this.primljenM.subscribe((data)=>{this.primiModel(data);});
     this.ucitajImeE();
     this.subscriptionName = this.shared.getUpdate().subscribe
     (
@@ -49,7 +58,12 @@ export class ModeliComponent implements OnInit {
        // this.ocisti();
         this.ngOnInit();
       }
-    )
+    );
+    console.log("Zovem se sad!!!");
+  }
+
+  primiModel(data : any){
+    this.ucitajModel();
   }
   onSuccess(message:any)
   {
@@ -84,9 +98,9 @@ export class ModeliComponent implements OnInit {
     this.ucitajImeE();
   }
 
-  send(id:number){
-    this.PosaljiModel.emit(id);
-  }
+  // send(id:number){
+  //   this.PosaljiModel.emit(id);
+  // }
 
   ocisti(){
     (<HTMLInputElement>document.getElementById("imeM")).value='';
@@ -122,15 +136,22 @@ export class ModeliComponent implements OnInit {
     );
   }
 
+  // treba da se zove ucitaj model
   ucitajModel()
   {
     this.ActivateAddEdit=true;
     this.http.get(url+'/api/Model/Modeli/' + this.id).subscribe(
         res=>{
-          console.log(res);
           this.json = res;
           this.modeli = Object.values(this.json);
           this.formatirajDatum();
+          
+          if (this.modeli.length > 0) {
+            var id = this.modeli[0].id;
+            this.modelDetaljnije(id);
+            this.uzmiId(id);
+            this.selektovanModel = 'p0';
+          }
         },
         error=>{
           console.log(error.error);
@@ -200,21 +221,16 @@ export class ModeliComponent implements OnInit {
   }
 
   promeni(event:any){
-
     if(this.selektovanModel != ""){
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
-      (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
-      this.selektovanModel = event.target.id;
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
+      (<HTMLDivElement>document.getElementById(this.selektovanModel)).className = "model-selected-false";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.background="#C4C4C4";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.color="white";
+      // (<HTMLDivElement>document.getElementById(this.selektovanModel)).style.transform="scale(1)";
     }
-    else{
-      this.selektovanModel = event.target.id;
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
-      (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
-    }
-
+    this.selektovanModel = event.target.id;
+    (<HTMLDivElement>document.getElementById(event.target.id)).className = "model-selected-true";
+    // (<HTMLDivElement>document.getElementById(event.target.id)).style.background="linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%)";
+    // (<HTMLDivElement>document.getElementById(event.target.id)).style.transform="scale(1.04)";
   }
 
   Izmeni()
@@ -247,9 +263,10 @@ export class ModeliComponent implements OnInit {
     }
   }
 
-  uzmiId(id: any)
+  uzmiId(id: number)
   {
     this.izabranId=id;
+    sessionStorage.setItem('idModela',id+"");
   }
 
   obrisiModel()
@@ -274,5 +291,11 @@ export class ModeliComponent implements OnInit {
       }
     }
   }
+
+  nastaviTreniranje(){
+
+    this.PosaljiIzabranModel.emit(this.izabranId);
+  }
 }
+
 

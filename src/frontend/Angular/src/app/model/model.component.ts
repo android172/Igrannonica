@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, withLatestFrom } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -16,6 +16,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications'; 
+import * as ApexCharts from 'apexcharts';
 
 @Component({
   selector: 'app-model',
@@ -27,8 +28,18 @@ export class ModelComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  @Input() mod!: Observable<number>;
-  @Input() index!: Observable<number>; 
+  @Input() idS! : Observable<number>;
+
+  @Input() idM! : Observable<number>;
+
+  @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
+
+  @Output() PosaljiModel:EventEmitter<number> = new EventEmitter<number>();
+
+  @Input() snapshots!: any[];
+
+   @Input() mod!: Observable<number>;
+
   idEksperimenta: any;
   nazivEksperimenta: any;
   nazivModela : any;
@@ -38,9 +49,16 @@ export class ModelComponent implements OnInit {
   jsonMetrika: any;
   jsonModel: any;
   selectedSS: any;
-  snapshots: any[] = [];
+  selectedimeSS : string = "";
+  tip: number=1;
+  imaTestni: boolean = true;
+  // snapshots: any[] = [];
   public aktFunk: any[] = [];
   public hiddLay: any[] = [];
+
+
+  private weights: number[][][] = [];
+  private absoluteWeightMean: number[] = [];
 
   
   public kolone: any[] = [];
@@ -50,6 +68,7 @@ export class ModelComponent implements OnInit {
   public brojU : number = 0;
   public brojI : number = 0;
   public kolone2 : any[] = [];
+  public pomocniNizKolone: any[] = [];
   // public pom : boolean = false;
   //public brHL : number = 0;
   //public niz : any[] = [];
@@ -64,11 +83,12 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
+  public momentum: boolean=false;
   public pomocna: boolean = false;
   public prikazi: boolean = false;
   public prikazi1: boolean = false;
-  // public testC: any[] = [];
-  // public trainC: any[] = [];
+  public testR: any[] = [];
+  public trainR: any[] = [];
   public mtest: any[] = [];
   public mtrain: any[] = [];
   public nizPoljaTest: any[] = [];
@@ -78,8 +98,13 @@ export class ModelComponent implements OnInit {
   cv: number = 0;
 
   buttonDisable : boolean = true;
+  buttonPlay:boolean = true;
+  buttonPause: boolean = false;
+  buttonContinue: boolean= false;
 
-  selectedLF: number = 0;
+  flagP : boolean = false;
+
+  selectedLF: number = 4;
   selectedO: number = 0;
   selectedRM: number = 0;
   selectedPT: number = 1;
@@ -104,6 +129,39 @@ export class ModelComponent implements OnInit {
   public ptrain: String = "";
   public rtest: String = "";
   public rtrain: String = "";
+  public optimizationParams: any[] = [];
+
+  public prikaziPredikciju: boolean = false;
+
+  public klasifikacija: boolean = true;
+
+  public MAE1: number[]=[];
+  public Adj1: number[]=[];
+  public MSE1: number[]=[];
+  public R21: number[]=[];
+  public RSE1: number[]=[];
+  public MAE: number[]=[];
+  public Adj: number[]=[];
+  public MSE: number[]=[];
+  public R2: number[]=[];
+  public RSE: number[]=[];
+
+  public modelData: any;
+
+  public snapshot: number = -1;
+  public annSettings: any;
+  public ioColumns: any;
+  public nizAnnSettings : any;
+  public general: any;
+  public nizGeneral : any;
+  public charts: any;
+  public charts1: any;
+  public inputCol: any[]=[];
+  public outputCol: any[]=[];
+  public matTrainData: any[] = [];
+  public matTestData: any[] = [];
+  public indeksiData: any[]=[];
+  public indeksiData1: any[]=[];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -114,14 +172,41 @@ export class ModelComponent implements OnInit {
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
-    })
+      this.prikaziPredikciju = true;
+
+      this.buttonPlay = true;
+      this.buttonPause = false;
+      this.buttonContinue= false;
+      //this.idModela = id;
+      // console.log("ID MODELA: " + this.idModela);
+    });
+    this.signalR.componentMethodLossCalled$.subscribe((weights: [][][]) => {
+      console.log(weights);
+      this.weights = weights;
+      
+      this.absoluteWeightMean = []
+      for (let a of this.weights) {
+        var sum = 0.0;
+        var count = 0;
+        for (let b of a) {
+          for (let weight of b) {
+            sum += Math.abs(weight);
+            count++;
+          }
+        }
+        this.absoluteWeightMean.push(count / sum)
+      }
+
+
+      this.drawCanvas();
+    });
   }
   sendMessage():void{
     this.shared.sendUpdate("Update");
   }
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -130,7 +215,7 @@ export class ModelComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -150,7 +235,8 @@ export class ModelComponent implements OnInit {
 
   ngOnInit(): void {
     // this.eventsSubscription = this.mod.subscribe((data)=>{this.posaljiZahtev(data);});
-    this.eventsSubscription = this.index.subscribe((data)=>{this.primiSnapshot(data);});
+    this.eventsSubscription = this.idS.subscribe((data)=>{this.primiSnapshot(data);});
+    this.eventsSubscription = this.idM.subscribe((data2)=>{this.ucitajModel(data2);});
     let token = tokenGetter()
     if (token != null)
     {
@@ -160,99 +246,226 @@ export class ModelComponent implements OnInit {
       this.signalR.StartModelTrainingListener();
       //console.log(this.signalR.data);
     }
-    this.dajSnapshots();
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+
+  }
+
+  ucitajModel(data2: number){
+
+    let idmodela = sessionStorage.getItem('idModela');
+    if(Number(idmodela) != -1)
+    {
+      this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
+        res=>{
+          this.modelData =  JSON.parse(res);
+           console.log(res);
+          this.snapshot = this.modelData.Snapshot;
+          this.annSettings = this.modelData.NetworkSettings;
+          this.ioColumns = this.modelData.IOColumns;
+          console.log(this.modelData.IOColumns);
+          this.general = this.modelData.General;
+          this.nizGeneral = Object.values(this.general);
+          (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
+          (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
+          console.log(this.nizGeneral[1]);
+          console.log(this.snapshot);
+          console.log(this.annSettings);
+          /*  SNAPSHOT  */
+          if(this.snapshot == 0)
+          {
+            this.imeS("Default snapshot");
+            sessionStorage.setItem('idSnapshota',"Default snapshot");
+            sessionStorage.setItem('idS',"0");
+          }
+          else
+          {
+            for(let i = 0; i < this.snapshots.length; i++)
+            {
+              if(this.snapshot == this.snapshots[i].id)
+              {
+                this.imeS(this.snapshots[i].ime);
+                sessionStorage.setItem('idSnapshota', this.snapshots[i].ime);
+                sessionStorage.setItem('idS', this.snapshot + "");
+                break;
+              }
+            }
+          }
+
+          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
+            (response: any)=>{
+                this.kolone = Object.assign([],response);   //imena kolona
+                this.kolone2 = [];
+                this.pomocniNizKolone = [];
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                let nizUlazi = this.ioColumns[0];
+                let nizIzlazi = this.ioColumns[1];
+                /* ULAZNE/IZLAZNE KOLONE */
+                for(let j = 0; j < nizUlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizUlazi[j] == i)
+                    {
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Input"});
+                    }
+                  }
+                }
+                for(let j = 0; j < nizIzlazi.length; j++)
+                {
+                  for(let i = 0; i < this.kolone.length; i++)
+                  {
+                    if(nizIzlazi[j] == i)
+                    {
+                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Output"});
+                    }
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  let ind = 0;
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                      ind=1;
+                  }
+                  if(ind == 0)
+                  {
+                    this.pomocniNizKolone.push({value : this.kolone[i], type : "None"});
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
+                  {
+                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
+                    {
+                      this.kolone2.push(this.pomocniNizKolone[j]);
+                    }
+                  }
+                }
+
+                for(let i=0; i<this.kolone.length-1; i++)
+                {
+                  this.ulazneKolone[i] = this.kolone[i];
+                }
+                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+                this.brojU = this.ulazneKolone.length;
+                this.brojI = 1;
+                console.log(this.brojU);
+                this.buttonDisable = false;
+                /* ANN SETTINGS */
+                
+                this.nizAnnSettings = Object.values(this.annSettings);
+                console.log(this.nizAnnSettings);
+                (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
+                (<HTMLInputElement>document.getElementById("lr")).value = this.nizAnnSettings[1]+"";
+                (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
+                (<HTMLInputElement>document.getElementById("noe")).value = this.nizAnnSettings[3]+"";
+                // current epoch - 4
+                this.brojU = this.nizAnnSettings[5];
+                this.brojI = this.nizAnnSettings[6];
+                this.hiddLay = [];
+                this.aktFunk = [];
+                this.nizCvorova = [];
+                this.brHL = 0;
+                this.hiddLay =  this.nizAnnSettings[7];
+                this.nizCvorova = Object.assign([], this.hiddLay);
+                this.brHL = this.nizCvorova.length;
+                console.log("CVOROVI: " + this.nizCvorova);
+                console.log("BR HL : " + this.brHL);
+                this.recreateNetwork();
+                this.aktFunk = this.nizAnnSettings[8];
+                (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
+                (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
+                if(this.nizAnnSettings[0] == 1)
+                {
+                  this.klasifikacija = true;
+                  this.tip = 1;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                else
+                {
+                  this.klasifikacija = false;
+                  this.tip = 0;
+                  this.selectedLF = this.nizAnnSettings[11];
+                  console.log(this.selectedLF);
+                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
+                }
+                (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
+                if(this.nizAnnSettings[13].length != 0)
+                {
+                  (<HTMLInputElement>document.getElementById("momentum")).value = this.nizAnnSettings[13]+"";
+                }
+                if(this.nizAnnSettings[14] == 0){
+                  this.flag = false;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+                }
+                else{
+                  this.flag = true;
+                  (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+                  (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
+                }
+                // console.log("ULAZNE KOLONE: " + this.ulazneKolone);
+                this.ulazneKolone = [];
+                this.izlazneKolone = [];
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizUlazi.length; j++)
+                  {
+                    if(i == nizUlazi[j])
+                      this.ulazneKolone.push(this.kolone[i]);
+                  }
+                }
+                for(let i = 0; i < this.kolone.length; i++)
+                {
+                  for(let j = 0; j < nizIzlazi.length; j++)
+                  {
+                    if(i == nizIzlazi[j])
+                      this.izlazneKolone.push(this.kolone[i]);
+                  }
+                }
+                this.prikaziPredikciju = true;
+                this.PosaljiSnapshot2.emit(this.snapshot);
+              },error =>{
+              console.log(error.error);
+            }
+            );
+            this.selectedSS=this.snapshot;
+            console.log(this.selectedSS);
+        },
+        error=>{
+          console.log(error.error);
+        }
+      )
+    }
+    
   }
 
   primiSnapshot(data:number){
 
-    this.dajSnapshots();
-    this.selectSnapshot(data);
-    //this.imeS("SIROVI PODACI");
-  }
-
-  posaljiZahtev(data:number){
-    //console.log(data);
-    this.aktFunk = [];
-    this.hiddLay = [];
-    this.brHL = 0;
-    this.nizHL  = [];
-    this.nizCvorova = [];
-    this.nizCvorovaStr = [];
-    this.selectedLF = 0;
-    this.selectedO = 0;
-    this.selectedRM = 0;
-    this.selectedPT = 1;
-    this.ulazneKolone = [];
-    this.izlazneKolone = [];
-    this.message = this.shared.getMessage();
-    this.kolone = Object.assign([],this.message);
-    this.kolone2 = Object.assign([],this.kolone);
-    this.idModela = data;
-    this.uzmiKolone();
-    this.ucitajNazivModela(this.idModela);
-    this.http.get(url+"/api/Eksperiment/Podesavanja/"+data).subscribe(
-      res=>{
-        console.log(res);
-        this.json1=res;
-        (<HTMLInputElement>document.getElementById("dd3")).value = this.json1.annType;
-        this.aktFunk =  this.json1['activationFunctions'];
-        (<HTMLInputElement>document.getElementById("bs")).defaultValue = this.json1['batchSize'];
-        (<HTMLInputElement>document.getElementById("lr")).defaultValue = this.json1['learningRate'];
-        this.hiddLay = this.json1['hiddenLayers'];
-        this.brHL = this.hiddLay.length;
-         for(let i=0; i<this.brHL;i++)
+    let snap = sessionStorage.getItem('idSnapshota');
+    let idsnap = sessionStorage.getItem('idS');
+    console.log(snap);
+    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+    if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
+    {
+      this.selectSnapshotM(data);
+      for(let i=0; i<this.snapshots.length; i++)
+      {
+        if(this.snapshots[i].id == data)
         {
-          this.nizCvorova[i] = this.hiddLay[i];
+          this.imeS(this.snapshots[i].ime);
+          return;
         }
-        if(this.aktFunk.length==0 && this.hiddLay.length ==0)
-        {
-          
-          this.aktFunk[0] = 1;
-          this.aktFunk[1] = 1;
-          this.hiddLay[0] = 2;
-          this.hiddLay[1] = 2;
-          this.nizCvorova[0] = 2;
-          this.nizCvorova[1] = 2;
-         /* this.hiddLay.push(1);
-          this.aktFunk.push(1);
-          this.nizCvorova.push(1);*/
-          this.brHL = 2;
-        }
-        console.log(this.hiddLay);
-        console.log(this.aktFunk);
-        this.brojU = this.json1['inputSize'];
-        this.brojI = this.json1['outputSize'];
-        if(this.brojU == 0 || this.brojI == 0)
-        {
-          this.buttonDisable = true;
-        }
-        else
-        {
-          this.buttonDisable = false;
-        }
-        (<HTMLInputElement>document.getElementById("noe")).defaultValue = this.json1['numberOfEpochs'];
-        (<HTMLInputElement>document.getElementById("rr")).defaultValue = this.json1['regularizationRate'];
-        this.crossV = this.json1['kFoldCV'];
-        console.log(this.crossV);
-        if(this.crossV == 0)
-        {
-          this.flag = false;
-          (<HTMLInputElement>document.getElementById("toggle")).checked = false;
-        }
-        else{
-          this.flag = true;
-          (<HTMLInputElement>document.getElementById("toggle")).checked = true;
-        }
-        this.onSuccess("Zahtev uspesno poslat!");
-      },
-      error=>{
-        console.log(error);
-        this.onError("Zahtev nije poslat!");
       }
-    )
+      this.imeS("Default snapshot");
+    }
   }
-
 
   ucitajNazivModela(id : any){
 
@@ -268,55 +481,119 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  funkcija(){
-    let nizK = <any>document.getElementsByName("ulz"); 
-    var ind1;
-    for(let i=0; i<nizK.length; i++)
-    {
-      if(nizK[i].checked)
-      {
+  funkcija(e: any){
 
-        ind1 = 0;
-        for(let j=0; j<this.ulazneKolone.length; j++)
-        {
-            if(this.ulazneKolone[j] === nizK[i].value)
-            {
-                ind1 = 1;
-            }
-        }
-        if(ind1 == 0)
-        {
-           this.ulazneKolone.push(nizK[i].value);
-           this.izabraneU.push(i);
-           (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
-           this.brojU++;
-           if(this.brojU > 0 && this.brojI > 0)
-            {
-              this.buttonDisable = false;
-            }
-            console.log(this.brojU);
-        }
-      }
-      if(!nizK[i].checked)
+    this.flagP = true;
+    if (e.type === 'None'){
+      e.type = 'Output';
+      this.izlazneKolone.push(e.value);
+      this.brojI++;
+      if(this.ulazneKolone.length == 0)
       {
-        for(let j=0; j < this.ulazneKolone.length; j++)
-        {
-          if(this.ulazneKolone[j] === nizK[i].value)
-          {
-            this.ulazneKolone.splice(j,1);
-            this.izabraneU.slice(j,1);
-            (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojU--;
-             console.log(this.brojU);
-            if(this.brojU == 0)
-            {
-              this.buttonDisable = true;
-            }
-          }
-        }
+        this.buttonDisable = true;
+      }
+      else
+      {
+        this.buttonDisable = false;
       }
     }
+    else if (e.type === 'Output'){
+      e.type = 'Input';
+      for(let j=0; j < this.izlazneKolone.length; j++)
+        {
+          if(this.izlazneKolone[j] === e.value)
+          {
+            this.izlazneKolone.splice(j,1);
+            this.brojI--;
+          }
+        }
+      this.ulazneKolone.push(e.value);
+      this.brojU++;
+      if(this.izlazneKolone.length == 0)
+      {
+        this.buttonDisable = true;
+      }
+      else
+      {
+        this.buttonDisable = false;
+      }
+    }
+    else
+    {
+      e.type = 'None';
+      for(let j=0; j < this.ulazneKolone.length; j++)
+        {
+          if(this.ulazneKolone[j] === e.value)
+          {
+            this.ulazneKolone.splice(j,1);
+            this.brojU--;
+          }
+        }
+        if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
+        {
+          this.buttonDisable = true;
+          console.log("TRUE-------------------------------");
+        }
+        else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
+        {
+          this.buttonDisable = true;
+        }
+        else
+        {
+          this.buttonDisable = false;
+        }
+    }
+    this.recreateNetwork();
+    // let nizK = <any>document.getElementsByName("ulz"); 
+    // var ind1;
+    // for(let i=0; i<nizK.length; i++)
+    // {
+    //   if(nizK[i].checked)
+    //   {
+
+    //     ind1 = 0;
+    //     for(let j=0; j<this.ulazneKolone.length; j++)
+    //     {
+    //         if(this.ulazneKolone[j] === nizK[i].value)
+    //         {
+    //             ind1 = 1;
+    //         }
+    //     }
+    //     if(ind1 == 0)
+    //     {
+    //        this.ulazneKolone.push(nizK[i].value);
+    //        this.izabraneU.push(i);
+    //        console.log(this.izabraneU);
+    //        (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
+    //        this.brojU++;
+    //        if(this.brojU > 0 && this.brojI > 0)
+    //         {
+    //           this.buttonDisable = false;
+    //         }
+    //         console.log(this.brojU);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     for(let j=0; j < this.ulazneKolone.length; j++)
+    //     {
+    //       if(this.ulazneKolone[j] === nizK[i].value)
+    //       {
+    //         this.ulazneKolone.splice(j,1);
+    //         this.izabraneU.splice(j,1);
+    //         console.log(this.izabraneU);
+    //         (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
+    //         //console.log(nizK[i].value);
+    //          this.brojU--;
+    //          console.log(this.brojU);
+    //         if(this.brojU == 0)
+    //         {
+    //           this.buttonDisable = true;
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 
 
@@ -351,60 +628,6 @@ export class ModelComponent implements OnInit {
     );
   }
 
-  funkcija2(){
-    let nizK = <any>document.getElementsByName("izl"); 
-    var ind2;
-    for(let i=0; i<nizK.length; i++)
-    {
-      if(nizK[i].checked)
-      {
-        ind2 = 0;
-        for(let j=0; j<this.izlazneKolone.length; j++)
-        {
-            if(this.izlazneKolone[j] === nizK[i].value)
-            {
-                ind2 = 1;
-            }
-        }
-        if(ind2 == 0)
-        {
-           this.izlazneKolone.push(nizK[i].value);
-           this.izabraneI.push(i);
-           (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = true;
-           this.brojI++;
-           if(this.brojI > 0 && this.brojU > 0)
-            {
-              this.buttonDisable = false;
-            }
-            console.log(this.brojI);
-        }
-      }
-      if(!nizK[i].checked)
-      {
-        for(let j=0; j < this.izlazneKolone.length; j++)
-        {
-          if(this.izlazneKolone[j] === nizK[i].value)
-          {
-            this.izlazneKolone.splice(j,1);
-            this.izabraneI.splice(j,1);
-            (<HTMLInputElement>document.getElementById(nizK[i].value + "1")).disabled = false;
-            //console.log(nizK[i].value);
-             this.brojI--;
-             console.log(this.brojI);
-            if(this.brojI == 0)
-            {
-              this.buttonDisable = true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-
-
-
-
   submit(){
     this.izmeniPodesavanja();
     this.uzmiCekirane();
@@ -433,6 +656,17 @@ export class ModelComponent implements OnInit {
   selectPT(event: any){
     var str = event.target.value;
     this.selectedPT = Number(str);
+    this.check();
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
+    {
+      this.klasifikacija = true;
+      this.selectedLF = 4;
+    }
+    else
+    {
+      this.klasifikacija = false;
+      this.selectedLF = 0;
+    }
   }
 
   uzmiAK(ind:any, event: any){
@@ -446,20 +680,28 @@ export class ModelComponent implements OnInit {
     }
   }
 
-  uzmiKolone()
+  check()
   {
-    console.log(this.idModela);
-    this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
-        res=>{
-          this.pomocni=Object.assign([],res);
-          this.izabraneU=Object.assign([],this.pomocni[0]);
-          this.izabraneI=Object.assign([],this.pomocni[1]);
-          this.cekiraj();
-        },error=>{
-          console.log(error.error);
-        }
-    );
+    if(this.selectedPT==0)
+      this.tip=0;
+    else
+      this.tip=1;
   }
+
+  // uzmiKolone()
+  // {
+  //   console.log(this.idModela);
+  //   this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
+  //       res=>{
+  //         this.pomocni=Object.assign([],res);
+  //         this.izabraneU=Object.assign([],this.pomocni[0]);
+  //         this.izabraneI=Object.assign([],this.pomocni[1]);
+  //         this.cekiraj();
+  //       },error=>{
+  //         console.log(error.error);
+  //       }
+  //   );
+  // }
 
   uzmiCekirane(){
     var ulazne=[];
@@ -490,33 +732,6 @@ export class ModelComponent implements OnInit {
     );
   }
 
-
-  cekiraj()
-  {
-    for(let i=0;i<this.message.length;i++)
-      for(let j=0;j<this.izabraneU.length;j++)
-        if(i==this.izabraneU[j])
-        {
-          let nizU = <any>document.getElementsByName("ulz"); 
-          for(let p=0;p<nizU.length;p++)
-            if(nizU[p].value===this.message[i])
-            {
-              nizU[p].checked=true;
-            }
-        }
-    for(let i=0;i<this.message.length;i++)
-      for(let j=0;j<this.izabraneI.length;j++)
-        if(i==this.izabraneI[j])
-        {
-          let nizI = <any>document.getElementsByName("izl"); 
-          for(let p=0;p<nizI.length;p++)
-            if(nizI[p].value===this.message[i])
-            {
-              nizI[p].checked=true;
-            }
-          }
-    
-  }
 
   izmeniPodesavanja(){
     this.s = (<HTMLInputElement>document.getElementById("bs")).value;
@@ -556,7 +771,7 @@ export class ModelComponent implements OnInit {
     
     this.http.put(url+"/api/Eksperiment/Podesavanja?id=" + this.idModela,jsonPod,{responseType:"text"}).subscribe(
       res=>{
-        this.onSuccess("Podesavanja uspesni izmenjena!");
+        this.onSuccess("Podesavanja uspesno izmenjena!");
       },err=>{
         console.log(jsonPod);
         console.log(err.error);
@@ -592,6 +807,12 @@ export class ModelComponent implements OnInit {
 
   treniraj(broj:number){
     
+    if(this.idModela == undefined)
+    {
+      this.onInfo("You have to save the model before training");
+      return;
+    }
+    
     (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
     
     if(broj == 1){
@@ -602,7 +823,8 @@ export class ModelComponent implements OnInit {
     // this.signalR.ZapocniTreniranje(tokenGetter(),1);
     this.signalR.clearChartData();
     this.chart?.update();
-    this.http.get(url+"/api/Model/Model/Treniraj?id="+this.idModela,{responseType:"text"}).subscribe(
+    // loading ... 
+    this.http.get(url+"/api/Model/Model/Treniraj?id="+ this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
       res => {
         let subscription = this.signalR.switchChange.asObservable().subscribe(
           value=>{
@@ -610,6 +832,10 @@ export class ModelComponent implements OnInit {
           }
         )
         this.onInfo("Trening je zapocet.");
+        // pauza   
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
       }
     )
   }
@@ -625,8 +851,9 @@ export class ModelComponent implements OnInit {
       if(this.brHL < 10 ){
         this.brHL++;
         this.hiddLay.push(1);
-        this.aktFunk.push(1);
+        this.aktFunk.push(0);
         this.nizCvorova.push(1);
+        this.recreateNetwork();
       }
       else{
         this.brHL = 10;
@@ -634,16 +861,194 @@ export class ModelComponent implements OnInit {
     }
     else{
 
-      if(this.brHL >= 1)
+      if(this.brHL >= 2){
         this.brHL--;
-      else{
-        this.brHL = 0;
+        this.hiddLay.pop();
+        this.aktFunk.pop();
+        this.nizCvorova.pop();
+        this.recreateNetwork();
       }
-      this.hiddLay.pop();
-      this.aktFunk.pop();
-      this.nizCvorova.pop();
+      else{
+        this.brHL = 1;
+      }
+    }
+    //this.recreateNetwork();
+  }
+
+  recreateNetwork() {
+    var ic = 0;
+    var oc = 0;
+    for (let kolona of this.kolone2) {
+      if      (kolona.type === 'Input')  ic += 1;
+      else if (kolona.type === 'Output') oc += 1;
+    }
+
+    var counts = [];
+    counts.push(ic);
+    for (let i = 0; i < this.brHL; i++)
+      counts.push(this.nizCvorova[i]);
+    counts.push(oc);
+    
+    this.weights = [];
+    this.absoluteWeightMean = []
+    for (let i = 0; i < counts.length - 1; i++) {
+      const count_c = counts[i];
+      const count_n = counts[i + 1];
+      
+      this.weights.push([]);
+      for (let j = 0; j < count_n; j++) {
+        this.weights[i].push([]);
+        for (let k = 0; k < count_c; k++) {
+          this.weights[i][j].push(this.sampleNormalDistribution(0, 1));
+        }
+      }
+      this.absoluteWeightMean.push(1.0)
+    }
+
+
+    this.drawCanvas();
+  }
+
+  sampleNormalDistribution(mean: number, std: number) {
+    const u = Math.random();
+    const v = Math.random();
+
+    const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * u);
+    
+    return z * std + mean;
+  }
+
+  drawCanvas() {
+    var canvas = <HTMLCanvasElement>document.getElementById("model-canvas");
+    const width  = 1920;
+    const height = 1080;
+    canvas.width = width;
+    canvas.height = height;
+
+    var ctx = canvas.getContext("2d");
+    if (ctx == null) return;
+
+    var ic = 0;
+    var oc = 0;
+    for (let kolona of this.kolone2) {
+      if      (kolona.type === 'Input')  ic += 1;
+      else if (kolona.type === 'Output') oc += 1;
+    }
+
+    var node_count = this.brHL + 1;
+    var bonus = 1;
+    if (ic > 0) {
+      node_count++;
+      bonus = 2;
+    }
+    if (oc > 0) node_count++;
+
+    // Draw input layer
+    if (ic > 0) {
+      var node_x = 1 / (node_count);
+      var node_x1 = 2 / (node_count);
+      var no_nodes_n = 0;
+      if (this.brHL > 0)
+        no_nodes_n = this.nizCvorova[0];
+      else if(oc > 0)
+        no_nodes_n = oc;
+
+      for (let j = 0; j < ic; j++) {
+        var node_y = (j + 1) / (ic + 1);
+
+        // Draw connections
+        for (let k = 0; k < no_nodes_n; k++) {
+          var node_y1 = (k + 1) / (no_nodes_n + 1);
+          var weight = this.weights[0][k][j]
+          this.draw_connection(ctx, 0, node_x, node_y, node_x1, node_y1, weight, width, height);
+        }
+
+        // Draw circle
+        this.draw_node(ctx, 'i', node_x, node_y, width, height);
+      }
+    }
+
+    // Draw hidden layers
+    for (let i = 0; i < this.brHL; i++) {
+      var node_x = (i + bonus) / (node_count);
+      var node_x1 = (i + 1 + bonus) / (node_count);
+      
+      var no_nodes_c = this.nizCvorova[i];
+      var no_nodes_n = 0;
+      if (i != this.brHL - 1)
+        no_nodes_n = this.nizCvorova[i + 1];
+      else if (oc > 0)
+        no_nodes_n = oc
+
+      for (let j = 0; j < no_nodes_c; j++) {
+        var node_y = (j + 1) / (no_nodes_c + 1);
+
+        // Draw connections
+        for (let k = 0; k < no_nodes_n; k++) {
+          var node_y1 = (k + 1) / (no_nodes_n + 1);
+          var weight = this.weights[i + bonus - 1][k][j]
+          this.draw_connection(ctx, i + bonus - 1, node_x, node_y, node_x1, node_y1, weight, width, height);
+        }
+
+        // Draw circle
+        this.draw_node(ctx, 'd', node_x, node_y, width, height);
+      }
+    }
+
+    // Draw output layer
+    if (oc > 0) {
+      node_x = (this.brHL + bonus) / (node_count);
+      for (let j = 0; j < oc; j++) {
+        var node_y = (j + 1) / (oc + 1);
+
+        // Draw circle
+        this.draw_node(ctx, 'o', node_x, node_y, width, height);
+      }
     }
   }
+
+  draw_node(ctx: any, kind: string, node_x: number, node_y: number, width: number, height: number) {
+    ctx.strokeStyle = "#5C6A8D42";
+    ctx.lineWidth = 3;
+
+    if (kind === "i")
+      ctx.fillStyle = "#323272";
+    else if (kind === "o")
+      ctx.fillStyle = "#703352";
+    else
+      ctx.fillStyle = "#5C6A8D";
+
+    ctx.beginPath();
+    ctx.arc(node_x * width, node_y  * height, 20, 0,2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  draw_connection(ctx: any, i:number, node_x1: number, node_y1: number, node_x2: number, node_y2: number, weight: number, width: number, height: number) {
+    var r = 255;
+    var g = 255;
+    var b = 255;
+    if (weight > 0) { r = 202; g = 42;  b = 80;  }
+    else            { r = 0;   g = 133; b = 190; }
+
+    var x = Math.abs(weight);
+    var alpha = 1 - 1 / Math.exp(this.absoluteWeightMean[i] * x);
+    alpha *= alpha;
+
+    ctx.strokeStyle = `rgb(${r},${g},${b},${alpha})`;
+    ctx.lineWidth = 4 * alpha;
+
+    ctx.beginPath();
+    ctx.moveTo(node_x1 * width, node_y1 * height);
+    const middle_point = node_x1 + (node_x2 - node_x1) / 2;
+    ctx.bezierCurveTo(
+      middle_point * width, node_y1 * height,
+      middle_point * width, node_y2 * height,
+      node_x2 * width, node_y2 * height
+    );
+    ctx.stroke()
+  }
+
 
   brojCvorova(ind:number){
 
@@ -661,16 +1066,17 @@ export class ModelComponent implements OnInit {
            (<HTMLInputElement>document.getElementById(this.pom)).value = "14";
         }
         else
-          if(Number(str) < 1)
+          if(Number(str) <= 1)
           {
             this.broj = 1;
             (<HTMLInputElement>document.getElementById(this.pom)).value = "1";
           }
         else{
           this.broj = Number(str);
+          //this.recreateNetwork();
         }
         this.nizCvorova[i]=this.broj;
-        console.log(this.nizCvorova[i]);
+        this.recreateNetwork();
       }
     }
   }
@@ -692,7 +1098,7 @@ export class ModelComponent implements OnInit {
       y: {
         title: {
           display: true,
-          text: 'Vrednost loss-a',
+          text: 'Loss value',
           color: 'white'
         },
         grid: {
@@ -706,7 +1112,7 @@ export class ModelComponent implements OnInit {
       x:{
         title: {
           display: true,
-          text: 'Broj epoha',
+          text: 'Epoch',
           color: 'white'
         },
         grid: {
@@ -760,6 +1166,30 @@ export class ModelComponent implements OnInit {
 
   kreirajModelCuvanje()
   {
+    this.prikaziPredikciju = false;
+    var crossVK;
+    if(this.flag == false)
+      crossVK = 0;
+    else
+      crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
+
+    var inputs = [];
+    var outputs = [];
+
+    for (let i in this.kolone2) {
+      var kolona = this.kolone2[i];
+      if (kolona.type === 'Input')
+        inputs.push(i);
+      else if (kolona.type === 'Output')
+        outputs.push(i);
+    }
+
+    this.inputCol=inputs;
+    this.outputCol=outputs;
+
+    if(this.momentum==true)
+      this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -771,59 +1201,101 @@ export class ModelComponent implements OnInit {
         "batchSize": Number((<HTMLInputElement>document.getElementById("bs")).value),
         "numberOfEpochs": Number((<HTMLInputElement>document.getElementById("noe")).value),
         "currentEpoch":0,
-        "inputSize": this.brojU,
-        "outputSize": this.brojI,
+        "inputSize": inputs.length,
+        "outputSize": outputs.length,
         "hiddenLayers":this.nizCvorova,
         "activationFunctions":this.aktFunk,
         "regularization": this.selectedRM,
         "regularizationRate": Number((<HTMLInputElement>document.getElementById("rr")).value),
         "lossFunction": this.selectedLF,
         "optimizer": this.selectedO,
-        "kFoldCV":Number((<HTMLInputElement>document.getElementById("crossV")).value)
+        "optimizationParams": this.optimizationParams,
+        "kFoldCV":crossVK
         },
         "kolone":{
-          "ulazne":this.izabraneU,
-          "izlazne":this.izabraneI
+          "ulazne":inputs,
+          "izlazne":outputs
         }
     };
     console.log((<HTMLInputElement>document.getElementById("bs2")).value);
     console.log(this.jsonModel);
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
-        this.idModela = res;
+        console.log(res);
+        this.idModela=res;
+        this.onSuccess("Model was successfully created.");
+        this.PosaljiModel.emit(this.selectedSS);
       },
       error =>{
         console.log(error.error);
+        this.onError("Model was not created.");
+        if(error.error === "Model sa tim imenom vec postoji.")
+        {
+          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+          this.onError("Model with that name already exists.");
+        }
       }
     )
   }
 
-  dajSnapshots()
-  {
-    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
-      res => {
-        this.jsonSnap=res;
-        this.snapshots = Object.values(this.jsonSnap);
-      },
-      error =>{
-        console.log(error.error);
-      }
-    )
-  }
+  // dajSnapshots()
+  // {
+  //   this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+  //     res => {
+  //       this.jsonSnap=res;
+  //       this.snapshots = Object.values(this.jsonSnap);
+  //     },
+  //     error =>{
+  //       console.log(error.error);
+  //     }
+  //   )
+  // }
 
  imeS(ime: string)
  {
-   (<HTMLButtonElement>document.getElementById("dropdown")).innerHTML = ime;
+   (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML = ime;
  }
 
-  selectSnapshot(id: any)
+  selectSnapshot(id: any,ime:string)
   {
+    if(id==0)
+    {
+      sessionStorage.setItem('idSnapshota',"Default snapshot");
+      sessionStorage.setItem('idS',"0");
+    }
+    else{ 
+      
+      sessionStorage.setItem('idSnapshota',ime);
+      sessionStorage.setItem('idS',id+"");
+    }
      this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
      (response: any)=>{
-         console.log(response);
-         this.kolone = Object.assign([],response);
-         this.kolone2 = Object.assign([],this.kolone);
-
+         this.kolone = Object.assign([],response);   //imena kolona
+         this.kolone2 = [];
+         console.log("----------------------" + this.kolone);
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
+         for (var kolona of this.kolone) {
+            this.kolone2.push({value : kolona, type : "Input"});
+         }
+         this.kolone2[this.kolone2.length - 1].type = "Output";
+        // this.PosaljiSnapshot2.emit(id);
+         for(let i=0; i<this.kolone.length-1; i++)
+         {
+           this.ulazneKolone[i] = this.kolone[i];
+         }
+         this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+         this.brojU = this.ulazneKolone.length;
+         this.brojI = 1;
+         console.log(this.brojU);
+         this.buttonDisable = false;
+         this.buttonDisable = false;
+         this.hiddLay = [3,3,3,3,3];
+         this.nizCvorova = [3,3,3,3,3];
+         this.brHL = 5;
+         this.aktFunk = [0,0,0,0,0];
+         this.PosaljiSnapshot2.emit(id);
+         this.recreateNetwork();
       },error =>{
        console.log(error.error);
      }
@@ -832,18 +1304,71 @@ export class ModelComponent implements OnInit {
     console.log(this.selectedSS);
   }
 
+  selectSnapshotM(id: any)
+  {
+     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+     (response: any)=>{
+        console.log("SELECT SNAPSHOT M");
+         console.log(response);
+         this.kolone = Object.assign([],response);
+         this.kolone2 = [];
+         this.brojI = 0;
+         this.brojU = 0;
+         this.ulazneKolone = [];
+         this.izlazneKolone = [];
+         if(this.kolone2.length == 0)
+         {
+          for (var kolona of this.kolone) {
+            this.kolone2.push({value : kolona, type : "Input"});
+           }
+           this.kolone2[this.kolone2.length - 1].type = "Output";
+         }
+         if(this.flagP == false) 
+         {
+          for(let i=0; i<this.kolone.length-1; i++)
+          {
+            this.ulazneKolone[i] = this.kolone[i];
+          }
+          this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+          this.brojU = this.ulazneKolone.length;
+          this.brojI = 1;
+         }
+         this.buttonDisable = false;
+         this.hiddLay = [3,3,3,3,3];
+         this.nizCvorova = [3,3,3,3,3];
+         this.brHL = 5;
+         this.aktFunk = [0,0,0,0,0];
+         this.recreateNetwork();
+      },error =>{
+       console.log(error.error);
+     }
+    );
+    this.selectedSS=id;
+  }
+
   dajMetriku(modelId:number)
   {
-    this.http.get(url+"/api/Model/metrika?modelId="+ modelId).subscribe(
+    this.http.get(url+"/api/Model/metrika?modelId="+ modelId + "&idEksperimenta=" + this.idEksperimenta).subscribe(
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        console.log(this.jsonMetrika);
+        this.trainR=Object.assign([],this.jsonMetrika[1]);
+        this.testR=Object.assign([],this.jsonMetrika[0]);
         this.checkType();
       },
       error => {
         console.log(error.error);
       }
     )
+  }
+
+  checkMomentum()
+  {
+    if(this.selectedO==8 || this.selectedO==9)
+      this.momentum=true;
+    else
+      this.momentum=false;
   }
 
   checkType()
@@ -853,120 +1378,449 @@ export class ModelComponent implements OnInit {
       if(this.pomocna==true)
         this.pomocna=false;
       this.setujMetrikuK();
-      this.kreirajMatricuTest();
-      this.kreirajMatricuTrain();
+
     }
     else if(this.selectedPT==0)
     {
-      this.setujMetrikuR();
       if(this.pomocna==false)
         this.pomocna=true;
+      this.setujMetrikuR();
     }
   }
 
   setujMetrikuK()
   {
-    this.atest = (Number(this.jsonMetrika[0]['Accuracy'])).toFixed(3);
-    this.atrain = (Number(this.jsonMetrika[1]['Accuracy'])).toFixed(3);
+    if(this.testR.length==0)
+        this.imaTestni=false; 
+    else if(this.testR.length==1)
+        this.imaTestni=true;
     
-    this.btest = (Number(this.jsonMetrika[0]['BalancedAccuracy'])).toFixed(3);
-    this.btrain = (Number(this.jsonMetrika[1]['BalancedAccuracy'])).toFixed(3);
+    console.log(this.imaTestni);   
+    console.log(this.testR.length);
 
-    this.ctest = (Number(this.jsonMetrika[0]['CrossEntropyLoss'])).toFixed(3);
-    this.ctrain = (Number(this.jsonMetrika[1]['CrossEntropyLoss'])).toFixed(3);
-   
-    this.ftest = (Number(this.jsonMetrika[0]['F1Score'])).toFixed(3);
-    this.ftrain = (Number(this.jsonMetrika[1]['F1Score'])).toFixed(3);
+    var max = this.nadjiMaxTrain();
     
-    this.htest = (Number(this.jsonMetrika[0]['HammingLoss'])).toFixed(3);
-    this.htrain = (Number(this.jsonMetrika[1]['HammingLoss'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
-    
-    this.ptest = (Number(this.jsonMetrika[0]['Precision'])).toFixed(3);
-    this.ptrain = (Number(this.jsonMetrika[1]['Precision'])).toFixed(3);
 
-    this.rtest = (Number(this.jsonMetrika[0]['Recall'])).toFixed(3);
-    this.rtrain = (Number(this.jsonMetrika[1]['Recall'])).toFixed(3);
+    this.atrain = (Number(this.jsonMetrika[1][0]['Accuracy'])).toFixed(3);
+    this.btrain = (Number(this.jsonMetrika[1][0]['BalancedAccuracy'])).toFixed(3);
+    this.ctrain = (Number(this.jsonMetrika[1][0]['CrossEntropyLoss'])).toFixed(3);
+    this.ftrain = (Number(this.jsonMetrika[1][0]['F1Score'])).toFixed(3);
+    this.htrain = (Number(this.jsonMetrika[1][0]['HammingLoss'])).toFixed(3);
+    this.ptrain = (Number(this.jsonMetrika[1][0]['Precision'])).toFixed(3);
+    this.rtrain = (Number(this.jsonMetrika[1][0]['Recall'])).toFixed(3);
 
+    this.matTrainData = this.jsonMetrika[1][0]['ConfusionMatrix'];
+
+    console.log(max);
+    var nizJson = [];
+    for(let i=this.matTrainData.length-1; i>=0; i--)
+    {
+      for(let j=this.matTrainData.length-1; j>=0; j--)
+        this.matTrainData[i][j]=Number(Number(this.matTrainData[i][j]/max).toFixed(3));
+      this.indeksiData[i]=i;  
+      nizJson.push({name: this.indeksiData[i] + '', data: this.matTrainData[i]});
+    }
+
+    var options = {
+      chart: {
+        type: 'heatmap',
+        foreColor: '#ffffff'
+      },
+      series: nizJson,
+      xaxis: {
+        categories: this.indeksiData
+      },
+      legend: {
+        labels: {
+            colors: '#ffffff',
+            useSeriesColors: false
+        }
+      },
+      title: {
+        text: undefined,
+        align: 'left',
+        margin: 10,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize:  '14px',
+          fontWeight:  'bold',
+          fontFamily:  undefined,
+          color:  '#ffffff'
+        },
+    },
+      theme: {
+        mode: 'light', 
+        palette: 'palette10', 
+        monochrome: {
+            enabled: true,
+            color: '#1c0e5c',
+            shadeTo: '#fca2ac',
+            shadeIntensity: 0.25
+        }
+    },
+    plotOptions: {
+      heatmap: {
+        colorScale: {
+          ranges: [{
+              from: 0,
+              to: 0.25,
+              color: '#ff70a7'
+            },
+            {
+              from: 0.26,
+              to: 0.50,
+              color: '#bd20ba'
+            },
+            {
+              from: 0.51,
+              to: 0.75,
+              color: '#630585'
+            },
+            {
+              from: 0.76,
+              to: 1,
+              color: '#490661'
+            }]
+        }}
+      }
+
+    }
+    this.charts = new ApexCharts(document.querySelector("#chart"), options);
+    
+    if(this.imaTestni==false)
+      return;
+    
+      this.matTestData = this.jsonMetrika[0][0]['ConfusionMatrix'];
+      var max1 = this.nadjiMaxTest();
+      var nizJson1 = [];
+      for(let i=this.matTestData.length-1; i>=0; i--)
+      {
+        for(let j=this.matTestData.length-1; j>=0; j--)
+          this.matTestData[i][j]=Number(Number(this.matTestData[i][j]/max1).toFixed(3));
+        this.indeksiData1[i]=i;  
+        nizJson1.push({name: this.indeksiData1[i] + '', data: this.matTestData[i]});
+      }
+      var options1 = {
+        chart: {
+          type: 'heatmap',
+          foreColor: '#ffffff'
+        },
+        series: nizJson1,
+        xaxis: {
+          categories: this.indeksiData1
+        },
+        legend: {
+          labels: {
+              colors: '#ffffff',
+              useSeriesColors: false
+          },
+        onItemHover: {
+            highlightDataSeries: false
+        }
+        },
+        title: {
+          text: undefined,
+          align: 'left',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize:  '14px',
+            fontWeight:  'bold',
+            fontFamily:  undefined,
+            color:  '#ffffff'
+          },
+      },
+        theme: {
+          mode: 'light', 
+          palette: 'palette10', 
+          monochrome: {
+              enabled: true,
+              color: '#1c0e5c',
+              shadeTo: '#fca2ac',
+              shadeIntensity: 0.25
+          }
+      },
+      plotOptions: {
+        heatmap: {
+          colorScale: {
+            ranges: [{
+                from: 0,
+                to: 0.25,
+                color: '#ff70a7'
+              },
+              {
+                from: 0.26,
+                to: 0.50,
+                color: '#bd21ba'
+              },
+              {
+                from: 0.51,
+                to: 0.75,
+                color: '#630584'
+              },
+              {
+                from: 0.76,
+                to: 1,
+                color: '#490661'
+              }]
+          }}
+        }
+  
+      }
+      this.atest = (Number(this.jsonMetrika[0][0]['Accuracy'])).toFixed(3);
+      this.btest = (Number(this.jsonMetrika[0][0]['BalancedAccuracy'])).toFixed(3);
+      this.ctest = (Number(this.jsonMetrika[0][0]['CrossEntropyLoss'])).toFixed(3);
+      this.ftest = (Number(this.jsonMetrika[0][0]['F1Score'])).toFixed(3);
+      this.htest = (Number(this.jsonMetrika[0][0]['HammingLoss'])).toFixed(3);
+      this.ptest = (Number(this.jsonMetrika[0][0]['Precision'])).toFixed(3);
+      this.rtest = (Number(this.jsonMetrika[0][0]['Recall'])).toFixed(3);
+
+    this.charts1 = new ApexCharts(document.querySelector("#chart1"), options1);
+    
+  }
+
+  prikaziMatrice()
+  {
+    if(this.imaTestni==true)
+    {
+      this.charts.render();
+      this.charts1.render();
+      (<HTMLDivElement>document.getElementById("chart1")).style.visibility = "visible";
+      (<HTMLDivElement>document.getElementById("bodymodal")).style.height = '680px';
+      console.log("Prikazao sam obe");
+    }
+    else
+    {
+      this.charts.render();
+      (<HTMLDivElement>document.getElementById("chart1")).style.visibility = "hidden";
+      (<HTMLDivElement>document.getElementById("bodymodal")).style.height = '340px';
+    }
   }
 
   setujMetrikuR()
   {
-    
-  }
+    if(this.testR.length==0)
+        this.imaTestni=false; 
+      else
+        this.imaTestni==true;
+    console.log(this.imaTestni);
+    for(let i=0;i<this.trainR.length;i++)
+    {
+      this.MAE[i]=Number(Number(this.trainR[i]['MAE']).toFixed(3));
+      this.MSE[i]=Number(Number(this.trainR[i]['MSE']).toFixed(3));
+      this.Adj[i]=Number(Number(this.trainR[i]['AdjustedR2']).toFixed(3));;
+      this.R2[i]=Number(Number(this.trainR[i]['R2']).toFixed(3));
+      this.RSE[i]=Number(Number(this.trainR[i]['RSE']).toFixed(3));
+    }
 
-  kreirajMatricuTest()
-  {
-    var p=0;
-    this.mtest = this.jsonMetrika[0]['ConfusionMatrix'];
-    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
-    for(let i=0;i<this.mtest.length;i++)
-       for(let j=0;j<this.mtest[i].length;j++)
-       {
-          this.nizPoljaTest[p]=this.mtest[i][j];
-          console.log(this.nizPoljaTest[p]);
-          p++;
-       }
-       this.nadjiMaxTest();
-  }
-
-  nadjiMaxTest()
-  {
-    var t;
-    for(let i=0;i<this.nizPoljaTest.length-1;i++)
-      for(let j=1;j<this.nizPoljaTest.length;j++)
-      {
-        if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
-        {
-          t=this.nizPoljaTest[i];
-          this.nizPoljaTest[i]=this.nizPoljaTest[j];
-          this.nizPoljaTest[j]=t;
-        }
-      }
-      this.maxNizaT= this.nizPoljaTest[0];
+    for(let i=0;i<this.testR.length;i++)
+    {
+      this.MAE1[i]=Number(Number(this.testR[i]['MAE']).toFixed(3));
+      this.MSE1[i]=Number(Number(this.testR[i]['MSE']).toFixed(3));
+      this.Adj1[i]=Number(Number(this.testR[i]['AdjustedR2']).toFixed(3));;
+      this.R21[i]=Number(Number(this.testR[i]['R2']).toFixed(3));
+      this.RSE1[i]=Number(Number(this.testR[i]['RSE']).toFixed(3));
+    }
   }
   
-  kreirajMatricuTrain()
+  nadjiMaxTrain()
   {
     var p=0;
-    this.mtrain = this.jsonMetrika[1]['ConfusionMatrix'];
+    var t;
+    this.mtrain = this.jsonMetrika[1][0]['ConfusionMatrix'];
     // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)
        {
           this.nizPoljaTrain[p]=this.mtrain[i][j];
-          console.log(this.nizPoljaTrain[p]);
           p++;
        }
-       this.nadjiMaxTrain();
+
+    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTrain.length;j++)
+       {
+         if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
+         {
+           t=this.nizPoljaTrain[i];
+           this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
+           this.nizPoljaTrain[j]=t;
+         }
+       }
+    }
+     this.maxNizaTr=this.nizPoljaTrain[0];
+     return this.maxNizaTr; 
   }
 
-  nadjiMaxTrain()
+  nadjiMaxTest()
   {
+    var p=0;
     var t;
-    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
-      for(let j=1;j<this.nizPoljaTrain.length;j++)
-      {
-        if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
-        {
-          t=this.nizPoljaTrain[i];
-          this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
-          this.nizPoljaTrain[j]=t;
-        }
-      }
-      this.maxNizaTr= this.nizPoljaTrain[0];
+    this.mtest = this.jsonMetrika[0][0]['ConfusionMatrix'];
+    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    for(let i=0;i<this.mtest.length;i++)
+       for(let j=0;j<this.mtest[i].length;j++)
+       {
+          this.nizPoljaTest[p]=this.mtest[i][j];
+          p++;
+       }
+
+    for(let i=0;i<this.nizPoljaTest.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTest.length;j++)
+       {
+         if(this.nizPoljaTest[i]<this.nizPoljaTest[j])
+         {
+           t=this.nizPoljaTest[i];
+           this.nizPoljaTest[i]=this.nizPoljaTest[j];
+           this.nizPoljaTest[j]=t;
+         }
+       }
+    }
+     this.maxNizaT=this.nizPoljaTest[0];
+     return this.maxNizaT; 
   }
 
   colapseLoss()
   {
     this.prikazi=true;
-    (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
+    // (<HTMLHeadElement>document.getElementById('loss')).style.display='none';
   }
   
   colapseStatistics()
   {
     this.prikazi1=true;
+  }
+
+  pripremiPredikciju()
+  {
+    console.log("PRIPREMI PREDIKCIJU");
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
+      (<HTMLInputElement>document.getElementById("nazivIzlaza0")).innerHTML = "Output";
+      for(let i = 1; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).style.display = "none";
+        (<HTMLInputElement>document.getElementById("nazivIzlaza" + i)).style.display = "none";
+      }
+    }
+  }
+
+  predikcija()
+  {
+    let nizVrednosti: string[] = [];
+    let ind = 0;
+
+    //ciscenje ako su ostale vrednosti od prethodne predikcije
+    if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
+    {
+      (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = "";
+    }
+    else
+    {
+      for(let i = 0; i < this.izlazneKolone.length; i++)
+      {
+        (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = "";
+      }
+    }
+
+    for(let i = 0; i < this.ulazneKolone.length; i++)
+    {
+      let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
+      // console.log(vrednost.length);
+      let vrednostTrim = vrednost.trim();
+      // console.log(vrednostTrim.length);
+      if(vrednostTrim == "")
+      {
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "visible";
+        ind = 1;
+      }
+      else
+      {
+        nizVrednosti.push(vrednostTrim);
+        (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "hidden";
+      }
+    }
+    if(ind == 1)
+      return;
+
+    console.log(nizVrednosti);
+    console.log(this.idModela);
+    this.http.post(url+"/api/Model/predict?idEksperimenta=" + this.idEksperimenta + "&modelId=" + this.idModela, nizVrednosti, {responseType : "text"}).subscribe(
+      res=>{
+        console.log("USPESNO");
+        console.log(res);
+        if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
+        {
+          (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
+        }
+        else
+        {
+          let resPodaci = res.slice(1, res.length-1);
+          console.log(resPodaci);
+          if(resPodaci.indexOf(","))
+          {
+            let podaci = resPodaci.split(", ");
+            console.log(podaci);
+            for(let i = 0; i < res.length; i++)
+            {
+              (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = Number(podaci[i]).toFixed(4) + "";
+            }
+          }
+          else
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = resPodaci;
+          }
+          for(let i = 0; i < res.length; i++)
+          {
+            (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = res[i];
+          }
+        }
+      },
+      error => {
+        console.log(error.error);
+      }
+    );
+  }
+
+  pauzirajTrening()
+  {
+    this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+
+        // nastavi trening 
+        this.buttonContinue = true;
+        this.buttonPause = false;
+        this.buttonPlay = false; 
+        this.onInfo("Training is paused.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  nastaviTrening()
+  {
+    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        console.table(res);
+        console.log("Nastavljam"); 
+
+        this.buttonPause = true;
+        this.buttonPlay = false;
+        this.buttonContinue = false; 
+        this.onInfo("Training continues.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
   }
 }

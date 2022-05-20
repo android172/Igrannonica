@@ -70,7 +70,6 @@ def change_settings(self):
     settingsString = self.connection.receive()
     annSettings = ANNSettings.load(settingsString)
     self.network.load_settings(annSettings)
-    self.network.create_new_network()
     
     print("ANN settings changed.")
 
@@ -127,15 +126,20 @@ def select_traning_data(self):
     print("Traning datset selected.")
     
 def start(self):
+    # Receive id
+    id = int(self.connection.receive())
+    
     # Initialize random data if no dataset is selected
     if self.network.data.dataset is None:
         self.network.initialize_random_data()
         
-    self.last_active_id += 1
-    id = self.last_active_id
-    
     # Setup network
     ann = self.network.create_deep_copy()
+    
+    if ann.isRegression == False:
+        if not ann.setup_output_columns():
+            self.report_error("ERROR :: Output column is of wrong format.")
+            return
     
     # Train
     Thread(target= lambda : train(self.token, id, ann)).start()
@@ -144,6 +148,7 @@ def start(self):
     self.active_models = {id : running_network}
     running_network.isRunning.set()
     
+    self.connection.send("OK")
     print("Traning commences.")
     
 def stop(self):
@@ -193,6 +198,9 @@ def compute_metrics_a(self, network):
     else:
         train = network.compute_classification_statistics("train")
         test = network.compute_classification_statistics("test")
+    
+    if train == None: train = ""
+    if test  == None: test  = ""
         
     self.connection.send("OK")
     self.connection.send(json.dumps({"test": test, "train": train}))

@@ -15,7 +15,7 @@ namespace dotNet.Controllers {
 
         private readonly IConfiguration configuration;
 
-        private static MLExperiment? experiment = null;
+        public static MLExperiment? experiment = null;
 
         public DB db;
 
@@ -25,7 +25,7 @@ namespace dotNet.Controllers {
         }
 
         [HttpPost("train")]
-        public IActionResult train() {
+        public IActionResult train(int idEksperimenta) {
             var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
@@ -37,8 +37,8 @@ namespace dotNet.Controllers {
             {
                 korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
 
-                if (Korisnik.eksperimenti.ContainsKey(token.ToString()))
-                    experiment = Korisnik.eksperimenti[token.ToString()];
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    experiment = Experiment.eksperimenti[idEksperimenta];
                 else
                     return BadRequest();
             }
@@ -48,9 +48,9 @@ namespace dotNet.Controllers {
 
 
             if (experiment == null)
-                experiment = new(configuration, "st");
+                experiment = new(configuration, "st", 1);
             // Load data
-            experiment.LoadDataset(1, "test_data.csv");
+            experiment.LoadDataset("test_data.csv");
 
             // Get statistics
             var statistics = experiment.ColumnStatistics();
@@ -119,14 +119,15 @@ namespace dotNet.Controllers {
                 regularizationRate: 0.0001f,
                 lossFunction: LossFunction.CrossEntropyLoss,
                 optimizer: Optimizer.Adam,
-                0
+                 optimizationParams: new float[] { 0f },
+                kFoldCV: 0
                 );
 
             experiment.ApplySettings(settings);
 
 
             // Start training
-            experiment.Start();
+            experiment.Start(1);
 
             return Ok("");
         }
@@ -137,10 +138,10 @@ namespace dotNet.Controllers {
             try
             {
                 if (experiment == null)
-                    experiment = new(configuration, "st");
+                    experiment = new(configuration, "st", 1);
 
                 // Load data
-                experiment.LoadDataset(1, "test_data.csv");
+                experiment.LoadDataset("test_data.csv");
 
                 //experiment.DrawScatterPlot(new int[] { 4, 6, 10 });
 
@@ -164,7 +165,7 @@ namespace dotNet.Controllers {
 
                 // Encode categorical values
                 experiment.LabelEncoding(new int[] { 4, 5 });
-                experiment.OneHotEncoding(new int[] { 13 });
+                //experiment.OneHotEncoding(new int[] { 7 });
 
                 //experiment.Undo();
 
@@ -180,7 +181,7 @@ namespace dotNet.Controllers {
 
                 // Replace NA values
                 experiment.ReplaceZeroWithNA(new int[] { 8 });
-                experiment.FillNAWithRegression(8, new int[] { 5, 7, 9, 10, 12 });
+                experiment.FillNAWithRegression(8, new int[] { 5, 9, 10, 12 });
 
                 // Set ANN settings
                 int networkSize = 5;
@@ -189,8 +190,8 @@ namespace dotNet.Controllers {
                 Console.WriteLine(experiment.GetColumnTypes());
 
                 // Select inputs, outputs and split data
-                experiment.LoadInputs(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
-                experiment.LoadOutputs(new int[] { 13, 14 });
+                experiment.LoadInputs(new int[] { 3, 4, 5, 6, 8, 9, 10, 11, 12, 13 });
+                experiment.LoadOutputs(new int[] { 7 });
                 experiment.TrainTestSplit(0.1f);
 
                 int[] hiddentLayers = new int[networkSize];
@@ -211,16 +212,17 @@ namespace dotNet.Controllers {
                     aNNType: ProblemType.Classification,
                     learningRate: 0.001f,
                     batchSize: 64,
-                    numberOfEpochs: 30,
+                    numberOfEpochs: 3,
                     currentEpoch: 0,
                     inputSize: 10,
-                    outputSize: 2,
+                    outputSize: 1,
                     hiddenLayers: hiddentLayers,
                     activationFunctions: activationFunctions,
                     regularization: RegularizationMethod.L1,
                     regularizationRate: 0.0001f,
-                    lossFunction: LossFunction.CrossEntropyLoss,
-                    optimizer: Optimizer.Adam,
+                    lossFunction: LossFunction.NLLLoss,
+                    optimizer: Optimizer.SGD,
+                    optimizationParams: new float[] { 0.9f },
                     kFoldCV: 0
                     );
 
@@ -228,18 +230,18 @@ namespace dotNet.Controllers {
 
 
                 // Start training
-                experiment.Start();
+                experiment.Start(1);
 
-                Thread.Sleep(4000);
+                //Thread.Sleep(4000);
 
-                experiment.Stop(1);
+                //experiment.Stop(1);
 
-                Thread.Sleep(2000);
+                //Thread.Sleep(5000);
 
-                experiment.Continue(1);
+                //experiment.Continue(1);
 
-                //experiment.ComputeMetrics();
-                experiment.Predict(new string[] { "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01" });
+                //experiment.ComputeMetrics(1);
+                //experiment.Predict(new string[] { "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01", "0.01" });
                 // Save model / load model
                 //try { experiment.LoadEpoch("2"); }
                 //catch (MLException e) { Console.WriteLine(e.Message); }

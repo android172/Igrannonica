@@ -15,9 +15,13 @@ export class EksperimentComponent implements OnInit {
   model: boolean = false;
   modeli: boolean = false;
   eventsSubject: Subject<number> = new Subject<number>();
+  eventsSubjectModel : Subject<number> = new Subject<number>();
+  eventsSubjectM : Subject<number> = new Subject<number>();
 
   idEksperimenta: any;
   nazivEksperimenta:any;
+
+  snapshotovi : any = [];
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) { 
     this.activatedRoute.queryParams.subscribe(
@@ -30,6 +34,7 @@ export class EksperimentComponent implements OnInit {
 
   ngOnInit(): void {
     this.ucitajNaziv();
+    this.ucitajSnapshotove();
   }
 
   ngDoCheck()
@@ -37,15 +42,21 @@ export class EksperimentComponent implements OnInit {
   }
 
   primi(id:number){
-    this.eventsSubject.next(id);
+    this.eventsSubjectModel.next(id);
     (<HTMLAnchorElement>document.getElementById("nav-modeli-tab")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("nav-model-tab")).classList.add("active","show");
     (<HTMLAnchorElement>document.getElementById("modeli")).classList.remove("active","show");
     (<HTMLAnchorElement>document.getElementById("model")).classList.add("active","show");
   }
 
-  primi2(id:number){
+
+  primiS(id:number){
     this.eventsSubject.next(id);
+  }
+
+  primiM(id:number)
+  {
+     this.eventsSubjectM.next(id);
   }
 
   boolPodaciPromena()
@@ -92,5 +103,12 @@ export class EksperimentComponent implements OnInit {
     );
   }
 
+  ucitajSnapshotove(){
+    this.http.get(url+"/api/File/Snapshots?id="+this.idEksperimenta).subscribe(
+      res=>{
+        this.snapshotovi = res;
+      }
+    );
+  }
 
 }

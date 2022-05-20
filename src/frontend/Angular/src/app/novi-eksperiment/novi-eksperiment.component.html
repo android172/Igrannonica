@@ -2,15 +2,14 @@
     <div class="box">
         <div class="divbox">
 
-            <div id="podaci">Naziv eksperimenta:</div>
+            <div id="podaci">Enter experiment name</div>
             <div id="polje">
-            <input  id="ime" type="text" name="ime" (keyup)="handleKeyUp($event)">
+            <input id="ime" type="text" name="ime" (keyup)="handleKeyUp($event)">
             <div id="greska" style="color: rgba(243, 48, 95, 0.85);; height: 20px; margin-left: 75px;"></div>
-            </div>  
-
-            <div>
-                <button id="dodaj" (click)="napraviEksperiment()">Dodaj</button>
             </div>
+            <button id="dodaj" type="button" class="btn btn-outline-primary col-md-2" (click)="napraviEksperiment()">Add experiment</button>    
+            <!-- <button id="dodaj" (click)="napraviEksperiment()">Add experiment</button> -->
+            
         </div> 
     </div>
 </div>

@@ -5,6 +5,47 @@ p
     font-size: larger;
 }
 
+#ulaziIzlaz{
+  width: 100%;
+  height: 380px;
+  border: 2.5px solid rgba(89, 119, 223, 1);
+  border-radius: 10px 10px 10px 10px;
+  border-right: 2px solid rgba(89, 119, 223, 1);;
+  /* float: left; */
+  padding: 25px 10%;
+  overflow: auto;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
+}
+
+.column-type-none {
+  color: rgb(249, 237, 245);
+  background-color: rgb(92, 106, 141);
+  border: 1px solid rgb(60, 51, 26);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
+.column-type-output{
+  color: rgb(249, 237, 245);
+  background-color: rgb(112, 51, 82);
+  border: 1px solid rgb(60, 26, 47);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
+.column-type-input{
+  color: rgb(216, 221, 251);
+  background-color: rgb(50, 50, 114);
+  border: 1px solid rgb(33, 33, 78);
+  border-radius: 5px;
+  padding: 7px 12px;
+  width: 100%;
+}
+
 #sacuvaj
 {/*
     width: 150px;
@@ -97,20 +138,19 @@ p
 }
 
 #div2{
-    position: relative;
-    display: flex;
-    width: 520px;
+    /* position: relative; */
+    /* display: flex; */
+    /* width: 520px; */
     height: 420px;
-    float: left;
+    /* float: left; */
     box-sizing: border-box;
 }
 
 #div21{
-  position: relative;
+  /* position: relative; */
  /* display: flex;*/
-  width: 848px;
+  /* width: 848px; */
   height: 350px;
-  float: right;
   box-sizing: border-box;
 }
 
@@ -118,27 +158,11 @@ p
 {
     position: relative;
     display: flex;
-    
  /*  justify-content: center;*/
     clear: both;
-    
 }
 
-#ulaziIzlaz{
 
-    width: 260px;
-    height: 380px;
-    border: 2.5px solid rgba(89, 119, 223, 1);
-    border-radius: 10px 10px 10px 10px;
-    border-right: 2px solid rgba(89, 119, 223, 1);;
-    float: left;
-    padding-top: 25px;
-    padding-left: 30px;
-    overflow: auto;
-    box-sizing: border-box;
-    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
-    background-color: #272741;
-}
 #ulaziIzlaz2{
 
   width: 260px;
@@ -157,9 +181,11 @@ p
 
 #divUI{
 
-    width: 260px;
+    /* width: 260px; */
     height: 420px;
-    float: left;
+    overflow: none;
+    width: 100%;
+    /* float: left; */
     /*
     margin-top: 50px;
     margin-left: 25px;
@@ -214,6 +240,8 @@ p
   float: right;
   margin-top: 70px;
   color: #CED9FF;
+  margin-right: 30px;
+  font-size: 16px;
 }
 
 /* width */
@@ -329,7 +357,7 @@ p
 
 h3{
   color: rgb(216, 221, 251);
-  margin-bottom: 5px;
+  margin-bottom: 25px;
   text-align: center;
 }
 
@@ -346,20 +374,21 @@ h4{
 
 #box
 {
-  width: 795px;
+  width: 98%;
   height: 250px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
+  float: right;
  /* padding-top: 25px;
   padding-left: 30px;*/
-  overflow: auto;
+  overflow: none;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-top: 0px;
  /* margin-right: 50px;*/
-  margin-left: 50px;
+  /* margin-left: 50px; */
   background-color: #272741;
+  margin-right: 0%;
 }
 
 #grupa
@@ -392,13 +421,13 @@ h4{
 }
 
 #grupa1{
-  float: left;
   height: 90px;
   margin-top: 0px;
   margin-bottom: 20px;
-  margin-left: 50px;
-  margin-right: 0px;
-  width: 790px;
+  /* margin-left: 50px; */
+  /* margin-right: 0px; */
+  width: 98%;
+  margin-left: 2%;
 }
 
 #grupa12{
@@ -416,26 +445,29 @@ h4{
 
 #podesavanja2{
 
-  width: 450px;
+  /* width: 450px; */
+  /* width: 50%; */
   height: 110px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
+  /* float: left; */
  /* padding-top: 25px;
   padding-left: 30px;*/
-  overflow: auto;
+  overflow: none;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-top: 20px;
  /* margin-right: 50px;*/
   background-color: #272741;
+  float: right;
  }
 
  #boxZT{
 
-  width: 320px;
+  /* width: 320px; */
   height: 160px;
-  float: left;
+  width: 100%;
+  /* float: left; */
  /* padding-top: 25px;
   padding-left: 30px;*/
  /* margin-right: 50px;*/
@@ -473,8 +505,8 @@ input
 
 #lista{
 
-  width: 320px;
-  height: 500px;
+  /* width: 320px; */
+  height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
@@ -487,7 +519,7 @@ input
 
 #div3{
   position: relative;
-  width: 320px;
+  /* width: 320px; */
   float: left;
   box-sizing: border-box;
   justify-content: center;
@@ -504,14 +536,13 @@ input
   margin-left: 25px;
 }
 
-#model{
-
+.model-content-wrapper{
+  position: relative;
   width: 100%;
-  height: 500px;
+  height: 570px;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
- /* margin-right: 15px;*/
+  /* float: left; */
   overflow: auto;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
@@ -521,22 +552,46 @@ input
   background-color: #272741;
 }
 
+/* .sixteen-by-nine.aspect-ratio {
+  padding-bottom: 56.25%;
+} */
+
+.model-content {
+  position: absolute;
+  top: 0;  bottom: 0;  left: 0;  right: 0;
+  justify-content: center;
+}
+
+#model-canvas{
+  width: 90%;
+}
+
 #body1{
   width: 99%;
   margin: auto;
   min-height: 60vh;
 }
 
+.okvir
+{
+  border: 2.5px solid rgba(89, 119, 223, 1);
+  border-radius: 10px;
+  float: left;
+  padding-top: 15px;
+  overflow: none;
+  box-sizing: border-box;
+  box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+  background-color: #272741;
+}
+
 #centrirano2
 {
-    position: relative;
-    display: flex;
-    
+    /* position: relative;
+    display: flex; */
+    height: 570px;
    /*justify-content: center;*/
-    clear: both;
-
+    /* clear: both; */
     margin-top: 30px;
-    
 }
 
 #dd1, #dd2, #dd3, #dd4{
@@ -568,15 +623,26 @@ input
   color: #CED9FF;
 }
 
+#momentum{
+
+  border: 2px solid #bc7ca1;
+  background: rgba(176, 167, 234, 0.3) ; 
+  border-radius: 8px;
+  min-width: 150px;
+  height: 29px;
+  color: #CED9FF;
+  margin-top: 7px;
+}
+
 #bs1,#bs2{
   border: 2px solid #bc7ca1;
   background: transparent; 
   border-radius: 8px;
-  min-width: 402px;
   height: 40px;
   color: #CED9FF;
   padding: 10px;
   color: white;
+  width:100%;
 }
 
 #opisM,#opisModela{
@@ -586,6 +652,7 @@ input
   color: #CED9FF;
   padding: 10px;
   color: white;
+  width: 100%;
 }
 
 #opisM:focus,#opisModela:focus,#bs1:focus,#bs2:focus{
@@ -646,11 +713,13 @@ input
   width: 28px;
   height: 28px;
   color: #CED9FF;
-  margin-bottom: 20px;
+  /* margin-top: 20px; */
   float: left;
-  text-align: center;
+  text-align: left;
   padding-top: 1px;
-  padding-right: 6px;
+  padding-right: 3px;
+  padding-left: 6px;
+  /* padding-right: 20px; */
   font-size: 20px;
 }
 
@@ -672,10 +741,10 @@ input
 
 #grupa2{
 
-  float: left;
-  width: 146px;
-  margin-left: 72px;
-  margin-right: 72px;
+  /* float: left; */
+  /* width: 146px; */
+  /* margin-left: 72px; */
+  /* margin-right: 72px; */
   text-align: center;
 }
 
@@ -683,7 +752,7 @@ input
 
   height: 35px;
   float: left;
-  width: 250px;
+  /* width: 250px; */
   margin-left: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -756,12 +825,14 @@ input
 }
 
 #collapse{
+  height: 423.68px;
   padding-top: 5px;
   width: 35vw;
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   float: left;
   overflow: auto;
+  /* overflow-y: scroll; */
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   margin-left: 25px;
@@ -1067,14 +1138,27 @@ body {
 .play-btn {
   width: 100px;
   height: 100px;
-  background: radial-gradient( rgba(255, 0, 128, 0.8) 60%, rgba(255, 255, 255, 1) 62%);
+  background: radial-gradient( rgb(255, 79, 126) 60%, rgba(255, 255, 255, 1) 62%);
   border-radius: 50%;
   position: relative;
   display: block;
   float: right;
   margin-top: 30px;
   margin-right: 30px;
-  box-shadow: 0px 0px 25px 3px rgba(255, 0, 128, 0.8);
+  box-shadow: 0px 0px 25px 3px rgb(249, 82, 135);
+}
+
+.play-btn:hover {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient( rgb(248, 76, 130) 60%, rgb(246, 127, 153) 62%);
+  border-radius: 50%;
+  position: relative;
+  display: block;
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
+  box-shadow: 0px 0px 25px 3px rgb(239, 142, 173);
 }
 
 /* triangle */
@@ -1100,8 +1184,8 @@ body {
 .play-btn:before {
   content: "";
   position: absolute;
-  width: 150%;
-  height: 150%;
+  width: 150px;
+  height: 150px;
   -webkit-animation-delay: 0s;
   animation-delay: 0s;
   -webkit-animation: pulsate1 2s;
@@ -1115,8 +1199,8 @@ body {
   opacity: 1;
   border-radius: 50%;
   border: 5px solid rgba(255, 255, 255, .75);
-  top: -30%;
-  left: -30%;
+  top: -25px;
+  left: -25px;
   background: rgba(198, 16, 0, 0);
 }
 
@@ -1125,7 +1209,7 @@ body {
     -webkit-transform: scale(0.6);
     transform: scale(0.6);
     opacity: 1;
-    box-shadow: inset 0px 0px 25px 3px rgba(255, 255, 255, 0.75), 0px 0px 25px 10px rgba(255, 255, 255, 0.75);
+    box-shadow: inset 0px 0px 25px 3px rgb(255, 117, 161), 0px 0px 25px 10px rgba(244, 164, 164, 0.75);
   }
   100% {
     -webkit-transform: scale(1);
@@ -1141,7 +1225,7 @@ body {
     -webkit-transform: scale(0.6);
     transform: scale(0.6);
     opacity: 1;
-    box-shadow: inset 0px 0px 25px 3px rgba(255, 255, 255, 0.75), 0px 0px 25px 10px rgba(255, 255, 255, 0.75);
+    box-shadow: inset 0px 0px 25px 3px rgb(255, 117, 161), 0px 0px 25px 10px rgba(244, 164, 164, 0.75);
   }
   100% {
     -webkit-transform: scale(1, 1);
@@ -1188,11 +1272,15 @@ body {
   transition: all 400ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-.btn-design2:focus
+.btn-secondary:focus
 {
   box-shadow: 0 0 0 0.2rem rgba(190, 138, 218, 0.601);
 }
 
+.btn-secondary
+{
+  border: none;
+}
 #imeM:focus{
   border: none;
   outline: none;
@@ -1240,4 +1328,236 @@ body {
 
 .form-check .form-check-input:active {
   background-color: #C8FFC8; 
+}
+
+/* ---------------------------PREDIKCIJA--------------------------- */
+
+.okvir
+{
+  border: 3px solid #5977DF;
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(39, 39, 65);
+  height: 570px;
+  overflow: auto;
+}
+
+.okvir2
+{
+  border: 3px solid #5977DF;
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(39, 39, 65);
+  overflow: none;
+}
+
+#predikcijaNaslov
+{
+  color: rgb(216, 221, 251);
+  text-align: center;
+  font-size: 17px;
+  margin-bottom: 15px; 
+  margin-top: 10px;
+}
+
+#divPredikcija
+{
+  margin-top: 30px;
+}
+
+.nazivKolone
+{
+  color: rgb(216, 221, 251);
+  font-size: 15px;
+  padding: 5px 0px;
+}
+
+.inputPolje
+{
+  background-color: #171f37;
+  border-radius: 10px;
+  width: 100%;
+  height: 35px;
+  font-size: 14px;
+  color: #c1cdff;
+  border: 2px solid rgb(98, 98, 182);
+}
+
+.unosVrednosti
+{
+  margin-right: 3%;
+  float: left;
+  width: 13%;
+  min-width: 120px;
+}
+
+#ulazi, #izlazi
+{
+  padding-left: 5%;
+}
+
+#izlazi
+{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.greska
+{
+  margin-left: 10px;
+  margin-top: 2px;
+  color: rgb(209, 168, 255);
+  visibility: hidden;
+}
+
+#dugmePredikcija
+{
+  margin-top: 15px;
+  background: rgb(110, 66, 137);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: white;
+  display: block;
+  max-width: 200px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+}
+
+#dugmePredikcija:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dugmePredikcija:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+}
+
+#dugmeMetrika
+{
+  margin-top: 15px;
+  background: rgb(110, 66, 137);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: block;
+  width: 220px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+  margin: auto;
+}
+
+#dugmeMetrika:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dugmeMetrika:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+}
+
+.inputIzlaz
+{
+  cursor: default;
+  pointer-events: none;
+  background-color: rgb(53, 53, 114);
+  border: none;
+  border-radius: 2px;
+}
+
+/* Dugme za pauziranje treninga */ 
+.play-btn-pause{
+  width: 100px;
+  height: 100px;
+  background: radial-gradient( rgba(59, 107, 211, 0.822) 60%, rgba(249, 245, 245, 0.844) 62%);
+  border-radius: 50%;
+  position: relative;
+  display: block;
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
+  text-decoration: none;
+}
+
+.play-btn-pause:hover {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient( rgba(59, 107, 211, 0.822) 60%, rgba(207, 201, 246, 0.844) 62%);
+  border-radius: 50%;
+  position: relative;
+  display: block;
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
+  text-decoration: none;
+}
+
+#pause-button-a{
+  text-decoration: none;
+  color: white;
+}
+
+
+/* Dugme za nastavak treninga */ 
+.play-btn-continue{
+  width: 100px;
+  height: 100px;
+  background: radial-gradient( rgb(252, 84, 126) 60%, rgba(255, 255, 255, 1) 62%);
+  border-radius: 50%;
+  position: relative;
+  display: block;
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
+  text-decoration: none;
+}
+
+.play-btn-continue:hover{
+  width: 100px;
+  height: 100px;
+  background: radial-gradient( rgb(252, 84, 126) 60%, rgb(251, 156, 180) 62%);
+  border-radius: 50%;
+  position: relative;
+  display: block;
+  float: right;
+  margin-top: 30px;
+  margin-right: 30px;
+  text-decoration: none;
+}
+
+.play-btn-continue::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateX(-40%) translateY(-50%);
+  transform: translateX(-40%) translateY(-50%);
+  transform-origin: center center;
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 25px solid #fff;
+  z-index: 100;
+  -webkit-transition: all 400ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  transition: all 400ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.kolona
+{
+  width: 50%;
+  margin: auto;
+  min-width: 130px;
+}
+
+::placeholder {
+  color: rgb(219, 233, 242);
+  opacity: 0.4;
 }

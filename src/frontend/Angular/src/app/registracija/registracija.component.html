@@ -1,34 +1,34 @@
 <div id="body">
     <div id="divDugmePocetna">
-        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Nazad</button>
+        <button routerLink="/pocetna-strana" (click)="changeBoolean()" id="dugmePocetna" >Back</button>
     </div>
     <div id="centrirano">
         <div class="box">
             <div class="divbox">
                 <div id="divdugmici">
-                    <button id="dugmeP" routerLink="/prijava">Prijava</button>
-                    <button id="dugmeR">Registracija</button>
+                    <button id="dugmeP" routerLink="/prijava">Login</button>
+                    <button id="dugmeR">Register</button>
                     <hr id="linijaD"><hr id="linijaT">
                 </div>
                 <form>
                     <div id="p"></div>
-                    <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Korisnicko ime" (keyup)="provera1()">
+                    <input id="korisnickoIme" type="text" name="korisnickoIme" placeholder="Username" (keyup)="provera1()">
                     <div id="podaci1"></div>
 
                     <input id="email" type="text" name="email"  placeholder="E-mail" (keyup)="provera2()" >
                     <div id="podaci2"></div>
 
-                    <input id="ime" type="text" name="ime" placeholder="Ime i prezime" (keyup)="provera3()">
+                    <input id="ime" type="text" name="ime" placeholder="Full name" (keyup)="provera3()">
                     <div id="podaci3"></div>
 
-                    <input id="sifra" type="password" name="sifra" placeholder="Lozinka" (keyup)="provera4()">
+                    <input id="sifra" type="password" name="sifra" placeholder="Password" (keyup)="provera4()">
                     <div id="podaci4"></div>
 
-                    <input id="sifra2" type="password" name="sifra2"  placeholder="Ponovite lozinku" (keyup)="provera5()">
+                    <input id="sifra2" type="password" name="sifra2"  placeholder="Confirm password" (keyup)="provera5()">
                     <div id="podaci5"></div>
                     
                     <div id="submitDugme">
-                        <button id="button" (click)="registracija()" type="submit">Registruj se</button> 
+                        <button id="button" (click)="registracija()" type="submit">Register</button> 
                     </div>
                 </form>
             </div>  

@@ -4,19 +4,17 @@ from io import BytesIO
 import os
 
 def is_dataset_loaded(self):
-    # Receive experiment id
-    experiment_id = self.connection.receive()
-    loaded = self.network.data.dataset is not None and experiment_id == self.experiment_id
+    
+    loaded = self.network.data.dataset is not None
     self.connection.send(loaded)
     
     print(f"Is Dataset loaded returned {loaded}.")
 
 def load_dataset(self):
-    # Receive experiment id
-    experiment_id = self.connection.receive()
-    self.experiment_id = experiment_id
     # Receive dataset name
     file_name = self.connection.receive()
+    
+    experiment_id = self.experiment_id
     
     if self.network.data.load_dataset_version(file_name):
         self.connection.send("OK")
