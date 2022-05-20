@@ -807,6 +807,12 @@ export class ModelComponent implements OnInit {
 
   treniraj(broj:number){
     
+    if(this.idModela == undefined)
+    {
+      this.onInfo("You have to save the model before training");
+      return;
+    }
+    
     (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
     
     if(broj == 1){
