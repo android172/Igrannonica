@@ -52,19 +52,35 @@ input[type=text]{
     margin-left: 75px;
 
 }
+input[type=text]:focus{
+    outline: none;
+}
 
-#dodaj{
-    width: 100px;
-    height: 35px;
-    background: #D74971;
-    border-radius: 10px;
-    color: #fff;
-    font-family: 'Roboto';
-    font-style: normal;
-    margin-left: 150px;
-    margin-top: 10px;
-    border: none;
-    box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);
+#dodaj
+{
+  margin-top: 15px;
+  background: rgb(241, 71, 125);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: block;
+  width: 160px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+  margin: auto;
+  margin-top: 10px;
+}
+#dodaj:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dodaj:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(255, 155, 197, 0.5);
 }
 
 input:-webkit-autofill,
