@@ -118,3 +118,15 @@ p
 body {
   background: #444;
 }
+
+#dgm
+{
+  background-color: #fa6698;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}

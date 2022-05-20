@@ -95,7 +95,7 @@ export class SignalRService {
     datasets: [
       {
         data: [],
-        label: 'Loss funkcija',
+        label: 'Loss function',
         backgroundColor: 'rgba(148,159,177,0.2)',
         borderColor: '#F45E82',
         pointBackgroundColor: '#fb9ab0',

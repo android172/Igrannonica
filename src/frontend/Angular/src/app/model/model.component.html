@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div>
-                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
+                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
                 <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                 <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
             </div>
@@ -100,7 +100,7 @@
                     
                             <div id="grupaP">
                                 <h4> Optimizer </h4>
-                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMementum()">
+                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
                                     <option id="ddp" value="0">AdaDelta</option>
                                     <option id="ddp" value="1">AdaGrad</option>
                                     <option id="ddp" value="2">Adam</option>
@@ -112,7 +112,8 @@
                                     <option id="ddp" value="8">RMSprop</option>
                                     <option id="ddp" value="9">SGD</option>
                                 </select>
-                                <input id="mementum" *ngIf="mementum==true">
+                                <input placeholder="Add momentum" id="momentum" *ngIf="momentum==true">
+                                <!-- <input type="number" id="bs" name="bs" value="64"> -->
                             </div>
 
                         </div>
@@ -187,7 +188,7 @@
     
                         <div class="d-flex justify-content-center" id="boxZT">
 
-                            <h4 id="tekstZT">Započni treniranje</h4>
+                            <h4 id="tekstZT">Start model training</h4>
                             <ng-template [ngIf]="buttonPlay">
                                 <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
                             </ng-template>
@@ -225,12 +226,12 @@
                                 <div class="modal-dialog">
                                 <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                                     <div class="modal-header pt-4" style="border-bottom: none;">
-                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Da li zelite prvo da sacuvate izmene?</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are you sure you want to start training?</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-footer" style="border-top: none;">
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Pokreni bez cuvanja</button>
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button>
+                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Yes</button>
+                                    <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
                                     </div>
                                 </div>
                                 </div>
@@ -317,7 +318,7 @@
             </div>
         </div>
         <div id="centrirano3">
-            <div id="collapse1"  *ngIf="prikazi==true">
+            <div id="collapse1" *ngIf="prikazi==true">
                 <div id="div">
                     <div id="grafik">
                         <div id="canvas">
@@ -337,13 +338,13 @@
         <div>
             <div id="collapse" *ngIf="prikazi1==true">
                 <div id="metrika">
-                    <h3>Statistika testnog i trening skupa</h3>
+                    <h3>Train and test dataset statistics</h3>
                     <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
                         <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
                             <table id="stat" style="width:100%">
                                 <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
                                 <tr>
-                                <th>Parametri</th>
+                                <th>Parameters</th>
                                 <th>Training</th>
                                 <th *ngIf="imaTestni==true">Test</th>
                                 </tr>
@@ -431,12 +432,12 @@
     <div class="container-fluid">
         <div class="row">
             <div *ngIf="prikaziPredikciju==true" id="divPredikcija" class="d-block justify-content-center align-items-center okvir2">
-                <div id="predikcijaNaslov">Predikcija</div>
+                <div id="predikcijaNaslov">Prediction</div>
                 <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="ulazi">
                     <div class="unosVrednosti" *ngFor="let naziv of ulazneKolone; index as i">
                         <div class="nazivKolone">{{naziv}}</div>
                         <input type="text" id="vrednostUlaza{{i}}" class="inputPolje">
-                        <div class="greska" id="greskaIspis{{i}}">*Unesite vrednost</div>
+                        <div class="greska" id="greskaIspis{{i}}">*Enter value</div>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
@@ -506,7 +507,7 @@
             </div>
           </div>
     
-        <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border: none;">
@@ -524,7 +525,7 @@
                 
             </div>
             </div>
-        </div>
+        </div> -->
         <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
@@ -535,15 +536,15 @@
                 <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
                 <!-- <div style="color: beige;">Ime modela</div> -->
                 <!-- <div style="color: bisque;">Ime modela</div> -->
-                <input type="text" id="bs2" autocomplete="off" placeholder="Enter modal name">
+                <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
                 <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
                 <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
                 <!-- <div style="color: bisque;">Opis modela</div> -->
-                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter modal description"></textarea>
+                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter model description"></textarea>
                 <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
                 </div>
                 <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
-                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Save</button>
+                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Save model</button>
                 </div>
             </div>
             </div>
