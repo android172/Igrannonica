@@ -206,7 +206,7 @@ export class ModelComponent implements OnInit {
   }
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -215,7 +215,7 @@ export class ModelComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -1092,7 +1092,7 @@ export class ModelComponent implements OnInit {
       y: {
         title: {
           display: true,
-          text: 'Vrednost loss-a',
+          text: 'Loss value',
           color: 'white'
         },
         grid: {
@@ -1106,7 +1106,7 @@ export class ModelComponent implements OnInit {
       x:{
         title: {
           display: true,
-          text: 'Broj epoha',
+          text: 'Epoch',
           color: 'white'
         },
         grid: {
@@ -1222,7 +1222,7 @@ export class ModelComponent implements OnInit {
       },
       error =>{
         console.log(error.error);
-        this.onError("Model was not successfully created.");
+        this.onError("Model was not created.");
         if(error.error === "Model sa tim imenom vec postoji.")
         {
           (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
