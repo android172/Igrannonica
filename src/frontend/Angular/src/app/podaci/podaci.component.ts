@@ -136,7 +136,7 @@ export class PodaciComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -316,7 +316,7 @@ lineDatas :any = [
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
-        this.onError("Podaci nisu ucitani");
+        this.onError(error.error);
 
         if(error.error === "Unet nedozvoljen tip fajla."){
           console.log("Nedozvoljeno");
@@ -383,7 +383,7 @@ lineDatas :any = [
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Fajl nije ucitan ");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-        this.onError("Testni skup nije ucitan!");
+        this.onError(error.error);
         
       });
     }
@@ -718,7 +718,7 @@ dajNaziveHeadera()
       let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHotEncoding nije izvršeno");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onError("OneHot Encoding nije izvrsen!");
+      this.onError(error.error);
     })
   }
 
@@ -753,7 +753,7 @@ dajNaziveHeadera()
       let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding nije izvršeno");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
-      this.onError("Label Encoding nije izvrsen!");
+      this.onError(error.error);
     })
   }
 
@@ -1014,7 +1014,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Ratio nije dodat");
-      this.onError("Ratio nije unet!");
+     this.onError(error.error);
     })
 
   }
@@ -1040,7 +1040,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
     //  this.dodajKomandu("Kolone nisu obrisane");
-      this.onError('Kolone nisu obrisane');
+    this.onError(error.error);
     })
   }
 
@@ -1092,7 +1092,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
     //  this.dodajKomandu("Vrednosti nisu dodate");
-      this.onError("Vrednosti nisu dodate!");
+       this.onError(error.error);
     })
   }
   fillWithMode()
@@ -1117,7 +1117,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Vrednosti nisu dodate");
-      this.onError("Vrednosti nisu dodate!");
+     this.onError(error.error);
     })
   }
 
@@ -1145,7 +1145,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Vrednosti nisu zamenjene");
-      this.onError("Vrednosti nisu zamenjene!");
+      this.onError(error.error);
     })
   }
   replaceZeroWithNA(){
@@ -1172,7 +1172,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Vrednosti nisu zamenjene");
-      this.onError("Nisu zamenjene numericke vrednosti!");
+      this.onError(error.error);
     })
   }
   selectAllColumns(event:any)
@@ -1303,7 +1303,7 @@ dajNaziveHeadera()
         }
     },error=>{
      // this.dodajKomandu("Brisanje redova nije izvršeno");
-      this.onError("Brisanje nije izvrseno!");
+     this.onError(error.error);
     })
   }
   ucitajNaziv()
@@ -1359,7 +1359,7 @@ dajNaziveHeadera()
      /* let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Izmene nisu sacuvane");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");*/
-      this.onError("Izmene nisu sacuvane!");
+      this.onError(error.error);
     })
     
   }
@@ -1392,7 +1392,7 @@ dajNaziveHeadera()
       console.log(error.error);
       this.rowsAndPages = [];
       //this.dodajKomandu("Polje nije izmenjeno");
-      this.onError("Vrednost " + data.value + " nije dodata!");
+      this.onError(error.error);
     })
   }
 
@@ -1421,7 +1421,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Absolute Maximum Scaling nije izvrseno");
-      this.onError("Absolute Max Scaling nije izvrseno!");
+      this.onError(error.error);
     })
   }
 
@@ -1450,7 +1450,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Min-Max Scaling nije izvrseno");
-      this.onError("Min-Max Scaling nije izvrseno!");
+     this.onError(error.error);
     })
   }
 
@@ -1479,7 +1479,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Z-score Scaling nije izvrseno");
-      this.onError("Z-score Scaling nije izvrseno!");
+     this.onError(error.error);
     })
   }
 
@@ -1549,7 +1549,7 @@ dajNaziveHeadera()
      },error=>{
        console.log(error.error);
        //this.dodajKomandu("Standard Deviation nije izvrseno");
-       this.onError("Standard Deviation nije izvrseno");
+       this.onError(error.error);
      })
    }
    removeOutliersQuantiles()
@@ -1577,7 +1577,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Quantiles nije izvrseno");
-      this.onError("Quantiles nije izvrseno");
+      this.onError(error.error);
     })
   }
   removeOutliersZScore()
@@ -1605,7 +1605,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("ZScore nije izvrseno");
-      this.onError("Z-Score nije izvrseno");
+     this.onError(error.error);
     })
   }
   
@@ -1634,7 +1634,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("IQR nije izvrseno");
-      this.onError("IQR nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersIsolationForest()
@@ -1662,7 +1662,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Isolaton Forest nije izvrseno");
-      this.onError("Isolation Forest nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersOneClassSVM()
@@ -1690,7 +1690,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("One Class SVM nije izvrseno");
-      this.onError("One Class SVM nije izvrseno");
+     this.onError(error.error);
     })
   }
   removeOutliersByLocalFactor()
@@ -1718,7 +1718,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("Local Factor nije izvrseno");
-      this.onError("Local factor nije izvrseno");
+     this.onError(error.error);
     })
   }
   selectOutliers(event:any)
@@ -1857,7 +1857,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
      // this.dodajKomandu("NA redovi nisu obrisani");
-      this.onError("NA redovi nisu obrisani");
+     this.onError(error.error);
     });
   }
 
@@ -1876,7 +1876,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Kolone nisu obrisane");
-      this.onError("Kolone sa NA vrednostima nisu obrisane!");
+      this.onError(error.error);
     });
   }
 
@@ -1906,7 +1906,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       //this.dodajKomandu("Redovi nisu obrisani");
-      this.onError("Redovi nisu obrisani!");
+      this.onError(error.error);
     });
   }
 
@@ -1983,7 +1983,7 @@ dajNaziveHeadera()
       console.log(error.error);
       this.selectedForRegression = -1;
      // this.dodajKomandu("Zamena vrednosti NA sa vrednostima dobijenih regresijom izvrseno");
-      this.onError("Regression - neuspesno!");
+     this.onError(error.error);
       (<HTMLInputElement>document.getElementById("regresija-input")).value = ""; 
     });
   }
@@ -2096,7 +2096,7 @@ dajNaziveHeadera()
         this.onSuccess("Dataset are downloaded successfully.");
     },error=>{
       console.log(error.error);
-      this.onError("Podaci nisu preuzeti!");
+      this.onError(error.error);
     });
   }
 
@@ -2639,7 +2639,7 @@ sacuvajKaoNovu(ime:string){
         this.onSuccess("New row added.");
     },error=>{
       console.log(error.error);
-      this.onError("Dodavanje reda nije izvrseno.");
+      this.onError(error.error);
     });
   }
 
@@ -2683,7 +2683,7 @@ sacuvajKaoNovu(ime:string){
           this.onSuccess("NA values are replaced by new values.");
       },error=>{
         console.log(error.error);
-        this.onError("Zamena NA nije izvrsena.");
+        this.onError(error.error);
       });
       // close modal 
     }
