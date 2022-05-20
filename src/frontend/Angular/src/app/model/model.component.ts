@@ -1092,7 +1092,7 @@ export class ModelComponent implements OnInit {
       y: {
         title: {
           display: true,
-          text: 'Vrednost loss-a',
+          text: 'Loss value',
           color: 'white'
         },
         grid: {
@@ -1106,7 +1106,7 @@ export class ModelComponent implements OnInit {
       x:{
         title: {
           display: true,
-          text: 'Broj epoha',
+          text: 'Epoch',
           color: 'white'
         },
         grid: {
