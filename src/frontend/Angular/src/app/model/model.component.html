@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div>
-                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Sacuvaj model</button>
+                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
                 <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                 <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
             </div>
@@ -187,7 +187,7 @@
     
                         <div class="d-flex justify-content-center" id="boxZT">
 
-                            <h4 id="tekstZT">Započni treniranje</h4>
+                            <h4 id="tekstZT">Start model training</h4>
                             <ng-template [ngIf]="buttonPlay">
                                 <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
                             </ng-template>
@@ -337,13 +337,13 @@
         <div>
             <div id="collapse" *ngIf="prikazi1==true">
                 <div id="metrika">
-                    <h3>Statistika testnog i trening skupa</h3>
+                    <h3>Train and test dataset statistics</h3>
                     <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
                         <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
                             <table id="stat" style="width:100%">
                                 <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
                                 <tr>
-                                <th>Parametri</th>
+                                <th>Parameters</th>
                                 <th>Training</th>
                                 <th *ngIf="imaTestni==true">Test</th>
                                 </tr>
@@ -431,7 +431,7 @@
     <div class="container-fluid">
         <div class="row">
             <div *ngIf="prikaziPredikciju==true" id="divPredikcija" class="d-block justify-content-center align-items-center okvir2">
-                <div id="predikcijaNaslov">Predikcija</div>
+                <div id="predikcijaNaslov">Prediction</div>
                 <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="ulazi">
                     <div class="unosVrednosti" *ngFor="let naziv of ulazneKolone; index as i">
                         <div class="nazivKolone">{{naziv}}</div>
