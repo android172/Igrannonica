@@ -226,12 +226,12 @@
                                 <div class="modal-dialog">
                                 <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                                     <div class="modal-header pt-4" style="border-bottom: none;">
-                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Da li zelite prvo da sacuvate izmene?</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are you sure you want to start training?</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-footer" style="border-top: none;">
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Pokreni bez cuvanja</button>
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button>
+                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Yes</button>
+                                    <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
                                     </div>
                                 </div>
                                 </div>
@@ -437,7 +437,7 @@
                     <div class="unosVrednosti" *ngFor="let naziv of ulazneKolone; index as i">
                         <div class="nazivKolone">{{naziv}}</div>
                         <input type="text" id="vrednostUlaza{{i}}" class="inputPolje">
-                        <div class="greska" id="greskaIspis{{i}}">*Unesite vrednost</div>
+                        <div class="greska" id="greskaIspis{{i}}">*Enter value</div>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center">
