@@ -100,7 +100,7 @@
                     
                             <div id="grupaP">
                                 <h4> Optimizer </h4>
-                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMementum()">
+                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
                                     <option id="ddp" value="0">AdaDelta</option>
                                     <option id="ddp" value="1">AdaGrad</option>
                                     <option id="ddp" value="2">Adam</option>
@@ -112,7 +112,7 @@
                                     <option id="ddp" value="8">RMSprop</option>
                                     <option id="ddp" value="9">SGD</option>
                                 </select>
-                                <input id="mementum" *ngIf="mementum==true">
+                                <input id="momentum" *ngIf="momentum==true">
                             </div>
 
                         </div>
@@ -506,7 +506,7 @@
             </div>
           </div>
     
-        <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border: none;">
@@ -524,7 +524,7 @@
                 
             </div>
             </div>
-        </div>
+        </div> -->
         <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
@@ -535,11 +535,11 @@
                 <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
                 <!-- <div style="color: beige;">Ime modela</div> -->
                 <!-- <div style="color: bisque;">Ime modela</div> -->
-                <input type="text" id="bs2" autocomplete="off" placeholder="Enter modal name">
+                <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
                 <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
                 <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
                 <!-- <div style="color: bisque;">Opis modela</div> -->
-                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter modal description"></textarea>
+                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter model description"></textarea>
                 <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
                 </div>
                 <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">

@@ -282,6 +282,7 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
                 cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
+                //cmd.Parameters.AddWithValue("@op", json.OptimizationParams);
                 //Console.WriteLine(json.ActivationFunctions[0]);
 
                 s = "";
@@ -509,7 +510,7 @@ namespace dotNet.DBFunkcije
             {
                 if (dajSnapshot(id) > 0)
                 {
-                    string query = "select * from model m left join podesavanja p on m.id=p.id left join snapshot s on m.snapshot=s.id where m.id=@id";
+                    string query = "select * from model m left join Podesavanja p on m.id=p.id left join Snapshot s on m.snapshot=s.id where m.id=@id";
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@id", id);
                     connection.Open();
@@ -525,7 +526,7 @@ namespace dotNet.DBFunkcije
                             model.Snapshot = reader.GetString("Ime");
                             model.SnapshotVerzija = reader.GetInt32("snapshot");
                             model.Opis = reader.GetString("Opis");
-                            model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                            model.HiddenLayers = HiddenLayers(reader.GetString("HiddenLayers"));
                             model.Epohe = reader.GetInt32("numberOfEpochs");
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
@@ -536,7 +537,7 @@ namespace dotNet.DBFunkcije
                 }
                 else
                 {
-                    string query = "select * from model m left join podesavanja p on m.id=p.id where m.id=@id";
+                    string query = "select * from model m left join Podesavanja p on m.id=p.id where m.id=@id";
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("@id", id);
                     connection.Open();
@@ -552,7 +553,7 @@ namespace dotNet.DBFunkcije
                             model.Snapshot = "Default snapshot";
                             model.SnapshotVerzija = 0;
                             model.Opis = reader.GetString("Opis");
-                            model.HiddenLayers = HiddenLayers(reader.GetString("hiddenlayers"));
+                            model.HiddenLayers = HiddenLayers(reader.GetString("HiddenLayers"));
                             model.Epohe = reader.GetInt32("numberOfEpochs");
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
