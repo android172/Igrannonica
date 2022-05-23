@@ -252,8 +252,9 @@ export class ModelComponent implements OnInit {
 
   ucitajModel(data2: number){
 
-    let idmodela = sessionStorage.getItem('idModela');
-    if(Number(idmodela) != -1)
+    // console.table(data2);
+    this.idModela = sessionStorage.getItem('idModela');
+    if(Number(this.idModela) != -1)
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
@@ -384,7 +385,7 @@ export class ModelComponent implements OnInit {
                   this.tip = 1;
                   this.selectedLF = this.nizAnnSettings[11];
                   console.log(this.selectedLF);
-                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
                 else
@@ -393,7 +394,7 @@ export class ModelComponent implements OnInit {
                   this.tip = 0;
                   this.selectedLF = this.nizAnnSettings[11];
                   console.log(this.selectedLF);
-                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
                 (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
