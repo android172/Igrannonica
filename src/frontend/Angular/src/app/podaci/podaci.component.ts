@@ -2424,10 +2424,13 @@ sacuvajKaoNovu(ime:string){
     }
   }
   izbrisiSnapshot(){
-    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
+    var id = sessionStorage.getItem("idS");
+    //console.log("------------------------ID SNAPSHOTA: " + id);
+    //var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
     if(id!="0"){
-      this.http.delete(url+"/api/File/Snapshot?id="+id).subscribe(
+      this.http.delete(url+"/api/File/Snapshot?id="+id, {responseType:"text"}).subscribe(
         res=>{
+          //console.log(res);
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
 
@@ -2438,6 +2441,7 @@ sacuvajKaoNovu(ime:string){
         },
         error=>{
           // this.ucitajSnapshotove();
+          //console.log(error.error);
           this.PosaljiPoruku.emit();
         }
       )
