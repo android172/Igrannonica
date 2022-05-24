@@ -2524,7 +2524,8 @@ sacuvajKaoNovu(ime:string){
     {
       text = "You have not selected any fields.";
       
-      this.openModalDeleteClose(this.modalDeleteClose); 
+      // this.openModalDeleteClose(this.modalDeleteClose); 
+      this.onInfo("You have not selected any fields.");
       (<HTMLDivElement>document.getElementById("textDeleteClose")).innerHTML = text;
     }
     else
