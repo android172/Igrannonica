@@ -219,7 +219,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("LearningRate"),
                             reader.GetInt32("BatchSize"),
                             reader.GetInt32("numberOfEpochs"),
-                            0,
+                            reader.GetInt32("currentEpoch"),
                             reader.GetInt32("inputSize"),
                             reader.GetInt32("OutputSize"),
                             HiddenLayers(reader.GetString("HiddenLayers")),
@@ -243,7 +243,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam','',0,'','');";
+                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam','',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -272,13 +272,14 @@ namespace dotNet.DBFunkcije
             String s;
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
+                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `currentEpoch`=@ce, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
                 cmd.Parameters.AddWithValue("@bs", json.BatchSize);
                 cmd.Parameters.AddWithValue("@ins", json.InputSize);
                 cmd.Parameters.AddWithValue("@noe", json.NumberOfEpochs);
+                cmd.Parameters.AddWithValue("@ce", json.CurrentEpoch);
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
                 cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
