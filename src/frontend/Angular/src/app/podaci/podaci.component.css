@@ -1762,6 +1762,10 @@ ngb-pagination ::ng-deep ul > li.active > a {
     width:100%;
 }
 
+#imeVerzije:focus{
+    outline: none;
+}
+
 .modal-header .btn-close {
     margin: -0.5rem -0.5rem -0.5rem auto;
     padding-top: 0px;
