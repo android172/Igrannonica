@@ -234,13 +234,14 @@ p
 
 #tekstZT{
 
-  width: 150px;
+  /* width: 150px; */
   margin: 0px;
   padding: 0px;
-  float: right;
+  /* float: right; */
   margin-top: 70px;
   color: #CED9FF;
-  margin-right: 30px;
+  margin-left: 10%;
+  margin-right: 10%;
   font-size: 16px;
 }
 
@@ -497,7 +498,7 @@ h4{
  #boxZT{
 
   /* width: 320px; */
-  height: 160px;
+  height: 110px;
   width: 100%;
   /* float: left; */
  /* padding-top: 25px;
@@ -1222,7 +1223,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   box-shadow: 0px 0px 25px 3px rgb(249, 82, 135);
 }
 
