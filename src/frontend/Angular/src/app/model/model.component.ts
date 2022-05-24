@@ -1191,6 +1191,13 @@ export class ModelComponent implements OnInit {
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
+    var a = (<HTMLInputElement>document.getElementById("bs2")).value;
+    if(a.trim()==="")
+    {
+      this.onError("Model name is required");
+      return;
+    }
+
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -1230,9 +1237,9 @@ export class ModelComponent implements OnInit {
       error =>{
         console.log(error.error);
         this.onError("Model was not created.");
-        if(error.error === "Model sa tim imenom vec postoji.")
+        if(error.error === "ERROR :: Model with this name already exists.")
         {
-          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model with that name already exists";
           this.onError("Model with that name already exists.");
         }
       }
