@@ -398,11 +398,22 @@ h4{
 #grupa
 {
   float: left;
-  margin-left: 50px;
-  margin-right: 0px;
-  width: 150px;
+  /* margin-right: 0px; */
+  /* width: 150px; */
   margin-bottom: 20px;
   margin-top: 20px;
+  min-width: 100px;
+}
+
+.grupaPom
+{
+  margin-left: 5%;
+  width: 90%;
+}
+
+.marPom
+{
+  margin-right: 10%;
 }
 
 #grupaP2
@@ -640,13 +651,24 @@ input
   color: #CED9FF;
 }
 
-#bs, #lr, #noe, #lf, #o, #rm, #rr{
+#bs, #lf, #o, #rm, #rr{
 
   border: 2px solid #bc7ca1;
   background: rgba(176, 167, 234, 0.3) ; 
   border-radius: 8px;
   min-width: 140px;
   width: 80%;
+  height: 29px;
+  color: #CED9FF;
+}
+
+#lr, #noe
+{
+  border: 2px solid #bc7ca1;
+  background: rgba(176, 167, 234, 0.3) ; 
+  border-radius: 8px;
+  min-width: 100px;
+  width: 85%;
   height: 29px;
   color: #CED9FF;
 }
