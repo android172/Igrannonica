@@ -912,23 +912,22 @@
 <!-- Modal Save As -->
 <div  class="modal fade" id="ModalSaveAs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
-      <div class="modal-content" style="background-color: #ffffff; color:#111111;" >
-        <div class="modal-header " style=" height:50px; background-color: #ddddf6; ">
-          <h3 class="modal-title pt-3" id="exampleModalLabel">Save current dataset version</h3>
+      <div class="modal-content"style="background: rgba(36, 38, 74, 0.95);">
+        <div class="modal-header " style="border-bottom: none; color: wheat">
+          <h3 class="modal-title" id="exampleModalLabel" style="font-size: large; margin-top: 10px; margin-left: 10px;">Save current dataset version</h3>
           <button #btnexit type="button" (click)="vratiTekstiNaziv()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body justify-content-center align-items-center">
-            <div style="margin: auto; width: 80%;" class="pt-3">
-                <h4>Version name:</h4>
-                <input type="text" id="imeVerzije" [(ngModel)]="nazivSnapshot" >  <!--(change)="daLiPostoji()" -->
+            <div style="margin: auto; width: 80%;">
+                <input placeholder="Enter version name" type="text" id="imeVerzije" [(ngModel)]="nazivSnapshot" >  <!--(change)="daLiPostoji()" -->
                 <div id="nijeUnetoImeVerzije" style="color: rgb(255, 43, 75);  visibility: hidden;">*Version name not given.</div>
             </div>
         </div>
     
-        <div class="modal-footer d-flex" style="border: none;">
-          <button type="button" (click)="vratiTekstiNaziv()" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" (click)="this.daLiPostoji()" style="background-color: #7779b0;" class="btn btn-secondary">Save</button>
+        <div class="modal-footer d-flex" style="border-top: none;">
+          <!-- <button type="button" (click)="vratiTekstiNaziv()" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> -->
+          <button type="button" (click)="this.daLiPostoji()" class="btn btn-secondary" id="sacuvajV">Save</button>
         </div>
 
     </div>
@@ -979,22 +978,22 @@
   </ng-template>
 
   <ng-template #modalNew let-modal>
-    <div class="modal-header" style="height:50px; background-color: #ddddf6;" >
-      <h3 class="modal-title pt-3" id="modal-basic-title">Create New Row</h3>
+    <div class="modal-header" style="height: 50px; border-bottom: none; background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;" >
+      <h3 class="modal-title pt-3" id="modal-basic-title" style="color: wheat; font-size: large">Create New Row</h3>
     </div>
-    <div class="modal-body justify-content-center d-flex align-items-center">
+    <div class="modal-body justify-content-center d-flex align-items-center" style="background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;">
         <div id="textNew" class="pt-2">
            <div class="d-flex justify-content-between" *ngFor="let head of getHeadAndType()" style="margin-bottom: 10px;">
                 <div class="d-flex justify-content-between" style="width: 100%; margin-right: 10px;">   
-                    <div style="margin-right: 12px;">{{head.slice(1)}}:</div> <input class="input-new-row" id="row{{head.slice(1)}}">
+                    <input placeholder="{{head.slice(1)}}" class="input-new-row" id="row{{head.slice(1)}}">
                 </div> 
                     <div id="tipPolja" >*{{head[0]}}</div>
             </div>
         </div>
     </div>
-    <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-otkazi-newrow"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
-        <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="kreirajNoviRed()" (click)="modal.close('Save click')" >Create</button>
+    <div class="modal-footer"  style=" border-top: none; background: rgba(36, 38, 74, 0.95);">
+        <!-- <button type="button" id="btn-otkazi-newrow"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button> -->
+        <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="kreirajNoviRed()" (click)="modal.close('Save click')">Create</button>
     </div>
   </ng-template>
 
