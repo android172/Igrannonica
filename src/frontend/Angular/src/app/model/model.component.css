@@ -412,6 +412,7 @@ h4{
   margin-top: 10px;
   margin-bottom: 10px;
   margin-left: 4%;
+  min-width: 140px;
   /* margin-right: 10px; */
 }
 
@@ -644,7 +645,8 @@ input
   border: 2px solid #bc7ca1;
   background: rgba(176, 167, 234, 0.3) ; 
   border-radius: 8px;
-  min-width: 150px;
+  min-width: 140px;
+  width: 80%;
   height: 29px;
   color: #CED9FF;
 }
@@ -1604,3 +1606,4 @@ body {
 {
   width: 90%;
 }
+
