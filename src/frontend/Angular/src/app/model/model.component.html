@@ -1,27 +1,31 @@
 <div class="container-fluid">
     <div id="body1">
-        <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
-            <div id="outliers-box">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
-                    Izaberi snapshot
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
-                        <div *ngFor="let s of snapshots">
-                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
-                        </div>
-                    </ul>
+
+        <div class="row">
+            <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
+                <div id="outliers-box">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
+                        Izaberi snapshot
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
+                            <div *ngFor="let s of snapshots">
+                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
+                    <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
+                    <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
                 </div>
             </div>
-            <div>
-                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
-                <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
-                <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
-            </div>
         </div>
+
         <div class="row d-flex justify-content-between">
-            <div class="col-md-4" id="div2">
+            <div class="col-md-4">
                 <div id="divUI">
                     <p>Select I/O Columns</p>
                     <div id="ulaziIzlaz">
@@ -49,138 +53,135 @@
                     <div id="poruka1"></div>
                     <div id="poruka2"></div>
                 </div>
-                <div id="box">
-                    <div id="podesavanja">
-                        <div class="row">
-                            <div class="col-md-3" id="grupa12">
-                            
-                                <div id="grupaUI">
-                                    <div type="text" id="is" >
-                                        <img src="assets/input.png" alt="">
-                                        <h3 id="inout"> Input size: {{brojU}}</h3>
-                                    </div>
-                                </div>
-                                <div id="grupaUI">
-                                    <div type="text" id="is" >
-                                        <img src="assets/output.png" alt="">
-                                        <h3 id="inout1"> Output size: {{brojI}}</h3>
-                                    </div>
-                                </div>
-    
-                            </div>
-    
-                            <div class="col-md-8 d-inline-block justify-content-between" id="grupaP2">
 
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Problem type </h4>
-                                    <select name="" id="dd4" (change)="selectPT($event)">
-                                        <option id="ddp" value="1">Classification</option>
-                                        <option id="ddp" value="0">Regression</option>
-                                    </select>
+                <div class="container-fluid" id="box">
+                    <div class="row">
+                        <div class="col-md-12 d-flex" id="podesavanja">
+                                <div class="col-md-3">
+                                
+                                    <div id="grupaUI">
+                                        <div type="text" id="is" >
+                                            <img src="assets/input.png" alt="">
+                                            <h3 id="inout"> Input size: {{brojU}}</h3>
+                                        </div>
+                                    </div>
+                                    <div id="grupaUI">
+                                        <div type="text" id="is" >
+                                            <img src="assets/output.png" alt="">
+                                            <h3 id="inout1"> Output size: {{brojI}}</h3>
+                                        </div>
+                                    </div>
+        
                                 </div>
-                        
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Loss function </h4>
-                                    <select [ngModel]="this.selectedLF" *ngIf="tip; else regression" name="" id="dd2" (change)="selectLF($event)">
-                                        <option id="ddp" value="4">NLLLoss</option>
-                                        <option id="ddp" value="5">CrossEntropyLoss</option>
-                                        <option id="ddp" value="6">KLDivLoss</option>
-                                        <option id="ddp" value="7">MultiMarginLoss</option>
-                                    </select>
-                                    <ng-template #regression>
-                                        <select [ngModel]="this.selectedLF" name="" id="dd2" (change)="selectLF($event)">
-                                            <option id="ddp" value="0">L1 loss</option>
-                                            <option id="ddp" value="1">L2 loss</option>
-                                            <option id="ddp" value="2">SmoothL1Loss</option>
-                                            <option id="ddp" value="3">HuberLoss</option>
+        
+                                <div class="col-md-8 d-inline-block justify-content-between" style="padding: 0; margin-left: 5%;" id="grupaP2">
+    
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Problem type </h4>
+                                        <select name="" id="dd4" (change)="selectPT($event)">
+                                            <option id="ddp" value="1">Classification</option>
+                                            <option id="ddp" value="0">Regression</option>
                                         </select>
-                                    </ng-template>
+                                    </div>
+                            
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Loss function </h4>
+                                        <select [ngModel]="this.selectedLF" *ngIf="tip; else regression" name="" id="dd2" (change)="selectLF($event)">
+                                            <option id="ddp" value="4">NLLLoss</option>
+                                            <option id="ddp" value="5">CrossEntropyLoss</option>
+                                            <option id="ddp" value="6">KLDivLoss</option>
+                                            <option id="ddp" value="7">MultiMarginLoss</option>
+                                        </select>
+                                        <ng-template #regression>
+                                            <select [ngModel]="this.selectedLF" name="" id="dd2" (change)="selectLF($event)">
+                                                <option id="ddp" value="0">L1 loss</option>
+                                                <option id="ddp" value="1">L2 loss</option>
+                                                <option id="ddp" value="2">SmoothL1Loss</option>
+                                                <option id="ddp" value="3">HuberLoss</option>
+                                            </select>
+                                        </ng-template>
+                                    </div>
+                            
+                            
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Optimizer </h4>
+                                        <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
+                                            <option id="ddp" value="0">AdaDelta</option>
+                                            <option id="ddp" value="1">AdaGrad</option>
+                                            <option id="ddp" value="2">Adam</option>
+                                            <option id="ddp" value="3">AdamW</option>
+                                            <option id="ddp" value="4">Adamax</option>
+                                            <option id="ddp" value="5">ASGD</option>
+                                            <option id="ddp" value="6">NAdam</option>
+                                            <option id="ddp" value="7">RAdam</option>
+                                            <option id="ddp" value="8">RMSprop</option>
+                                            <option id="ddp" value="9">SGD</option>
+                                        </select>
+                                        <input placeholder="Add momentum" id="momentum" *ngIf="momentum==true">
+                                    </div>
+        
                                 </div>
-                        
-                        
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Optimizer </h4>
-                                    <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
-                                        <option id="ddp" value="0">AdaDelta</option>
-                                        <option id="ddp" value="1">AdaGrad</option>
-                                        <option id="ddp" value="2">Adam</option>
-                                        <option id="ddp" value="3">AdamW</option>
-                                        <option id="ddp" value="4">Adamax</option>
-                                        <option id="ddp" value="5">ASGD</option>
-                                        <option id="ddp" value="6">NAdam</option>
-                                        <option id="ddp" value="7">RAdam</option>
-                                        <option id="ddp" value="8">RMSprop</option>
-                                        <option id="ddp" value="9">SGD</option>
-                                    </select>
-                                    <input placeholder="Add momentum" id="momentum" *ngIf="momentum==true">
-                                </div>
-    
                             </div>
-                        </div>
-                        <div class="row">
-
-                            <div class="col-md-3" id="grupa12">
-                                <div id="grupaCV">
-                                    <div class="row justify-content-between crossval">
-                                        <div class="col-md-5">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="container-fluid" style="padding: 3% 5%;" id="grupaCV">
+                                <div class="row">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
                                             <h4 id="tekstCV">Cross<br> validation</h4>
                                         </div>
-                                        <div class="col-md-5">
+                                        <div>
                                             <label class="switch">
                                                 <input type="checkbox" id="toggle" (click)="dugmeCV()">
                                                 <span class="slider round"></span>
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div *ngIf="flag; else onemoguceno">
-                                            <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
-                                        </div>
-                                        <ng-template #onemoguceno>
-                                            <input id="crossVd" disabled>
-                                        </ng-template>
-                                    </div>
-                                    <!--
-                                    <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
-                                    <div *ngIf="!flag; else onemoguceno">
-                                        <input id="crossV" min="2" max="20" [defaultValue]="crossV">
+                                </div>
+                                <div class="row">
+                                    <div *ngIf="flag; else onemoguceno">
+                                        <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
                                     </div>
                                     <ng-template #onemoguceno>
                                         <input id="crossVd" disabled>
                                     </ng-template>
-                                    -->
                                 </div>
-                            </div>
-    
-                            <div class="col-md-8 d-inline-block justify-content-between" id="grupaP2">
-    
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Regularization</h4>
-                                    <select name="" id="dd1" (change)="selectRM($event)">
-                                        <option id="ddp" value="0">L1</option>
-                                        <option id="ddp" value="1">L2</option>
-                                    </select>
+                                <!--
+                                <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
+                                <div *ngIf="!flag; else onemoguceno">
+                                    <input id="crossV" min="2" max="20" [defaultValue]="crossV">
                                 </div>
-                        
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Regularization rate </h4>
-                                    <input type="number" id="rr" name="rr" value="0.01">
-                                </div>
-                        
-                                <div class="col-md-4" id="grupaP">
-                                    <h4> Batch size </h4>
-                                        <input type="number" id="bs" name="bs" value="64">
-                                </div>
-    
+                                <ng-template #onemoguceno>
+                                    <input id="crossVd" disabled>
+                                </ng-template>
+                                -->
                             </div>
                         </div>
-                        
+                        <div class="col-md-8 d-inline-block justify-content-between" style="padding: 0;" id="grupaP3">
+    
+                            <div class="col-md-4" id="grupaP">
+                                <h4> Regularization</h4>
+                                <select name="" id="dd1" (change)="selectRM($event)">
+                                    <option id="ddp" value="0">L1</option>
+                                    <option id="ddp" value="1">L2</option>
+                                </select>
+                            </div>
+                    
+                            <div class="col-md-4" id="grupaP">
+                                <h4> Regularization rate </h4>
+                                <input type="number" id="rr" name="rr" value="0.01">
+                            </div>
+                    
+                            <div class="col-md-4" id="grupaP">
+                                <h4> Batch size </h4>
+                                    <input type="number" id="bs" name="bs" value="64">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div style="clear: both;"></div>
-
-                <div class="row">
                     <div id="grupa1" class="col-md-12 d-flex">
     
                         <div class="col-md-6 d-flex justify-content-center" id="podesavanja2">
@@ -232,20 +233,6 @@
                                 <img id="playbutton" src="assets/play-button.png">
                             </button>
                             -->
-                            <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                                    <div class="modal-header pt-4" style="border-bottom: none;">
-                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are you sure you want to start training?</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-footer" style="border-top: none;">
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Yes</button>
-                                    <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
                             <!-- <jw-modal id="modal-1">
                                 <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
                                 <p>
@@ -267,7 +254,6 @@
                         <h4 id="tekstZT">Započni treniranje</h4>
                         -->
                     </div>
-                </div>
             </div>
         </div>
 
@@ -516,6 +502,21 @@
               </div>
             </div>
           </div>
+
+          <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                <div class="modal-header pt-4" style="border-bottom: none;">
+                <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are you sure you want to start training?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer" style="border-top: none;">
+                <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Yes</button>
+                <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
+                </div>
+            </div>
+            </div>
+        </div>
     
         <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
