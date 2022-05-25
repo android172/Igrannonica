@@ -91,7 +91,7 @@ namespace dotNet.Controllers
                 {
                     Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
 
-                    string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
+                    string putanja = Path.Combine(Directory.GetCurrentDirectory() , "Files" , kor.Id.ToString());
                     if(!Directory.Exists(putanja))
                         Directory.CreateDirectory(putanja);
                     return Ok("Registrovan korisnik");
