@@ -1,27 +1,31 @@
-<div id="header">
-  <div id="content">
-  <div id="pomoc">
-      <button id="pomocDugme1">Login</button>
-      <button id="pomocDugme2">Register</button>
+ <div id="meni">
+ <nav class="navbar navbar-expand navbar-dark  flex-column flex-md-row bd-navbar" style="height: 75px;">
+    <a class="navbar-brand" href="#">
+      <img src="assets/aplikacijalogo.png" width="220" height="85" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse  d-flex justify-content-between" id="navbarNav">
+
+      <ul class="navbar-nav bd-navbar-nav flex-row">
+        <div *ngFor="let tabs of prikaziMeni_1">
+          <li *ngIf="tabs.id==false">
+              <a routerLink="{{tabs.link}}" [style]="tabs.style">{{tabs.tab}}</a>
+              <!--<a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="novieks(tabs.novieks)">{{tabs.tab}}</a>-->
+          </li>
+        </div>
+      </ul>
+
+      <div id="prijava_i_registracija" *ngIf="nesto" class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+        <button routerLink="/prijava" id="prijava" (click)="proba()" class="d-flex justify-content-center align-items-center">Login</button>
+        <button routerLink="/registracija" id="registracija" (click)="proba()" class="d-flex justify-content-center align-items-center">Register</button>
+      </div>
+      <div id="prijava_i_registracija1" *ngIf="!nesto" class="d-flex justify-content-center align-items-center ">
+        <button id="prijava" class="d-flex justify-content-center align-items-center" (click)="odjava()">Logout</button>
+        <button id="dugmeikonica" type="image" routerLink="/profilna-strana"><img id="iconSlika" src="assets/ikonica.png" width="45" height="45"></button>
+      </div>
     </div>
-    <div id="naslov">
-      <img src="assets/aplikacijalogo.png" alt="">
-    </div>
-    <div id="prijava_i_registracija" *ngIf="nesto">
-      <button routerLink="/prijava" id="prijava" (click)="proba()">Login</button>
-      <button routerLink="/registracija" id="registracija" (click)="proba()">Register</button>
-    </div>
-    <div id="prijava_i_registracija1" *ngIf="!nesto">
-      <button id="prijava" (click)="odjava()">Logout</button>
-      <button id="dugmeikonica" type="image" routerLink="/profilna-strana"><img id="iconSlika" src="assets/ikonica.png"></button>
-    </div>
+  </nav>
+
   </div>
-  <ul id="meni">
-    <div *ngFor="let tabs of prikaziMeni_1">
-      <li *ngIf="tabs.id==false">
-          <a routerLink="{{tabs.link}}" [style]="tabs.style">{{tabs.tab}}</a>
-          <!--<a routerLink="{{tabs.link}}" [style]="tabs.style" (click)="novieks(tabs.novieks)">{{tabs.tab}}</a>-->
-      </li>
-    </div>
-  </ul>
-</div>
