@@ -17,7 +17,7 @@ export class SignalRService {
   public switch: boolean = false;
   public switchChange: Subject<boolean> = new Subject<boolean>();
   private hubConnection!: signalR.HubConnection; 
-  
+
   private componentMethodCallSource = new Subject<any>();
   componentMethodCalled$ = this.componentMethodCallSource.asObservable();
   callComponentMethod(id:number) {
@@ -34,14 +34,14 @@ export class SignalRService {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl(url+'/hub').build();
     this.hubConnection.start().then(
       ()=> {
-        console.log('povezan')
+        // console.log('povezan')
         //this.LossListener()
       }).then(()=>this.getConnectionId(token)).catch(()=>console.log("Doslo do greske"));
   }
   public getConnectionId(token:string) {
     this.hubConnection.invoke('getconnectionid', token).then(
       (data) => {
-        console.log(data);
+        // console.log(data);
           this.connectionId = data;
         }
     ); 
@@ -53,32 +53,17 @@ export class SignalRService {
       this.models.push(modelId)
     })
   }
+
   public LossListener()
   {
     this.hubConnection.on('Loss', (data) => {
       var res = JSON.parse(data)
       
-      var id = res.modelId
-
-      var epochRes = res.epochRes
-      var currentEpoch = epochRes.epoch
-      var currentLoss = epochRes.loss
-      var weights = epochRes.weights
-
-      this.callComponentMethodLoss(weights)
-
-      if (epochRes.fold !== undefined) {}
+      this.callComponentMethodLoss(res);
 
       // this.data.push(data);
-      
-      console.log(currentEpoch);
-      console.log(currentLoss);
-
-      this.lineChartData.datasets[0].data.push(currentLoss);
-      this.lineChartData.labels?.push(currentEpoch);
-      
-      this.switch = !this.switch;
-      this.switchChange.next(this.switch);
+      // this.lineChartData.datasets[0].data.push(currentLoss);
+      // this.lineChartData.labels?.push(currentEpoch);
     })
   }
 

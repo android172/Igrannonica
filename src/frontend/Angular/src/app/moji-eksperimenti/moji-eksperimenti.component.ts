@@ -30,7 +30,7 @@ export class MojiEksperimentiComponent implements OnInit {
   
     this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
-          console.log(res);
+          // console.log(res);
           this.json = res;
           this.eksperimenti = Object.values(this.json);
         }
@@ -83,7 +83,7 @@ export class MojiEksperimentiComponent implements OnInit {
       {
         this.http.delete(url+'/api/Eksperiment/Eksperiment/' + this.eksperimenti[i].id,{responseType: 'text'}).subscribe(
           res=>{
-            console.log(res);
+            // console.log(res);
             this.ucitajEksp();
             var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
             this.onSuccess("Eksperiment je uspesno obrisan");

@@ -111,7 +111,7 @@ class MLClientInstance(Thread):
             # Network calls
             'ComputeMetrics'    : compute_metrics,
             'ChangeSettings'    : change_settings,
-            'SelectTraningData' : select_traning_data,
+            'SelectTrainingData': select_training_data,
             'Start'             : start,
             'Stop'              : stop,
             'Continue'          : continue_training,
@@ -123,7 +123,10 @@ class MLClientInstance(Thread):
             command = self.connection.receive()
             
             # Execute command
-            calls[command](self)
+            try: calls[command](self)
+            except:
+                print(f"UNCAUGHT ERROR :: An uncaught error thrown while executing command: {command}.")
+                self.report_error("ERROR :: Internal MLServer Error.")
         
     def report_error(self, message):
         print(message, flush=True)

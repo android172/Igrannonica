@@ -189,12 +189,12 @@ namespace dotNet.Controllers
                 int idSnapshot = db.dbmodel.dajSnapshot(id);
                 if (idSnapshot == 0)
                 {
-                    eksperiment.SelectTraningData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                    eksperiment.SelectTrainingData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
                 }
                 else 
                 {
                     Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
-                    eksperiment.SelectTraningData(snapshot.csv);
+                    eksperiment.SelectTrainingData(snapshot.csv);
                 }
                 eksperiment.ApplySettings(podesavanja);
                 eksperiment.Start(id);
@@ -242,12 +242,12 @@ namespace dotNet.Controllers
                 if(snapshot == 0)
                 {
                     string csv = db.dbeksperiment.uzmi_naziv_csv(idEksperimenta);
-                    eksperiment.SelectTraningData(csv);
+                    eksperiment.SelectTrainingData(csv);
                     string koloness = eksperiment.GetColumns(csv);
                     return Ok(koloness.Replace('\'', '"'));
                 }
                 Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
-                eksperiment.SelectTraningData(snapshot1.csv);
+                eksperiment.SelectTrainingData(snapshot1.csv);
                 string kolones = eksperiment.GetColumns(snapshot1.csv);
                 return Ok(kolones.Replace('\'', '"'));
             }

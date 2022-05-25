@@ -331,7 +331,11 @@ class ANN:
             
             initial_state = {k:v for k,v in self.model.state_dict().items()}
             
+            folds_to_skip = self.current_epoch // self.num_epochs
+            current_epoch = self.current_epoch %  self.num_epochs
             for fold, (train_indices, validation_indices) in enumerate(KFold(self.cv_k, shuffle=True).split(train_dataset)):
+                if fold < folds_to_skip: continue
+                
                 train_subs = SubsetRandomSampler(train_indices)
                 val_subs   = SubsetRandomSampler(validation_indices)
                 train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=train_subs)
@@ -339,31 +343,51 @@ class ANN:
                 
                 self.model.load_state_dict(initial_state)
                 
-                while self.current_epoch < self.num_epochs:
-                    loss = self.train_epoch(train_loader)
+                while current_epoch < self.num_epochs:
+                    self.train_epoch(train_loader)
+                    loss = self.test_epoch(train_loader)
                     valLoss = self.test_epoch(val_loader)
                     yield {
                         "fold"    : fold,
-                        "epoch"   : self.current_epoch,
+                        "epoch"   : current_epoch,
                         "loss"    : loss if loss != np.nan else sys.float_info.max,
-                        "valLoss" : valLoss,
+                        "valLoss" : valLoss if valLoss != np.nan else sys.float_info.max,
                         "weights" : self.get_weights()
                     }
-                    self.weights_history[f"{fold}:{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
-                    self.current_epoch = self.current_epoch + 1
+                    self.weights_history[f"{fold}:{current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    current_epoch += 1
+                    self.current_epoch += 1
+                current_epoch = 0
             
         else:
             if self.train_loader is None:
                 self.initialize_loaders()
-            while self.current_epoch < self.num_epochs:
-                loss = self.train_epoch(self.train_loader)
-                yield {
-                    "epoch" : self.current_epoch,
-                    "loss"  : loss if loss != np.nan else sys.float_info.max,
-                    "weights" : self.get_weights() 
-                }
-                self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
-                self.current_epoch = self.current_epoch + 1
+                
+            if self.test_loader is None:
+                while self.current_epoch < self.num_epochs:
+                    self.train_epoch(self.train_loader)
+                    loss = self.test_epoch(self.train_loader)
+                    yield {
+                        "epoch" : self.current_epoch,
+                        "loss"  : loss if loss != np.nan else sys.float_info.max,
+                        "weights" : self.get_weights() 
+                    }
+                    self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    self.current_epoch = self.current_epoch + 1
+            else:
+                while self.current_epoch < self.num_epochs:
+                    self.train_epoch(self.train_loader)
+                    loss = self.test_epoch(self.train_loader)
+                    valLoss = self.test_epoch(self.test_loader)
+                    yield {
+                        "epoch" : self.current_epoch,
+                        "loss"  : loss if loss != np.nan else sys.float_info.max,
+                        "valLoss" : valLoss if valLoss != np.nan else sys.float_info.max,
+                        "weights" : self.get_weights() 
+                    }
+                    self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    self.current_epoch = self.current_epoch + 1
+                
     
     # Metrics
     def compute_regression_statistics(self, dataset):

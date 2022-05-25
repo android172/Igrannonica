@@ -85,7 +85,7 @@ export class PodaciComponent implements OnInit {
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.fileName=res;
         (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
         (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
@@ -120,7 +120,7 @@ export class PodaciComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
-        console.log(this.idEksperimenta);
+        // console.log(this.idEksperimenta);
       }
     )
   }
@@ -158,7 +158,7 @@ export class PodaciComponent implements OnInit {
   {
     this.http.get<any>('/assets/stats.json').subscribe(
       response => {
-        console.log(response);
+        // console.log(response);
         let str = JSON.stringify(response);
         this.statistika = JSON.parse(str);
         this.numerickaS = this.statistika.statsNum;
@@ -312,7 +312,7 @@ lineDatas :any = [
       },error =>{
         console.log(error.error);	
         var div = (<HTMLDivElement>document.getElementById("porukaGreske")).className="visible-n";
-        console.log("Greska");
+        // console.log("Greska");
         (<HTMLDivElement>document.getElementById("poruka")).className="nonvisible-y";  
         (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).style.visibility = "hidden";
         (<HTMLDivElement>document.getElementById("brojRedovaTabelePoruka")).style.visibility = "hidden";
@@ -330,7 +330,7 @@ lineDatas :any = [
     this.http.get(url+"/api/Upload/ColumnTypes?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
 
-        console.log(response);
+        // console.log(response);
         this.nizTipova = response;
         this.dodajTipovePoredKolona(response); // dodavanje tipova
 
@@ -349,7 +349,7 @@ lineDatas :any = [
          this.statistikaCat = []
          this.statistikaNum = []
          //console.log(response);
-        console.log(JSON.parse(response.data));
+        // console.log(JSON.parse(response.data));
         this.json =  JSON.parse(response.data);
         this.ucitanCsv = true;
         this.dajStatistiku();
@@ -414,7 +414,7 @@ dajNaziveHeadera()
   {
     this.http.get(url+"/api/Statistics/statistika?idEksperimenta=" + this.idEksperimenta, {responseType: 'text'}).subscribe(
       (response: any) => {
-        console.log(response);
+        // console.log(response);
         this.jsonStatistika = JSON.parse(response);
         this.ucitajStatistiku();
         
@@ -610,7 +610,7 @@ dajNaziveHeadera()
         });
       }
     }
-    console.log(this.statistikaNum);
+    // console.log(this.statistikaNum);
     //console.log(this.statistikaCat);
   }
 
@@ -628,10 +628,10 @@ dajNaziveHeadera()
   }
 
   gty(page: any){
-   console.log("---GTY--");
+  //  console.log("---GTY--");
    this.itemsPerPage = (<HTMLSelectElement>document.getElementById("brojRedovaTabele")).value;
-   console.log(this.itemsPerPage);
-   console.log(this.page);
+  //  console.log(this.itemsPerPage);
+  //  console.log(this.page);
    this.http.get(url+"/api/Upload/paging/" + page + "/" + this.itemsPerPage + "?idEksperimenta=" + this.idEksperimenta).subscribe(
       (response: any) => {
         this.json =  JSON.parse(response.data);
@@ -700,7 +700,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/DataManipulation/oneHotEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
         this.nizNumerickihKolona = [];
@@ -734,7 +734,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/labelEncoding?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
         this.nizNumerickihKolona = [];
@@ -784,7 +784,7 @@ dajNaziveHeadera()
               this.selectedColumns[1] = pom;
           }
         }
-        console.log(this.selectedColumns);
+        // console.log(this.selectedColumns);
       }
       else{
         (<HTMLButtonElement>document.getElementById("boxplot")).disabled = true;
@@ -833,7 +833,7 @@ dajNaziveHeadera()
         if (index1 > -1) {
         this.nizKategorickihKolona.splice(index1, 1);
         } 
-        console.log(this.nizKategorickihKolona);
+        // console.log(this.nizKategorickihKolona);
       }
       else
       {
@@ -841,7 +841,7 @@ dajNaziveHeadera()
         if (index2 > -1) {
         this.nizNumerickihKolona.splice(index2, 1);
         } 
-        console.log(this.nizNumerickihKolona);
+        // console.log(this.nizNumerickihKolona);
       }
 
       if(!this.niz2.includes(header)) // dodatak za regression
@@ -857,23 +857,23 @@ dajNaziveHeadera()
     if(this.nizTipova[i] === "Categorical")
     {
       this.nizKategorickihKolona.push(i); 
-      console.log(this.nizKategorickihKolona);
+      // console.log(this.nizKategorickihKolona);
     }
     else
     {
       this.nizNumerickihKolona.push(i); 
-      console.log(this.nizNumerickihKolona);
+      // console.log(this.nizNumerickihKolona);
     }
     this.EnableDisableGrafik();
 
-    console.log(this.selectedColumns);
+    // console.log(this.selectedColumns);
     this.selectedName = header;
 
     // dodatak za regression
     if(this.niz2.includes(header))
     {
       this.niz2[i] = "0";
-      console.log(this.niz2);  
+      // console.log(this.niz2);  
     }
 
   }
@@ -1001,12 +1001,12 @@ dajNaziveHeadera()
     if(Number.isNaN(ratio))
     {
      // this.dodajKomandu("Nije unet ratio");
-      console.log("Uneta vrednost: "+ ratio);
+      // console.log("Uneta vrednost: "+ ratio);
       return;
     }
     this.http.post(url+"/api/Upload/setRatio/"+ratio + "?idEksperimenta=" + this.idEksperimenta,ratio,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         let dateTime = new Date();
         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Ratio added: "+ ratio);
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
@@ -1027,7 +1027,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/deleteColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1053,7 +1053,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/fillWithMean?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1079,7 +1079,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/fillWithMedian?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
@@ -1104,7 +1104,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/fillWithMode?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         this.loadDefaultItemsPerPage();
         this.selectedColumns = [];
         this.nizKategorickihKolona = [];
@@ -1130,7 +1130,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/replaceEmpty?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1157,7 +1157,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/replaceZero?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1189,7 +1189,7 @@ dajNaziveHeadera()
         this.isSelectedNum(i);
       }
       this.EnableDisableGrafik();
-     console.log(this.selectedColumns);
+    //  console.log(this.selectedColumns);
      (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Columns";
     }
     else{
@@ -1207,7 +1207,7 @@ dajNaziveHeadera()
         this.rowsAndPages.push([i,this.page]);
         this.isSelectedRow(i);
       }
-      console.log(this.rowsAndPages);
+      // console.log(this.rowsAndPages);
       (<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML = "Deselect Rows";
     }
     else{
@@ -1310,10 +1310,10 @@ dajNaziveHeadera()
   {
     this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
-          console.log(res);
+          ;
           this.nazivEksperimenta = res;
           var div = (<HTMLInputElement>document.getElementById("naziveksperimenta")).value = this.nazivEksperimenta;
-          console.log(this.nazivEksperimenta);
+          // console.log(this.nazivEksperimenta);
         },error=>{
           console.log(error.error);
         }
@@ -1326,7 +1326,7 @@ dajNaziveHeadera()
 
     this.http.put(url+"/api/Eksperiment/Eksperiment?ime=" + nazivE + "&id=" + this.idEksperimenta,null, {responseType : "text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.onSuccess("Experiment name changed successfully!");
       }, error=>{
         this.ucitajNaziv();
@@ -1349,7 +1349,7 @@ dajNaziveHeadera()
 
     this.http.post(url + "/api/Upload/sacuvajIzmene?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
     res => {
-      console.log(res);
+      ;
       this.onSuccess("All changes have been saved.");
       let dateTime = new Date();
       this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All changes have been saved");
@@ -1372,10 +1372,10 @@ dajNaziveHeadera()
     {
       data.value = "";
     }*/
-    console.log(typeof(data.value));
+    // console.log(typeof(data.value));
     this.http.put(url+"/api/DataManipulation/updateValue/" + row + "/" + column + "/" + data.value + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1406,7 +1406,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/absoluteMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1435,7 +1435,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/minMaxScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1464,7 +1464,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/zScoreScaling?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1534,7 +1534,7 @@ dajNaziveHeadera()
      }
      this.http.post(url+"/api/DataManipulation/standardDeviation/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
        res => {
-         console.log(res);
+         ;
          //this.loadDefaultItemsPerPage();
          this.gtyLoadPageWithStatistics(this.page);
          this.brojacAkcija++;
@@ -1562,7 +1562,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersQuantiles/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1590,7 +1590,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersZScore/" + this.threshold + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1619,7 +1619,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersIQR?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1647,7 +1647,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersIsolationForest?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1675,7 +1675,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersOneClassSVM?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1703,7 +1703,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/outliersByLocalFactor?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1803,7 +1803,7 @@ dajNaziveHeadera()
     if(this.selectedOutlier == "option-sd")
     {
       this.threshold = (Number)((<HTMLInputElement>document.getElementById("threshold")).value);
-      console.log(typeof(this.threshold));
+      // console.log(typeof(this.threshold));
       this.removeStandardDeviation();
     }
     if(this.selectedOutlier == "option-quantiles")
@@ -1846,7 +1846,7 @@ dajNaziveHeadera()
   {
     this.http.post(url+"/api/DataManipulation/deleteAllRowsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1865,7 +1865,7 @@ dajNaziveHeadera()
   {
     this.http.post(url+"/api/DataManipulation/deleteAllColumnsNA?idEksperimenta=" + this.idEksperimenta,null,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1891,7 +1891,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/DataManipulation/deleteNARowsForColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -1965,7 +1965,7 @@ dajNaziveHeadera()
     }
     this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         //this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -2131,7 +2131,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/scatterplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2144,7 +2144,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/boxplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2157,7 +2157,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/violinplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2170,7 +2170,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/barplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2183,7 +2183,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/histogram?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2196,7 +2196,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/hexbin?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2209,7 +2209,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Graph/densityplot?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         this.preuzmiSliku();
       },
       error=>{
@@ -2225,7 +2225,7 @@ dajNaziveHeadera()
         var blob = new Blob([res], {
             type: 'image/png'
         });
-        console.log(blob);
+        // console.log(blob);
         this.convertToBase64(blob);
     },
     error=>{
@@ -2298,7 +2298,7 @@ dajNaziveHeadera()
 
   tryUndoAction(){
 
-    console.log("Broj akcija:" + this.brojacAkcija);
+    // console.log("Broj akcija:" + this.brojacAkcija);
     if(this.brojacUndoRedo < 5 && this.brojacAkcija > 0)
     {
       this.undo();
@@ -2314,7 +2314,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Eksperiment/Undo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
-        console.log(res);
+        ;
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.obrisiKomandu();
@@ -2344,7 +2344,7 @@ dajNaziveHeadera()
 
     this.http.post(url+"/api/Eksperiment/Redo?idEksperimenta=" + this.idEksperimenta,null,{responseType:"text"}).subscribe(
       res => {
-        console.log(res);
+        ;
        // this.loadDefaultItemsPerPage();
         this.gtyLoadPageWithStatistics(this.page);
         this.vratiKomandu();
@@ -2378,7 +2378,7 @@ dajNaziveHeadera()
     if(id!="0"){
       this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+id,null,{responseType:"text"}).subscribe(
         res=>{
-          console.log(res);
+          ;
         }
       );
     }
@@ -2389,9 +2389,9 @@ sacuvajKaoNovu(ime:string){
   if(naziv!=""){
     this.http.post(url+"/api/File/SaveAsSnapshot?idEksperimenta="+this.idEksperimenta+"&naziv="+naziv,null,{responseType:"text"}).subscribe(
       res=>{
-        console.log(res);
+        ;
         if(res!="-1"){
-          console.log("Sacuvan snapshot.");
+          // console.log("Sacuvan snapshot.");
           this.onSuccess("New data version is saved successfully.");
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
@@ -2414,7 +2414,7 @@ sacuvajKaoNovu(ime:string){
           if(res!="-1"){
             // vec postoji u bazi - override or discard  
             this.open(this.content);
-            console.log("Postoji");          
+            // console.log("Postoji");          
             // override ... 
             this.idSnapshotaOverride = res;
             this.nazivSnapshotaOverride = naziv;
@@ -2460,7 +2460,7 @@ sacuvajKaoNovu(ime:string){
   izbrisiSnapshott(id:any){
       this.http.delete(url+"/api/File/Snapshot?id"+id).subscribe(
         res=>{
-          console.log(res);
+          ;
           const index = this.snapshots.indexOf(this.nazivSnapshotaOverride, 0);
           if (index > -1) {
             this.snapshots.splice(index, 1);
@@ -2634,16 +2634,16 @@ sacuvajKaoNovu(ime:string){
       }
       else
       {
-        console.log("Niste uneli sva polja!"); 
+        // console.log("Niste uneli sva polja!"); 
         this.onInfo("You have not entered all required fields.");
         return; 
       }
     }
-    console.log(uneteVrednosti);
+    // console.log(uneteVrednosti);
 
     this.http.post(url+"/api/DataManipulation/addNewRow?idEksperimenta=" + this.idEksperimenta, uneteVrednosti, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        ;
         this.loadDefaultItemsPerPage();
         //this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
@@ -2687,7 +2687,7 @@ sacuvajKaoNovu(ime:string){
      {
       this.http.post(url+"/api/DataManipulation/fillNaWithValue/" + kolona +"/"+vrednost + "?idEksperimenta=" + this.idEksperimenta,null, {responseType: 'text'}).subscribe(
         res => {
-          console.log(res);
+          ;
           this.selectedColumns = []; 
           this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
@@ -2745,11 +2745,11 @@ zamenaTipaKolone(event:any)
 
   var type = this.nizTipova[idKolone];
 
-  console.log("ID KOLONE type: "+ idKolone);
+  // console.log("ID KOLONE type: "+ idKolone);
 
   this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone + "?idEksperimenta=" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
     res => {
-      console.log(res);
+      ;
       this.selectedColumns = []; 
       this.gtyLoadPageWithStatistics(this.page);
       // this.selectedColumns = []; 
@@ -2823,10 +2823,10 @@ zamenaTipaKolone(event:any)
 
  getPieplot(id:number){
 
-  console.log(this.selectedColumns[0]); // this.selectedColumns[0]
+  // console.log(this.selectedColumns[0]); // this.selectedColumns[0]
       this.http.post(url+"/api/Graph/piePlot/"+this.idEksperimenta+"/"+id,null,{responseType:"text"}).subscribe(
         res=>{
-          console.log(res);
+          ;
           this.preuzmiSliku();
         },
         error=>{

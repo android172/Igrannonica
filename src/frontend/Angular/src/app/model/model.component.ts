@@ -1,22 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FlexAlignStyleBuilder } from '@angular/flex-layout';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription, withLatestFrom } from 'rxjs';
+import { max, Observable, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { SignalRService } from '../services/signal-r.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { tokenGetter, url } from '../app.module';
-import { isDefined } from '@ng-bootstrap/ng-bootstrap/util/util';
-import { ChartData } from 'chart.js';
-import { ChartOptions } from 'chart.js';
-import { ChartType } from 'chart.js';
 import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications'; 
 import * as ApexCharts from 'apexcharts';
+import { WebglPlot, WebglLine, ColorRGBA, WebglThickLine, WebglPolar, WebglStep, WebglSquare } from "webgl-plot";
 
 @Component({
   selector: 'app-model',
@@ -163,6 +158,16 @@ export class ModelComponent implements OnInit {
   public indeksiData: any[]=[];
   public indeksiData1: any[]=[];
 
+  // Loss plot
+  public lossPlot: WebglPlot | null = null;
+  public lossPlotWidth: number = 0;
+  public lossPlotHeight: number = 0;
+
+  public lossPoints: any[] = [];
+  public maxPointX: number = 0;
+  public maxPointY: number = 0;
+  public minPointY: number = 99999;
+  
   public nizNedozvoljenih : string[] = [];
   pomocniNiz : any[] = [];
   pomocniNizKoloneString : any[] = [];
@@ -172,7 +177,7 @@ export class ModelComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
-        console.log(this.idEksperimenta);
+        //console.log(this.idEksperimenta);
       }
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
@@ -183,10 +188,36 @@ export class ModelComponent implements OnInit {
       this.buttonPause = false;
       this.buttonContinue= false;
       //this.idModela = id;
-      // console.log("ID MODELA: " + this.idModela);
+      // //console.log("ID MODELA: " + this.idModela);
     });
-    this.signalR.componentMethodLossCalled$.subscribe((weights: [][][]) => {
-      console.log(weights);
+    this.signalR.componentMethodLossCalled$.subscribe((res: any) => {
+      
+      if (res.modelId != this.idModela)
+        return;
+
+      var epochRes = res.epochRes;
+      
+      // loss
+      if (epochRes.epoch > this.maxPointX)
+        this.maxPointX = epochRes.epoch;
+      if (epochRes.loss > this.maxPointY)
+        this.maxPointY = epochRes.loss;
+      if (epochRes.valLoss > this.maxPointY)
+        this.maxPointY = epochRes.valLoss;
+      if (epochRes.loss < this.minPointY)
+        this.minPointY = epochRes.loss;
+      if (epochRes.valLoss < this.minPointY)
+        this.minPointY = epochRes.valLoss;
+
+      this.lossPoints.push({
+        fold : epochRes.fold,
+        loss : epochRes.loss,
+        valLoss : epochRes.valLoss
+      })
+      this.updateInfo();
+      
+      // Weights
+      var weights = epochRes.weights;
       this.weights = weights;
       
       this.absoluteWeightMean = []
@@ -201,8 +232,6 @@ export class ModelComponent implements OnInit {
         }
         this.absoluteWeightMean.push(count / sum)
       }
-
-
       this.drawCanvas();
     });
   }
@@ -249,10 +278,159 @@ export class ModelComponent implements OnInit {
       this.signalR.LossListener();
       this.signalR.FinishModelTrainingListener();
       this.signalR.StartModelTrainingListener();
-      //console.log(this.signalR.data);
+      ////console.log(this.signalR.data);
     }
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
 
+  }
+
+  addSquares(points: number[], color: ColorRGBA) {
+    if (this.lossPlot == null) return;
+    var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    const sqHalfWidth = 0.02;
+
+    for (let i = 0; i < points.length; i++) {
+      const pointX = 2 * i / this.maxPointX - 1;
+      const YDiff = this.maxPointY - this.minPointY;
+      const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
+      
+      const pointSq = new WebglSquare(color);
+      pointSq.setSquare(pointX - sqHalfWidth, pointY - sqHalfWidth, pointX + sqHalfWidth, pointY + sqHalfWidth);
+
+      this.lossPlot.addSurface(pointSq);
+    }
+  }
+
+  addCircles(points: number[], color: ColorRGBA) {
+    if (this.lossPlot == null) return;
+    var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    const np = 100;
+    const r = 0.008;
+    
+    for (let i = 0; i < points.length; i++) {
+      const pointX = 2 * i / this.maxPointX - 1;
+      const YDiff = this.maxPointY - this.minPointY;
+      const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
+
+      const point = new WebglThickLine(color, np, 2 * r);
+
+      for (let i = 0; i < np; i++) {
+        const theta = i / (2 * Math.PI);
+        const x = r*Math.cos(theta) + pointX;
+        const y = r*Math.sin(theta) + pointY;
+  
+        point.setX(i, x);
+        point.setY(i, y);
+      }
+
+      this.lossPlot.addThickLine(point);
+    }
+
+  }
+
+  addLossLine(points: number[], color: ColorRGBA) {
+    if (this.lossPlot == null) return;
+    if (points.length == 0) return;
+
+    
+    var line = null;
+    if (this.maxPointX <= 50) {
+      const r = color.r + 100/255;
+      const g = color.g + 112/255;
+      const b = color.b + 95 /255;
+
+      const pointColor = new ColorRGBA(r, g, b, 1);
+
+      line = new WebglThickLine(color, points.length, 0.01);
+      this.lossPlot.addThickLine(line);
+      this.addCircles(points, pointColor);
+    }
+    else {
+      line = new WebglLine(color, points.length);
+      this.lossPlot.addLine(line);
+    }
+
+    // Scale X points
+    line.lineSpaceX(-1, 2 / this.maxPointX);
+
+    // Scale Y points
+    var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    var inputs: number[] = []
+    const YDiff = this.maxPointY - this.minPointY;
+    for (let i = 0; i < points.length; i++)
+      inputs.push(maxY * (points[i] - this.minPointY) / YDiff - maxY / 2);
+    for (let index = 0; index < inputs.length; index++)
+      line.setY(index, inputs[index]);
+  }
+
+  initializeDrawer() {
+    const canvas = <HTMLCanvasElement>document.getElementById("loss-graph");
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    canvas.width  = 1920 * devicePixelRatio * 0.6;
+    canvas.height = 1080 * devicePixelRatio * 0.6;
+    
+    this.lossPlot = new WebglPlot(canvas);
+    this.lossPlot.gXYratio = canvas.width / canvas.height;
+
+    this.lossPoints = [];
+    this.minPointY = 99999;
+    this.maxPointX = 0;
+    this.maxPointY = 0;
+
+    this.lossPlot.update();
+
+    // setTimeout(() => this.demo(), 500);
+  }
+
+  updateInfo() {
+    if (this.lossPlot == null) return;
+    this.lossPlot.removeAllLines();
+
+    const points: number[][] = [];
+    if (this.lossPoints[0].fold === undefined) {
+      points.push([])
+      for (const point of this.lossPoints) {
+        points[0].push(point.loss)
+      }
+      if (this.lossPoints[0].valLoss !== undefined) {
+        points.push([])
+        for (const point of this.lossPoints) {
+          points[1].push(point.valLoss)
+        }
+      }
+    }
+    else {
+      const noOfFolds = this.lossPoints[this.lossPoints.length - 1].fold + 1;
+      for (let i = 0; i < noOfFolds; i++) {
+        points.push([]);
+        points.push([]);
+      }
+      for (const point of this.lossPoints) {
+        points[point.fold].push(point.loss)
+        points[noOfFolds + point.fold].push(point.valLoss)
+      }
+    }
+
+    const step_r = Math.floor(250 / points.length);
+    const step_g = Math.floor(20  / points.length);
+    const step_b = Math.floor(40  / points.length);
+
+    for (let i = 0; i < points.length; i++) {
+      var r = 202 - i * step_r;
+      var g = 42  + i * step_g;
+      var b = 80  + i * step_b;
+
+      r = Math.min(255, Math.max(0, r)) / 255;
+      g = Math.min(255, Math.max(0, g)) / 255;
+      b = Math.min(255, Math.max(0, b)) / 255;
+      
+      const line = points[i];
+      const color = new ColorRGBA(r, g, b, 1);
+      
+      this.addLossLine(line, color);
+    }
+
+    this.lossPlot.update();
   }
 
   ucitajModel(data2: number){
@@ -264,18 +442,18 @@ export class ModelComponent implements OnInit {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
           this.modelData =  JSON.parse(res);
-           console.log(res);
+           //console.log(res);
           this.snapshot = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns = this.modelData.IOColumns;
-          console.log(this.modelData.IOColumns);
+          //console.log(this.modelData.IOColumns);
           this.general = this.modelData.General;
           this.nizGeneral = Object.values(this.general);
           (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
           (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
-          console.log(this.nizGeneral[1]);
-          console.log(this.snapshot);
-          console.log(this.annSettings);
+          //console.log(this.nizGeneral[1]);
+          //console.log(this.snapshot);
+          //console.log(this.annSettings);
           /*  SNAPSHOT  */
           if(this.snapshot == 0)
           {
@@ -358,12 +536,12 @@ export class ModelComponent implements OnInit {
                 this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
                 this.brojU = this.ulazneKolone.length;
                 this.brojI = 1;
-                console.log(this.brojU);
+                //console.log(this.brojU);
                 this.buttonDisable = false;
                 /* ANN SETTINGS */
                 
                 this.nizAnnSettings = Object.values(this.annSettings);
-                console.log(this.nizAnnSettings);
+                //console.log(this.nizAnnSettings);
                 (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
                 (<HTMLInputElement>document.getElementById("lr")).value = this.nizAnnSettings[1]+"";
                 (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
@@ -378,8 +556,8 @@ export class ModelComponent implements OnInit {
                 this.hiddLay =  this.nizAnnSettings[7];
                 this.nizCvorova = Object.assign([], this.hiddLay);
                 this.brHL = this.nizCvorova.length;
-                console.log("CVOROVI: " + this.nizCvorova);
-                console.log("BR HL : " + this.brHL);
+                //console.log("CVOROVI: " + this.nizCvorova);
+                //console.log("BR HL : " + this.brHL);
                 this.recreateNetwork();
                 this.aktFunk = this.nizAnnSettings[8];
                 (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
@@ -389,7 +567,7 @@ export class ModelComponent implements OnInit {
                   this.klasifikacija = true;
                   this.tip = 1;
                   this.selectedLF = this.nizAnnSettings[11];
-                  console.log(this.selectedLF);
+                  // console.log(this.selectedLF);
                   //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
@@ -398,7 +576,7 @@ export class ModelComponent implements OnInit {
                   this.klasifikacija = false;
                   this.tip = 0;
                   this.selectedLF = this.nizAnnSettings[11];
-                  console.log(this.selectedLF);
+                  // console.log(this.selectedLF);
                   //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
@@ -416,7 +594,7 @@ export class ModelComponent implements OnInit {
                   (<HTMLInputElement>document.getElementById("toggle")).checked = true;
                   (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
                 }
-                // console.log("ULAZNE KOLONE: " + this.ulazneKolone);
+                // //console.log("ULAZNE KOLONE: " + this.ulazneKolone);
                 this.ulazneKolone = [];
                 this.izlazneKolone = [];
                 for(let i = 0; i < this.kolone.length; i++)
@@ -442,7 +620,7 @@ export class ModelComponent implements OnInit {
             }
             );
             this.selectedSS=this.snapshot;
-            console.log(this.selectedSS);
+            //console.log(this.selectedSS);
         },
         error=>{
           console.log(error.error);
@@ -456,8 +634,8 @@ export class ModelComponent implements OnInit {
 
     let snap = sessionStorage.getItem('idSnapshota');
     let idsnap = sessionStorage.getItem('idS');
-    console.log(snap);
-    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+    //console.log(snap);
+    //console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
     if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
     {
       this.selectSnapshotM(data);
@@ -477,7 +655,7 @@ export class ModelComponent implements OnInit {
 
   this.http.get(url+"/api/Model/Model/Naziv/"+ id, {responseType: 'text'}).subscribe(
       res=>{
-        console.log(res);
+        //console.log(res);
         this.nazivModela = res;
         var div = (<HTMLInputElement>document.getElementById("nazivM")).value = this.nazivModela;
       },
@@ -547,7 +725,7 @@ export class ModelComponent implements OnInit {
         if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
         {
           this.buttonDisable = true;
-          console.log("TRUE-------------------------------");
+          //console.log("TRUE-------------------------------");
         }
         else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
         {
@@ -578,14 +756,14 @@ export class ModelComponent implements OnInit {
     //     {
     //        this.ulazneKolone.push(nizK[i].value);
     //        this.izabraneU.push(i);
-    //        console.log(this.izabraneU);
+    //        //console.log(this.izabraneU);
     //        (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = true;
     //        this.brojU++;
     //        if(this.brojU > 0 && this.brojI > 0)
     //         {
     //           this.buttonDisable = false;
     //         }
-    //         console.log(this.brojU);
+    //         //console.log(this.brojU);
     //     }
     //   }
     //   else
@@ -596,11 +774,11 @@ export class ModelComponent implements OnInit {
     //       {
     //         this.ulazneKolone.splice(j,1);
     //         this.izabraneU.splice(j,1);
-    //         console.log(this.izabraneU);
+    //         //console.log(this.izabraneU);
     //         (<HTMLInputElement>document.getElementById(nizK[i].value)).disabled = false;
-    //         //console.log(nizK[i].value);
+    //         ////console.log(nizK[i].value);
     //          this.brojU--;
-    //          console.log(this.brojU);
+    //          //console.log(this.brojU);
     //         if(this.brojU == 0)
     //         {
     //           this.buttonDisable = true;
@@ -614,7 +792,7 @@ export class ModelComponent implements OnInit {
 
   napraviModel()
   {
-    console.log(this.idEksperimenta);
+    //console.log(this.idEksperimenta);
     var ime = (<HTMLInputElement>document.getElementById("bs1")).value;
     var opis = (<HTMLInputElement>document.getElementById("opisM")).value;
     var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
@@ -627,7 +805,7 @@ export class ModelComponent implements OnInit {
     }
     this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.idEksperimenta + "&opis=" + opis + "&snapshot=" + this.selectedSS,null,{responseType: 'text'}).subscribe(
       res=>{
-        console.log(res);
+        //console.log(res);
         ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
         this.onSuccess("Model je uspesno napravljen");
       },
@@ -658,7 +836,7 @@ export class ModelComponent implements OnInit {
   selectLF(event: any){
     var str = event.target.value;
     this.selectedLF = Number(str);
-    console.log(this.selectedLF);
+    //console.log(this.selectedLF);
   }
   selectO(event: any){
     var str = event.target.value;
@@ -705,7 +883,7 @@ export class ModelComponent implements OnInit {
 
   // uzmiKolone()
   // {
-  //   console.log(this.idModela);
+  //   //console.log(this.idModela);
   //   this.http.get(url+"/api/Eksperiment/Podesavanja/Kolone?id=" + this.idModela).subscribe(
   //       res=>{
   //         this.pomocni=Object.assign([],res);
@@ -713,7 +891,7 @@ export class ModelComponent implements OnInit {
   //         this.izabraneI=Object.assign([],this.pomocni[1]);
   //         this.cekiraj();
   //       },error=>{
-  //         console.log(error.error);
+  //         //console.log(error.error);
   //       }
   //   );
   // }
@@ -742,7 +920,7 @@ export class ModelComponent implements OnInit {
     }
     this.http.post(url+"/api/Eksperiment/Podesavanja/Kolone?id="+this.idModela,{ulazne,izlazne}).subscribe(
       res=>{
-        console.log(res);
+        //console.log(res);
       }
     );
   }
@@ -810,7 +988,7 @@ export class ModelComponent implements OnInit {
           this.onSuccess("Naziv modela uspesno izmenjen!");
       }, error=>{
         this.ucitajNazivModela(this.idModela);
-        //console.log(error.error);
+        // console.log(error.error);
         if(error.error === "Vec postoji model sa tim imenom")
         {
            var div1 = (<HTMLDivElement>document.getElementById("poruka2")).innerHTML = "*Model sa tim nazivom vec postoji";
@@ -833,24 +1011,19 @@ export class ModelComponent implements OnInit {
     if(broj == 1){
       this.izmeniPodesavanja();
       this.uzmiCekirane();
-      console.log("sacuvano");
+      //console.log("sacuvano");
     }
-    // this.signalR.ZapocniTreniranje(tokenGetter(),1);
-    this.signalR.clearChartData();
-    this.chart?.update();
     // loading ... 
     this.http.get(url+"/api/Model/Model/Treniraj?id="+ this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
       res => {
-        let subscription = this.signalR.switchChange.asObservable().subscribe(
-          value=>{
-            this.chart?.update();
-          }
-        )
         this.onInfo("Trening je zapocet.");
         // pauza   
         this.buttonPause = true;
         this.buttonPlay = false;
         this.buttonContinue = false; 
+
+        // Initialize loss draw
+        this.initializeDrawer();
       }
     )
   }
@@ -935,8 +1108,9 @@ export class ModelComponent implements OnInit {
 
   drawCanvas() {
     var canvas = <HTMLCanvasElement>document.getElementById("model-canvas");
-    const width  = 1920;
-    const height = 1080;
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const width  = 1920 * devicePixelRatio * 0.7;
+    const height = 1080 * devicePixelRatio * 0.7;
     canvas.width = width;
     canvas.height = height;
 
@@ -1239,11 +1413,11 @@ export class ModelComponent implements OnInit {
           "izlazne":outputs
         }
     };
-    console.log((<HTMLInputElement>document.getElementById("bs2")).value);
-    console.log(this.jsonModel);
+    //console.log((<HTMLInputElement>document.getElementById("bs2")).value);
+    //console.log(this.jsonModel);
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
-        console.log(res);
+        //console.log(res);
         this.idModela=res;
         this.onSuccess("Model was successfully created.");
         this.PosaljiModel.emit(this.selectedSS);
@@ -1268,7 +1442,7 @@ export class ModelComponent implements OnInit {
   //       this.snapshots = Object.values(this.jsonSnap);
   //     },
   //     error =>{
-  //       console.log(error.error);
+  //       //console.log(error.error);
   //     }
   //   )
   // }
@@ -1454,7 +1628,7 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
-        console.log(this.jsonMetrika);
+        //console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
         this.checkType();
@@ -1497,8 +1671,8 @@ export class ModelComponent implements OnInit {
     else if(this.testR.length==1)
         this.imaTestni=true;
     
-    console.log(this.imaTestni);   
-    console.log(this.testR.length);
+    //console.log(this.imaTestni);   
+    //console.log(this.testR.length);
 
     var max = this.nadjiMaxTrain();
     
@@ -1513,7 +1687,7 @@ export class ModelComponent implements OnInit {
 
     this.matTrainData = this.jsonMetrika[1][0]['ConfusionMatrix'];
 
-    console.log(max);
+    //console.log(max);
     var nizJson = [];
     for(let i=this.matTrainData.length-1; i>=0; i--)
     {
@@ -1693,7 +1867,7 @@ export class ModelComponent implements OnInit {
       this.charts1.render();
       (<HTMLDivElement>document.getElementById("chart1")).style.visibility = "visible";
       (<HTMLDivElement>document.getElementById("bodymodal")).style.height = '680px';
-      console.log("Prikazao sam obe");
+      //console.log("Prikazao sam obe");
     }
     else
     {
@@ -1709,7 +1883,7 @@ export class ModelComponent implements OnInit {
         this.imaTestni=false; 
       else
         this.imaTestni==true;
-    console.log(this.imaTestni);
+    //console.log(this.imaTestni);
     for(let i=0;i<this.trainR.length;i++)
     {
       this.MAE[i]=Number(Number(this.trainR[i]['MAE']).toFixed(3));
@@ -1734,7 +1908,7 @@ export class ModelComponent implements OnInit {
     var p=0;
     var t;
     this.mtrain = this.jsonMetrika[1][0]['ConfusionMatrix'];
-    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    // //console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)
        {
@@ -1763,7 +1937,7 @@ export class ModelComponent implements OnInit {
     var p=0;
     var t;
     this.mtest = this.jsonMetrika[0][0]['ConfusionMatrix'];
-    // console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
+    // //console.log(this.mtest[0].length);//'(2)array[array(2),array(2)]';
     for(let i=0;i<this.mtest.length;i++)
        for(let j=0;j<this.mtest[i].length;j++)
        {
@@ -1800,7 +1974,7 @@ export class ModelComponent implements OnInit {
 
   pripremiPredikciju()
   {
-    console.log("PRIPREMI PREDIKCIJU");
+    //console.log("PRIPREMI PREDIKCIJU");
     if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
     {
       (<HTMLInputElement>document.getElementById("vrednostIzlaza0")).value = "";
@@ -1834,9 +2008,9 @@ export class ModelComponent implements OnInit {
     for(let i = 0; i < this.ulazneKolone.length; i++)
     {
       let vrednost = (<HTMLInputElement>document.getElementById("vrednostUlaza" + i)).value;
-      // console.log(vrednost.length);
+      // //console.log(vrednost.length);
       let vrednostTrim = vrednost.trim();
-      // console.log(vrednostTrim.length);
+      // //console.log(vrednostTrim.length);
       if(vrednostTrim == "")
       {
         (<HTMLDivElement>document.getElementById("greskaIspis" + i)).style.visibility = "visible";
@@ -1851,12 +2025,12 @@ export class ModelComponent implements OnInit {
     if(ind == 1)
       return;
 
-    console.log(nizVrednosti);
-    console.log(this.idModela);
+    //console.log(nizVrednosti);
+    //console.log(this.idModela);
     this.http.post(url+"/api/Model/predict?idEksperimenta=" + this.idEksperimenta + "&modelId=" + this.idModela, nizVrednosti, {responseType : "text"}).subscribe(
       res=>{
-        console.log("USPESNO");
-        console.log(res);
+        //console.log("USPESNO");
+        //console.log(res);
         if((<HTMLSelectElement>document.getElementById("dd4")).value == "1")
         {
           (<HTMLInputElement>document.getElementById("vrednostIzlaza")).value = res;
@@ -1864,11 +2038,11 @@ export class ModelComponent implements OnInit {
         else
         {
           let resPodaci = res.slice(1, res.length-1);
-          console.log(resPodaci);
+          //console.log(resPodaci);
           if(resPodaci.indexOf(","))
           {
             let podaci = resPodaci.split(", ");
-            console.log(podaci);
+            //console.log(podaci);
             for(let i = 0; i < res.length; i++)
             {
               (<HTMLInputElement>document.getElementById("vrednostIzlaza" + i)).value = Number(podaci[i]).toFixed(4) + "";
@@ -1913,7 +2087,7 @@ export class ModelComponent implements OnInit {
     this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
       res => {
         console.table(res);
-        console.log("Nastavljam"); 
+        //console.log("Nastavljam"); 
 
         this.buttonPause = true;
         this.buttonPlay = false;
