@@ -317,18 +317,26 @@
                     </div> -->
             </div>
         </div>
+
         <div id="centrirano3">
             <div id="collapse1" *ngIf="prikazi==true">
                 <div id="div">
                     <div id="grafik">
-                        <div id="canvas">
+                        <div class="loss-content-wrapper">
+                            <div class="sixteen-by-nine aspect-ratio"></div>
+                            <div class="model-content d-flex justify-content-center align-items-center">
+                                <canvas id="loss-graph">
+                                </canvas>
+                            </div>
+                        </div>
+                        <!-- <div id="canvas">
                             <canvas baseChart
                                 [data]="signalR.lineChartData"
                                 [options]="chartOptions"
                                 [type]="'line'"
                             >
-                        </canvas>
-                        </div>
+                            </canvas>
+                        </div> -->
                     </div>
                     <!-- <table *ngFor="let elem of signalR.data" style="color:white">
                         <tr><td>{{elem}}</td></tr>

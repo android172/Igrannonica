@@ -41,7 +41,7 @@ export class ModeliComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.id = params['id'];
-        console.log(this.id);
+        // console.log(this.id);
       }
     )
   }
@@ -54,12 +54,12 @@ export class ModeliComponent implements OnInit {
       message => {
         this.ActivateAddEdit = false;
         this.messageReceived = message;
-        console.log(this.messageReceived);
+        // console.log(this.messageReceived);
        // this.ocisti();
         this.ngOnInit();
       }
     );
-    console.log("Zovem se sad!!!");
+    // console.log("Zovem se sad!!!");
   }
 
   primiModel(data : any){
@@ -107,7 +107,7 @@ export class ModeliComponent implements OnInit {
   }
 
   napraviModel(){
-    console.log(this.id);
+    // console.log(this.id);
     var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
     var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
     if(ime === ""){
@@ -119,7 +119,7 @@ export class ModeliComponent implements OnInit {
     }
     this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
       res=>{
-        console.log(res);
+        // console.log(res);
         this.ucitajModel();
         ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
         this.onSuccess("Model je uspesno napravljen");
@@ -277,7 +277,7 @@ export class ModeliComponent implements OnInit {
       {
         this.http.delete(url+'/api/Model/Modeli/' + this.modeli[i].id).subscribe(
           res=>{
-            console.log(res);
+            // console.log(res);
                this.onSuccess("Model je uspesno obrisan");
           },
           error=>{

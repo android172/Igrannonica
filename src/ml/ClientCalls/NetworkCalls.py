@@ -73,7 +73,7 @@ def change_settings(self):
     
     print("ANN settings changed.")
 
-def select_traning_data(self):
+def select_training_data(self):
     # Receive data version
     version_name = self.connection.receive()
     

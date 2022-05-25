@@ -548,9 +548,9 @@ namespace dotNet.MLService {
             }
         }
 
-        public void SelectTraningData(string datasetVersion) {
+        public void SelectTrainingData(string datasetVersion) {
             lock (_lock) {
-                connection.Send(Command.SelectTraningData);
+                connection.Send(Command.SelectTrainingData);
                 connection.Send(datasetVersion);
                 CheckStatus();
             }
@@ -681,7 +681,7 @@ namespace dotNet.MLService {
         LoadEpoch,
         ComputeMetrics,
         ChangeSettings,
-        SelectTraningData,
+        SelectTrainingData,
         Start,
         Stop,
         Continue,
