@@ -1752,10 +1752,23 @@ ngb-pagination ::ng-deep ul > li.active > a {
 
 
 #imeVerzije{
-    width: 250px;
-    height: 30px;
-    border-radius: 4px;
-    border: 2px solid rgb(54, 57, 111); 
+    border: 2px solid #bc7ca1;
+    background: transparent; 
+    border-radius: 8px;
+    height: 40px;
+    color: #CED9FF;
+    padding: 10px;
+    color: white;
+    width:100%;
+}
+
+#imeVerzije:focus{
+    outline: none;
+}
+
+.modal-header .btn-close {
+    margin: -0.5rem -0.5rem -0.5rem auto;
+    padding-top: 0px;
 }
 
 #btn-otkazi{
@@ -1784,12 +1797,6 @@ ngb-pagination ::ng-deep ul > li.active > a {
 
 /* INPUT NEW ROW */ 
 
-.input-new-row{
-    width: 230px;
-    border-radius: 4px;
-    border: 1px solid rgb(170, 170, 170);
-}
-
 #btn-otkazi-newrow{
     box-shadow: none;
 }
@@ -1797,6 +1804,18 @@ ngb-pagination ::ng-deep ul > li.active > a {
 #tipPolja{
     color: rgb(150, 150, 150);
     font-size: smaller;
+}
+
+.input-new-row,.input-new-row:focus{
+  border: 2px solid #bc7ca1;
+  background: transparent; 
+  border-radius: 8px;
+  height: 30px;
+  color: #CED9FF;
+  padding: 10px;
+  color: white;
+  width:100%;
+  outline: none;
 }
 
 /* NA new Value */
@@ -1851,4 +1870,52 @@ ngb-pagination ::ng-deep ul > li.active > a {
 .btn-secondary
 {
   border: none;
+}
+
+#btn-kreirajnovired
+{
+  background-color: #fa6698;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+#btn-kreirajnovired:hover
+{
+  background-color: #e2466b;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+#sacuvajV{
+  background-color: #fa6698;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+
+#sacuvajV:hover
+{
+  background-color: #e2466b;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
 }

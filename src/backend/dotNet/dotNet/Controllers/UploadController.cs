@@ -142,6 +142,13 @@ namespace dotNet.Controllers
                     return new Paging(null, 1);
                 var j = page * size - size;
                 int ukupanBrRedovaFajla = eksperiment.GetRowCount();
+
+                if (j == ukupanBrRedovaFajla)
+                {
+                    page--;
+                    j = page * size - size;
+                }
+
                 if (j + size > ukupanBrRedovaFajla)
                 {
                     size = ukupanBrRedovaFajla - j;

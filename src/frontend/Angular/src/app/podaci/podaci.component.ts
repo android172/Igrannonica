@@ -2084,14 +2084,24 @@ dajNaziveHeadera()
 
   preuzmiDataset()
   {
-    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;
-    // console.log(this.snapshots);
-    // console.log(id);
-    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text',params:{"versionName":this.snapshots[Number(id)-1].csv}}).subscribe(
+    var id = sessionStorage.getItem("idS");
+    var name = sessionStorage.getItem("idSnapshota");
+
+    if(name == null) 
+      this.onError("Dataset not found");
+    if(id == null)
+      this.onError("Dataset not found");
+    if(id == "0")
+      name = "test_data";
+
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text',params:{"versionName":name+".csv"}}).subscribe(
       res => {
 
+        if(id == "0")
+           name = "default";
+           
         var blob = new Blob([res], {type: 'text/csv' })
-        saveAs(blob, "dataset_"+this.fileName);
+        saveAs(blob, name + "_" + this.fileName);
 
         this.onSuccess("Dataset are downloaded successfully.");
     },error=>{
@@ -2099,7 +2109,6 @@ dajNaziveHeadera()
       this.onError(error.error);
     });
   }
-
  
   promena(event:any){
 
@@ -2424,10 +2433,13 @@ sacuvajKaoNovu(ime:string){
     }
   }
   izbrisiSnapshot(){
-    var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
+    var id = sessionStorage.getItem("idS");
+    //console.log("------------------------ID SNAPSHOTA: " + id);
+    //var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
     if(id!="0"){
-      this.http.delete(url+"/api/File/Snapshot?id="+id).subscribe(
+      this.http.delete(url+"/api/File/Snapshot?id="+id, {responseType:"text"}).subscribe(
         res=>{
+          //console.log(res);
           // this.ucitajSnapshotove();
           this.PosaljiPoruku.emit();
 
@@ -2438,6 +2450,7 @@ sacuvajKaoNovu(ime:string){
         },
         error=>{
           // this.ucitajSnapshotove();
+          //console.log(error.error);
           this.PosaljiPoruku.emit();
         }
       )
@@ -2520,7 +2533,8 @@ sacuvajKaoNovu(ime:string){
     {
       text = "You have not selected any fields.";
       
-      this.openModalDeleteClose(this.modalDeleteClose); 
+      // this.openModalDeleteClose(this.modalDeleteClose); 
+      this.onInfo("You have not selected any fields.");
       (<HTMLDivElement>document.getElementById("textDeleteClose")).innerHTML = text;
     }
     else

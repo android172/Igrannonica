@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `LearningRate` FLOAT NULL,
   `BatchSize` INT NULL,
   `numberOfEpochs` INT NULL,
+  `currentEpoch` INT NULL,
   `InputSize` INT NULL,
   `OutputSize` INT NULL,
   `HiddenLayers` VARCHAR(256) NULL,

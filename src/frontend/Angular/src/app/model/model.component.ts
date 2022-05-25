@@ -167,6 +167,11 @@ export class ModelComponent implements OnInit {
   public maxPointX: number = 0;
   public maxPointY: number = 0;
   public minPointY: number = 99999;
+  
+  public nizNedozvoljenih : string[] = [];
+  pomocniNiz : any[] = [];
+  pomocniNizKoloneString : any[] = [];
+  jsonPom : any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -430,8 +435,9 @@ export class ModelComponent implements OnInit {
 
   ucitajModel(data2: number){
 
-    let idmodela = sessionStorage.getItem('idModela');
-    if(Number(idmodela) != -1)
+    // console.table(data2);
+    this.idModela = sessionStorage.getItem('idModela');
+    if(Number(this.idModela) != -1)
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
@@ -561,8 +567,8 @@ export class ModelComponent implements OnInit {
                   this.klasifikacija = true;
                   this.tip = 1;
                   this.selectedLF = this.nizAnnSettings[11];
-                  //console.log(this.selectedLF);
-                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // console.log(this.selectedLF);
+                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
                 else
@@ -570,8 +576,8 @@ export class ModelComponent implements OnInit {
                   this.klasifikacija = false;
                   this.tip = 0;
                   this.selectedLF = this.nizAnnSettings[11];
-                  //console.log(this.selectedLF);
-                   (<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
+                  // console.log(this.selectedLF);
+                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
                   // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
                 }
                 (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
@@ -663,6 +669,15 @@ export class ModelComponent implements OnInit {
 
     this.flagP = true;
     if (e.type === 'None'){
+      
+      for(let i=0; i<this.nizNedozvoljenih.length;i++)
+      {
+        if(this.nizNedozvoljenih[i] === e.value)
+        {
+          this.onError("All input columns need to be numerical or encoded");
+          return;
+        }
+      }
       e.type = 'Output';
       this.izlazneKolone.push(e.value);
       this.brojI++;
@@ -1364,6 +1379,13 @@ export class ModelComponent implements OnInit {
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
+    var a = (<HTMLInputElement>document.getElementById("bs2")).value;
+    if(a.trim()==="")
+    {
+      this.onError("Model name is required");
+      return;
+    }
+
     this.jsonModel = 
     {
         "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
@@ -1403,9 +1425,9 @@ export class ModelComponent implements OnInit {
       error =>{
         console.log(error.error);
         this.onError("Model was not created.");
-        if(error.error === "Model sa tim imenom vec postoji.")
+        if(error.error === "ERROR :: Model with this name already exists.")
         {
-          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model with that name already exists";
           this.onError("Model with that name already exists.");
         }
       }
@@ -1430,95 +1452,175 @@ export class ModelComponent implements OnInit {
    (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML = ime;
  }
 
-  selectSnapshot(id: any,ime:string)
-  {
-    if(id==0)
-    {
-      sessionStorage.setItem('idSnapshota',"Default snapshot");
-      sessionStorage.setItem('idS',"0");
-    }
-    else{ 
-      
-      sessionStorage.setItem('idSnapshota',ime);
-      sessionStorage.setItem('idS',id+"");
-    }
-     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
-     (response: any)=>{
-         this.kolone = Object.assign([],response);   //imena kolona
-         this.kolone2 = [];
-         //console.log("----------------------" + this.kolone);
-         this.ulazneKolone = [];
-         this.izlazneKolone = [];
-         for (var kolona of this.kolone) {
-            this.kolone2.push({value : kolona, type : "Input"});
-         }
-         this.kolone2[this.kolone2.length - 1].type = "Output";
-        // this.PosaljiSnapshot2.emit(id);
-         for(let i=0; i<this.kolone.length-1; i++)
-         {
-           this.ulazneKolone[i] = this.kolone[i];
-         }
-         this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
-         this.brojU = this.ulazneKolone.length;
-         this.brojI = 1;
-         //console.log(this.brojU);
-         this.buttonDisable = false;
-         this.buttonDisable = false;
-         this.hiddLay = [3,3,3,3,3];
-         this.nizCvorova = [3,3,3,3,3];
-         this.brHL = 5;
-         this.aktFunk = [0,0,0,0,0];
-         this.PosaljiSnapshot2.emit(id);
-         this.recreateNetwork();
-      },error =>{
-       console.log(error.error);
-     }
-    );
-    this.selectedSS=id;
-    //console.log(this.selectedSS);
-  }
-
-  selectSnapshotM(id: any)
-  {
-     this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
-     (response: any)=>{
-        //console.log("SELECT SNAPSHOT M");
-         //console.log(response);
-         this.kolone = Object.assign([],response);
-         this.kolone2 = [];
-         this.brojI = 0;
-         this.brojU = 0;
-         this.ulazneKolone = [];
-         this.izlazneKolone = [];
-         if(this.kolone2.length == 0)
-         {
-          for (var kolona of this.kolone) {
-            this.kolone2.push({value : kolona, type : "Input"});
-           }
-           this.kolone2[this.kolone2.length - 1].type = "Output";
-         }
-         if(this.flagP == false) 
-         {
-          for(let i=0; i<this.kolone.length-1; i++)
+ selectSnapshot(id: any,ime:string)
+ {
+   if(id==0)
+   {
+     sessionStorage.setItem('idSnapshota',"Default snapshot");
+     sessionStorage.setItem('idS',"0");
+   }
+   else{ 
+     
+     sessionStorage.setItem('idSnapshota',ime);
+     sessionStorage.setItem('idS',id+"");
+   }
+   this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
+     res=>{
+       this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
+         (response: any) => {
+           this.pomocniNiz = [];
+           this.pomocniNizKoloneString = [];
+           this.jsonPom =  JSON.parse(response.data);
+           var br = 0;
+          this.pomocniNiz = Object.values(this.jsonPom[0]);;
+          console.log(this.pomocniNiz);
+          for(let i=0; i<this.pomocniNiz.length; i++)
           {
-            this.ulazneKolone[i] = this.kolone[i];
+            if (typeof this.pomocniNiz[i] === 'string')
+            {
+              this.pomocniNizKoloneString[br] = i;
+              console.log(this.pomocniNizKoloneString[br]);
+              br++;
+            }
           }
-          this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
-          this.brojU = this.ulazneKolone.length;
-          this.brojI = 1;
-         }
-         this.buttonDisable = false;
-         this.hiddLay = [3,3,3,3,3];
-         this.nizCvorova = [3,3,3,3,3];
-         this.brHL = 5;
-         this.aktFunk = [0,0,0,0,0];
-         this.recreateNetwork();
-      },error =>{
-       console.log(error.error);
+          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+           (response: any)=>{
+              //  this.nizKolonaStr = [];
+                this.nizNedozvoljenih = [];
+               this.kolone = Object.assign([],response);   //imena kolona
+               this.kolone2 = [];
+               this.brojI = 0;
+               this.brojU = 0;
+               this.ulazneKolone = [];
+               this.izlazneKolone = [];
+               if(this.kolone2.length == 0)
+               {
+                for (var kolona of this.kolone) {
+                  this.kolone2.push({value : kolona, type : "Input"});
+                 }
+                 this.kolone2[this.kolone2.length - 1].type = "Output";
+               }
+               for(let i=0; i< this.pomocniNizKoloneString.length; i++)
+               {
+                    (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
+                   // console.log(this.kolone2[this.nizKolonaStr[i]]);
+                   this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
+              }
+              // this.PosaljiSnapshot2.emit(id);
+              var brojac = 0;
+               for(let i=0; i<this.kolone2.length-1; i++)
+               {
+                 if(this.kolone2[i].type === 'Input')
+                 {
+                  this.ulazneKolone[brojac] = this.kolone2[i].value;
+                  brojac++;
+                 }
+               }
+               console.log(this.ulazneKolone);
+               this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+               this.brojU = this.ulazneKolone.length;
+               this.brojI = 1;
+               console.log(this.brojU);
+               this.buttonDisable = false;
+               this.buttonDisable = false;
+               this.hiddLay = [3,3,3,3,3];
+               this.nizCvorova = [3,3,3,3,3];
+               this.brHL = 5;
+               this.aktFunk = [0,0,0,0,0];
+               this.PosaljiSnapshot2.emit(id);
+               this.recreateNetwork();
+            },error =>{
+             console.log(error.error);
+           }
+          );
+       })
      }
-    );
-    this.selectedSS=id;
-  }
+   );
+    
+   this.selectedSS=id;
+   console.log(this.selectedSS);
+ }
+
+ selectSnapshotM(id: any)
+ {
+   this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
+     res=>{
+       this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
+         (response: any) => {
+           this.pomocniNiz = [];
+           this.pomocniNizKoloneString = [];
+           this.jsonPom =  JSON.parse(response.data);
+           var br = 0;
+          this.pomocniNiz = Object.values(this.jsonPom[0]);;
+          console.log(this.pomocniNiz);
+          for(let i=0; i<this.pomocniNiz.length; i++)
+          {
+            if (typeof this.pomocniNiz[i] === 'string')
+            {
+              this.pomocniNizKoloneString[br] = i;
+              console.log(this.pomocniNizKoloneString[br]);
+              br++;
+            }
+          }
+          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
+           (response: any)=>{
+              //  this.nizKolonaStr = [];
+                this.nizNedozvoljenih = [];
+               this.kolone = Object.assign([],response);   //imena kolona
+               this.kolone2 = [];
+               this.brojI = 0;
+               this.brojU = 0;
+               this.ulazneKolone = [];
+               this.izlazneKolone = [];
+               if(this.kolone2.length == 0)
+               {
+                for (var kolona of this.kolone) {
+                  this.kolone2.push({value : kolona, type : "Input"});
+                 }
+                 this.kolone2[this.kolone2.length - 1].type = "Output";
+               }
+               for(let i=0; i< this.pomocniNizKoloneString.length; i++)
+               {
+                    (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
+                   // console.log(this.kolone2[this.nizKolonaStr[i]]);
+                   this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
+              }
+              // this.PosaljiSnapshot2.emit(id);
+              if(this.flagP == false)
+              {
+               var brojac = 0;
+               for(let i=0; i<this.kolone2.length-1; i++)
+               {
+                 if(this.kolone2[i].type === 'Input')
+                 {
+                  this.ulazneKolone[brojac] = this.kolone2[i].value;
+                  brojac++;
+                 }
+               }
+               console.log(this.ulazneKolone);
+               this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+               this.brojU = this.ulazneKolone.length;
+               this.brojI = 1;
+               console.log(this.brojU);
+              }
+               this.buttonDisable = false;
+               this.hiddLay = [3,3,3,3,3];
+               this.nizCvorova = [3,3,3,3,3];
+               this.brHL = 5;
+               this.aktFunk = [0,0,0,0,0];
+               this.PosaljiSnapshot2.emit(id);
+               this.recreateNetwork();
+            },error =>{
+             console.log(error.error);
+           }
+          );
+       })
+     }
+   );
+    
+   this.selectedSS=id;
+   console.log(this.selectedSS);
+ }
 
   dajMetriku(modelId:number)
   {

@@ -254,7 +254,7 @@ namespace dotNet.DBFunkcije
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
-                if (cmd.ExecuteNonQuery() >= 0)
+                if (cmd.ExecuteNonQuery() > 0)
                 {
                     return true;
                 }
