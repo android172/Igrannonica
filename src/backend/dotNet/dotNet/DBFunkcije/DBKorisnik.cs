@@ -188,11 +188,19 @@ namespace dotNet.DBFunkcije
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 string query = "update Korisnik set `KorisnickoIme` =@korisnickoime , `Ime`=@ime , `Sifra`=@sifra , `email`=@email where `id`=@id";
+                byte[] salt;
+                new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+                var pbkdf2 = new Rfc2898DeriveBytes(korisnik.Sifra, salt, 100000);
+                byte[] hash = pbkdf2.GetBytes(20);
+                byte[] hashBytes = new byte[36];
+                Array.Copy(salt, 0, hashBytes, 0, 16);
+                Array.Copy(hash, 0, hashBytes, 16, 20);
+                string savedPasswordHash = Convert.ToBase64String(hashBytes);
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", korisnik.Id);
                 cmd.Parameters.AddWithValue("@korisnickoime", korisnik.KorisnickoIme);
                 cmd.Parameters.AddWithValue("@ime", korisnik.Ime);
-                cmd.Parameters.AddWithValue("@sifra", korisnik.Sifra);
+                cmd.Parameters.AddWithValue("@sifra", savedPasswordHash);
                 cmd.Parameters.AddWithValue("@email", korisnik.Email);
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
