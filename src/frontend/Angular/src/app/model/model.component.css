@@ -1087,6 +1087,8 @@ td{
   margin-top: 0px;
   width: 100%;
   padding-left: 5%;
+  min-width: 120px;
+  max-width: 200px;
 }
 
 #grupaP{
@@ -1095,6 +1097,7 @@ td{
   /* margin-right: 10px; */
   /* width: 150px; */
   min-width: 140px;
+  /* margin-right: 5px; */
   /* margin-top: 10px; */
 }
 
@@ -1236,7 +1239,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   box-shadow: 0px 0px 25px 3px rgb(239, 142, 173);
 }
 
@@ -1327,7 +1330,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   /*box-shadow: 0px 0px 25px 3px rgb(192,194,206,0.5);*/
 }
 
@@ -1561,7 +1564,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   text-decoration: none;
 }
 
@@ -1574,7 +1577,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   text-decoration: none;
 }
 
@@ -1594,7 +1597,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   text-decoration: none;
 }
 
@@ -1607,7 +1610,7 @@ body {
   display: block;
   float: right;
   margin-top: 30px;
-  margin-right: 30px;
+  margin-right: 10%;
   text-decoration: none;
 }
 
