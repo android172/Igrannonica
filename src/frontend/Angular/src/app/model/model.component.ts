@@ -1601,14 +1601,12 @@ export class ModelComponent implements OnInit {
                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
                this.brojU = this.ulazneKolone.length;
                this.brojI = 1;
-               console.log(this.brojU);
               }
                this.buttonDisable = false;
                this.hiddLay = [3,3,3,3,3];
                this.nizCvorova = [3,3,3,3,3];
                this.brHL = 5;
                this.aktFunk = [0,0,0,0,0];
-               this.PosaljiSnapshot2.emit(id);
                this.recreateNetwork();
             },error =>{
              console.log(error.error);
