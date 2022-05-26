@@ -132,11 +132,6 @@ p
     float: right;
 }*/
 
-#div1{
-    float: right;
-    width: 600px;
-}
-
 #div2{
     /* position: relative; */
     /* display: flex; */
@@ -599,7 +594,7 @@ input
 .loss-content-wrapper {
   position: relative;
   width: 100%;
-  height: 570px;
+  height: 420px;
   /* border: 2.5px solid rgba(89, 119, 223, 1); */
   /* border-radius: 10px; */
   /* float: left; */
@@ -622,10 +617,17 @@ input
   justify-content: center;
 }
 
-#model-canvas, #loss-graph {
+#model-canvas{
   width: 100%;
   max-width: 978px;
   max-height: 550px;
+}
+
+#loss-graph
+{
+  width: 100%;
+  max-width: 711px;
+  max-height: 400px;
 }
 
 #body1{
@@ -907,31 +909,33 @@ input
 }
 
 #collapse{
-  height: 423.68px;
+  /* height: 423.68px; */
   padding-top: 5px;
-  width: 35vw;
+  /* width: 35vw; */
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
+  /* float: left; */
   overflow: auto;
   /* overflow-y: scroll; */
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
-  margin-left: 25px;
+  /* margin-left: 25px; */
   background-color: #272741;
+  margin-top: 23px;
 }
 
 #collapse1{
   padding-top: 5px;
-  width: 65vw;
+  /* width: 65vw; */
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
-  float: left;
+  /* float: left; */
   overflow: auto;
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   background-color: #272741;
-  
+  margin-top: 23px;
+  width: 55%;
 }
 
 #stat{
@@ -950,10 +954,9 @@ td{
 #centrirano3
 {
 
-  position: relative;
-  display: flex;
+  /* position: relative; */
+  /* display: flex; */
   clear: both;
-  margin-top: 30px;
 }
 
 #centrirano4
@@ -1068,11 +1071,11 @@ td{
   background: rgb(192,194,206,0.5);
   border-radius: 8px;
   /* width: 150px; */
-  /* width: 80%; */
+  width: 100%;
   height: 28px;
   color: #CED9FF;
   margin-top: 10px;
-  margin-left: 5.5%;
+  /* margin-left: 5.5%; */
   min-width: 110px;
 }
 

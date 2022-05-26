@@ -1011,7 +1011,7 @@ export class ModelComponent implements OnInit {
       return;
     }
     
-    (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
+    (<HTMLDivElement>document.getElementById('boxZT')).scrollIntoView();
     
     if(broj == 1){
       this.izmeniPodesavanja();

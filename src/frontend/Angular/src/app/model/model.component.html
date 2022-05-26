@@ -140,12 +140,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div *ngIf="flag; else onemoguceno">
-                                        <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
+                                    <div style="width:100%">
+                                        <div *ngIf="flag; else onemoguceno">
+                                            <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
+                                        </div>
+                                        <ng-template #onemoguceno>
+                                            <input id="crossVd" disabled>
+                                        </ng-template>
                                     </div>
-                                    <ng-template #onemoguceno>
-                                        <input id="crossVd" disabled>
-                                    </ng-template>
                                 </div>
                                 <!--
                                 <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
@@ -260,6 +262,123 @@
             </div>
         </div>
 
+        <div class="container-fluid" id="centrirano3">
+            <div class="row justify-content-between">
+                <div class="col-md-7" id="collapse1" *ngIf="prikazi==true">
+                    <div id="grafik">
+                        <div class="loss-content-wrapper">
+                            <div class="sixteen-by-nine aspect-ratio"></div>
+                            <div class="model-content d-flex justify-content-center align-items-center">
+                                <canvas id="loss-graph">
+                                </canvas>
+                            </div>
+                        </div>
+                        <!-- <div id="canvas">
+                            <canvas baseChart
+                                [data]="signalR.lineChartData"
+                                [options]="chartOptions"
+                                [type]="'line'"
+                            >
+                            </canvas>
+                        </div> -->
+                    </div>
+                    <!-- <table *ngFor="let elem of signalR.data" style="color:white">
+                        <tr><td>{{elem}}</td></tr>
+                    </table> -->
+                </div>
+                <div class="col-md-5" id="collapse" *ngIf="prikazi1==true">
+                    <div id="metrika">
+                        <h3>Train and test dataset statistics</h3>
+                        <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
+                            <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
+                                <table id="stat" style="width:100%">
+                                    <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
+                                    <tr>
+                                    <th>Parameters</th>
+                                    <th>Training</th>
+                                    <th *ngIf="imaTestni==true">Test</th>
+                                    </tr>
+                                    <tr>
+                                    <td>AdjustedR2</td>
+                                    <td id="actest">{{Adj[ind]}}</td>
+                                    <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>MAE</td>
+                                    <td id="batest">{{MAE[ind]}}</td>
+                                    <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MSE</td>
+                                        <td id="celtest">{{MSE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>R2</td>
+                                        <td id="f1test">{{R2[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>RSE</td>
+                                        <td id="htest">{{RSE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
+                            <table id="stat" style="width:100%">
+                                <tr>
+                                <th>Parametri</th>
+                                <th *ngIf="imaTestni==true">Testni</th>
+                                <th>Trening</th>
+                                </tr>
+                                <tr>
+                                <td>Accuracy</td>
+                                <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
+                                <td id="actrain">{{atrain}}</td>
+                                </tr>
+                                <tr>
+                                <td>Balanced Accuracy</td>
+                                <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
+                                <td id="batrain">{{btrain}}</td>
+                                </tr>
+                                <tr>
+                                    <td>CrossEntropyLoss</td>
+                                    <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
+                                    <td id="celtrain">{{ctrain}}</td>
+                                </tr>
+                                <tr>
+                                    <td>F1Score</td>
+                                    <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
+                                    <td id="f1train">{{ftrain}}</td>
+                                </tr>
+                                <tr>
+                                    <td>HammingLoss</td>
+                                    <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
+                                    <td id="htrain">{{htrain}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Precision</td>
+                                    <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
+                                    <td id="ptrain">{{ptrain}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Recall</td>
+                                    <td *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
+                                    <td id="rtrain">{{rtrain}}</td>
+                                </tr>
+                            </table>
+                            <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                                Show confusion matrix for training and test dataset
+                            </button> -->
+                            <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalM">Show confusion matrix</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container-fluid">
             <div class="row justify-content-between" id="centrirano2">
                 <div class="col-md-3 justify-content-center okvir">
@@ -318,125 +437,6 @@
                 </div>
             </div>
         </div>
-
-        <div id="centrirano3">
-            <div id="collapse1" *ngIf="prikazi==true">
-                <div id="div">
-                    <div id="grafik">
-                        <div class="loss-content-wrapper">
-                            <div class="sixteen-by-nine aspect-ratio"></div>
-                            <div class="model-content d-flex justify-content-center align-items-center">
-                                <canvas id="loss-graph">
-                                </canvas>
-                            </div>
-                        </div>
-                        <!-- <div id="canvas">
-                            <canvas baseChart
-                                [data]="signalR.lineChartData"
-                                [options]="chartOptions"
-                                [type]="'line'"
-                            >
-                            </canvas>
-                        </div> -->
-                    </div>
-                    <!-- <table *ngFor="let elem of signalR.data" style="color:white">
-                        <tr><td>{{elem}}</td></tr>
-                    </table> -->
-                </div>
-            </div>
-        <div>
-            <div id="collapse" *ngIf="prikazi1==true">
-                <div id="metrika">
-                    <h3>Train and test dataset statistics</h3>
-                    <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
-                        <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
-                            <table id="stat" style="width:100%">
-                                <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
-                                <tr>
-                                <th>Parameters</th>
-                                <th>Training</th>
-                                <th *ngIf="imaTestni==true">Test</th>
-                                </tr>
-                                <tr>
-                                <td>AdjustedR2</td>
-                                <td id="actest">{{Adj[ind]}}</td>
-                                <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                <td>MAE</td>
-                                <td id="batest">{{MAE[ind]}}</td>
-                                <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>MSE</td>
-                                    <td id="celtest">{{MSE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>R2</td>
-                                    <td id="f1test">{{R2[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>RSE</td>
-                                    <td id="htest">{{RSE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
-                        <table id="stat" style="width:100%">
-                            <tr>
-                            <th>Parametri</th>
-                            <th *ngIf="imaTestni==true">Testni</th>
-                            <th>Trening</th>
-                            </tr>
-                            <tr>
-                            <td>Accuracy</td>
-                            <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
-                            <td id="actrain">{{atrain}}</td>
-                            </tr>
-                            <tr>
-                            <td>Balanced Accuracy</td>
-                            <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
-                            <td id="batrain">{{btrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>CrossEntropyLoss</td>
-                                <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
-                                <td id="celtrain">{{ctrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>F1Score</td>
-                                <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
-                                <td id="f1train">{{ftrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>HammingLoss</td>
-                                <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
-                                <td id="htrain">{{htrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>Precision</td>
-                                <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
-                                <td id="ptrain">{{ptrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>Recall</td>
-                                <td *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
-                                <td id="rtrain">{{rtrain}}</td>
-                            </tr>
-                        </table>
-                        <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
-                            Show confusion matrix for training and test dataset
-                        </button> -->
-                        <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalM">Show confusion matrix</button>  
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- PREDIKCIJA -->
     <div class="container-fluid">
         <div class="row">
