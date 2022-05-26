@@ -188,6 +188,9 @@ class ANN:
         self.regularization_rate = annSettings.regularizationRate
         
     def create_new_network(self):
+        if self.hidden_layers is None:
+            return False
+        
         self.weights_history = {}
     
         num_of_layers  = len(self.hidden_layers)
@@ -244,6 +247,8 @@ class ANN:
             self.optimizer = optim.RMSprop   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
         else:
             self.optimizer = optim.SGD       (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
+
+        return True
     
     # Weights
     def get_weights(self):

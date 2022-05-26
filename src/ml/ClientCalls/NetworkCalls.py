@@ -72,6 +72,14 @@ def change_settings(self):
     self.network.load_settings(annSettings)
     
     print("ANN settings changed.")
+    
+def create_new_network(self):
+    if not self.network.create_new_network():
+        self.report_error("ERROR :: ANN settings not set, can't create a network.")
+        return
+    
+    self.connection.send("OK")
+    print("New ANN created.")
 
 def select_training_data(self):
     # Receive data version

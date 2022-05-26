@@ -111,6 +111,7 @@ class MLClientInstance(Thread):
             # Network calls
             'ComputeMetrics'    : compute_metrics,
             'ChangeSettings'    : change_settings,
+            'CreateNewNetwork'  : create_new_network,
             'SelectTrainingData': select_training_data,
             'Start'             : start,
             'Stop'              : stop,

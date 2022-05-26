@@ -616,6 +616,8 @@ namespace dotNet.DBFunkcije
 
         private string confusionMatrix(int[][] Matrix)
         {
+            if (Matrix == null)
+                return "";
             Console.WriteLine("Test");
             string niz = "";
             for(int i = 0; i < Matrix.Length; i++)

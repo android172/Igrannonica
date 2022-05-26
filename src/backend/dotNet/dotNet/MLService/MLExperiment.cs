@@ -8,6 +8,10 @@ namespace dotNet.MLService {
 
         public MLExperiment(IConfiguration configuration, string token, int experimentId) {
             connection = new MLConnection(configuration);
+            SetupUser(token, experimentId);
+        }
+
+        public void SetupUser(string token, int experimentId) {
             connection.Send(Command.SetupUser);
             connection.Send(token);
             connection.Send(experimentId);
@@ -548,6 +552,13 @@ namespace dotNet.MLService {
             }
         }
 
+        public void CreateNewNetwork() {
+            lock (_lock) {
+                connection.Send(Command.CreateNewNetwork);
+                CheckStatus();
+            }
+        }
+
         public void SelectTrainingData(string datasetVersion) {
             lock (_lock) {
                 connection.Send(Command.SelectTrainingData);
@@ -681,6 +692,7 @@ namespace dotNet.MLService {
         LoadEpoch,
         ComputeMetrics,
         ChangeSettings,
+        CreateNewNetwork,
         SelectTrainingData,
         Start,
         Stop,

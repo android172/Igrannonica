@@ -999,10 +999,9 @@ export class ModelComponent implements OnInit {
   }
 
   treniraj(broj:number){
-    
     if(this.idModela == undefined)
     {
-      this.onInfo("You have to save the model before training");
+      this.onInfo("You have to save the model before training.");
       return;
     }
     
@@ -1419,8 +1418,17 @@ export class ModelComponent implements OnInit {
       res => {
         //console.log(res);
         this.idModela=res;
-        this.onSuccess("Model was successfully created.");
-        this.PosaljiModel.emit(this.selectedSS);
+        
+        this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&idmodela=" + this.idModela, {responseType : 'text'}).subscribe(
+          res => {
+            this.onSuccess("Model was successfully created.");
+            this.PosaljiModel.emit(this.selectedSS);
+          },
+          error => {
+            console.log(error.error);
+            this.onError(error.error);
+          }
+        )
       },
       error =>{
         console.log(error.error);

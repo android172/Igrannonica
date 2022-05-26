@@ -406,28 +406,55 @@ namespace dotNet.Controllers
             try
             {
                 MLExperiment eksperiment = Experiment.eksperimenti[ideksperimenta];
+
+                ANNSettings podesavanja = db.dbmodel.podesavanja(idmodela);
+                eksperiment.ApplySettings(podesavanja);
+                eksperiment.CreateNewNetwork();
+
                 Model model = db.dbmodel.model(idmodela);
-                eksperiment.SaveModel(model.Name,idmodela);
-                string metrika = eksperiment.ComputeMetrics(idmodela);
-                if(db.dbmodel.podesavanja(idmodela).ANNType == ProblemType.Regression)
-                {
+                eksperiment.SaveModel(model.Name, idmodela);
+
+                try {
+                    string metrika = eksperiment.ComputeMetrics(idmodela);
                     JObject met = JObject.Parse(metrika);
-                    StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
-                    db.dbmodel.upisiStatistiku(idmodela,rg);
-                    return Ok("Model sacuvan");
+
+                    if (podesavanja.ANNType == ProblemType.Regression)
+                    {
+                        StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
+                        db.dbmodel.upisiStatistiku(idmodela, rg);
+                        return Ok("Model sacuvan");
+                    }
+                    else if (podesavanja.ANNType == ProblemType.Classification)
+                    {
+                        StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
+                        db.dbmodel.upisiStatistiku(idmodela, cs);
+                        return Ok("Model sacuvan");
+                    }
                 }
-                else if (db.dbmodel.podesavanja(idmodela).ANNType == ProblemType.Classification)
-                {
-                    JObject met = JObject.Parse(metrika);
-                    StatisticsClassification rg = met.GetValue("train").ToObject<StatisticsClassification>();
-                    db.dbmodel.upisiStatistiku(idmodela, rg);
-                    return Ok("Model sacuvan");
+                catch (MLException) {
+                    if (podesavanja.ANNType == ProblemType.Regression)
+                    {
+                        StatisticsRegression reg = new(0, 0, 0, 0, 0);
+                        db.dbmodel.upisiStatistiku(idmodela, reg);
+                        return Ok("Model sacuvan");
+                    }
+                    else if (podesavanja.ANNType == ProblemType.Classification)
+                    {
+                        StatisticsClassification cls = new(0, 0, 0, 0, 0, 0, 0, null);
+                        db.dbmodel.upisiStatistiku(idmodela, cls);
+                        return Ok("Model sacuvan");
+                    }
                 }
+                
                 return BadRequest("Doslo do greske");
             }
-            catch (Exception ex)
+            catch (MLException e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(500);
             }
 
         }
