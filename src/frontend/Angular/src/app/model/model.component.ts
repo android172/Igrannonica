@@ -1587,8 +1587,13 @@ export class ModelComponent implements OnInit {
                     brojac++;
                   }
                 }
-                console.log(this.ulazneKolone);
-                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+                for(let i=0; i<this.kolone2.length; i++)
+                {
+                  if(this.kolone2[i].type === 'Output')
+                  {
+                    this.izlazneKolone[0] = this.kolone2[i].value;
+                  }
+                }
                 this.brojU = this.ulazneKolone.length;
                 this.brojI = 1;
                 console.log(this.brojU);
@@ -1688,7 +1693,13 @@ export class ModelComponent implements OnInit {
                       brojac++;
                     }
                   }
-                  this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
+                  for(let i=0; i<this.kolone2.length; i++)
+                  {
+                    if(this.kolone2[i].type === 'Output')
+                    {
+                      this.izlazneKolone[0] = this.kolone2[i].value;
+                    }
+                  }
                   this.brojU = this.ulazneKolone.length;
                   this.brojI = 1;
                   }
