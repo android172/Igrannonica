@@ -346,5 +346,21 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
+        
+        [HttpGet("Statistika")]
+        public IActionResult statistika(int idEksperimenta)
+        {
+            try
+            {
+                List<Regression> reg = db.dbmodel.eksperimentRegression(idEksperimenta);
+                List<Classification> clas = db.dbmodel.eksperimentKlasifikacija(idEksperimenta);
+                return Ok(new { reg, clas });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

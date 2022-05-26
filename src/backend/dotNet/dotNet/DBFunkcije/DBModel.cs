@@ -637,7 +637,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update reggresion set mae = @MAE, mse = @MSE, rse = @RSE, r2 = @R2, adjustedR2 = @AR2 where id = @id;";
+                string query = "update Reggresion set MAE = @MAE, MSE = @MSE, RSE = @RSE, R2 = @R2, AdjustedR2 = @AR2 where id = @id;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
@@ -697,9 +697,13 @@ namespace dotNet.DBFunkcije
 
         public bool upisiStatistiku(int id,StatisticsClassification statistica)
         {
+            Console.WriteLine("upisiStatistiku");
+            try
+            {
+
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update classification set accuracy = @Accuracy, balancedAccuracy = @BalancedAccuracy, `precision` = @Precision, recall = @Recall, f1Score = @F1Score, hammingLoss = @HammingLoss, crossEntropyLoss = @CrossEntropyLoss, confusionMatrix = @ConfusionMatrix where id = @id;";
+                string query = "insert into Classification values(@id,@Accuracy,@BalancedAccuracy,@Precision,@Recall,@F1Score,@HammingLoss,@CrossEntropyLoss,@ConfusionMatrix)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
@@ -713,6 +717,12 @@ namespace dotNet.DBFunkcije
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                     return true;
+                return false;
+            }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }

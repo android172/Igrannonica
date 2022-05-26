@@ -474,14 +474,11 @@ namespace dotNet.Controllers
 
                 ANNSettings podesavanja = db.dbmodel.podesavanja(idmodela);
                 eksperiment.ApplySettings(podesavanja);
-
                 Model model = db.dbmodel.model(idmodela);
                 eksperiment.SaveModel(model.Name, idmodela);
-
                 try {
                     string metrika = eksperiment.ComputeMetrics(idmodela);
                     JObject met = JObject.Parse(metrika);
-
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
                         StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
@@ -496,15 +493,16 @@ namespace dotNet.Controllers
                     }
                 }
                 catch (MLException) {
+                    Console.WriteLine("Test");
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
-                        StatisticsRegression reg = new(0, 0, 0, 0, 0);
+                        StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
                         saveModelStatistics(idmodela, reg);
                         return Ok("Model sacuvan");
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
                     {
-                        StatisticsClassification cls = new(0, 0, 0, 0, 0, 0, 0, null);
+                        StatisticsClassification cls = new StatisticsClassification(0f, 0f, 0f, 0f, 0f, 0f, 0f, null);
                         saveModelStatistics(idmodela, cls);
                         return Ok("Model sacuvan");
                     }
