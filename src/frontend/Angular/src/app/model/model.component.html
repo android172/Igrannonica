@@ -260,60 +260,62 @@
             </div>
         </div>
 
-        <div class="row justify-content-between" id="centrirano2">
-            <div class="col-md-3 okvir">
-                <div class="container-fluid">
-                    <div class="row d-flex justify-content-center">
-                        <h3>Hidden layers</h3>
-                        <button id="minus1" (click)="promeni1(2)" >—</button>
-                        <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
-                        <button id="plus1" (click)="promeni1(1)">+</button>
-                    </div>
-                    <div class="row d-flex justify-content-center">
-                        <div class="d-flex justify-content-between"><h4 class="text-center">Activation function</h4><h4 class="text-center">Neurons</h4></div>
-                        
-                        <div *ngFor="let  in of hiddLay;let i = index">
-                            <div class="d-flex justify-content-between mb-3">
-                                <select id="dd6" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
-                                    <option id="ddp" value="0">ReLU</option>
-                                    <option id="ddp" value="1">LeakyReLU</option>
-                                    <option id="ddp" value="2">Sigmoid</option>
-                                    <option id="ddp" value="3">Tahn</option>
-                                    <option id="ddp" value="4">Linear</option>
-                                </select>
-                            <input type="number" min="1"  max="14" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)" (change)="brojCvorova(i)">        
+        <div class="container-fluid">
+            <div class="row justify-content-between" id="centrirano2">
+                <div class="col-md-3 justify-content-center okvir">
+                    <div class="container-fluid">
+                        <div class="row d-flex justify-content-center">
+                            <h3>Hidden layers</h3>
+                            <button id="minus1" (click)="promeni1(2)" >—</button>
+                            <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
+                            <button id="plus1" (click)="promeni1(1)">+</button>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="d-flex justify-content-between"><h4 class="text-center">Activation function</h4><h4 class="text-center">Neurons</h4></div>
+                            
+                            <div *ngFor="let in of hiddLay;let i = index">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <select id="dd6" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
+                                        <option id="ddp" value="0">ReLU</option>
+                                        <option id="ddp" value="1">LeakyReLU</option>
+                                        <option id="ddp" value="2">Sigmoid</option>
+                                        <option id="ddp" value="3">Tahn</option>
+                                        <option id="ddp" value="4">Linear</option>
+                                    </select>
+                                <input type="number" min="1"  max="14" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)" (change)="brojCvorova(i)">        
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-9">
-                <div style="width: 98%; float: right;">
-                    <div class="model-content-wrapper">
-                        <div class="sixteen-by-nine aspect-ratio"></div>
-                        <div class="model-content d-flex justify-content-center align-items-center">
-                            <canvas id="model-canvas">
-                            </canvas>
+                <div class="col-md-9 p-0">
+                    <div style="width: 96%; float: right;">
+                        <div class="model-content-wrapper">
+                            <div class="sixteen-by-nine aspect-ratio"></div>
+                            <div class="model-content d-flex justify-content-center align-items-center">
+                                <canvas id="model-canvas">
+                                </canvas>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-            
-                    <!-- <div id="kolona">
-                        <div *ngFor="let brojac of counter1(brojU);let ind = index">
+    
+                
+                        <!-- <div id="kolona">
+                            <div *ngFor="let brojac of counter1(brojU);let ind = index">
+                                    <div id="cvor"></div>
+                            </div>
+                        </div>
+                        <div id="kolona" *ngFor="let in of nizCvorova;let i = index">
+                            <div *ngFor="let br of counter1(nizCvorova[i]);let j = index">
                                 <div id="cvor"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div id="kolona" *ngFor="let in of nizCvorova;let i = index">
-                        <div *ngFor="let br of counter1(nizCvorova[i]);let j = index">
-                            <div id="cvor"></div>
-                        </div>
-                    </div>
-                    <div id="kolona">
-                        <div *ngFor="let brojac of counter1(brojI);let ind = index">
-                            <div id="cvor"></div>
-                        </div>
-                    </div> -->
+                        <div id="kolona">
+                            <div *ngFor="let brojac of counter1(brojI);let ind = index">
+                                <div id="cvor"></div>
+                            </div>
+                        </div> -->
+                </div>
             </div>
         </div>
 

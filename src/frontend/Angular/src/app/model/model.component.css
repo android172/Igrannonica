@@ -810,8 +810,8 @@ input
   float: left;
   text-align: left;
   padding-top: 1px;
-  padding-right: 3px;
-  padding-left: 6px;
+  /* padding-right: 0px; */
+  padding-left: 7px;
   /* padding-right: 20px; */
   font-size: 20px;
 }
@@ -855,9 +855,10 @@ input
   border: 2px solid #bc7ca1;
   background: rgba(176, 167, 234, 0.3) ; 
   border-radius: 8px;
-  min-width: 70px;
+  min-width: 50px;
   height: 29px;
   color: #CED9FF;
+  width: 23%;
 }
 
 #dd4{
@@ -870,6 +871,7 @@ input
 #dd6
 {
   width: 50%;
+  min-width: 70px;
 }
 
 
