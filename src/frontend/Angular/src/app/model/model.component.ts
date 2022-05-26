@@ -1011,7 +1011,7 @@ export class ModelComponent implements OnInit {
       return;
     }
     
-    (<HTMLDivElement>document.getElementById('grafik')).scrollIntoView();
+    (<HTMLDivElement>document.getElementById('boxZT')).scrollIntoView();
     
     if(broj == 1){
       this.izmeniPodesavanja();
@@ -1552,36 +1552,61 @@ export class ModelComponent implements OnInit {
                   this.kolone2.push({value : kolona, type : "Input"});
                  }
                  this.kolone2[this.kolone2.length - 1].type = "Output";
-               }
-               for(let i=0; i< this.pomocniNizKoloneString.length; i++)
-               {
+                 for(let i=0; i< this.pomocniNizKoloneString.length; i++)
+                {
                     (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
-                   // console.log(this.kolone2[this.nizKolonaStr[i]]);
-                   this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
-              }
-              // this.PosaljiSnapshot2.emit(id);
-              var brojac = 0;
-               for(let i=0; i<this.kolone2.length-1; i++)
-               {
-                 if(this.kolone2[i].type === 'Input')
-                 {
-                  this.ulazneKolone[brojac] = this.kolone2[i].value;
-                  brojac++;
-                 }
+                    // console.log(this.kolone2[this.nizKolonaStr[i]]);
+                    this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
+                }
+                var ind = 0;
+                for(let i=0; i< this.kolone2.length; i++)
+                {
+                    if(this.kolone2[i].type == "Output")
+                    {
+                      ind = 1;
+                    }
+                }
+                if(ind == 0)
+                {
+                  for(let i=this.kolone2.length-1; i>=0; i--)
+                  {
+                    if(this.kolone2[i].type == "Input")
+                    {
+                      (this.kolone2[i]).type = 'Output';
+                      break;
+                    }
+                  }
+                }
+                // this.PosaljiSnapshot2.emit(id);
+                var brojac = 0;
+                for(let i=0; i<this.kolone2.length-1; i++)
+                {
+                  if(this.kolone2[i].type === 'Input')
+                  {
+                    this.ulazneKolone[brojac] = this.kolone2[i].value;
+                    brojac++;
+                  }
+                }
+                for(let i=0; i<this.kolone2.length; i++)
+                {
+                  if(this.kolone2[i].type === 'Output')
+                  {
+                    this.izlazneKolone[0] = this.kolone2[i].value;
+                  }
+                }
+                this.brojU = this.ulazneKolone.length;
+                this.brojI = 1;
+                console.log(this.brojU);
+                this.buttonDisable = false;
+                this.buttonDisable = false;
+                this.hiddLay = [3,3,3,3,3];
+                this.nizCvorova = [3,3,3,3,3];
+                this.brHL = 5;
+                this.aktFunk = [0,0,0,0,0];
+                this.PosaljiSnapshot2.emit(id);
+                this.recreateNetwork();
                }
-               console.log(this.ulazneKolone);
-               this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
-               this.brojU = this.ulazneKolone.length;
-               this.brojI = 1;
-               console.log(this.brojU);
-               this.buttonDisable = false;
-               this.buttonDisable = false;
-               this.hiddLay = [3,3,3,3,3];
-               this.nizCvorova = [3,3,3,3,3];
-               this.brHL = 5;
-               this.aktFunk = [0,0,0,0,0];
-               this.PosaljiSnapshot2.emit(id);
-               this.recreateNetwork();
+               
             },error =>{
              console.log(error.error);
            }
@@ -1631,36 +1656,61 @@ export class ModelComponent implements OnInit {
                   this.kolone2.push({value : kolona, type : "Input"});
                  }
                  this.kolone2[this.kolone2.length - 1].type = "Output";
+                 for(let i=0; i< this.pomocniNizKoloneString.length; i++)
+                  {
+                      (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
+                    // console.log(this.kolone2[this.nizKolonaStr[i]]);
+                    this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
+                  }
+                  var ind = 0;
+                  for(let i=0; i< this.kolone2.length; i++)
+                  {
+                      if(this.kolone2[i].type == "Output")
+                      {
+                        ind = 1;
+                      }
+                  }
+                  if(ind == 0)
+                  {
+                    for(let i=this.kolone2.length-1; i>=0; i--)
+                    {
+                      if(this.kolone2[i].type == "Input")
+                      {
+                        (this.kolone2[i]).type = 'Output';
+                        break;
+                      }
+                    }
+                  }
+                  // this.PosaljiSnapshot2.emit(id);
+                  if(this.flagP == false)
+                  {
+                  var brojac = 0;
+                  for(let i=0; i<this.kolone2.length-1; i++)
+                  {
+                    if(this.kolone2[i].type === 'Input')
+                    {
+                      this.ulazneKolone[brojac] = this.kolone2[i].value;
+                      brojac++;
+                    }
+                  }
+                  for(let i=0; i<this.kolone2.length; i++)
+                  {
+                    if(this.kolone2[i].type === 'Output')
+                    {
+                      this.izlazneKolone[0] = this.kolone2[i].value;
+                    }
+                  }
+                  this.brojU = this.ulazneKolone.length;
+                  this.brojI = 1;
+                  }
+                  this.buttonDisable = false;
+                  this.hiddLay = [3,3,3,3,3];
+                  this.nizCvorova = [3,3,3,3,3];
+                  this.brHL = 5;
+                  this.aktFunk = [0,0,0,0,0];
+                  this.recreateNetwork();
                }
-               for(let i=0; i< this.pomocniNizKoloneString.length; i++)
-               {
-                    (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
-                   // console.log(this.kolone2[this.nizKolonaStr[i]]);
-                   this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
-              }
-              // this.PosaljiSnapshot2.emit(id);
-              if(this.flagP == false)
-              {
-               var brojac = 0;
-               for(let i=0; i<this.kolone2.length-1; i++)
-               {
-                 if(this.kolone2[i].type === 'Input')
-                 {
-                  this.ulazneKolone[brojac] = this.kolone2[i].value;
-                  brojac++;
-                 }
-               }
-              //  console.log(this.ulazneKolone);
-               this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
-               this.brojU = this.ulazneKolone.length;
-               this.brojI = 1;
-              }
-               this.buttonDisable = false;
-               this.hiddLay = [3,3,3,3,3];
-               this.nizCvorova = [3,3,3,3,3];
-               this.brHL = 5;
-               this.aktFunk = [0,0,0,0,0];
-               this.recreateNetwork();
+               
             },error =>{
              console.log(error.error);
            }

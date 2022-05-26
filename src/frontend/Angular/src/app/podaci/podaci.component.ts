@@ -1020,11 +1020,17 @@ dajNaziveHeadera()
   }
   deleteColumns()
   {
+    let str = "";
     if(this.selectedColumns.length == 0)
     {
       //this.onInfo("Kolone nisu selektovane");
       return;
     }
+    else if(this.selectedColumns.length == 1)
+      str = " Column deleted";
+    else if(this.selectedColumns.length > 1)
+      str = " Columns deleted";
+    
     this.http.post(url+"/api/DataManipulation/deleteColumns?idEksperimenta=" + this.idEksperimenta,this.selectedColumns,{responseType: 'text'}).subscribe(
       res => {
         ;
@@ -1035,6 +1041,9 @@ dajNaziveHeadera()
         this.nizKategorickihKolona = [];
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
+        let dateTime = new Date();
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str);
+        this.nizKomandiTooltip.push("" + dateTime.toString() + "");
        // this.dodajKomandu("Uspesno obrisane kolone");
         this.onSuccess('Columns are deleted.');
     },error=>{
@@ -1177,9 +1186,13 @@ dajNaziveHeadera()
   }
   selectAllColumns(event:any)
   {
+    if(this.json == undefined)
+      return;
+    var headers = Object.keys(this.json[0]);
+
     if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Columns")
     { 
-      for(var i = 0;i<this.kolone.length;i++)
+      for(var i = 0;i<headers.length;i++)
       {
         this.selectedColumns.push(i);
         if(this.nizTipova[i] === "Categorical")
@@ -1263,11 +1276,17 @@ dajNaziveHeadera()
 
   deleteRows()
   {
+    let str = "";
     if(this.rowsAndPages.length == 0)
     {
       //this.onInfo("Nema selektovanih redova."); 
       return; 
     }
+    else if(this.rowsAndPages.length == 1)
+      str = " Row deleted";
+    else if(this.rowsAndPages.length > 1)
+      str = " Rows deleted";
+    
     let redoviZaBrisanje:number[] = [];
 
     for(let j = 0;j<this.rowsAndPages.length;j++)
@@ -1299,6 +1318,9 @@ dajNaziveHeadera()
           this.brojacAkcija++;
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
+          let dateTime = new Date();
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str);
+          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.onSuccess("Rows are deleted.");
         }
     },error=>{
@@ -2790,6 +2812,8 @@ zamenaTipaKolone(event:any)
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
+      this.izbrisiSelektovaneKolone();
+      this.izbrisiSelektovaneRedove();
       // this.PosaljiSnapshot.emit(id);
 
       if(id==0)
