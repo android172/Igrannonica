@@ -1016,6 +1016,22 @@
         <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="fillNaWithValue()" (click)="modal.close('Save click')" >Replace</button>
     </div>
   </ng-template>
+
+  <ng-template #modalSnapshot let-modal>
+    <div class="modal-header" >
+      <h3 class="modal-title" id="modal-basic-title">You have made changes!</h3>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body justify-content-center d-flex align-items-center ">
+        <div id="textDelete">
+            If you switch to another dataset version you will lose the changes you made. Are you sure you want to continue?
+        </div>
+    </div>
+    <div class="modal-footer  d-flex justify-content-between">
+        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="discardChanges()" (click)="modal.close('Close click')">Yes</button>
+        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="modal.close('Save click')">No</button>
+    </div>
+  </ng-template>
   
 
     <simple-notifications></simple-notifications>
