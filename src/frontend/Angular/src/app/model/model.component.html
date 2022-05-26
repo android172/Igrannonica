@@ -548,12 +548,12 @@
             </div>
             </div>
         </div> -->
-        <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border-bottom: none; padding: 30px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: bisque; margin: 0px;">Save model</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button #btnexitoverridemodel type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
                 <!-- <div style="color: beige;">Ime modela</div> -->
@@ -566,11 +566,26 @@
                 <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
                 </div>
                 <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
-                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Save model</button>
+                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()">Save model</button>
                 </div>
             </div>
             </div>
         </div>
+
+        <ng-template #overridemodela let-modal>
+            <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+              <h3 class="modal-title" style="color: bisque;" id="modal-basic-title">Model with that name already exists. Do you want to override it?</h3>
+              <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+            </div>
+        
+            <div class="modal-body justify-content-center d-flex align-items-center " style="background: rgba(36, 38, 74, 0.95);">
+                <div class=" d-flex justify-content-between" style="width: 60%; margin: auto;">
+                    <!-- <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="vratiTekst()" (click)="modal.close('Close click')">Cancel</button> -->
+                    <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="modal.close('Close click')">Cancel</button>
+                    <button type="button" id="dgm" class="btn btn-outline-dark" (click)="overrideModel()" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Override</button>
+                </div>
+            </div>
+          </ng-template>
         <simple-notifications></simple-notifications>
     </div>
 </div>

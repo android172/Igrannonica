@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications'; 
 import * as ApexCharts from 'apexcharts';
 import { WebglPlot, WebglLine, ColorRGBA, WebglThickLine, WebglPolar, WebglStep, WebglSquare } from "webgl-plot";
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-model',
@@ -173,7 +174,12 @@ export class ModelComponent implements OnInit {
   pomocniNizKoloneString : any[] = [];
   jsonPom : any;
 
-  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private router: Router,private service: NotificationsService) { 
+  @ViewChild('overridemodela') overridemodela:any;
+  closeResult = '';
+
+  @ViewChild('btnexitoverridemodel') btnexitoverridemodel:any;
+
+  constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private ngbModalService: NgbModal, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
@@ -1417,21 +1423,61 @@ export class ModelComponent implements OnInit {
     //console.log(this.jsonModel);
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
-        //console.log(res);
+        //console.log(this.jsonModel);
         this.idModela=res;
-        this.onSuccess("Model was successfully created.");
-        this.PosaljiModel.emit(this.selectedSS);
+        if(res == "-1") //kreira novi model
+        {
+          this.http.post(url+"/api/Model/KreirajNoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
+            res => {
+              this.idModela=res;
+              this.izadjiIzObaModala();
+              this.onSuccess("Model was successfully created.");
+              this.PosaljiModel.emit(this.selectedSS);
+              
+            },
+            error =>{
+              console.log(error.error);
+              this.onError("Model was not created.");
+              this.izadjiIzObaModala();
+            }
+          ); 
+        }
+        else // override modela
+        {  
+          this.open(this.overridemodela);
+          
+        }
+
       },
       error =>{
         console.log(error.error);
         this.onError("Model was not created.");
-        if(error.error === "ERROR :: Model with this name already exists.")
-        {
-          (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model with that name already exists";
-          this.onError("Model with that name already exists.");
-        }
+        // if(error.error === "ERROR :: Model with this name already exists.")
+        // {
+        //   (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model with that name already exists";
+        //   this.onError("Model with that name already exists.");
+        // }
       }
-    )
+    );
+  }
+
+  overrideModel()
+  { console.log(this.idModela);
+    this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + this.idModela, this.jsonModel, {responseType: 'text'}).subscribe(
+        res=>{
+          this.onSuccess("Model was overrided.");
+          console.log(res);
+          this.PosaljiModel.emit(this.selectedSS);
+        },err=>{
+          this.onError("Model was not overrided."); 
+        }
+      ); 
+  }
+
+  izadjiIzObaModala()
+  {
+    let el: HTMLElement = this.btnexitoverridemodel.nativeElement;
+    el.click();
   }
 
   // dajSnapshots()
@@ -2096,5 +2142,23 @@ export class ModelComponent implements OnInit {
         console.log(error.error);
       }
     )
+  }
+
+  open(content: any) {
+    this.ngbModalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 }
