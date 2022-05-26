@@ -296,7 +296,7 @@ export class ModelComponent implements OnInit {
     const sqHalfWidth = 0.02;
 
     for (let i = 0; i < points.length; i++) {
-      const pointX = 2 * i / this.maxPointX - 1;
+      const pointX = 1.9 * i / this.maxPointX - 1 + 0.05;
       const YDiff = this.maxPointY - this.minPointY;
       const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
       
@@ -314,7 +314,7 @@ export class ModelComponent implements OnInit {
     const r = 0.008;
     
     for (let i = 0; i < points.length; i++) {
-      const pointX = 2 * i / this.maxPointX - 1;
+      const pointX = 1.9 * i / this.maxPointX - 1 + 0.05;
       const YDiff = this.maxPointY - this.minPointY;
       const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
 
@@ -357,7 +357,7 @@ export class ModelComponent implements OnInit {
     }
 
     // Scale X points
-    line.lineSpaceX(-1, 2 / this.maxPointX);
+    line.lineSpaceX(-1 + 0.05, 1.9 / this.maxPointX);
 
     // Scale Y points
     var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;

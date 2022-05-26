@@ -266,11 +266,15 @@
             <div class="row justify-content-between">
                 <div class="col-md-7" id="collapse1" *ngIf="prikazi==true">
                     <div id="grafik">
+                        <!-- <canvas id="loss-legend"></canvas> -->
                         <div class="loss-content-wrapper">
                             <div class="sixteen-by-nine aspect-ratio"></div>
                             <div class="model-content d-flex justify-content-center align-items-center">
-                                <canvas id="loss-graph">
-                                </canvas>
+                                <div id="loss-plot">
+                                    <canvas id="loss-x-axis"></canvas>f
+                                    <canvas id="loss-y-axis"></canvas>
+                                    <canvas id="loss-graph"></canvas>
+                                </div>
                             </div>
                         </div>
                         <!-- <div id="canvas">
