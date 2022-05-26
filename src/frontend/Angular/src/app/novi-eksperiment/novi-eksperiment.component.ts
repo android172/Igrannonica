@@ -17,7 +17,7 @@ export class NoviEksperimentComponent implements OnInit {
   }
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -26,7 +26,7 @@ export class NoviEksperimentComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -52,12 +52,16 @@ export class NoviEksperimentComponent implements OnInit {
     }
     this.http.post(url+"/api/Eksperiment/Eksperiment?ime="+ime,null,{responseType: 'text'}).subscribe(
       res=>{
+        this.onSuccess("Experiment is successfully created.")
         this.router.navigate(['/eksperiment'],{ queryParams: { id: res } });
       },
-      error=>{
-        (<HTMLInputElement>document.getElementById("greska")).innerHTML=error.error;
-        
-        alert(error.error); 
+      error=>{ 
+        if(error.error==="ERROR :: Experiment with this name already exists.")
+        {
+          console.log("BLA");
+          this.onInfo("Experiment with that name already exists.");
+          (<HTMLInputElement>document.getElementById("greska")).innerHTML="Experiment with that name already exists."
+        }
       }
     );
   }

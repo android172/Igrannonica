@@ -67,7 +67,7 @@ export class ModeliComponent implements OnInit {
   }
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -76,7 +76,7 @@ export class ModeliComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -106,35 +106,35 @@ export class ModeliComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("imeM")).value='';
   }
 
-  napraviModel(){
-    // console.log(this.id);
-    var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
-    var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
-    if(ime === ""){
-      ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="*Polje ne sme biti prazno";
-      return;
-    }
-    if(div === "*Model sa tim nazivom vec postoji"){
-      div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
-    }
-    this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
-      res=>{
-        // console.log(res);
-        this.ucitajModel();
-        ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
-        this.onSuccess("Model je uspesno napravljen");
-      },
-      error=>{
-        console.log(error.error);
-        this.onError("Model nije napravljen!");
-        if(error.error === "Vec postoji model sa tim imenom")
-        {
-           var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
-           this.onError("Model sa tim nazivom vec postoji");
-        }
-      }
-    );
-  }
+  // napraviModel(){
+  //   // console.log(this.id);
+  //   var ime = (<HTMLInputElement>document.getElementById("imeM")).value;
+  //   var div = (<HTMLDivElement>document.getElementById("greska")).innerHTML;
+  //   if(ime === ""){
+  //     ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="*This field can not be empty.";
+  //     return;
+  //   }
+  //   if(div === "*Model sa tim nazivom vec postoji"){
+  //     div = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "";
+  //   }
+  //   this.http.post(url+"/api/Model/Modeli?ime=" + ime + "&id=" + this.id,null,{responseType: 'text'}).subscribe(
+  //     res=>{
+  //       // console.log(res);
+  //       this.ucitajModel();
+  //       ime = (<HTMLInputElement>document.getElementById("greska")).innerHTML="";
+  //       this.onSuccess("Model was successfully created.");
+  //     },
+  //     error=>{
+  //       console.log(error.error);
+  //       this.onError("Model nije napravljen!");
+  //       if(error.error === "Model with that name already exists.")
+  //       {
+  //          var div1 = (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model sa tim nazivom vec postoji";
+  //          this.onError("Model sa tim nazivom vec postoji");
+  //       }
+  //     }
+  //   );
+  // }
 
   // treba da se zove ucitaj model
   ucitajModel()
@@ -191,7 +191,7 @@ export class ModeliComponent implements OnInit {
 
   handleKeyUp(event: any){
      if(event.keyCode === 13){
-      this.napraviModel();
+      // this.napraviModel();
       this.ocisti();
      }
   }
@@ -253,10 +253,10 @@ export class ModeliComponent implements OnInit {
       {
         this.http.put(url+"/api/Model/Modeli/Opis?id=" + this.modeli[i].id + "&opis=" + a, {responseType : "text"}).subscribe(
           res=>{
-            this.onSuccess("Uspesno!");
           },error=>{
             (<HTMLDivElement>document.getElementById("opis")).innerHTML=a;
             this.ucitajModel();
+            this.onSuccess("Description was successfully edited.");
           }
         );
       }
@@ -285,7 +285,7 @@ export class ModeliComponent implements OnInit {
             this.ucitajModel();
             var div = (<HTMLDivElement>document.getElementById("m")).style.visibility="hidden";
             // this.onError("Model nije obrisan!");
-            this.onSuccess("Model je uspesno obrisan");
+            this.onSuccess("Model was successfully deleted.");
           }
         )
       }
