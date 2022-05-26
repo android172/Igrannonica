@@ -442,6 +442,29 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
+
+        private void saveModelStatistics(int modelId, StatisticsRegression stats) {
+            try
+            {
+                db.dbmodel.upisiStatistiku(modelId, stats);
+            }
+            catch
+            {
+                db.dbmodel.prepisiStatistiku(modelId, stats);
+            }
+        }
+        private void saveModelStatistics(int modelId, StatisticsClassification stats)
+        {
+            try
+            {
+                db.dbmodel.upisiStatistiku(modelId, stats);
+            }
+            catch
+            {
+                db.dbmodel.prepisiStatistiku(modelId, stats);
+            }
+        }
+
         [HttpPost("Save")]
         public IActionResult sacuvajModel(int ideksperimenta ,int idmodela)
         {
@@ -451,7 +474,6 @@ namespace dotNet.Controllers
 
                 ANNSettings podesavanja = db.dbmodel.podesavanja(idmodela);
                 eksperiment.ApplySettings(podesavanja);
-                eksperiment.CreateNewNetwork();
 
                 Model model = db.dbmodel.model(idmodela);
                 eksperiment.SaveModel(model.Name, idmodela);
@@ -463,13 +485,13 @@ namespace dotNet.Controllers
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
                         StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
-                        db.dbmodel.upisiStatistiku(idmodela, rg);
+                        saveModelStatistics(idmodela, rg);
                         return Ok("Model sacuvan");
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
                     {
                         StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
-                        db.dbmodel.upisiStatistiku(idmodela, cs);
+                        saveModelStatistics(idmodela, cs);
                         return Ok("Model sacuvan");
                     }
                 }
@@ -477,13 +499,13 @@ namespace dotNet.Controllers
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
                         StatisticsRegression reg = new(0, 0, 0, 0, 0);
-                        db.dbmodel.upisiStatistiku(idmodela, reg);
+                        saveModelStatistics(idmodela, reg);
                         return Ok("Model sacuvan");
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
                     {
                         StatisticsClassification cls = new(0, 0, 0, 0, 0, 0, 0, null);
-                        db.dbmodel.upisiStatistiku(idmodela, cls);
+                        saveModelStatistics(idmodela, cls);
                         return Ok("Model sacuvan");
                     }
                 }
@@ -500,7 +522,6 @@ namespace dotNet.Controllers
             }
 
         }
-
 
 
         [Authorize]

@@ -21,7 +21,9 @@ def save_model(self):
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
     
-    network.save_weights(model_path)
+    if not network.save_weights(model_path):
+        self.report_error("ERROR :: ANN settings not set, can't create a network.")
+        return
     
     response = requests.post(
         f"http://localhost:5008/api/file/uploadModel/{experiment_id}", 

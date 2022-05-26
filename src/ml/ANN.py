@@ -269,7 +269,12 @@ class ANN:
         return self.load_state_dict(state_dict)
     
     def save_weights(self, path):
+        if self.model is None:
+            if not self.create_new_network():
+                return False
         torch.save(self.model.state_dict(), path)
+        return True
+        
     
     def load_state_dict(self, state_dict):
         if state_dict is None:

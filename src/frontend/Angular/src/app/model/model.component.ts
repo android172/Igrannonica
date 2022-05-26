@@ -1458,7 +1458,7 @@ export class ModelComponent implements OnInit {
   }
 
   saveModel() {
-    this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&idmodela=" + this.idModela, {responseType : 'text'}).subscribe(
+    this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&idmodela=" + this.idModela, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully created.");
         this.PosaljiModel.emit(this.selectedSS);
@@ -1605,13 +1605,13 @@ export class ModelComponent implements OnInit {
            this.jsonPom =  JSON.parse(response.data);
            var br = 0;
           this.pomocniNiz = Object.values(this.jsonPom[0]);;
-          console.log(this.pomocniNiz);
+          // console.log(this.pomocniNiz);
           for(let i=0; i<this.pomocniNiz.length; i++)
           {
             if (typeof this.pomocniNiz[i] === 'string')
             {
               this.pomocniNizKoloneString[br] = i;
-              console.log(this.pomocniNizKoloneString[br]);
+              // console.log(this.pomocniNizKoloneString[br]);
               br++;
             }
           }
@@ -1650,7 +1650,7 @@ export class ModelComponent implements OnInit {
                   brojac++;
                  }
                }
-               console.log(this.ulazneKolone);
+              //  console.log(this.ulazneKolone);
                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
                this.brojU = this.ulazneKolone.length;
                this.brojI = 1;
@@ -1670,7 +1670,7 @@ export class ModelComponent implements OnInit {
    );
     
    this.selectedSS=id;
-   console.log(this.selectedSS);
+  //  console.log(this.selectedSS);
  }
 
   dajMetriku(modelId:number)

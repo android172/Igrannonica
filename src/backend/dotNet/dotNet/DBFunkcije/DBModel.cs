@@ -633,8 +633,26 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+        public bool prepisiStatistiku(int id, StatisticsRegression statistica)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update reggresion set mae = @MAE, mse = @MSE, rse = @RSE, r2 = @R2, adjustedR2 = @AR2 where id = @id;";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
+                cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
+                cmd.Parameters.AddWithValue("@RSE", statistica.RSE);
+                cmd.Parameters.AddWithValue("@R2", statistica.R2);
+                cmd.Parameters.AddWithValue("@AR2", statistica.AdjustedR2);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
 
-        private string confusionMatrix(int[][] Matrix)
+        private string confusionMatrix(int[][]? Matrix)
         {
             if (Matrix == null)
                 return "";
@@ -681,7 +699,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Classification values ( @id ,@Accuracy , @BalancedAccuracy , @Precision , @Recall , @F1Score, @HammingLoss , @CrossEntropyLoss , @ConfusionMatrix );";
+                string query = "update classification set accuracy = @Accuracy, balancedAccuracy = @BalancedAccuracy, `precision` = @Precision, recall = @Recall, f1Score = @F1Score, hammingLoss = @HammingLoss, crossEntropyLoss = @CrossEntropyLoss, confusionMatrix = @ConfusionMatrix where id = @id;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
@@ -692,6 +710,28 @@ namespace dotNet.DBFunkcije
                 cmd.Parameters.AddWithValue("@HammingLoss", statistica.HammingLoss);
                 cmd.Parameters.AddWithValue("@CrossEntropyLoss", statistica.CrossEntropyLoss);
                 cmd.Parameters.AddWithValue("@ConfusionMatrix", confusionMatrix( statistica.ConfusionMatrix));
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
+
+        public bool prepisiStatistiku(int id, StatisticsClassification statistica)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update Classification set ( @id ,@Accuracy , @BalancedAccuracy , @Precision , @Recall , @F1Score, @HammingLoss , @CrossEntropyLoss , @ConfusionMatrix );";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
+                cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
+                cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
+                cmd.Parameters.AddWithValue("@Recall", statistica.Recall);
+                cmd.Parameters.AddWithValue("@F1Score", statistica.F1Score);
+                cmd.Parameters.AddWithValue("@HammingLoss", statistica.HammingLoss);
+                cmd.Parameters.AddWithValue("@CrossEntropyLoss", statistica.CrossEntropyLoss);
+                cmd.Parameters.AddWithValue("@ConfusionMatrix", confusionMatrix(statistica.ConfusionMatrix));
                 connection.Open();
                 if (cmd.ExecuteNonQuery() > 0)
                     return true;
