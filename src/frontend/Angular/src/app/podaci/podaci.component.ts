@@ -1186,9 +1186,13 @@ dajNaziveHeadera()
   }
   selectAllColumns(event:any)
   {
+    if(this.json == undefined)
+      return;
+    var headers = Object.keys(this.json[0]);
+
     if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Columns")
     { 
-      for(var i = 0;i<this.kolone.length;i++)
+      for(var i = 0;i<headers.length;i++)
       {
         this.selectedColumns.push(i);
         if(this.nizTipova[i] === "Categorical")
@@ -2808,6 +2812,8 @@ zamenaTipaKolone(event:any)
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
+      this.izbrisiSelektovaneKolone();
+      this.izbrisiSelektovaneRedove();
       // this.PosaljiSnapshot.emit(id);
 
       if(id==0)
