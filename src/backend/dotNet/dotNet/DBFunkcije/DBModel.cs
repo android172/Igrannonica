@@ -132,6 +132,26 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+
+        public bool izmeniModel(int idModela, string ime, int id, string opis, int snanpshot)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set naziv=@ime, idEksperimenta=@id, snapshot=@snapshot, obnovljen=now(), opis=@opis where id=@idModela";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", ime);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@opis", opis);
+                cmd.Parameters.AddWithValue("@snapshot", snanpshot);
+                cmd.Parameters.AddWithValue("@idModela", idModela);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         public bool promeniImeModela(string ime, int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))

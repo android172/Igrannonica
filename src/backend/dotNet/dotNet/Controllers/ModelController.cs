@@ -316,22 +316,64 @@ namespace dotNet.Controllers
                 int modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
                 if(modela == -1)
                 {
-                    if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot))
+                    return Ok("-1");
+                }
+                return Ok(modela.ToString());
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("KreirajNoviModel")]
+        public IActionResult KreirajNoviModel(int idEksperimenta, [FromBody] NovModel model)
+        {
+            try
+            {
+                int modela = -1;
+                if (db.dbmodel.dodajModel(model.naziv, idEksperimenta, model.opis, model.snapshot))
+                {
+                    modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
+                    if (db.dbmodel.izmeniPodesavanja(modela, model.podesavalja))
                     {
-                        modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
-                        if (db.dbmodel.izmeniPodesavanja(modela, model.podesavalja))
+                        if (db.dbmodel.UpisiKolone(modela, model.kolone))
                         {
-                            if (db.dbmodel.UpisiKolone(modela, model.kolone))
-                            {
-                                return Ok(modela);
-                            }
-                            return StatusCode(500);
+                            return Ok(modela);
                         }
                         return StatusCode(500);
                     }
                     return StatusCode(500);
                 }
-                return BadRequest(ErrorMessages.ModelExists);
+                return StatusCode(500);
+                
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [Authorize]
+        [HttpPut("OverrideModel")]
+        public IActionResult OverrideModel(int idEksperimenta, int idModela, [FromBody] NovModel model)
+        {
+            try
+            {
+                if (db.dbmodel.izmeniModel(idModela, model.naziv, idEksperimenta, model.opis, model.snapshot))
+                {
+                    if (db.dbmodel.izmeniPodesavanja(idModela, model.podesavalja))
+                    {
+                        if (db.dbmodel.UpisiKolone(idModela, model.kolone))
+                        {
+                            return Ok("Model was overrided successfully.");
+                        }
+                        return StatusCode(500);
+                    }
+                    return StatusCode(500);
+                }
+                return StatusCode(500);
+                
             }
             catch
             {
