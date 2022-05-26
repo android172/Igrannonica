@@ -1186,9 +1186,13 @@ dajNaziveHeadera()
   }
   selectAllColumns(event:any)
   {
+    if(this.json == undefined)
+      return;
+    var headers = Object.keys(this.json[0]);
+
     if((<HTMLButtonElement>document.getElementById(event.target.id)).innerHTML === "Select All Columns")
     { 
-      for(var i = 0;i<this.kolone.length;i++)
+      for(var i = 0;i<headers.length;i++)
       {
         this.selectedColumns.push(i);
         if(this.nizTipova[i] === "Categorical")
