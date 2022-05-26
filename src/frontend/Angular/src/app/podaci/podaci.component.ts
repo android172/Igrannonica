@@ -2812,6 +2812,8 @@ zamenaTipaKolone(event:any)
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
       this.loadDefaultItemsPerPage();
+      this.izbrisiSelektovaneKolone();
+      this.izbrisiSelektovaneRedove();
       // this.PosaljiSnapshot.emit(id);
 
       if(id==0)
