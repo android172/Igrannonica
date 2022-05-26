@@ -197,6 +197,7 @@ namespace dotNet.Controllers
                     eksperiment.SelectTrainingData(snapshot.csv);
                 }
                 eksperiment.ApplySettings(podesavanja);
+                eksperiment.CreateNewNetwork();
                 eksperiment.Start(id);
                 return Ok("Pocelo treniranje");
             }
