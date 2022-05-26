@@ -33,18 +33,5 @@ namespace dotNet.SingalR
                 }
             }
         }
-
-
-        public override Task OnConnectedAsync()
-        {
-            Console.WriteLine("connected");
-            users.Add(Context.ConnectionId,null);
-            return base.OnConnectedAsync();
-        }
-        public override Task OnDisconnectedAsync(Exception? exception)
-        {
-            users.Remove(Context.ConnectionId);
-            return base.OnDisconnectedAsync(exception);
-        }
     }
 }
