@@ -1523,6 +1523,8 @@ dajNaziveHeadera()
 
   izmeniPolje(row:number,column:number,page:any,data:any)
   {
+    let rowPom = row + 1;
+
     row = page * this.itemsPerPage - this.itemsPerPage + row;
 /*
     if(data == undefined)
@@ -1542,10 +1544,10 @@ dajNaziveHeadera()
         this.EnableDisableGrafik();
         this.rowsAndPages = [];
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Added row value: " + data.value);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Row value changed: " + data.value + " (Row: " + rowPom + ", Column: " + this.nizImenaTrenutnihKolona[column] + ", Page: " + page + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
-        this.onSuccess("Added row value: "+ data.value);
+        this.onSuccess("Row value changed: "+ data.value);
     },error=>{
       console.log(error.error);
       this.rowsAndPages = [];
