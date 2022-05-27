@@ -1369,6 +1369,58 @@ dajNaziveHeadera()
     else if(this.rowsAndPages.length > 1)
       str = " Rows deleted";
     
+    let pages = [];
+    let uniquePages = [];
+
+    for(let i = 0; i < this.rowsAndPages.length; i++)
+    {
+      pages.push(this.rowsAndPages[i][1]);
+    }
+
+    uniquePages.push(pages[0]);
+    let pom = 0;
+
+    for(let i = 1; i < pages.length; i++)
+    {
+      pom = 0;
+      for(let j = 0; j < uniquePages.length; j++)
+      {
+        if(uniquePages[j] == pages[i])
+          pom = 1;
+      }
+      if(pom == 0)
+      {
+        uniquePages.push(pages[i]);
+      }
+    }
+    // console.log(pages);
+    // console.log(uniquePages);
+    
+    pom = 0;
+    for(var i = 0; i < uniquePages.length - 1; i++) 
+    {
+      for(var j = i; j < uniquePages.length; j++) 
+      {
+        if(uniquePages[j] < uniquePages[i]) 
+        {
+          pom = uniquePages[j];
+          uniquePages[j] = uniquePages[i];
+          uniquePages[i] = pom;
+        }
+      }
+    }
+    // console.log(uniquePages);
+
+    if(uniquePages.length == 1)
+      str += " (On page: ";
+    else if(uniquePages.length > 1)
+      str += " (On pages: ";
+
+    for(let i = 0; i < uniquePages.length - 1; i++)
+      str += uniquePages[i] + ", ";
+    
+    str += uniquePages[uniquePages.length - 1] + ")";
+
     let redoviZaBrisanje:number[] = [];
 
     for(let j = 0;j<this.rowsAndPages.length;j++)
