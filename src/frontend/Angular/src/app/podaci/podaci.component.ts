@@ -2785,11 +2785,9 @@ sacuvajKaoNovu(ime:string){
 
     if(this.selectedColumns.length == 0 && this.rowsAndPages.length == 0)
     {
-      text = "You have not selected any fields.";
+      text = " ";
       
-      // this.openModalDeleteClose(this.modalDeleteClose); 
       this.onInfo("You have not selected any fields.");
-      (<HTMLDivElement>document.getElementById("textDeleteClose")).innerHTML = text;
     }
     else
     {
