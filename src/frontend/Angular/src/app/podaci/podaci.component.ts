@@ -713,7 +713,7 @@ dajNaziveHeadera()
     {
       imena.push(this.nizImenaTrenutnihKolona[this.selectedColumns[i]]);
     }
-    console.log(imena);
+    // console.log(imena);
 
     for(let i = 0; i < imena.length - 1; i++)
       str += imena[i] + ", ";
@@ -1369,6 +1369,58 @@ dajNaziveHeadera()
     else if(this.rowsAndPages.length > 1)
       str = " Rows deleted";
     
+    let pages = [];
+    let uniquePages = [];
+
+    for(let i = 0; i < this.rowsAndPages.length; i++)
+    {
+      pages.push(this.rowsAndPages[i][1]);
+    }
+
+    uniquePages.push(pages[0]);
+    let pom = 0;
+
+    for(let i = 1; i < pages.length; i++)
+    {
+      pom = 0;
+      for(let j = 0; j < uniquePages.length; j++)
+      {
+        if(uniquePages[j] == pages[i])
+          pom = 1;
+      }
+      if(pom == 0)
+      {
+        uniquePages.push(pages[i]);
+      }
+    }
+    // console.log(pages);
+    // console.log(uniquePages);
+    
+    pom = 0;
+    for(var i = 0; i < uniquePages.length - 1; i++) 
+    {
+      for(var j = i; j < uniquePages.length; j++) 
+      {
+        if(uniquePages[j] < uniquePages[i]) 
+        {
+          pom = uniquePages[j];
+          uniquePages[j] = uniquePages[i];
+          uniquePages[i] = pom;
+        }
+      }
+    }
+    // console.log(uniquePages);
+
+    if(uniquePages.length == 1)
+      str += " (On page: ";
+    else if(uniquePages.length > 1)
+      str += " (On pages: ";
+
+    for(let i = 0; i < uniquePages.length - 1; i++)
+      str += uniquePages[i] + ", ";
+    
+    str += uniquePages[uniquePages.length - 1] + ")";
+
     let redoviZaBrisanje:number[] = [];
 
     for(let j = 0;j<this.rowsAndPages.length;j++)
@@ -2108,6 +2160,31 @@ dajNaziveHeadera()
       this.onInfo("No columns selected from menu.");
       return;
     }
+
+    let str = "";
+    if(this.selectedColumns.length == 1)
+    {
+      str = "(Column: ";
+    }
+    else if(this.selectedColumns.length > 1)
+    {
+      str = "(Columns: ";
+    }
+
+    let imena = [];
+    for(let i = 0; i < this.selectedColumns.length; i++)
+    {
+      imena.push(this.nizImenaTrenutnihKolona[this.selectedColumns[i]]);
+    }
+
+    for(let i = 0; i < imena.length - 1; i++)
+      str += imena[i] + ", ";
+    
+    str += imena[imena.length-1] + "; ";
+
+    let kolonaRegresija = (<HTMLInputElement>document.getElementById("regresija-input")).value;
+    str += "Selected for regression: " + kolonaRegresija + ")";
+
     this.http.post(url+"/api/DataManipulation/linearRegression/" + this.selectedForRegression + "?idEksperimenta=" + this.idEksperimenta, this.selectedColumns, {responseType: 'text'}).subscribe(
       res => {
         ;
@@ -2120,7 +2197,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Regression is performed");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Regression is performed " + str);
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Regression is performed.");
@@ -2825,6 +2902,7 @@ sacuvajKaoNovu(ime:string){
       this.onInfo("Select one column.");
       return;
     }
+
     this.openModalDelete(this.modalValue);
     (<HTMLDivElement>document.getElementById("tip-Vrednosti")).innerHTML = "*" + this.nizTipova[this.selectedColumns[0]];
   }
@@ -2833,6 +2911,9 @@ sacuvajKaoNovu(ime:string){
   {
     var vrednost = (<HTMLInputElement>document.getElementById("newNaValue")).value; 
     var kolona = this.selectedColumns[0]; 
+
+    let imeKolone = "";
+    imeKolone = this.nizImenaTrenutnihKolona[this.selectedColumns[0]];
 
      if(isNaN(Number(vrednost)) && this.nizTipova[this.selectedColumns[0]] == "Numerical")
      {
@@ -2848,7 +2929,7 @@ sacuvajKaoNovu(ime:string){
           this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values");
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values (Column: " + imeKolone + ", New value: " + vrednost + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.flag++;
           this.onSuccess("NA values are replaced by new values.");
