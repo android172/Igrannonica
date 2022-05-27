@@ -15,6 +15,7 @@ export class MojiEksperimentiComponent implements OnInit {
   json: any;
   id: any;
   izabranId: number = -1;
+  provera: boolean = false;
   constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
@@ -33,6 +34,10 @@ export class MojiEksperimentiComponent implements OnInit {
           // console.log(res);
           this.json = res;
           this.eksperimenti = Object.values(this.json);
+          if(this.eksperimenti.length > 0)
+            this.provera = true;
+          else
+            this.provera = false;
         }
     );
   }
@@ -87,6 +92,8 @@ export class MojiEksperimentiComponent implements OnInit {
             this.ucitajEksp();
             var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
             this.onSuccess("Experiment is successfully deleted.");
+            if(this.eksperimenti.length < 2)
+              this.provera = false;
           },
           error=>{
             console.log(error.error);
