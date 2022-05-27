@@ -731,7 +731,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Classification set ( @id ,@Accuracy , @BalancedAccuracy , @Precision , @Recall , @F1Score, @HammingLoss , @CrossEntropyLoss , @ConfusionMatrix );";
+                string query = "update Classification set `Accuracy`=@Accuracy , `BalancedAccuracy`=@BalancedAccuracy , `Precision`=@Precision , `Recall`=@Recall , `F1Score`=@F1Score, `HammingLoss`=@HammingLoss , `CrossEntropyLoss`=@CrossEntropyLoss , `ConfusionMatrix`=@ConfusionMatrix where `id`=@id ;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);

@@ -482,14 +482,21 @@ namespace dotNet.Controllers
                     JObject met = JObject.Parse(metrika);
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
-                        StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
-                        saveModelStatistics(idmodela, rg);
+                        foreach(JToken i  in met.GetValue("train").Values())
+                        {
+                            Console.WriteLine(i.ToString());
+                            StatisticsRegression rg = i.ToObject<StatisticsRegression>();
+                            saveModelStatistics(idmodela, rg);
+                        }
+                        //StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
+                        //saveModelStatistics(idmodela, rg);
                         return Ok("Model sacuvan");
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
                     {
-                        StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
-                        saveModelStatistics(idmodela, cs);
+                        var cs = met.GetValue("train")["0"].ToObject<StatisticsClassification>();
+                        //StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
+                        db.dbmodel.prepisiStatistiku(idmodela, cs);
                         return Ok("Model sacuvan");
                     }
                 }
@@ -515,9 +522,9 @@ namespace dotNet.Controllers
             {
                 return BadRequest(e.Message);
             }
-            catch
+            catch(Exception e)
             {
-                return StatusCode(500);
+                return BadRequest(e.Message);
             }
 
         }
