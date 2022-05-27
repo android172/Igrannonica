@@ -616,12 +616,13 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
-        public bool upisiStatistiku(int id, StatisticsRegression statistica) {
+        public bool upisiStatistiku(int id, StatisticsRegression statistica, string Kolona) {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Reggresion values ( @id ,@MAE , @MSE , @RSE , @R2 , @AR2);";
+                string query = "insert into Reggresion values ( @id , @Kolona ,@MAE , @MSE , @RSE , @R2 , @AR2);";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Kolona", Kolona);
                 cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
                 cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
                 cmd.Parameters.AddWithValue("@RSE" , statistica.RSE);
@@ -633,13 +634,14 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
-        public bool prepisiStatistiku(int id, StatisticsRegression statistica)
+        public bool prepisiStatistiku(int id, StatisticsRegression statistica, string Kolona)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Reggresion set MAE = @MAE, MSE = @MSE, RSE = @RSE, R2 = @R2, AdjustedR2 = @AR2 where id = @id;";
+                string query = "update Reggresion set MAE = @MAE, MSE = @MSE, RSE = @RSE, R2 = @R2, AdjustedR2 = @AR2 where id = @id and Kolona=@Kolona ;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Kolona", Kolona);
                 cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
                 cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
                 cmd.Parameters.AddWithValue("@RSE", statistica.RSE);
@@ -697,7 +699,6 @@ namespace dotNet.DBFunkcije
 
         public bool upisiStatistiku(int id,StatisticsClassification statistica)
         {
-            Console.WriteLine("upisiStatistiku");
             try
             {
 
@@ -781,7 +782,7 @@ namespace dotNet.DBFunkcije
                 {
                     while (reader.Read())
                     {
-                        results.Add(new Regression(reader.GetInt32("id"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
+                        results.Add(new Regression(reader.GetInt32("id"),reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
                     }
                 }
                 return results;

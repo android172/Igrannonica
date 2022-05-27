@@ -55,7 +55,7 @@ namespace dotNet.Controllers
         {
             try
             {
-                if (db.dbmodel.upisiStatistiku(id, statistika))
+                if (db.dbmodel.upisiStatistiku(id, statistika,""))
                 {
                     return Ok();
                 }
