@@ -1412,9 +1412,9 @@ dajNaziveHeadera()
     // console.log(uniquePages);
 
     if(uniquePages.length == 1)
-      str += " (Page: ";
+      str += " (On page: ";
     else if(uniquePages.length > 1)
-      str += " (Pages: ";
+      str += " (On pages: ";
 
     for(let i = 0; i < uniquePages.length - 1; i++)
       str += uniquePages[i] + ", ";
