@@ -103,7 +103,7 @@ namespace dotNet.Controllers
                 StatisticsClassification sc = db.dbmodel.modelKlasifikacija(id);
                 if(sc !=null)
                     return Ok(sc);
-                StatisticsRegression sr = db.dbmodel.modelRegresija(id);
+                List<Regression> sr = db.dbmodel.modelRegresija(id);
                 if(sr !=null)
                     return Ok(sr);
                 return Ok();

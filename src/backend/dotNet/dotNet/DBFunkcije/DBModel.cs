@@ -788,24 +788,24 @@ namespace dotNet.DBFunkcije
                 return results;
             }
         }
-        public StatisticsRegression modelRegresija(int id)
+        public List<Regression> modelRegresija(int id)
         {
+            List<Regression> results = new List<Regression>();
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                List<Regression> results = new List<Regression>();
                 string query = "select * from Reggresion where id = @id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        return new StatisticsRegression( reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2"));
+                        results.Add( new Regression(id,reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
                     }
                 }
             }
-            return null;
+            return results;
         }
         public StatisticsClassification modelKlasifikacija(int id)
         {
