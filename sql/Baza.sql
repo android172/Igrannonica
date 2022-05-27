@@ -135,12 +135,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Reggresion` (
   `id` INT UNSIGNED NOT NULL,
+  `Kolona` VARCHAR(512) NOT NULL,
   `MAE` FLOAT NOT NULL,
   `MSE` FLOAT NOT NULL,
   `RSE` FLOAT NOT NULL,
   `R2` FLOAT NOT NULL,
-  `AdjustedR2` FLOAT NOT NULL,
-  PRIMARY KEY (`id`))
+  `AdjustedR2` FLOAT NOT NULL)
 ENGINE = InnoDB;
 
 
