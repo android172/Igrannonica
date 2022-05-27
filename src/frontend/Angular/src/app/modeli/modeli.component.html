@@ -63,9 +63,38 @@
             <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
             <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
         </div>
-        <!-- <div id="matrica">
-
-        </div> -->
+        <div id="statistikaR">
+          <div id="nazivK">MAE</div>
+          <div id="maeData"></div>
+          <div id="nazivK">MSE</div>
+          <div id="mseData"></div>
+          <div id="nazivK">RSE</div>
+          <div id="rseData"></div>
+          <div id="nazivK">R2</div>
+          <div id="r2Data"></div>
+          <div id="nazivK">AdjustedR2</div>
+          <div id="ar2Data"></div>
+        </div>
+        <div id="statistikaK">
+          <div id="statistikaK1">
+            <div id="nm">Accuracy</div>
+          <div id="aData"></div>
+          <div id="nm">Balanced Accuracy</div>
+          <div id="bData"></div>
+          <div id="nm">Cross Entropy loss</div>
+          <div id="cData"></div>
+          <div id="nm">F1Score</div>
+          <div id="fData"></div>
+          </div>
+          <div id="statistikaK1">
+            <div id="nm">Hamming loss</div>
+          <div id="hData"></div>
+          <div id="nm">Precision</div>
+          <div id="pData"></div>
+          <div id="nm">Recall</div>
+          <div id="rData"></div>
+          </div>
+        </div>
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

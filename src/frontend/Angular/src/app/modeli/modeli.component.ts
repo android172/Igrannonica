@@ -25,7 +25,7 @@ export class ModeliComponent implements OnInit {
 
   json: any;
   json1: any;
-  jsonMetrika: any;
+  jsonStatistika: any;
   modeli : any[] = [];
   id: any;
   trenId: any;
@@ -36,6 +36,7 @@ export class ModeliComponent implements OnInit {
   messageReceived: any;
   subscriptionName: Subscription = new Subscription;
   izabranId: number = -1;
+  type: any;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -144,6 +145,7 @@ export class ModeliComponent implements OnInit {
         res=>{
           this.json = res;
           this.modeli = Object.values(this.json);
+          console.log(this.modeli);
           this.formatirajDatum();
           
           if (this.modeli.length > 0) {
@@ -198,6 +200,7 @@ export class ModeliComponent implements OnInit {
 
   modelDetaljnije(id: any)
   {
+    this.ucitajStatistiku(id);
     this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
       res => {
         this.json1=res;
@@ -212,7 +215,51 @@ export class ModeliComponent implements OnInit {
           if(this.modeli[i].id==id)
             (<HTMLDivElement>document.getElementById("d")).innerHTML=this.modeli[i].createdDate;
         }
+        if((<HTMLDivElement>document.getElementById("ann")).innerHTML=="Regression")
+        {
+          this.type=0;
+          (<HTMLDivElement>document.getElementById("statistikaK")).style.display="none";
+          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="";
+        }
+        else if((<HTMLDivElement>document.getElementById("ann")).innerHTML=="Classification")
+        {
+          this.type=1;
+          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="none";
+          (<HTMLDivElement>document.getElementById("statistikaK")).style.display="";
 
+          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="none";
+          (<HTMLDivElement>document.getElementById("aData")).innerHTML=this.jsonStatistika['accuracy'];
+          (<HTMLDivElement>document.getElementById("bData")).innerHTML=this.jsonStatistika['balancedAccuracy'];
+          (<HTMLDivElement>document.getElementById("cData")).innerHTML=this.jsonStatistika['crossEntropyLoss'];
+          (<HTMLDivElement>document.getElementById("fData")).innerHTML=this.jsonStatistika['f1Score'];
+          (<HTMLDivElement>document.getElementById("hData")).innerHTML=this.jsonStatistika['hammingLoss'];
+          (<HTMLDivElement>document.getElementById("pData")).innerHTML=this.jsonStatistika['precision'];
+          (<HTMLDivElement>document.getElementById("rData")).innerHTML=this.jsonStatistika['recall'];
+        }
+
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+
+  // checkType()
+  // {
+  //   if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Regression")
+  //     this.type=0;
+  //   else if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Classification")
+  //     this.type=1;
+  //   console.log(this.type);
+  // }
+
+  ucitajStatistiku(id: any)
+  {
+    this.http.get(url+"/api/Statistics/Model?id=" + id).subscribe(
+      res => {
+        this.jsonStatistika=res;
+        console.log(this.jsonStatistika);
+        
       },
       error => {
         console.log(error.error);
