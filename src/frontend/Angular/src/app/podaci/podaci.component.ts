@@ -2902,6 +2902,8 @@ zamenaTipaKolone(event:any)
 
   var type = this.nizTipova[idKolone];
 
+  let imeKolone = this.nizImenaTrenutnihKolona[idKolone];
+
   // console.log("ID KOLONE type: "+ idKolone);
 
   this.http.post(url+"/api/DataManipulation/toggleColumnType/" + idKolone + "?idEksperimenta=" + this.idEksperimenta, null, {responseType: 'text'}).subscribe(
@@ -2914,7 +2916,7 @@ zamenaTipaKolone(event:any)
       this.nizKategorickihKolona = [];
       this.EnableDisableGrafik();
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Column type is changed");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Column type is changed (Column: " + imeKolone + ")");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.flag++;
       this.onSuccess("Column type is changed.");
