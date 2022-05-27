@@ -271,9 +271,12 @@
                             <div class="sixteen-by-nine aspect-ratio"></div>
                             <div class="model-content d-flex justify-content-center align-items-center">
                                 <div id="loss-plot">
-                                    <canvas id="loss-x-axis"></canvas>f
-                                    <canvas id="loss-y-axis"></canvas>
-                                    <canvas id="loss-graph"></canvas>
+                                    <div class="container">
+                                      <div class="y-axis"><canvas id="loss-y-axis"></canvas></div>
+                                      <div class="x-axis"><canvas id="loss-x-axis"></canvas></div>
+                                      <canvas id="loss-graph" class="loss-graph"></canvas>
+                                      <div class="legend"><canvas id="loss-legend"></canvas></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
