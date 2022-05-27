@@ -87,6 +87,8 @@ export class PodaciComponent implements OnInit {
 
   @ViewChild('modalSnapshot') modalSnapshot:any;
 
+  @ViewChild('modalBrisanjeVerzije') modalBrisanjeVerzije:any;
+
   ucitanipodaci(){
     this.http.get(url+"/api/Eksperiment/Eksperiment/Csv?id="+this.idEksperimenta,{responseType:"text"}).subscribe(
       res=>{
@@ -2671,6 +2673,11 @@ sacuvajKaoNovu(ime:string){
     //console.log("------------------------ID SNAPSHOTA: " + id);
     //var id = (<HTMLButtonElement>document.getElementById("verzijaSnapshotaSelect")).value;    
     if(id!="0"){
+
+      if(this.flag >= 0)
+          this.flag = 0;
+      this.brojacAkcija = 0;
+
       this.http.delete(url+"/api/File/Snapshot?id="+id, {responseType:"text"}).subscribe(
         res=>{
           //console.log(res);
@@ -2688,6 +2695,19 @@ sacuvajKaoNovu(ime:string){
           this.PosaljiPoruku.emit();
         }
       )
+    }
+  }
+  potvrdaZaBrisanjeVerzije()
+  {
+    var id = sessionStorage.getItem("idS");
+
+    if(id != "0")
+    {
+      this.open(this.modalBrisanjeVerzije);
+    }
+    else
+    {
+      this.onInfo("It is not possible to delete default dataset version.");
     }
   }
   // 2. fun za brisanje
