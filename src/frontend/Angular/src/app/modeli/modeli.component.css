@@ -469,6 +469,33 @@ input:-webkit-autofill:active
   margin-bottom: 10px;
 }
 
+#dugmeMetrika
+{
+  margin-top: 15px;
+  background: rgb(237, 130, 164);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: block;
+  width: 220px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+  margin: auto;
+}
+
+#dugmeMetrika:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dugmeMetrika:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+}
+
 .modal-body:focus
 {
   border: none;

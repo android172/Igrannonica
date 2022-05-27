@@ -94,6 +94,7 @@
           <div id="nm">Recall</div>
           <div id="rData"></div>
           </div>
+          <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalModeli">Show confusion matrix</button>
         </div>
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -129,6 +130,28 @@
               </div>
             </div>
           </div>
+      </div>
+      <div class="modal fade" id="exampleModalModeli" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+            <div class="modal-header" style="border: none; padding-bottom: 0px;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="bodymodal" class="modal-body" style=" text-align: center;">
+                <h6 class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Training dataset's confusion matrix</h6>
+                <div id="chart2">
+                    
+                </div>
+                <br>
+                <br>
+                <!-- <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6>
+                <div id="chart1">
+                    
+                </div> -->
+            </div>
+            
+          </div>
+        </div>
       </div>
     <simple-notifications></simple-notifications>
 </div>

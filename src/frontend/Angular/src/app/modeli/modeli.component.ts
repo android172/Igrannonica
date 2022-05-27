@@ -38,6 +38,19 @@ export class ModeliComponent implements OnInit {
   izabranId: number = -1;
   type: any;
 
+  imaTestni: boolean = true;
+  public testR: any[] = [];
+  public trainR: any[] = [];
+  public mtest: any[] = [];
+  public mtrain: any[] = [];
+  public nizPoljaTest: any[] = [];
+  public nizPoljaTrain: any[] = [];
+  public maxNizaT: any;
+  public maxNizaTr: any;
+  public matTrainData: any[] = [];
+  public indeksiData: any[]=[];
+  public charts: any;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -235,6 +248,89 @@ export class ModeliComponent implements OnInit {
           (<HTMLDivElement>document.getElementById("hData")).innerHTML=this.jsonStatistika['hammingLoss'];
           (<HTMLDivElement>document.getElementById("pData")).innerHTML=this.jsonStatistika['precision'];
           (<HTMLDivElement>document.getElementById("rData")).innerHTML=this.jsonStatistika['recall'];
+          
+          var max = this.nadjiMaxTrain();
+
+          this.matTrainData = this.jsonStatistika['confusionMatrix'];
+
+          var nizJson = [];
+          for(let i=this.matTrainData.length-1; i>=0; i--)
+          {
+            for(let j=this.matTrainData.length-1; j>=0; j--)
+              this.matTrainData[i][j]=Number(Number(this.matTrainData[i][j]/max).toFixed(3));
+            this.indeksiData[i]=i;  
+            nizJson.push({name: this.indeksiData[i] + '', data: this.matTrainData[i]});
+          }
+          console.log(this.matTrainData);
+
+          var options = {
+            chart: {
+              type: 'heatmap',
+              foreColor: '#ffffff'
+            },
+            series: nizJson,
+            xaxis: {
+              categories: this.indeksiData
+            },
+            legend: {
+              labels: {
+                  colors: '#ffffff',
+                  useSeriesColors: false
+              }
+            },
+            title: {
+              text: undefined,
+              align: 'left',
+              margin: 10,
+              offsetX: 0,
+              offsetY: 0,
+              floating: false,
+              style: {
+                fontSize:  '14px',
+                fontWeight:  'bold',
+                fontFamily:  undefined,
+                color:  '#ffffff'
+              },
+          },
+            theme: {
+              mode: 'light', 
+              palette: 'palette10', 
+              monochrome: {
+                  enabled: true,
+                  color: '#1c0e5c',
+                  shadeTo: '#fca2ac',
+                  shadeIntensity: 0.25
+              }
+          },
+          plotOptions: {
+            heatmap: {
+              colorScale: {
+                ranges: [{
+                    from: 0,
+                    to: 0.25,
+                    color: '#ff70a7'
+                  },
+                  {
+                    from: 0.26,
+                    to: 0.50,
+                    color: '#bd20ba'
+                  },
+                  {
+                    from: 0.51,
+                    to: 0.75,
+                    color: '#630585'
+                  },
+                  {
+                    from: 0.76,
+                    to: 1,
+                    color: '#490661'
+                  }]
+              }}
+            }
+
+          }
+          this.charts = new ApexCharts(document.querySelector("#chart2"), options);
+
         }
 
       },
@@ -244,14 +340,51 @@ export class ModeliComponent implements OnInit {
     )
   }
 
-  // checkType()
-  // {
-  //   if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Regression")
-  //     this.type=0;
-  //   else if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Classification")
+  nadjiMaxTrain()
+  {
+    var p=0;
+    var t;
+    this.mtrain = this.jsonStatistika['confusionMatrix'];
+    console.log(this.mtrain);
+    for(let i=0;i<this.mtrain.length;i++)
+       for(let j=0;j<this.mtrain[i].length;j++)
+       {
+          this.nizPoljaTrain[p]=this.mtrain[i][j];
+          p++;
+       }
+
+    for(let i=0;i<this.nizPoljaTrain.length-1;i++)
+    {
+      for(let j=1;j<this.nizPoljaTrain.length;j++)
+       {
+         if(this.nizPoljaTrain[i]<this.nizPoljaTrain[j])
+         {
+           t=this.nizPoljaTrain[i];
+           this.nizPoljaTrain[i]=this.nizPoljaTrain[j];
+           this.nizPoljaTrain[j]=t;
+         }
+       }
+    }
+     this.maxNizaTr=this.nizPoljaTrain[0];
+     console.log(this.maxNizaTr);
+     return this.maxNizaTr; 
+  }
+
+  prikaziMatrice()
+  {
+      this.charts.render();
+  }
+
+  
+
+  //  checkType()
+  //  {
+  //    if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Regression")
+  //      this.type=0;
+  //    else if((<HTMLDivElement>document.getElementById("ann")).innerHTML==="Classification")
   //     this.type=1;
-  //   console.log(this.type);
-  // }
+  //    console.log(this.type);
+  //  }
 
   ucitajStatistiku(id: any)
   {
@@ -259,6 +392,10 @@ export class ModeliComponent implements OnInit {
       res => {
         this.jsonStatistika=res;
         console.log(this.jsonStatistika);
+        // console.log(this.jsonStatistika['ConfusionMatrix']);
+        // this.trainR=Object.assign([],this.jsonStatistika[1]);
+        // this.testR=Object.assign([],this.jsonStatistika[0]);
+        // console.log(this.trainR);
         
       },
       error => {
