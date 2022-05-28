@@ -657,7 +657,7 @@ export class ModelComponent implements OnInit {
           {
             if(this.imeS(this.snapshots[i].ime))
             {
-              if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML == snap)
+              if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML === snap)
               {
                 this.selectSnapshotM(data);
               }
@@ -701,7 +701,10 @@ export class ModelComponent implements OnInit {
       this.brojI++;
       if(this.ulazneKolone.length == 0)
       {
-        this.buttonDisable = true;
+        if(this.buttonDisable == false)
+        {
+          this.buttonDisable = true;
+        }
       }
       else
       {
@@ -722,7 +725,10 @@ export class ModelComponent implements OnInit {
       this.brojU++;
       if(this.izlazneKolone.length == 0)
       {
-        this.buttonDisable = true;
+        if(this.buttonDisable == false)
+        {
+          this.buttonDisable = true;
+        }
       }
       else
       {
@@ -742,12 +748,18 @@ export class ModelComponent implements OnInit {
         }
         if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
         {
+          if(this.buttonDisable == false)
+        {
           this.buttonDisable = true;
+        }
           //console.log("TRUE-------------------------------");
         }
         else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
         {
-          this.buttonDisable = true;
+          if(this.buttonDisable == false)
+          {
+            this.buttonDisable = true;
+          }
         }
         else
         {
