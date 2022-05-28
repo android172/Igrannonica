@@ -1758,3 +1758,7 @@ body {
   opacity: 0.4;
 }
 
+.dropdown-toggle::after{
+  float: right;
+  margin-top: 10px;
+}

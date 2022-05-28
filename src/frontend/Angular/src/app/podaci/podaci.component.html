@@ -963,17 +963,18 @@
   </ng-template>
 
   <ng-template #modalDelete let-modal>
-    <div class="modal-header" >
-      <h3 class="modal-title" id="modal-basic-title">Delete</h3>
+    <div class="modal-header" style= "background: rgba(36, 38, 74, 0.95); border-bottom: none; color: wheat;">
+      <h3 class="modal-title" id="modal-basic-title" style="margin-bottom: 0px; font-size:large">Delete</h3>
+      <button type="button" class="btn-close" (click)="modal.close('Close click')" aria-label="Close" style="box-shadow: none;"></button>
     </div>
-    <div class="modal-body justify-content-center d-flex align-items-center ">
+    <div class="modal-body  d-flex align-items-center " style= "background: rgba(36, 38, 74, 0.95); color: white">
         <div id="textDelete">
            
         </div>
     </div>
-    <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
-        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="brisanje()" (click)="modal.close('Save click')" >Delete</button>
+    <div class="modal-footer  d-flex " style= "background: rgba(36, 38, 74, 0.95); border-top: none;">
+        <!-- <button type="button" id="btn-otkazi"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button> -->
+        <button type="button" id="obrisiK" class="btn btn-outline-dark" (click)="brisanje()" (click)="modal.close('Save click')" >Delete</button>
     </div>
   </ng-template>
 

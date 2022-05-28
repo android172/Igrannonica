@@ -1663,9 +1663,13 @@ th{
 }
 
 #dugmecsv:hover{
-    background-color: #1c1e4e; 
+    background-color: #4e4f64; 
     color:rgb(255, 255, 255);
-    border: 1px solid rgb(110, 110, 120);
+}
+
+.dropdown-toggle::after{
+    float: right;
+    margin-top: 10px;
 }
 
 #izbaci-selekt-vrste
@@ -1896,7 +1900,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
   color: #eee;
 }
 
-#sacuvajV{
+#sacuvajV,#obrisiK{
   background-color: #fa6698;
   border: none;
   border-radius: 5px;
@@ -1908,7 +1912,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
 }
 
 
-#sacuvajV:hover
+#sacuvajV:hover,#obrisiK:hover
 {
   background-color: #e2466b;
   border: none;
