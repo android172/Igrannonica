@@ -418,9 +418,10 @@ export class ModelComponent implements OnInit {
 
     this.yAxis = canvasY.getContext("2d");
     if (this.yAxis) {
-      this.yAxis.font = "16px Courier New";
+      this.yAxis.font = "18px Courier New";
       this.yAxis.fillStyle = "white";
       this.yAxis.strokeStyle = "white";
+      this.yAxis.lineWidth = 2;
     }
   }
 
@@ -511,21 +512,34 @@ export class ModelComponent implements OnInit {
     this.yAxis.lineTo(this.yAxisWidth, this.yAxisHeight);
     this.yAxis.stroke();
 
-    const numberOfDvs = this.maxPointX + 1;
+    var numberOfDvs = 1;
 
-    var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    var temp = this.maxPointX;
+    temp = Math.floor(temp / 2);
+    while (temp > 0) {
+      numberOfDvs *= 2;
+      temp = Math.floor(temp / 2);
+    }
+
+    const maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    const actualMaxY = 2.0 / this.lossPlot.gXYratio;
     
-    // for (let i = 0; i < numberOfDvs; i++) {
-    //   const yNorm = maxY * i / numberOfDvs + 0.05;
-    //   const x = this.xAxisWidth * xNorm / 2;
+    for (let i = 0; i < numberOfDvs + 1; i++) {
+      // const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
+      // 0.05 to maxY
+      const yNorm = maxY * i / numberOfDvs - maxY / 2;
+      const y = this.yAxisHeight * (yNorm + actualMaxY / 2) / actualMaxY;
       
-    //   const leftShift = (i + 1).toString().length * 5;
+      const yDiff = this.maxPointY - this.minPointY;
+      const yLab = (yDiff * (1 - i / numberOfDvs) + this.minPointY).toFixed(2);
       
-    //   this.yAxis.fillText(`${i + 1}`, x - leftShift, 25)
-    //   this.yAxis.moveTo(x, 0);
-    //   this.yAxis.lineTo(x, 10);
-    //   this.yAxis.stroke();
-    // }
+      const leftShift = yLab.toString().length * 5;
+      
+      this.yAxis.fillText(`${yLab}`, this.yAxisWidth - 50 - leftShift, y + 5)
+      this.yAxis.moveTo(this.yAxisWidth, y);
+      this.yAxis.lineTo(this.yAxisWidth - 10, y);
+      this.yAxis.stroke();
+    }
   }
 
   ucitajModel(data2: number){
