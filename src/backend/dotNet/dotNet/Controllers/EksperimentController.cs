@@ -37,7 +37,7 @@ namespace dotNet.Controllers
                 if (eksperimenti.Count > 0)
                     return Ok(eksperimenti);
                 
-                return BadRequest(ErrorMessages.NoExperiments);
+                return Ok(0);
             }
             catch
             {

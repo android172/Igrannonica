@@ -1,6 +1,6 @@
 <div id="divEksperimenti">
         <div id="skrol">
-        <div id="nemaEks" *ngIf="provera==false">You haven't created any experiments yet!</div>
+        <div id="nemaEks"></div>
         <div *ngIf="provera==true">
           <div id="e" *ngFor="let e of eksperimenti">
               <p type="button" (click)="otvoriEksperiment(e.id)">  {{ e.name }}  </p>

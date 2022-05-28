@@ -31,13 +31,18 @@ export class MojiEksperimentiComponent implements OnInit {
   
     this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
-          // console.log(res);
-          this.json = res;
-          this.eksperimenti = Object.values(this.json);
-          if(this.eksperimenti.length > 0)
-            this.provera = true;
+           console.log(res);
+          if(res != 0)
+          {
+            this.json = res;
+            this.eksperimenti = Object.values(this.json)
+            this.provera = true;      
+          }
           else
-            this.provera = false;
+          {
+            this.provera = false; 
+            (<HTMLDivElement>document.getElementById("nemaEks")).innerHTML = "You haven't created any experiments yet!";
+          }
         }
     );
   }
@@ -92,8 +97,6 @@ export class MojiEksperimentiComponent implements OnInit {
             this.ucitajEksp();
             var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
             this.onSuccess("Experiment is successfully deleted.");
-            if(this.eksperimenti.length < 2)
-              this.provera = false;
           },
           error=>{
             console.log(error.error);
