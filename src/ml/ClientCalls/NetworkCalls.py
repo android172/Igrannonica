@@ -218,13 +218,6 @@ def compute_metrics_a(self, network):
 def train(token, id, network):
     connection_established = threading.Event()
     sr_connection = SignalRConnection(token, connection_established)
-    
-    # Setup dataset version
-    if network.dataset_version is not None:
-        if not network.data.load_dataset_version(network.dataset_version):
-            sr_connection.set_method("SendError")
-            sr_connection.send_to_front("ERROR :: Selected dataset not recognized.")
-            return
         
     # Wait for connection
     connection_established.wait()

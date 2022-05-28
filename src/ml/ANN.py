@@ -59,7 +59,7 @@ class ANN:
         
         new_ann = ANN()
         
-        new_ann.data = self.data
+        new_ann.data = self.data.create_deep_copy(self.dataset_version)
         
         new_ann.learning_rate = self.learning_rate
         new_ann.batch_size    = self.batch_size   
@@ -115,6 +115,10 @@ class ANN:
             self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
     
     def setup_output_columns(self):
+        for column in self.data.output_columns:
+            if self.data.column_types[column] == 'float64':
+                return False
+            
         if self.output_size > 1:
             return True
         if self.output_size < 1:
