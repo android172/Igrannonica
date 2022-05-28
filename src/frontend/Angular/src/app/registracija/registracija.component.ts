@@ -30,11 +30,11 @@ export class RegistracijaComponent implements OnInit {
     var test1 = regexp1.test(korisnickoIme);
     if(!test1 && korisnickoIme)
     {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Pogresan unos";
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Invalid input";
     }
     else if(!korisnickoIme)
     {
-       var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+       var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*This field is required";
     }
     else
     {
@@ -49,11 +49,11 @@ export class RegistracijaComponent implements OnInit {
     var test2 = regexp2.test(email);
     if(!test2 && email)
     {
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Pogresan unos";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Invalid input";
     }
     else if(!email)
     {
-       var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+       var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*This field is required";
     }
     else
     {
@@ -68,11 +68,11 @@ export class RegistracijaComponent implements OnInit {
     var test3 = regexp3.test(ime);
     if(!test3 && ime)
     {
-        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Pogresan unos";
+        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Invalid input";
     }
     else if(!ime)
     {
-       var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Ovo polje je obavezno";
+       var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*This field is required";
     }
     else
     {
@@ -87,15 +87,15 @@ export class RegistracijaComponent implements OnInit {
     var test4 = regexp4.test(sifra);
     if(!test4 && sifra.indexOf(' ') >= 0)
     {
-      var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Pogresan unos";
+      var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Invalid input";
     }
     else if(!test4 && sifra)
     {
-        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Lozinka mora da sadrzi najmanje 8 karaktera, jedno veliko slovo i jedan broj";
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Password must be at least 8 characters and must contain one uppercase letter and one number";
     }
     else if(!sifra)
     {
-       var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Ovo polje je obavezno";
+       var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*This field is required";
     }
     else
     {
@@ -109,11 +109,11 @@ export class RegistracijaComponent implements OnInit {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
     if(sifra2 != sifra)
     {
-        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Lozinke se ne poklapaju";
+        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Password doesn't match";
     }
     else if(!sifra2)
     {
-       var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Ovo polje je obavezno";
+       var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*This field is required";
     }
     else
     {
@@ -152,33 +152,33 @@ export class RegistracijaComponent implements OnInit {
         },error =>{
          // console.log(error);
           if(error.error === "1"){
-            var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Korisnik vec postoji";
-            var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Korisnik sa ovim email-om vec postoji";
+            var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Username already exists";
+            var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*User with this email already exists";
           }
           if(error.error === "2"){
-            var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Korisnik vec postoji";
+            var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Username already exists";
           }
           if(error.error === "3"){
-            var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Korisnik sa ovim email-om vec postoji";
+            var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*User with this email already exists";
           }
         }
       );
     }
     else{
       if(!korisnickoIme){
-          var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+          var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*This field is required";
       }
       if(!email){
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*This field is required";
       }
       if(!ime){
-        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*Ovo polje je obavezno";
+        var div3 = (<HTMLDivElement>document.getElementById("podaci3")).innerHTML = "*This field is required";
       }
       if(!sifra){
-        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Ovo polje je obavezno";
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*This field is required";
       }
       if(!sifra2){
-        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*Ovo polje je obavezno";
+        var div5 = (<HTMLDivElement>document.getElementById("podaci5")).innerHTML = "*This field is required";
       }
     }
   }

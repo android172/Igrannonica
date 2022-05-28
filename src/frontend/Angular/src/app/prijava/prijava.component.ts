@@ -29,7 +29,7 @@ export class PrijavaComponent implements OnInit {
     var korisnickoIme = (<HTMLInputElement>document.getElementById("korisnickoIme")).value;
     if(!korisnickoIme)
     {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*This field is required";
     }
     else
     {
@@ -42,7 +42,7 @@ export class PrijavaComponent implements OnInit {
     var sifra = (<HTMLInputElement>document.getElementById("sifra")).value;
     if(!sifra)
     {
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*This field is required";
     }
     else
     {
@@ -68,23 +68,23 @@ export class PrijavaComponent implements OnInit {
           this.router.navigate(['/']);  
         },error =>{
           console.log(error.error);
-          var div = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Pogresno korisnicko ime ili lozinka";
+          var div = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Incorrect username or password";
         }
       );
     }
     else
       if(!korisnickoIme && sifra)
       {
-        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
+        var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*This field is required";
       }
     else
       if(!sifra && korisnickoIme)
       {
-        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+        var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*This field is required";
       }
     else{
-      var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*Ovo polje je obavezno";
-      var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*Ovo polje je obavezno";
+      var div1 = (<HTMLDivElement>document.getElementById("podaci1")).innerHTML = "*This field is required";
+      var div2 = (<HTMLDivElement>document.getElementById("podaci2")).innerHTML = "*This field is required";
     }
   }
   changeBoolean()

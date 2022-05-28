@@ -650,7 +650,10 @@ export class ModelComponent implements OnInit {
         {
           if(this.imeS(this.snapshots[i].ime))
           {
-            this.selectSnapshotM(data);
+            if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML == snap)
+            {
+              this.selectSnapshotM(data);
+            }
           }
           return;
         }
