@@ -164,6 +164,14 @@ export class ModelComponent implements OnInit {
   public lossPlotWidth: number = 0;
   public lossPlotHeight: number = 0;
 
+  public xAxis: CanvasRenderingContext2D | null = null;
+  public yAxis: CanvasRenderingContext2D | null = null;
+
+  public xAxisWidth:  number = 0;
+  public xAxisHeight: number = 0;
+  public yAxisWidth:  number = 0;
+  public yAxisHeight: number = 0;
+
   public lossPoints: any[] = [];
   public maxPointX: number = 0;
   public maxPointY: number = 0;
@@ -385,7 +393,35 @@ export class ModelComponent implements OnInit {
 
     this.lossPlot.update();
 
-    // setTimeout(() => this.demo(), 500);
+    // X axis
+    const canvasX = <HTMLCanvasElement>document.getElementById("loss-x-axis");
+    this.xAxisWidth  = canvasX.clientWidth * devicePixelRatio;
+    this.xAxisHeight = canvasX.clientHeight * devicePixelRatio;
+    // this.xAxisHeight = this.xAxisWidth / 1728 * 108;
+    canvasX.width  = this.xAxisWidth;
+    canvasX.height = this.xAxisHeight;
+
+    this.xAxis = canvasX.getContext("2d");
+    if (this.xAxis) {
+      this.xAxis.font = "18px Courier New";
+      this.xAxis.fillStyle = "white";
+      this.xAxis.strokeStyle = "white";
+      this.xAxis.lineWidth = 2;
+    }
+    
+    // Y axis
+    const canvasY = <HTMLCanvasElement>document.getElementById("loss-y-axis");
+    this.yAxisWidth  = canvasY.clientWidth  * devicePixelRatio;
+    this.yAxisHeight = canvasY.clientHeight * devicePixelRatio;
+    canvasY.width  = this.yAxisWidth;
+    canvasY.height = this.yAxisHeight;
+
+    this.yAxis = canvasY.getContext("2d");
+    if (this.yAxis) {
+      this.yAxis.font = "16px Courier New";
+      this.yAxis.fillStyle = "white";
+      this.yAxis.strokeStyle = "white";
+    }
   }
 
   updateInfo() {
@@ -437,6 +473,59 @@ export class ModelComponent implements OnInit {
     }
 
     this.lossPlot.update();
+    this.updateXAxis();
+    this.updateYAxis();
+  }
+
+  updateXAxis() {
+    if (this.xAxis == null) return
+    this.xAxis.clearRect(0, 0, this.xAxisWidth, this.xAxisHeight);
+    this.xAxis.beginPath();
+
+    this.xAxis.moveTo(0, 0);
+    this.xAxis.lineTo(this.xAxisWidth, 0);
+    this.xAxis.stroke();
+    
+    for (let i = 0; i < this.maxPointX + 1; i++) {
+      // 0.05 to 1.95 (0 - 2)
+      const xNorm = 1.9 * i / this.maxPointX + 0.05;
+      // 0 to maxW
+      const x = this.xAxisWidth * xNorm / 2;
+      
+      const leftShift = (i + 1).toString().length * 5;
+      
+      this.xAxis.fillText(`${i + 1}`, x - leftShift, 25)
+      this.xAxis.moveTo(x, 0);
+      this.xAxis.lineTo(x, 10);
+      this.xAxis.stroke();
+    }
+  }
+
+  updateYAxis() {
+    if (this.yAxis == null) return
+    if (this.lossPlot == null) return;
+    this.yAxis.clearRect(0, 0, this.yAxisWidth, this.yAxisHeight);
+    this.yAxis.beginPath();
+
+    this.yAxis.moveTo(this.yAxisWidth, 0);
+    this.yAxis.lineTo(this.yAxisWidth, this.yAxisHeight);
+    this.yAxis.stroke();
+
+    const numberOfDvs = this.maxPointX + 1;
+
+    var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
+    
+    // for (let i = 0; i < numberOfDvs; i++) {
+    //   const yNorm = maxY * i / numberOfDvs + 0.05;
+    //   const x = this.xAxisWidth * xNorm / 2;
+      
+    //   const leftShift = (i + 1).toString().length * 5;
+      
+    //   this.yAxis.fillText(`${i + 1}`, x - leftShift, 25)
+    //   this.yAxis.moveTo(x, 0);
+    //   this.yAxis.lineTo(x, 10);
+    //   this.yAxis.stroke();
+    // }
   }
 
   ucitajModel(data2: number){
