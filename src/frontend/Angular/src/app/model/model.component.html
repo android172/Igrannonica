@@ -203,10 +203,12 @@
         
                             <div class="d-flex justify-content-center" id="boxZT">
                                 <h4 id="tekstZT">Start model training</h4>
-                                <ng-template [ngIf]="buttonPlay">
+                                <ng-template [ngIf]="buttonPlay" *ngIf="!buttonDisable; else onesposobi">
                                     <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
                                 </ng-template>
-        
+                                <ng-template #onesposobi>
+                                    <a class="play-btn-disable"></a>
+                                </ng-template>
                                 <ng-template [ngIf]="buttonPause">
                                     <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
@@ -214,48 +216,9 @@
                                           </svg>
                                     </a>
                                 </ng-template>
-        
-                                <!-- <ng-template [ngIf]="buttonDisable == false">
-                                    <a class="play-btn-disable"></a>
-                                </ng-template> -->
-        
                                 <ng-template [ngIf]="buttonContinue">
                                     <a class="play-btn-continue" (click)="nastaviTrening()" ></a>
-                                </ng-template>
-                                
-                                <!-- stari kod -->
-                                <!-- <div *ngIf="!buttonDisable; else onesposobi">
-                                    <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
-                                </div>
-                                <ng-template #onesposobi>
-                                    <a class="play-btn-disable"></a>
-                                </ng-template> -->
-                                
-                                <!--
-                                <button id="pokreniM" (click)="modalService.open('modal-1');">
-                                    <img id="playbutton" src="assets/play-button.png">
-                                </button>
-                                -->
-                                <!-- <jw-modal id="modal-1">
-                                    <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
-                                    <p>
-                                        <br>
-                                        <br>
-                                        Da li zelite prvo da sacuvate izmene?
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <button id="popupDugme1" (click)="treniraj(1);" (click)="modalService.close('modal-1');">Sacuvaj izmene</button>
-                                        <button id="popupDugme2" (click)="treniraj(2);" (click)="modalService.close('modal-1');">Pokreni bez cuvanja</button>
-                                    </p>
-                                </jw-modal> -->
-                            </div>
-                            <!--
-                            <button id="pokreniM" (click)="treniraj()">
-                                <img id="playbutton" src="assets/play-button.png">
-                            </button>
-                            <h4 id="tekstZT">Započni treniranje</h4>
-                            -->
+                                </ng-template>                          
                         </div>
                     </div>
                 </div>
