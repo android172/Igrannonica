@@ -130,3 +130,12 @@ body {
   padding-left: 10px;
   color: #eee;
 }
+
+#nemaEks
+{
+  text-align: center;
+  font-size: 17px;
+  color: #fc7098;
+  margin-top: 20px;
+  text-shadow: 1px 1px #49232e;
+}
