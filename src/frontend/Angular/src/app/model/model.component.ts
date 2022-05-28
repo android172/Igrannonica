@@ -644,22 +644,28 @@ export class ModelComponent implements OnInit {
     //console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
     if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
     {
-      for(let i=0; i<this.snapshots.length; i++)
+      if(data == 0)
       {
-        if(this.snapshots[i].id == data)
+        this.imeS("Default snapshot");
+        this.selectSnapshotM(data);
+      }
+      else
+      {
+        for(let i=0; i<this.snapshots.length; i++)
         {
-          if(this.imeS(this.snapshots[i].ime))
+          if(this.snapshots[i].id == data)
           {
-            if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML == snap)
+            if(this.imeS(this.snapshots[i].ime))
             {
-              this.selectSnapshotM(data);
+              if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML == snap)
+              {
+                this.selectSnapshotM(data);
+              }
             }
+            return;
           }
-          return;
         }
       }
-      this.imeS("Default snapshot");
-      this.selectSnapshotM(data);
     }
   }
 
