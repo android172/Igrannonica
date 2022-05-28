@@ -118,7 +118,7 @@ export class PodaciComponent implements OnInit {
       },
       error=>{
         //console.log("OVDE----------------");
-        (<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Chose default snapshot";
+        //(<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML = "Chose default snapshot";
       }
     )
   }
