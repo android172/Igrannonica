@@ -644,16 +644,19 @@ export class ModelComponent implements OnInit {
     //console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
     if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
     {
-      this.selectSnapshotM(data);
       for(let i=0; i<this.snapshots.length; i++)
       {
         if(this.snapshots[i].id == data)
         {
-          this.imeS(this.snapshots[i].ime);
+          if(this.imeS(this.snapshots[i].ime))
+          {
+            this.selectSnapshotM(data);
+          }
           return;
         }
       }
       this.imeS("Default snapshot");
+      this.selectSnapshotM(data);
     }
   }
 
@@ -1503,6 +1506,7 @@ export class ModelComponent implements OnInit {
  imeS(ime: string)
  {
    (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML = ime;
+   return true;
  }
 
  selectSnapshot(id: any,ime:string)

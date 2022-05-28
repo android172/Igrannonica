@@ -2534,6 +2534,7 @@ dajNaziveHeadera()
     }
     else{
       console.log("Ne moze unazad");
+      this.onInfo("Cannot undo");
     }
   }
 
@@ -2581,6 +2582,7 @@ dajNaziveHeadera()
       },
       error =>{
         console.log(error.error);
+        this.onInfo("Cannot redo");
       }
       );
   }
@@ -2654,12 +2656,12 @@ sacuvajKaoNovu(ime:string){
           }
           else{
             // ne postoji u bazi -> cuvaj kao novu
-            this.sacuvajKaoNovu(naziv);
-            this.izadjiIzObaModala();  
             if(this.flag >= 0)
             {
               this.flag = 0;
-            }         
+            } 
+            this.sacuvajKaoNovu(naziv);
+            this.izadjiIzObaModala();          
           }
         }
       );
