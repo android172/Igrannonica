@@ -63,9 +63,39 @@
             <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
             <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
         </div>
-        <!-- <div id="matrica">
-
-        </div> -->
+        <div id="statistikaR">
+          <div id="nazivK">MAE</div>
+          <div id="maeData"></div>
+          <div id="nazivK">MSE</div>
+          <div id="mseData"></div>
+          <div id="nazivK">RSE</div>
+          <div id="rseData"></div>
+          <div id="nazivK">R2</div>
+          <div id="r2Data"></div>
+          <div id="nazivK">AdjustedR2</div>
+          <div id="ar2Data"></div>
+        </div>
+        <div id="statistikaK">
+          <div id="statistikaK1">
+            <div id="nm">Accuracy</div>
+          <div id="aData"></div>
+          <div id="nm">Balanced Accuracy</div>
+          <div id="bData"></div>
+          <div id="nm">Cross Entropy loss</div>
+          <div id="cData"></div>
+          <div id="nm">F1Score</div>
+          <div id="fData"></div>
+          </div>
+          <div id="statistikaK1">
+            <div id="nm">Hamming loss</div>
+          <div id="hData"></div>
+          <div id="nm">Precision</div>
+          <div id="pData"></div>
+          <div id="nm">Recall</div>
+          <div id="rData"></div>
+          </div>
+          <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalModeli">Show confusion matrix</button>
+        </div>
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -100,6 +130,28 @@
               </div>
             </div>
           </div>
+      </div>
+      <div class="modal fade" id="exampleModalModeli" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+            <div class="modal-header" style="border: none; padding-bottom: 0px;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="bodymodal" class="modal-body" style=" text-align: center;">
+                <h6 class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Training dataset's confusion matrix</h6>
+                <div id="chart2">
+                    
+                </div>
+                <br>
+                <br>
+                <!-- <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6>
+                <div id="chart1">
+                    
+                </div> -->
+            </div>
+            
+          </div>
+        </div>
       </div>
     <simple-notifications></simple-notifications>
 </div>

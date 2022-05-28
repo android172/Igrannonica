@@ -1729,9 +1729,10 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
-        //console.log(this.jsonMetrika);
+        console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
+        console.log(this.trainR);
         this.checkType();
       },
       error => {

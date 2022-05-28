@@ -56,6 +56,7 @@ transform: scale(1.04);
   float: left;
   font-weight: bolder;
   width: 170px;
+  height: 23px;
   text-align: left;
   color:#d94f6f ;
   font-size: 19px;
@@ -66,6 +67,7 @@ transform: scale(1.04);
   float: left;
   font-weight: bolder;
   width: 170px;
+  height: 23px;
   text-align: left;
   color:rgb(248, 211, 224) ;
   font-size: 19px;
@@ -386,6 +388,7 @@ input:-webkit-autofill:active
   padding-bottom: 5px;
   width: 200px;
   color: #f0859e;
+  display: flex;
 }
 #nmo
 {
@@ -428,7 +431,7 @@ input:-webkit-autofill:active
   padding-left: 30px;
 }
 
-#matrica
+/* #matrica
 {
   width: 410px;
   height: 400px;
@@ -437,6 +440,60 @@ input:-webkit-autofill:active
   border-radius: 10px;
   margin-top: 20px;
   margin-left: 20px;
+} */
+
+#nazivK,#nazivK1
+{
+  font-size: large;
+  color: #f0859e;
+}
+
+#statistikaK,#statistikaR
+{
+  width: 400px;
+  float: left;
+  padding-left: 30px;
+  padding-top: 20px;
+}
+#statistikaK1
+{
+  width: 180px;
+  float: left;
+}
+
+#aData,#bData,#cData,#fData,#hData,#pData,#rData
+{
+  color: #eee;
+  height: 30px;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+#dugmeMetrika
+{
+  margin-top: 15px;
+  background: rgb(237, 130, 164);
+  height: 40px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: block;
+  width: 220px;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+  margin: auto;
+}
+
+#dugmeMetrika:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#dugmeMetrika:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
 }
 
 .modal-body:focus
