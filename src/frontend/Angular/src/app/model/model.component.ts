@@ -542,6 +542,12 @@ export class ModelComponent implements OnInit {
     }
   }
 
+  checkLR(){
+    if(Number((<HTMLInputElement>document.getElementById("lr")).value)>1000)
+      (<HTMLInputElement>document.getElementById("lr")).value='1000';
+    
+  }
+
   ucitajModel(data2: number){
 
     // console.table(data2);

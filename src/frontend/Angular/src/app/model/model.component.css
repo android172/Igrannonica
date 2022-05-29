@@ -795,6 +795,14 @@ input
   height: 29px;
   color: #CED9FF;
 }
+#lr:focus, #noe:focus, #bs:focus, #rr:focus, #crossV{
+  outline: none;
+}
+
+select:focus {
+  box-shadow: none;
+  outline: none;
+}
 
 #momentum{
 
@@ -805,6 +813,7 @@ input
   height: 29px;
   color: #CED9FF;
   margin-top: 7px;
+  outline: none;
 }
 
 #bs1,#bs2{
@@ -1760,4 +1769,12 @@ body {
 .dropdown-toggle::after{
   float: right;
   margin-top: 10px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
 }
