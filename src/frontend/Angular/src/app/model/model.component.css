@@ -276,28 +276,27 @@ p
 }
 
 /* The container */
-.container {
+/* .container {
     display: block;
     position: relative;
     padding-left: 30px;
     margin-bottom: 20px;
-    /* cursor: pointer; */
     font-size: 15px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     color: white;
-  }
+  } */
   
   /* Hide the browser's default checkbox */
-   .container input {
+   /* .container input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     height: 0;
     width: 0;
-  } 
+  }  */
   
   /* Create a custom checkbox */
   .checkmark {
@@ -310,15 +309,15 @@ p
   }
   
   /* On mouse-over, add a grey background color */
-  .container:hover input ~ .checkmark {
+  /* .container:hover input ~ .checkmark {
     background-color: #ccc;
-  }
+  } */
   
   /* When the checkbox is checked, add a blue background */
-  .container input:checked ~ .checkmark {
+  /* .container input:checked ~ .checkmark {
     background: #F45E82;
   
-  }
+  } */
   /* Create the checkmark/indicator (hidden when not checked) */
   .checkmark:after {
     content: "";
@@ -327,12 +326,12 @@ p
   }
   
   /* Show the checkmark when checked */
-  .container input:checked ~ .checkmark:after {
+  /* .container input:checked ~ .checkmark:after {
     display: block;
-  }
+  } */
   
   /* Style the checkmark/indicator */
-  .container .checkmark:after {
+  /* .container .checkmark:after {
     left: 6px;
     top: 3px;
     width: 5px;
@@ -342,7 +341,7 @@ p
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-  }
+  } */
 
 #poruka
 {
@@ -626,8 +625,8 @@ input
 /**************************************/
 /*****************   GRAFIK LOSS ******/
 .container {  display: grid;
-  grid-template-columns: 7% 93%;
-  grid-template-rows: 5% 88% 7%;
+  grid-template-columns: 10% 90%;
+  grid-template-rows: 5% 90% 5%;
   grid-auto-columns: 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
@@ -637,11 +636,11 @@ input
     ". x-axis";
 }
 
-.y-axis { grid-area: y-axis; border-left: none !important; border-top: none !important; 
+.y-axis { grid-area: y-axis; border: none !important;
   /* background: #f4606054; */
 }
 
-.x-axis { grid-area: x-axis; border-bottom: none !important; border-right: none !important;
+.x-axis { grid-area: x-axis; border: none !important;
   /* background: #f4606054;  */
 }
 
@@ -651,10 +650,10 @@ input
   /* background: #5f47a0; */
 }
 
-.container {
+/* .container {
   height: 100%;
   margin: 0;
-}
+} */
 
 .container * {
   border: 2px solid #6f57b2;
