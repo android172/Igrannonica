@@ -606,6 +606,33 @@ input
   /* background-color: #272741; */
 }
 
+.legend-wrapper {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 0px;
+  padding-right: 0px;
+  display: table;
+}
+
+.legend-line {
+  height: 100%;
+  float: left;
+}
+
+.legend-box {
+  width: 30px;
+  height: 50%;
+  float:left;
+}
+.legend-text {
+  color: white;
+  width: 30px;
+  margin-left: 10px;
+  float:left;
+}
+
+
 /* .sixteen-by-nine.aspect-ratio {
   padding-bottom: 56.25%;
 } */
@@ -624,14 +651,15 @@ input
 
 /**************************************/
 /*****************   GRAFIK LOSS ******/
-.container {  display: grid;
+.container {
+  height: 100%;
+  display: grid;
   grid-template-columns: 10% 90%;
-  grid-template-rows: 5% 90% 5%;
+  grid-template-rows: 90% 10%;
   grid-auto-columns: 1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
-    "legend legend"
     "y-axis loss-graph"
     ". x-axis";
 }
@@ -646,8 +674,11 @@ input
 
 .loss-graph { grid-area: loss-graph; }
 
-.legend { grid-area: legend;  border: none !important;
-  /* background: #5f47a0; */
+.legend {
+  width: 100%;
+  max-width: 711px;
+  /* max-height: 64.64px;
+  aspect-ratio: 11/1; */
 }
 
 /* .container {
@@ -694,17 +725,11 @@ input
   border: none;
 } 
 
-#loss-legend{
-  width: 100%;
-  height: 100%;
-  position: absolute;
-
-  border: none;
-}
-
 #loss-plot{
-  max-width: 800px;
+  width: 100%;
+  max-width: 711px;
   max-height: 400px;
+  aspect-ratio: 16/9;
 }
 /*********************************/ 
 
@@ -987,14 +1012,14 @@ input
 }
 
 #collapse{
-  /* height: 423.68px; */
+  height: 440px;
+  overflow-y: auto;
   padding-top: 5px;
   /* width: 35vw; */
   border: 2.5px solid rgba(89, 119, 223, 1);
   border-radius: 10px;
   /* float: left; */
   overflow: auto;
-  /* overflow-y: scroll; */
   box-sizing: border-box;
   box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
   /* margin-left: 25px; */
@@ -1014,6 +1039,9 @@ input
   background-color: #272741;
   margin-top: 23px;
   width: 55%;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 #stat{
@@ -1092,8 +1120,9 @@ td{
 
 #grafik
 {
-  display: flex;
-  justify-content: center; 
+  position: relative;
+  /* display: flex;
+  justify-content: center;  */
 }
 
 #canvas

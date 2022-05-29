@@ -177,6 +177,9 @@ export class ModelComponent implements OnInit {
   public maxPointY: number = 0;
   public minPointY: number = 99999;
   
+  public lossLineParams: string[][] = [];
+  public lossLineEnabled: boolean[] = [];
+
   public nizNedozvoljenih : string[] = [];
   pomocniNiz : any[] = [];
   pomocniNizKoloneString : any[] = [];
@@ -393,6 +396,10 @@ export class ModelComponent implements OnInit {
 
     this.lossPlot.update();
 
+    // Legend
+    this.lossLineParams = [];
+    this.lossLineEnabled = [];
+
     // X axis
     const canvasX = <HTMLCanvasElement>document.getElementById("loss-x-axis");
     this.xAxisWidth  = canvasX.clientWidth * devicePixelRatio;
@@ -429,16 +436,20 @@ export class ModelComponent implements OnInit {
     if (this.lossPlot == null) return;
     this.lossPlot.removeAllLines();
 
+    const lineNames = [];
+
     const points: number[][] = [];
     if (this.lossPoints[0].fold === undefined) {
-      points.push([])
+      lineNames.push("Loss");
+      points.push([]);
       for (const point of this.lossPoints) {
-        points[0].push(point.loss)
+        points[0].push(point.loss);
       }
       if (this.lossPoints[0].valLoss !== undefined) {
-        points.push([])
+        lineNames.push("Loss (test)");
+        points.push([]);
         for (const point of this.lossPoints) {
-          points[1].push(point.valLoss)
+          points[1].push(point.valLoss);
         }
       }
     }
@@ -447,12 +458,20 @@ export class ModelComponent implements OnInit {
       for (let i = 0; i < noOfFolds; i++) {
         points.push([]);
         points.push([]);
+        lineNames.push(`Loss${i} (train)`);
       }
+      for (let i = 0; i < noOfFolds; i++)
+        lineNames.push(`Loss${i} (val)`);
       for (const point of this.lossPoints) {
         points[point.fold].push(point.loss)
         points[noOfFolds + point.fold].push(point.valLoss)
       }
     }
+
+    for (let i = this.lossLineEnabled.length; i < points.length; i++)
+      this.lossLineEnabled.push(true);
+
+    this.lossLineParams = [];
 
     const step_r = Math.floor(250 / points.length);
     const step_g = Math.floor(20  / points.length);
@@ -463,19 +482,29 @@ export class ModelComponent implements OnInit {
       var g = 42  + i * step_g;
       var b = 80  + i * step_b;
 
-      r = Math.min(255, Math.max(0, r)) / 255;
-      g = Math.min(255, Math.max(0, g)) / 255;
-      b = Math.min(255, Math.max(0, b)) / 255;
+      r = Math.min(255, Math.max(0, r));
+      g = Math.min(255, Math.max(0, g));
+      b = Math.min(255, Math.max(0, b));
       
       const line = points[i];
-      const color = new ColorRGBA(r, g, b, 1);
+      const color = new ColorRGBA(r / 255, g / 255, b / 255, 1);
       
-      this.addLossLine(line, color);
+      if (this.lossLineEnabled[i] == true) {
+        this.addLossLine(line, color);
+        this.lossLineParams.push([lineNames[i], `${r}, ${g}, ${b}`]);
+      }
+      else
+        this.lossLineParams.push([lineNames[i], `${69}, ${69}, ${69}`]);
     }
 
     this.lossPlot.update();
     this.updateXAxis();
     this.updateYAxis();
+  }
+
+  toggleLineEnable(index: number) {
+    this.lossLineEnabled[index] = !this.lossLineEnabled[index];
+    this.updateInfo();
   }
 
   updateXAxis() {
