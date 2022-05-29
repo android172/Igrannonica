@@ -47,20 +47,11 @@ export class HeaderComponent implements OnInit {
 
     if(this.router.url == "/kontakt")
     {
-      this.prikaziMeni_1[3].style = "color:#F45E82"
+      this.prikaziMeni_1[3].style = "color:#F45E82;border-right:none"
     }
     else
     {
-      this.prikaziMeni_1[3].style = "color:white"
-    }
-
-    if(this.router.url == "/o-nama")
-    {
-      this.prikaziMeni_1[4].style = "color:#F45E82;border-right:none"
-    }
-    else
-    {
-      this.prikaziMeni_1[4].style = "color:white;border-right:none"
+      this.prikaziMeni_1[3].style = "color:white;border-right:none"
     }
   }
 
