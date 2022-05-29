@@ -12,6 +12,7 @@
         public string ProblemType { get; set; }
         public string Optimizacija { get; set; }
         public int Epohe { get; set; }
+        public int trenutnaEpoha { get; set; }
         public int[] HiddenLayers { get; set; }
         public int[] IzlazneKolone { get; set; }
     }

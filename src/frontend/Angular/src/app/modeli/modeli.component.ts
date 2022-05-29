@@ -218,12 +218,14 @@ export class ModeliComponent implements OnInit {
     this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
       res => {
         this.json1=res;
+        console.log(this.json1);
         (<HTMLDivElement>document.getElementById("n")).innerHTML=this.json1['name'];
         (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.json1['opis'];
         (<HTMLDivElement>document.getElementById("ann")).innerHTML=this.json1['problemType'];
         (<HTMLDivElement>document.getElementById("opt")).innerHTML=this.json1['optimizacija'];
         (<HTMLDivElement>document.getElementById("eph")).innerHTML=this.json1["epohe"];
         (<HTMLDivElement>document.getElementById("snap")).innerHTML=this.json1["snapshot"];
+        (<HTMLDivElement>document.getElementById("ce")).innerHTML=this.json1["trenutnaEpoha"];
         for(let i=0;i<this.modeli.length;i++)
         {
           if(this.modeli[i].id==id)

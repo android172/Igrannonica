@@ -552,6 +552,7 @@ namespace dotNet.DBFunkcije
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
                             model.ProblemType = reader.GetString("ProblemType");
+                            model.trenutnaEpoha = reader.GetInt32("currentEpoch");
                             return model;
                         }
                     }
@@ -579,6 +580,7 @@ namespace dotNet.DBFunkcije
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
                             model.ProblemType = reader.GetString("ProblemType");
+                            model.trenutnaEpoha = reader.GetInt32("currentEpoch");
                             return model;
                         }
                     }
