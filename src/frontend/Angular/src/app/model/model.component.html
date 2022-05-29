@@ -229,32 +229,27 @@
             <div class="row justify-content-between">
                 <div class="col-md-7" id="collapse1" *ngIf="prikazi==true">
                     <div id="grafik">
-                        <!-- <canvas id="loss-legend"></canvas> -->
-                        <div class="loss-content-wrapper">
-                            <div class="sixteen-by-nine aspect-ratio"></div>
-                            <div class="model-content d-flex justify-content-center align-items-center">
-                                <div id="loss-plot">
-                                    <div class="container">
-                                      <div class="y-axis"><canvas id="loss-y-axis"></canvas></div>
-                                      <div class="x-axis"><canvas id="loss-x-axis"></canvas></div>
-                                      <canvas id="loss-graph" class="loss-graph"></canvas>
-                                      <div class="legend"><canvas id="loss-legend"></canvas></div>
-                                    </div>
+                        <div class="legend-wrapper d-flex justify-content-center align-items-bottom">
+                            <div class="legend">
+                                <div class="legend-line" *ngFor="let line of this.lossLineParams; let i=index" (click)="toggleLineEnable(i)">
+                                    <div class="legend-box" 
+                                        [style.background]="'rgba(' + line[1] + ', 0.5)'"
+                                        [style.border]="'3px solid rgb(' + line[1] + ')'"
+                                        ></div>
+                                    <div class="legend-text">{{line[0]}}</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div id="canvas">
-                            <canvas baseChart
-                                [data]="signalR.lineChartData"
-                                [options]="chartOptions"
-                                [type]="'line'"
-                            >
-                            </canvas>
-                        </div> -->
+                        <div class="loss-content-wrapper d-flex justify-content-center align-items-center">
+                            <div id="loss-plot">
+                                <div class="container">
+                                    <div class="y-axis"><canvas id="loss-y-axis"></canvas></div>
+                                    <div class="x-axis"><canvas id="loss-x-axis"></canvas></div>
+                                    <canvas id="loss-graph" class="loss-graph"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- <table *ngFor="let elem of signalR.data" style="color:white">
-                        <tr><td>{{elem}}</td></tr>
-                    </table> -->
                 </div>
                 <div class="col-md-5" id="collapse" *ngIf="prikazi1==true">
                     <div id="metrika">

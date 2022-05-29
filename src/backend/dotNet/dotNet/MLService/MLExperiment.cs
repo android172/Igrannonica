@@ -26,7 +26,9 @@ namespace dotNet.MLService {
                 var loaded = connection.Receive();
                 if (loaded != null && loaded.Equals("True"))
                     return true;
-                return false;
+                else if (loaded != null && loaded.Equals("False"))
+                    return false;
+                throw new MLException($"ERROR :: Server out of sync. Wrong message received: {loaded}");
             }
         }
 
