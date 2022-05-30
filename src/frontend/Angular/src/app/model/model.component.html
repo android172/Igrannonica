@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
                 <div id="outliers-box">
-                    <div class="dropdown">
+                    <div class="dropdown" [class.input-disabled]="inputsLocked == true">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
                         Izaberi snapshot
                         </button>
@@ -17,6 +17,7 @@
                     </div>
                 </div>
                 <div>
+                    <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="enableInputs()">Unlock model</button>
                     <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
                     <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                     <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
@@ -33,6 +34,7 @@
                             <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                             <span class="checkmark"></span>
                         </label> -->
+                        <div [class.input-disabled]="inputsLocked == true">
                         <div class="pb-3" *ngFor="let e of kolone2; let i = index" style="color: #fff; font-size: 15px;">
                             <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
                             <button class="kolona column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
@@ -45,6 +47,7 @@
                                 {{e.value}}
                             </button>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,6 +58,7 @@
                 </div>
 
                 <div class="container-fluid" id="box">
+                    <div [class.input-disabled]="inputsLocked == true">
                     <div class="row">
                         <div class="col-md-12 d-flex" id="podesavanja">
                                 <div class="col-md-3">
@@ -181,6 +185,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
                 <div style="clear: both;"></div>
 
@@ -202,9 +207,9 @@
                             </div>
         
                             <div class="d-flex justify-content-center" id="boxZT">
-                                <h4 id="tekstZT">Start model training</h4>
-                                <ng-template [ngIf]="buttonPlay" *ngIf="!buttonDisable; else onesposobi">
-                                    <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
+                                <h4 id="tekstZT">{{this.modelText}}</h4>
+                                <ng-template [ngIf]="buttonPlay">
+                                    <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"  *ngIf="!buttonDisable; else onesposobi"></a>
                                 </ng-template>
                                 <ng-template #onesposobi>
                                     <a class="play-btn-disable"></a>
@@ -347,7 +352,7 @@
         <div class="container-fluid">
             <div class="row justify-content-between" id="centrirano2">
                 <div class="col-md-3 justify-content-center okvir">
-                    <div class="container-fluid">
+                    <div class="container-fluid" [class.input-disabled]="inputsLocked == true">
                         <div class="row d-flex justify-content-center">
                             <h3>Hidden layers</h3>
                             <button id="minus1" (click)="promeni1(2)" >—</button>

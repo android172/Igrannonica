@@ -581,6 +581,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.Stop);
                 connection.Send(modelId);
+                CheckStatus();
             }
         }
 
@@ -588,6 +589,7 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.Continue);
                 connection.Send(modelId);
+                CheckStatus();
             }
         }
 

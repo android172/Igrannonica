@@ -46,7 +46,7 @@ p
   width: 100%;
 }
 
-#sacuvaj
+#sacuvaj, #restart-model
 {/*
     width: 150px;
     height: 40px;
@@ -78,7 +78,7 @@ p
 }
 
 
-#sacuvaj:hover
+#sacuvaj:hover, #restart-model:hover
 {
   background: linear-gradient(to left, rgb(128, 128, 201), rgb(108, 108, 204), rgb(108, 82, 202) );
 }
@@ -1798,6 +1798,11 @@ body {
 .dropdown-toggle::after{
   float: right;
   margin-top: 10px;
+}
+
+.input-disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 input:-webkit-autofill,

@@ -56,6 +56,7 @@ export class ModelComponent implements OnInit {
   private weights: number[][][] = [];
   private absoluteWeightMean: number[] = [];
 
+  public inputsLocked: boolean = false;
   
   public kolone: any[] = [];
   message: any;
@@ -92,6 +93,9 @@ export class ModelComponent implements OnInit {
   public maxNizaT: any;
   public maxNizaTr: any;
   cv: number = 0;
+
+  public modelStateTexts: string[] = ["Start model training", "Pause training", "Continue training"]
+  public modelText: string = this.modelStateTexts[0];
 
   buttonDisable : boolean = true;
   buttonPlay:boolean = true;
@@ -206,6 +210,8 @@ export class ModelComponent implements OnInit {
       this.buttonContinue= false;
       //this.idModela = id;
       // //console.log("ID MODELA: " + this.idModela);
+
+      this.modelText = this.modelStateTexts[0];
     });
     this.signalR.componentMethodLossCalled$.subscribe((res: any) => {
       
@@ -681,7 +687,7 @@ export class ModelComponent implements OnInit {
                 this.brojU = this.ulazneKolone.length;
                 this.brojI = 1;
                 //console.log(this.brojU);
-                this.buttonDisable = false;
+                
                 /* ANN SETTINGS */
                 
                 this.nizAnnSettings = Object.values(this.annSettings);
@@ -691,6 +697,15 @@ export class ModelComponent implements OnInit {
                 (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
                 (<HTMLInputElement>document.getElementById("noe")).value = this.nizAnnSettings[3]+"";
                 // current epoch - 4
+                
+                // Is model trained (locked)
+                if (this.nizAnnSettings[4] > 0) {
+                  this.disableInputs();
+                  this.recreateNetwork(); // TEMP
+                }
+                else
+                  this.enableInputs();
+
                 this.brojU = this.nizAnnSettings[5];
                 this.brojI = this.nizAnnSettings[6];
                 this.hiddLay = [];
@@ -702,7 +717,7 @@ export class ModelComponent implements OnInit {
                 this.brHL = this.nizCvorova.length;
                 //console.log("CVOROVI: " + this.nizCvorova);
                 //console.log("BR HL : " + this.brHL);
-                this.recreateNetwork();
+                
                 this.aktFunk = this.nizAnnSettings[8];
                 (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
                 (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
@@ -1188,11 +1203,34 @@ export class ModelComponent implements OnInit {
         this.buttonPause = true;
         this.buttonPlay = false;
         this.buttonContinue = false; 
+        this.modelText = this.modelStateTexts[1];
 
         // Initialize loss draw
         this.initializeDrawer();
+
+        // Disable network changes
+        this.disableInputs()
       }
     )
+  }
+
+  disableInputs() {
+    this.inputsLocked = true;
+    this.buttonDisable = true;
+  }
+
+  enableInputs() {
+    this.inputsLocked = false;
+    
+    this.recreateNetwork();
+
+    this.prikazi = false;
+    this.prikazi1 = false;
+    this.prikaziPredikciju = false;
+
+    this.buttonDisable = false;
+    this.buttonPlay = true;
+    this.buttonContinue = false;
   }
 
   counter1(i:number){
@@ -1760,7 +1798,6 @@ export class ModelComponent implements OnInit {
                 this.brojU = this.ulazneKolone.length;
                 this.brojI = 1;
                 console.log(this.brojU);
-                this.buttonDisable = false;
                 this.buttonDisable = false;
                 this.hiddLay = [3,3,3,3,3];
                 this.nizCvorova = [3,3,3,3,3];
@@ -2339,6 +2376,7 @@ export class ModelComponent implements OnInit {
         this.buttonContinue = true;
         this.buttonPause = false;
         this.buttonPlay = false; 
+        this.modelText = this.modelStateTexts[2];
         this.onInfo("Training is paused.");
       },
       error => {
@@ -2357,6 +2395,7 @@ export class ModelComponent implements OnInit {
         this.buttonPause = true;
         this.buttonPlay = false;
         this.buttonContinue = false; 
+        this.modelText = this.modelStateTexts[1];
         this.onInfo("Training continues.");
       },
       error => {
