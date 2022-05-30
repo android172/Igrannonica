@@ -182,10 +182,6 @@ namespace dotNet.Controllers
                     string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
                     eksperiment.LoadDataset(model.Vlasnik, csv);
                 }*/
-                List<List<int>> kolone = db.dbmodel.Kolone(id);
-                eksperiment.LoadInputs(kolone[0].ToArray());
-                eksperiment.LoadOutputs(kolone[1].ToArray());
-                ANNSettings podesavanja = db.dbmodel.podesavanja(id);
                 int idSnapshot = db.dbmodel.dajSnapshot(id);
                 if (idSnapshot == 0)
                 {
@@ -196,6 +192,10 @@ namespace dotNet.Controllers
                     Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
                     eksperiment.SelectTrainingData(snapshot.csv);
                 }
+                List<List<int>> kolone = db.dbmodel.Kolone(id);
+                eksperiment.LoadInputs(kolone[0].ToArray());
+                eksperiment.LoadOutputs(kolone[1].ToArray());
+                ANNSettings podesavanja = db.dbmodel.podesavanja(id);
                 eksperiment.ApplySettings(podesavanja);
                 eksperiment.CreateNewNetwork();
                 eksperiment.Start(id);
