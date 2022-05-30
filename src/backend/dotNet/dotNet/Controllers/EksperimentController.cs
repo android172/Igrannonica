@@ -171,38 +171,36 @@ namespace dotNet.Controllers
         {
             try
             {
-                Console.WriteLine("P1");
                 string csv = db.dbeksperiment.uzmi_naziv_csv(id);
                 if (csv != "")
                 {
-                    Console.WriteLine("P2");
+
                     var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                     MLExperiment eksperiment;
                     if (Experiment.eksperimenti.ContainsKey(id))
                     {
-                        Console.WriteLine("P3");
+
                         eksperiment = Experiment.eksperimenti[id];
                         if (!eksperiment.IsDataLoaded())
                         {
-                            Console.WriteLine("P4");
+
                             eksperiment.LoadDataset(csv);
                         }
                         return Ok(csv);
                     }
-                    Console.WriteLine("EP3");
+
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 }
-                Console.WriteLine("EP4");
+
                 return NotFound(ErrorMessages.FileNotFound);
             }
             catch (MLException e)
             {
-                Console.WriteLine("EP1");
+
                 return BadRequest(e.Message);
             }
             catch
             {
-                Console.WriteLine("EP2");
                 return StatusCode(500);
             }
         }

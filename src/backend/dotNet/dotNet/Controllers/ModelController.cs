@@ -82,7 +82,10 @@ namespace dotNet.Controllers
                     return BadRequest(ErrorMessages.ModelExists);
                 }
                 if (db.dbmodel.promeniImeModela(ime, id))
+                {
+                    Console.WriteLine("Update-ovan model " + id.ToString());
                     return Ok("Promenjeno ime modela");
+                }
                 return StatusCode(500);
             }
             catch
@@ -99,6 +102,7 @@ namespace dotNet.Controllers
             {
                 if (db.dbmodel.promeniOpisModela(opis, id))
                 {
+                    Console.WriteLine("Promenjen opis modela" + id.ToString());
                     return Ok("Opis promenjen");
                 }
                 return StatusCode(500);
@@ -117,6 +121,7 @@ namespace dotNet.Controllers
                 if (db.dbmodel.izbrisiPodesavanja(id))
                 {
                     db.dbmodel.izbrisiModel(id);
+                    Console.WriteLine("Izbrisan model "+id.ToString());
                     return Ok("Model izbrisan");
                 }
                 return StatusCode(500);
@@ -155,6 +160,7 @@ namespace dotNet.Controllers
         {
             try
             {
+                Console.WriteLine("Detaljnije o modelu" + id);
                 return Ok(db.dbmodel.detaljnije(id));
             }
             catch
@@ -199,6 +205,7 @@ namespace dotNet.Controllers
                 eksperiment.ApplySettings(podesavanja);
                 eksperiment.CreateNewNetwork();
                 eksperiment.Start(id);
+                Console.WriteLine("Otpocelo treniranje");
                 return Ok("Pocelo treniranje");
             }
             catch (MLException e)
@@ -217,8 +224,10 @@ namespace dotNet.Controllers
         {
             try
             {
-                if(db.dbmodel.PostaviSnapshot(model, snapshot))
+                if (db.dbmodel.PostaviSnapshot(model, snapshot)) { 
+                    Console.WriteLine("Postavljen snapshot "+snapshot.ToString()+" za model "+model.ToString());
                     return Ok(snapshot);
+                }
                 return StatusCode(500);
             }
             catch
@@ -250,6 +259,7 @@ namespace dotNet.Controllers
                 Snapshot snapshot1 = db.dbeksperiment.dajSnapshot(snapshot);
                 eksperiment.SelectTrainingData(snapshot1.csv);
                 string kolones = eksperiment.GetColumns(snapshot1.csv);
+                Console.WriteLine("Vracene kolone za snapshot " + snapshot.ToString());
                 return Ok(kolones.Replace('\'', '"'));
             }
             catch (MLException e)
@@ -269,6 +279,7 @@ namespace dotNet.Controllers
             try
             {
                 ModelDetaljnije model = db.dbmodel.detaljnije(id);
+                Console.WriteLine("Detaljnije o modelu "+id.ToString());
                 return Ok(model);
             }
             catch
@@ -294,7 +305,7 @@ namespace dotNet.Controllers
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 metrika = eksperiment.ComputeMetrics(modelId);
-                Console.WriteLine(metrika);
+                Console.WriteLine("Vracena metrika za model " + modelId);
                 return Ok(metrika);
             }
             catch (MLException e)
@@ -341,6 +352,7 @@ namespace dotNet.Controllers
                     {
                         if (db.dbmodel.UpisiKolone(modela, model.kolone))
                         {
+                            Console.WriteLine("Kreiran novi model");
                             return Ok(modela);
                         }
                         return StatusCode(500);
@@ -370,7 +382,7 @@ namespace dotNet.Controllers
                             
                             db.dbmodel.izbrisiRegStatistiku(idModela);
                             db.dbmodel.izbrisiClasStatistiku(idModela);
-                            Console.WriteLine("izbrisane kolone");
+                            Console.WriteLine("Model was overrided successfully.");
                             return Ok("Model was overrided successfully.");
                         }
                         return StatusCode(500);
@@ -406,7 +418,7 @@ namespace dotNet.Controllers
                     { "NetworkSettings", settings },
                     { "IOColumns", kolone }
                 };
-
+                Console.WriteLine("Load-an model "+idModela);
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(result));
             }
             catch
@@ -431,11 +443,8 @@ namespace dotNet.Controllers
                 else
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
-                /*for(int i = 0; i < inputs.Length; i++)
-                {
-                    Console.WriteLine(inputs[i]);
-                }*/
                 predikcija = eksperiment.Predict(inputs,modelId);
+                Console.WriteLine("Predikcija za model " + modelId.ToString() + ": " + predikcija);
                 return Ok(predikcija);
             }
             catch (MLException e)
@@ -483,7 +492,6 @@ namespace dotNet.Controllers
                 eksperiment.SaveModel(model.Name, idmodela);
                 try {
                     string metrika = eksperiment.ComputeMetrics(idmodela);
-                    Console.WriteLine(metrika);
                     JObject met = JObject.Parse(metrika);
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
@@ -498,11 +506,9 @@ namespace dotNet.Controllers
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.uzmi_naziv_csv(ideksperimenta)));
                         }
                         //JArray kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(idmodela)).csv));
-                        Console.WriteLine(kol[0]);
                         int k = 0;
                         foreach(JToken i  in met.GetValue("train").Values())
                         {
-                            Console.WriteLine(kol[kolone[1][k]]);
                             StatisticsRegression rg = i.ToObject<StatisticsRegression>();
                             saveModelStatistics(idmodela, rg, kol[kolone[1][k]].ToString());
                             //db.dbmodel.prepisiStatistiku(idmodela, rg, kol[kolone[1][k]].ToString());
@@ -510,6 +516,7 @@ namespace dotNet.Controllers
                         }
                         //StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
                         //saveModelStatistics(idmodela, rg);
+                        Console.WriteLine("Model sacuvan");
                         return Ok("Model sacuvan");
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
@@ -518,11 +525,11 @@ namespace dotNet.Controllers
                         //StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
                         saveModelStatistics(idmodela, cs);
                         //db.dbmodel.prepisiStatistiku(idmodela, cs);
+                        Console.WriteLine("Model sacuvan");
                         return Ok("Model sacuvan");
                     }
                 }
                 catch (MLException) {
-                    Console.WriteLine("Test");
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
                         List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
@@ -539,7 +546,6 @@ namespace dotNet.Controllers
                         StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
                         foreach (var i in kolone[1]) { 
                             saveModelStatistics(idmodela, reg,kol[i].ToString());
-                            Console.WriteLine(kol[i].ToString());
                         }
                         return Ok("Model sacuvan");
                     }
@@ -582,7 +588,7 @@ namespace dotNet.Controllers
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.Stop(idModela);
-
+                Console.WriteLine("Model pauziran");
                 return Ok("Pauza");
             }
             catch (MLException e)
@@ -611,7 +617,7 @@ namespace dotNet.Controllers
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.Continue(idModela);
-
+                Console.WriteLine("Model " + idModela + " nastavio sa treniranjem");
                 return Ok("Nastavak treniranja");
             }
             catch (MLException e)
@@ -641,7 +647,7 @@ namespace dotNet.Controllers
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
                 eksperiment.Dismiss(idModela);
-
+                Console.WriteLine("Trening prekinut.");
                 return Ok("Trening prekinut.");
             }
             catch (MLException e)

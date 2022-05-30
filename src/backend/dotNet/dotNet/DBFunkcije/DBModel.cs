@@ -446,7 +446,7 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        Console.WriteLine("OK");
+
                         String naziv = reader.GetString("naziv");
                         return naziv;
                     }
@@ -526,7 +526,6 @@ namespace dotNet.DBFunkcije
 
         public ModelDetaljnije detaljnije(int id)
         {
-            Console.WriteLine(id.ToString());
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 if (dajSnapshot(id) > 0)
@@ -660,7 +659,6 @@ namespace dotNet.DBFunkcije
         {
             if (Matrix == null)
                 return "";
-            Console.WriteLine("Test");
             string niz = "";
             for(int i = 0; i < Matrix.Length; i++)
             {
@@ -673,7 +671,6 @@ namespace dotNet.DBFunkcije
                 if (i < Matrix.Length - 1)
                     niz += ":";
             }
-            Console.WriteLine(niz);
             return niz;
         }
         private int[][] Matrix(string matrica)
