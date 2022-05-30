@@ -26,7 +26,31 @@ def compute_metrics(self):
         if ann is None:
             self.report_error("ERROR :: Wrong model identifier.")
             return
-    Thread(target = lambda : compute_metrics_a(self, ann)).start()
+    
+    if ann.isRunning.is_set():
+        self.report_error("ERROR :: Network is currently running.")
+        return
+    
+    # Setup dataset version
+    if ann.dataset_version is not None:
+        if not ann.data.load_dataset_version(ann.dataset_version):
+            self.report_error("ERROR :: Selected dataset not recognized.")
+            return
+    
+    if ann.isRegression:
+        train = ann.compute_regression_statistics("train")
+        test = ann.compute_regression_statistics("test")
+    else:
+        train = ann.compute_classification_statistics("train")
+        test = ann.compute_classification_statistics("test")
+    
+    if train == None: train = ""
+    if test  == None: test  = ""
+        
+    self.connection.send("OK")
+    self.connection.send(json.dumps({"test": test, "train": train}))
+
+    print("Network statistics requested.")
     
 def predict(self):
     # receive inputs
@@ -188,33 +212,6 @@ def continue_training(self):
     print("Traning continued.")
     
 # Helper functions #
-def compute_metrics_a(self, network):
-    
-    if network.isRunning.is_set():
-        self.report_error("ERROR :: Network is currently running.")
-        return
-    
-    # Setup dataset version
-    if network.dataset_version is not None:
-        if not network.data.load_dataset_version(network.dataset_version):
-            self.report_error("ERROR :: Selected dataset not recognized.")
-            return
-    
-    if network.isRegression:
-        train = network.compute_regression_statistics("train")
-        test = network.compute_regression_statistics("test")
-    else:
-        train = network.compute_classification_statistics("train")
-        test = network.compute_classification_statistics("test")
-    
-    if train == None: train = ""
-    if test  == None: test  = ""
-        
-    self.connection.send("OK")
-    self.connection.send(json.dumps({"test": test, "train": train}))
-
-    print("Network statistics requested.")
-    
 def train(token, id, network):
     connection_established = threading.Event()
     sr_connection = SignalRConnection(token, connection_established)
