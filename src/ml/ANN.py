@@ -349,6 +349,7 @@ class ANN:
             train_dataset = self.data.get_train_dataset()
             
             initial_state = {k:v.clone() for k,v in self.model.state_dict().items()}
+            initial_state_o = {k:v for k,v in self.optimizer.state_dict().items()}
             
             folds_to_skip = self.current_epoch // self.num_epochs
             current_epoch = self.current_epoch %  self.num_epochs
@@ -361,6 +362,7 @@ class ANN:
                 val_loader   = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=val_subs)
                 
                 self.model.load_state_dict(initial_state)
+                self.optimizer.load_state_dict(initial_state_o)
                 
                 while current_epoch < self.num_epochs:
                     self.train_epoch(train_loader)
