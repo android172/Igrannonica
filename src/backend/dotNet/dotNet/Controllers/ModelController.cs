@@ -367,6 +367,10 @@ namespace dotNet.Controllers
                     {
                         if (db.dbmodel.UpisiKolone(idModela, model.kolone))
                         {
+                            
+                            db.dbmodel.izbrisiRegStatistiku(idModela);
+                            db.dbmodel.izbrisiClasStatistiku(idModela);
+                            Console.WriteLine("izbrisane kolone");
                             return Ok("Model was overrided successfully.");
                         }
                         return StatusCode(500);
@@ -479,6 +483,7 @@ namespace dotNet.Controllers
                 eksperiment.SaveModel(model.Name, idmodela);
                 try {
                     string metrika = eksperiment.ComputeMetrics(idmodela);
+                    Console.WriteLine(metrika);
                     JObject met = JObject.Parse(metrika);
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
@@ -499,7 +504,8 @@ namespace dotNet.Controllers
                         {
                             Console.WriteLine(kol[kolone[1][k]]);
                             StatisticsRegression rg = i.ToObject<StatisticsRegression>();
-                            db.dbmodel.prepisiStatistiku(idmodela, rg, kol[kolone[1][k]].ToString());
+                            saveModelStatistics(idmodela, rg, kol[kolone[1][k]].ToString());
+                            //db.dbmodel.prepisiStatistiku(idmodela, rg, kol[kolone[1][k]].ToString());
                             k++;
                         }
                         //StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
@@ -510,12 +516,13 @@ namespace dotNet.Controllers
                     {
                         var cs = met.GetValue("train")["0"].ToObject<StatisticsClassification>();
                         //StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
-                        db.dbmodel.prepisiStatistiku(idmodela, cs);
+                        saveModelStatistics(idmodela, cs);
+                        //db.dbmodel.prepisiStatistiku(idmodela, cs);
                         return Ok("Model sacuvan");
                     }
                 }
                 catch (MLException) {
-                    //Console.WriteLine("Test");
+                    Console.WriteLine("Test");
                     if (podesavanja.ANNType == ProblemType.Regression)
                     {
                         List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
@@ -552,7 +559,7 @@ namespace dotNet.Controllers
             }
             catch(Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e);
             }
 
         }

@@ -829,7 +829,34 @@ namespace dotNet.DBFunkcije
             return null;
         }
 
-
+        public void izbrisiRegStatistiku(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from Reggresion where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return;
+                }
+            }
+        }
+        public void izbrisiClasStatistiku(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from Classification where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return;
+                }
+            }
+        }
 
     }
 }
