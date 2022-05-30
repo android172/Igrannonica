@@ -696,16 +696,17 @@ namespace dotNet.DBFunkcije
         }
 
 
-        public bool upisiStatistiku(int id,StatisticsClassification statistica)
+        public bool upisiStatistiku(int id,StatisticsClassification statistica, string Kolona)
         {
             try
             {
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Classification values(@id,@Accuracy,@BalancedAccuracy,@Precision,@Recall,@F1Score,@HammingLoss,@CrossEntropyLoss,@ConfusionMatrix)";
+                string query = "insert into Classification values(@id,@kolona,@Accuracy,@BalancedAccuracy,@Precision,@Recall,@F1Score,@HammingLoss,@CrossEntropyLoss,@ConfusionMatrix)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@kolona",Kolona);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
                 cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
                 cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
@@ -727,13 +728,14 @@ namespace dotNet.DBFunkcije
             }
         }
 
-        public bool prepisiStatistiku(int id, StatisticsClassification statistica)
+        public bool prepisiStatistiku(int id, StatisticsClassification statistica,string Kolona)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Classification set `Accuracy`=@Accuracy , `BalancedAccuracy`=@BalancedAccuracy , `Precision`=@Precision , `Recall`=@Recall , `F1Score`=@F1Score, `HammingLoss`=@HammingLoss , `CrossEntropyLoss`=@CrossEntropyLoss , `ConfusionMatrix`=@ConfusionMatrix where `id`=@id ;";
+                string query = "update Classification set `Kolona`=@kolona , `Accuracy`=@Accuracy , `BalancedAccuracy`=@BalancedAccuracy , `Precision`=@Precision , `Recall`=@Recall , `F1Score`=@F1Score, `HammingLoss`=@HammingLoss , `CrossEntropyLoss`=@CrossEntropyLoss , `ConfusionMatrix`=@ConfusionMatrix where `id`=@id ;";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@kolona",Kolona);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
                 cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
                 cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
@@ -762,7 +764,7 @@ namespace dotNet.DBFunkcije
                 {
                     while (reader.Read())
                     {
-                        results.Add(new Classification(reader.GetInt32("id"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
+                        results.Add(new Classification(reader.GetInt32("id"),reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
                     }
                 }
                 return results;
