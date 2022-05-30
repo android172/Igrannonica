@@ -4,6 +4,7 @@
     {
         public Classification(
             int id,
+            string kolona,
             float accuracy,
             float balancedAccuracy,
             float precision,
@@ -15,6 +16,7 @@
             )
         {
             this.id = id;
+            Kolona = kolona;
             Accuracy = accuracy;
             BalancedAccuracy = balancedAccuracy;
             Precision = precision;
@@ -25,6 +27,7 @@
             ConfusionMatrix = confusionMatrix;
         }
         public int id { get; set; }
+        public string Kolona { get; set; }
         public float Accuracy { get; set; }
         public float BalancedAccuracy { get; set; }
         public float Precision { get; set; }

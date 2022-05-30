@@ -467,15 +467,15 @@ namespace dotNet.Controllers
                 db.dbmodel.prepisiStatistiku(modelId, stats, Kolona);
             }
         }
-        private void saveModelStatistics(int modelId, StatisticsClassification stats)
+        private void saveModelStatistics(int modelId, StatisticsClassification stats,string Kolona)
         {
             try
             {
-                db.dbmodel.upisiStatistiku(modelId, stats);
+                db.dbmodel.upisiStatistiku(modelId, stats,Kolona);
             }
             catch
             {
-                db.dbmodel.prepisiStatistiku(modelId, stats);
+                db.dbmodel.prepisiStatistiku(modelId, stats,Kolona);
             }
         }
 
@@ -493,11 +493,9 @@ namespace dotNet.Controllers
                 try {
                     string metrika = eksperiment.ComputeMetrics(idmodela);
                     JObject met = JObject.Parse(metrika);
-                    if (podesavanja.ANNType == ProblemType.Regression)
-                    {
-                        List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
-                        JArray kol;
-                        int snapshotid = db.dbmodel.dajSnapshot(idmodela);
+                    List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
+                    JArray kol;
+                    int snapshotid = db.dbmodel.dajSnapshot(idmodela);
                         if (snapshotid != 0) {
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(snapshotid).csv));
                         }
@@ -505,6 +503,8 @@ namespace dotNet.Controllers
                         {
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.uzmi_naziv_csv(ideksperimenta)));
                         }
+                    if (podesavanja.ANNType == ProblemType.Regression)
+                    {
                         //JArray kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(idmodela)).csv));
                         int k = 0;
                         foreach(JToken i  in met.GetValue("train").Values())
@@ -523,15 +523,21 @@ namespace dotNet.Controllers
                     {
                         var cs = met.GetValue("train")["0"].ToObject<StatisticsClassification>();
                         //StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
-                        saveModelStatistics(idmodela, cs);
+                        string kolonestr = "";
+                        for(int i=0;i<kolone[1].Count; i++)
+                        {
+                            kolonestr += kol[kolone[1][i]];
+                            if (i < kolone[1].Count - 1) kolonestr += ", ";
+                        }
+
+
+                        saveModelStatistics(idmodela, cs,kolonestr);
                         //db.dbmodel.prepisiStatistiku(idmodela, cs);
                         Console.WriteLine("Model sacuvan");
                         return Ok("Model sacuvan");
                     }
                 }
                 catch (MLException) {
-                    if (podesavanja.ANNType == ProblemType.Regression)
-                    {
                         List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
                         JArray kol;
                         int snapshotid = db.dbmodel.dajSnapshot(idmodela);
@@ -543,6 +549,8 @@ namespace dotNet.Controllers
                         {
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.uzmi_naziv_csv(ideksperimenta)));
                         }
+                    if (podesavanja.ANNType == ProblemType.Regression)
+                    {
                         StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
                         foreach (var i in kolone[1]) { 
                             saveModelStatistics(idmodela, reg,kol[i].ToString());
@@ -551,8 +559,14 @@ namespace dotNet.Controllers
                     }
                     else if (podesavanja.ANNType == ProblemType.Classification)
                     {
+                        string kolonestr = "";
+                        for (int i = 0; i < kolone[1].Count; i++)
+                        {
+                            kolonestr += kol[kolone[1][i]];
+                            if (i < kolone[1].Count - 1) kolonestr += ", ";
+                        }
                         StatisticsClassification cls = new StatisticsClassification(0f, 0f, 0f, 0f, 0f, 0f, 0f, null);
-                        saveModelStatistics(idmodela, cls);
+                        saveModelStatistics(idmodela, cls, kolonestr);
                         return Ok("Model sacuvan");
                     }
                 }

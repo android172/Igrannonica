@@ -72,7 +72,7 @@ namespace dotNet.Controllers
             try
             {
                 Console.WriteLine(id.ToString() + " " + statistika.Precision.ToString());
-                if (db.dbmodel.upisiStatistiku(id, statistika))
+                if (db.dbmodel.upisiStatistiku(id, statistika,null))
                 {
                     return Ok(1);
                 }

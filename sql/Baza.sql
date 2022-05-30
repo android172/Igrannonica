@@ -119,6 +119,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Classification` (
   `id` INT UNSIGNED NOT NULL,
+  `Kolona` VARCHAR(512) NOT NULL,
   `Accuracy` FLOAT NOT NULL,
   `BalancedAccuracy` FLOAT NOT NULL,
   `Precision` FLOAT NOT NULL,
