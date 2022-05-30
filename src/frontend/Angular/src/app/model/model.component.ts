@@ -315,7 +315,9 @@ export class ModelComponent implements OnInit {
     for (let i = 0; i < points.length; i++) {
       const pointX = 1.9 * i / this.maxPointX - 1 + 0.05;
       const YDiff = this.maxPointY - this.minPointY;
-      const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
+      var pointY = 0;
+      if (YDiff > 10e-7)
+        pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
       
       const pointSq = new WebglSquare(color);
       pointSq.setSquare(pointX - sqHalfWidth, pointY - sqHalfWidth, pointX + sqHalfWidth, pointY + sqHalfWidth);
@@ -333,7 +335,9 @@ export class ModelComponent implements OnInit {
     for (let i = 0; i < points.length; i++) {
       const pointX = 1.9 * i / this.maxPointX - 1 + 0.05;
       const YDiff = this.maxPointY - this.minPointY;
-      const pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
+      var pointY = 0;
+      if (YDiff > 10e-7)
+        pointY = maxY * (points[i] - this.minPointY) / YDiff - maxY / 2;
 
       const point = new WebglThickLine(color, np, 2 * r);
 
@@ -380,8 +384,13 @@ export class ModelComponent implements OnInit {
     var maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
     var inputs: number[] = []
     const YDiff = this.maxPointY - this.minPointY;
-    for (let i = 0; i < points.length; i++)
-      inputs.push(maxY * (points[i] - this.minPointY) / YDiff - maxY / 2);
+    var pointY = 0;
+    if (YDiff > 10e-7)
+      for (let i = 0; i < points.length; i++)
+        inputs.push(maxY * (points[i] - this.minPointY) / YDiff - maxY / 2);
+    else
+      for (let i = 0; i < points.length; i++)
+        inputs.push(0);
     for (let index = 0; index < inputs.length; index++)
       line.setY(index, inputs[index]);
   }
@@ -522,7 +531,11 @@ export class ModelComponent implements OnInit {
     this.xAxis.lineTo(this.xAxisWidth, 0);
     this.xAxis.stroke();
     
-    for (let i = 0; i < this.maxPointX + 1; i++) {
+    var step = 1;
+    if (this.maxPointX > 16)
+      step = Math.floor(this.maxPointX / 16);
+
+    for (let i = 0; i < this.maxPointX + 1; i += step) {
       // 0.05 to 1.95 (0 - 2)
       const xNorm = 1.9 * i / this.maxPointX + 0.05;
       // 0 to maxW
@@ -555,6 +568,7 @@ export class ModelComponent implements OnInit {
       numberOfDvs *= 2;
       temp = Math.floor(temp / 2);
     }
+    numberOfDvs = Math.min(numberOfDvs, 16);
 
     const maxY = 2.0 / this.lossPlot.gXYratio - 0.05;
     const actualMaxY = 2.0 / this.lossPlot.gXYratio;

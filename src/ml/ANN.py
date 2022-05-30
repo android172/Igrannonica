@@ -348,7 +348,7 @@ class ANN:
             # Train with K-Fold Cross Validation
             train_dataset = self.data.get_train_dataset()
             
-            initial_state = {k:v for k,v in self.model.state_dict().items()}
+            initial_state = {k:v.clone() for k,v in self.model.state_dict().items()}
             
             folds_to_skip = self.current_epoch // self.num_epochs
             current_epoch = self.current_epoch %  self.num_epochs
