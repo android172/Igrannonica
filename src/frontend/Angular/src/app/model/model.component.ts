@@ -1654,6 +1654,10 @@ export class ModelComponent implements OnInit {
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
       res => {
         //console.log(this.jsonModel);
+        var oldModelId = this.idModela;
+        if (oldModelId == undefined)
+          oldModelId = res;
+        
         this.idModela=res;
         
         if(res == "-1") //kreira novi model
@@ -1662,7 +1666,7 @@ export class ModelComponent implements OnInit {
             res => {
               this.idModela=res;
               this.izadjiIzObaModala();
-              this.saveModel();
+              this.saveModel(oldModelId, this.idModela);
             },
             error =>{
               console.log(error.error);
@@ -1688,8 +1692,8 @@ export class ModelComponent implements OnInit {
     );
   }
 
-  saveModel() {
-    this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&idmodela=" + this.idModela, null, {responseType : 'text'}).subscribe(
+  saveModel(oldModelId: number, newModelId: number) {
+    this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully created.");
         this.PosaljiModel.emit(this.selectedSS);
@@ -1705,7 +1709,7 @@ export class ModelComponent implements OnInit {
   { console.log(this.idModela);
     this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + this.idModela, this.jsonModel, {responseType: 'text'}).subscribe(
         res=>{
-          this.saveModel();
+          this.saveModel(this.idModela, this.idModela);
         },err=>{
           this.onError("Model was not overrided."); 
         }

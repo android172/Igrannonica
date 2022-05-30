@@ -480,22 +480,22 @@ namespace dotNet.Controllers
         }
 
         [HttpPost("Save")]
-        public IActionResult sacuvajModel(int ideksperimenta ,int idmodela)
+        public IActionResult sacuvajModel(int ideksperimenta, int modelIdOld, int modelIdNew)
         {
             try
             {
                 MLExperiment eksperiment = Experiment.eksperimenti[ideksperimenta];
 
-                ANNSettings podesavanja = db.dbmodel.podesavanja(idmodela);
+                ANNSettings podesavanja = db.dbmodel.podesavanja(modelIdNew);
                 eksperiment.ApplySettings(podesavanja);
-                Model model = db.dbmodel.model(idmodela);
-                eksperiment.SaveModel(model.Name, idmodela);
+                Model model = db.dbmodel.model(modelIdNew);
+                eksperiment.SaveModel(model.Name, modelIdOld);
                 try {
-                    string metrika = eksperiment.ComputeMetrics(idmodela);
+                    string metrika = eksperiment.ComputeMetrics(modelIdOld);
                     JObject met = JObject.Parse(metrika);
-                    List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
+                    List<List<int>> kolone = db.dbmodel.Kolone(modelIdNew);
                     JArray kol;
-                    int snapshotid = db.dbmodel.dajSnapshot(idmodela);
+                    int snapshotid = db.dbmodel.dajSnapshot(modelIdNew);
                         if (snapshotid != 0) {
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(snapshotid).csv));
                         }
@@ -510,7 +510,7 @@ namespace dotNet.Controllers
                         foreach(JToken i  in met.GetValue("train").Values())
                         {
                             StatisticsRegression rg = i.ToObject<StatisticsRegression>();
-                            saveModelStatistics(idmodela, rg, kol[kolone[1][k]].ToString());
+                            saveModelStatistics(modelIdNew, rg, kol[kolone[1][k]].ToString());
                             //db.dbmodel.prepisiStatistiku(idmodela, rg, kol[kolone[1][k]].ToString());
                             k++;
                         }
@@ -531,16 +531,16 @@ namespace dotNet.Controllers
                         }
 
 
-                        saveModelStatistics(idmodela, cs,kolonestr);
+                        saveModelStatistics(modelIdNew, cs,kolonestr);
                         //db.dbmodel.prepisiStatistiku(idmodela, cs);
                         Console.WriteLine("Model sacuvan");
                         return Ok("Model sacuvan");
                     }
                 }
                 catch (MLException) {
-                        List<List<int>> kolone = db.dbmodel.Kolone(idmodela);
+                        List<List<int>> kolone = db.dbmodel.Kolone(modelIdNew);
                         JArray kol;
-                        int snapshotid = db.dbmodel.dajSnapshot(idmodela);
+                        int snapshotid = db.dbmodel.dajSnapshot(modelIdNew);
                         if (snapshotid != 0)
                         {
                             kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(snapshotid).csv));
@@ -553,7 +553,7 @@ namespace dotNet.Controllers
                     {
                         StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
                         foreach (var i in kolone[1]) { 
-                            saveModelStatistics(idmodela, reg,kol[i].ToString());
+                            saveModelStatistics(modelIdNew, reg,kol[i].ToString());
                         }
                         return Ok("Model sacuvan");
                     }
@@ -566,7 +566,7 @@ namespace dotNet.Controllers
                             if (i < kolone[1].Count - 1) kolonestr += ", ";
                         }
                         StatisticsClassification cls = new StatisticsClassification(0f, 0f, 0f, 0f, 0f, 0f, 0f, null);
-                        saveModelStatistics(idmodela, cls, kolonestr);
+                        saveModelStatistics(modelIdNew, cls, kolonestr);
                         return Ok("Model sacuvan");
                     }
                 }
