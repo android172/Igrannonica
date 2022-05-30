@@ -1,3 +1,30 @@
+#particles-js
+{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-image: url('/assets/wallpaper.jpg');
+    /* margin-right: 0!important;
+    margin-left: 0!important;
+    margin-bottom: 0!important; */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /* z-index: -2; */
+    /* background: linear-gradient(#03001b,#1e012c); */
+}
+
+.particles-js-canvas-el {
+    position: fixed;
+    top: 0;
+    z-index: -1;
+      /* color: #1e042b;   */
+    /* color: 150226;  trenutna  */
+}
+
+
 #container
 {
     position: relative;
