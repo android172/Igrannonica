@@ -1228,12 +1228,18 @@ export class ModelComponent implements OnInit {
     this.prikazi1 = false;
     this.prikaziPredikciju = false;
 
+    if (this.buttonPlay == false)
+      this.forkTraining();
+
     this.modelText = this.modelStateTexts[0];
     this.buttonDisable = false;
     this.buttonPlay = true;
     this.buttonContinue = false;
     this.buttonPause = false;
+  }
 
+  forkTraining() {
+    // Za sada samo odbacuje trening
     this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
       res => {
         this.onInfo("Training dissmisted.");
