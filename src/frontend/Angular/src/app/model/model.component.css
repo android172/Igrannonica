@@ -627,8 +627,8 @@ input
 }
 .legend-text {
   color: white;
-  width: 30px;
-  margin-left: 10px;
+  margin-left: 2px;
+  margin-right: 10px;
   float:left;
 }
 
@@ -679,6 +679,8 @@ input
   max-width: 711px;
   /* max-height: 64.64px;
   aspect-ratio: 11/1; */
+  height:25px;
+  overflow-y: auto;
 }
 
 /* .container {
@@ -1021,7 +1023,7 @@ select:focus {
 }
 
 #collapse{
-  height: 440px;
+  height: 475px;
   overflow-y: auto;
   padding-top: 5px;
   /* width: 35vw; */
