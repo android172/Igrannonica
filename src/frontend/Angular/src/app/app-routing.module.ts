@@ -12,13 +12,14 @@ import { ProfilnaStranaIzmenaPodatakaComponent } from './profilna-strana-izmena-
 import { EksperimentComponent } from './eksperiment/eksperiment.component';
 import { LoggedinGuard } from './auth/loggedin.guard';
 import { LoggedoutGuard } from './auth/loggedout.guard';
+import { PrijaviseGuard } from './auth/prijavise.guard';
 
 const routes: Routes = [
   {path:"", redirectTo: "/pocetna-strana", pathMatch: "full"},
   {path:'pocetna-strana', component:PocetnaStranaComponent},
   {path:'prijava', component:PrijavaComponent,canActivate:[LoggedoutGuard]},
   {path:'registracija', component:RegistracijaComponent,canActivate:[LoggedoutGuard]},
-  {path:'novi-eksperiment', component:NoviEksperimentComponent,canActivate:[LoggedinGuard]},
+  {path:'novi-eksperiment', component:NoviEksperimentComponent,canActivate:[PrijaviseGuard]},
   {path:'kontakt', component:KontaktComponent},
   {path:'o-nama', component:ONamaComponent},
   {path:'moji-eksperimenti', component:MojiEksperimentiComponent,canActivate:[LoggedinGuard]},
