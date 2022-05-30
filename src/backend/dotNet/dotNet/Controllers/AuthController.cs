@@ -38,7 +38,6 @@ namespace dotNet.Controllers
                 if (user != null)
                 {
                     var token = Generate(user);
-                    Console.WriteLine(token);
                     Osvezi(user.Id, token);
                     return Ok(token);
                 }
