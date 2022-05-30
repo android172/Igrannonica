@@ -116,6 +116,7 @@ class MLClientInstance(Thread):
             'Start'             : start,
             'Stop'              : stop,
             'Continue'          : continue_training,
+            'Dismiss'           : dismiss_training,
             'Predict'           : predict
         }
         

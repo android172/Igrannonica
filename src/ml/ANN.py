@@ -27,6 +27,7 @@ class ANN:
         self.data = MLData()
         
         self.isRunning = threading.Event()
+        self.kys = False
         
         self.learning_rate = 0
         self.batch_size    = 0
@@ -293,6 +294,8 @@ class ANN:
         for bach_index, (data, target) in enumerate(train_loader):
             
             self.isRunning.wait()
+            if self.kys:
+                sys.exit()
             
             data = data.to(device)
             target = target.to(device)
@@ -322,6 +325,8 @@ class ANN:
         for bach_index, (data, target) in enumerate(test_loader):
             
             self.isRunning.wait()
+            if self.kys:
+                sys.exit()
             
             data = data.to(device)
             target = target.to(device)

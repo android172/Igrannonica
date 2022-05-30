@@ -593,6 +593,14 @@ namespace dotNet.MLService {
             }
         }
 
+        public void Dismiss(int modelId) {
+            lock (_lock) {
+                connection.Send(Command.Dismiss);
+                connection.Send(modelId);
+                CheckStatus();
+            }
+        }
+
         public string Predict(string[] inputs, int modelId = -1) {
             lock (_lock) {
                 connection.Send(Command.Predict);
@@ -701,6 +709,7 @@ namespace dotNet.MLService {
         Start,
         Stop,
         Continue,
+        Dismiss,
         Predict
     }
 }

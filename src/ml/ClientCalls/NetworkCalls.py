@@ -155,7 +155,7 @@ def select_training_data(self):
     self.network.data_version = version_name
     
     self.connection.send("OK")
-    print("Traning datset selected.")
+    print("Training dataset selected.")
     
 def start(self):
     # Receive id
@@ -181,7 +181,7 @@ def start(self):
     running_network.isRunning.set()
     
     self.connection.send("OK")
-    print("Traning commences.")
+    print("Training commences.")
     
 def stop(self):
     # Receive model identifier
@@ -195,7 +195,7 @@ def stop(self):
     running_network.isRunning.clear()
 
     self.connection.send("OK")
-    print("Traning stopped.")
+    print("Training stopped.")
 
 def continue_training(self):
     # Receive model identifier
@@ -209,7 +209,22 @@ def continue_training(self):
     running_network.isRunning.set()
 
     self.connection.send("OK")
-    print("Traning continued.")
+    print("Training continued.")
+
+def dismiss_training(self):
+    # Receive model identifier
+    model_id = int(self.connection.receive())
+    
+    running_network = self.active_models.get(model_id, None)
+    if running_network is None:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+    
+    running_network.kys = True
+    self.active_models[model_id] = None
+    
+    self.connection.send("OK")
+    print("Training dismissed.")
     
 # Helper functions #
 def train(token, id, network):
@@ -234,4 +249,4 @@ def train(token, id, network):
     sr_connection.set_method("FinishModelTraining")
     sr_connection.send_to_front(id)
     
-    print("Traning complete.")
+    print("Training complete.")

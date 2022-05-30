@@ -616,5 +616,35 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Authorize]
+        [HttpPost("Model/PrekiniTrening")]
+        public IActionResult ModelPrekiniTrening(int idEksperimenta, int idModela)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                {
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                }
+                else
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+
+                eksperiment.Dismiss(idModela);
+
+                return Ok("Trening prekinut.");
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }
