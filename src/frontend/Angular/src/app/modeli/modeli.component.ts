@@ -27,6 +27,7 @@ export class ModeliComponent implements OnInit {
   json1: any;
   jsonStatistika1: any;
   jsonStatistika: any;
+  jsonStatistikaR: any[] = [];
   modeli : any[] = [];
   id: any;
   trenId: any;
@@ -236,22 +237,22 @@ export class ModeliComponent implements OnInit {
           this.type=0;
           console.log(this.type);
           (<HTMLDivElement>document.getElementById("statistikaK")).style.display="none";
-          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="";
+          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="block";
           // (<HTMLDivElement>document.getElementById("statistikaK")).style.visibility="hidden";
           // (<HTMLDivElement>document.getElementById("statistikaR")).style.visibility="visible";
 
-          (<HTMLDivElement>document.getElementById("ar2Data")).innerHTML=this.jsonStatistika['adjustedR2'];
-          (<HTMLDivElement>document.getElementById("maeData")).innerHTML=this.jsonStatistika['mae'];
-          (<HTMLDivElement>document.getElementById("mseData")).innerHTML=this.jsonStatistika['mse'];
-          (<HTMLDivElement>document.getElementById("r2Data")).innerHTML=this.jsonStatistika['r2'];
-          (<HTMLDivElement>document.getElementById("rseData")).innerHTML=this.jsonStatistika['rse'];
+          // (<HTMLDivElement>document.getElementById("ar2Data")).innerHTML=this.jsonStatistika['adjustedR2'];
+          // (<HTMLDivElement>document.getElementById("maeData")).innerHTML=this.jsonStatistika['mae'];
+          // (<HTMLDivElement>document.getElementById("mseData")).innerHTML=this.jsonStatistika['mse'];
+          // (<HTMLDivElement>document.getElementById("r2Data")).innerHTML=this.jsonStatistika['r2'];
+          // (<HTMLDivElement>document.getElementById("rseData")).innerHTML=this.jsonStatistika['rse'];
         }
         else if((<HTMLDivElement>document.getElementById("ann")).innerHTML=="Classification")
         {
           this.type=1;
           console.log(this.type);
-          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="none";
-          (<HTMLDivElement>document.getElementById("statistikaK")).style.display="";
+          // (<HTMLDivElement>document.getElementById("statistikaR")).style.display="none";
+          (<HTMLDivElement>document.getElementById("statistikaK")).style.display="block";
           // (<HTMLDivElement>document.getElementById("statistikaR")).style.visibility="hidden";
           // (<HTMLDivElement>document.getElementById("statistikaK")).style.visibility="visible";
 
@@ -405,11 +406,10 @@ export class ModeliComponent implements OnInit {
     this.http.get(url+"/api/Statistics/Model?id=" + id).subscribe(
       res => {
         this.jsonStatistika1=res;
-        console.log(this.jsonStatistika);
-        if(this.jsonStatistika1.length==1)
+        if(this.jsonStatistika1.length>=1)
         {
-          console.log("A");
-           this.jsonStatistika=this.jsonStatistika1[0];
+           this.jsonStatistikaR=this.jsonStatistika1;
+           console.log(this.jsonStatistikaR);
         }
         else
            this.jsonStatistika=this.jsonStatistika1;

@@ -66,18 +66,25 @@
             <div id="eph"></div>
             <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
         </div>
-        <div id="statistikaR">
+        <div id="statistikaR" *ngIf="type==0">
           <div id="st">Statistic</div>
-          <div id="nazivK">MAE(Mean absolute error)</div>
-          <div id="maeData"></div>
-          <div id="nazivK">MSE(Mean squared error)</div>
-          <div id="mseData"></div>
-          <div id="nazivK">RMSE(Root mean squared error)</div>
-          <div id="rseData"></div>
-          <div id="nazivK">R2(R-squared)</div>
-          <div id="r2Data"></div>
-          <div id="nazivK">AdjustedR2</div>
-          <div id="ar2Data"></div>
+          <div id="skrol1">
+            <div *ngFor="let j of jsonStatistikaR; let i=index">
+              <div id="nazivK">Output column name</div>
+              <div id="nameData">{{j.kolona}}</div>
+              <div id="nazivK">MAE(Mean absolute error)</div>
+              <div id="maeData">{{j.mae}}</div>
+              <div id="nazivK">MSE(Mean squared error)</div>
+              <div id="mseData">{{j.mse}}</div>
+              <div id="nazivK">RMSE(Root mean squared error)</div>
+              <div id="rseData">{{j.rse}}</div>
+              <div id="nazivK">R2(R-squared)</div>
+              <div id="r2Data">{{j.r2}}</div>
+              <div id="nazivK">AdjustedR2</div>
+              <div id="ar2Data">{{j.adjustedR2}}</div>
+            </div>
+          </div>
+          <button id="dugmeR" (click)="nastaviTreniranje()">Continue training</button>
         </div>
         <div id="statistikaK">
           <div id="st">Statistic</div>
