@@ -813,30 +813,32 @@ export class ModelComponent implements OnInit {
 
     let snap = sessionStorage.getItem('idSnapshota');
     let idsnap = sessionStorage.getItem('idS');
-    //console.log(snap);
-    //console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
-      if(data == 0)
+    console.log(snap);
+    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+    if(data == 0)
+    {
+       this.imeS("Default snapshot");
+       this.selectSnapshotM(data);
+    }
+    else
+    {
+      for(let i=0; i<this.snapshots.length; i++)
       {
-        this.imeS("Default snapshot");
-        this.selectSnapshotM(data);
-      }
-      else
-      {
-        for(let i=0; i<this.snapshots.length; i++)
+        if(this.snapshots[i].id == data)
         {
-          if(this.snapshots[i].id == data)
-          {
-            if(this.imeS(this.snapshots[i].ime))
+          if(this.imeS(this.snapshots[i].ime))
+           {
+            if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML === snap)
             {
-              if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML === snap)
-              {
-                this.selectSnapshotM(data);
-              }
+              console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+              console.log(data);
+              this.selectSnapshotM(data);
             }
-            return;
           }
+            return;
         }
       }
+    }
   }
 
   ucitajNazivModela(id : any){
@@ -855,7 +857,7 @@ export class ModelComponent implements OnInit {
 
   funkcija(e: any){
 
-    this.flagP = true;
+   // this.flagP = true;
     if (e.type === 'None'){
       
       for(let i=0; i<this.nizNedozvoljenih.length;i++)
@@ -1967,8 +1969,6 @@ export class ModelComponent implements OnInit {
                     }
                   }
                   // this.PosaljiSnapshot2.emit(id);
-                  if(this.flagP == false)
-                  {
                   var brojac = 0;
                   for(let i=0; i<this.kolone2.length-1; i++)
                   {
@@ -1990,7 +1990,7 @@ export class ModelComponent implements OnInit {
                     this.brojU = this.ulazneKolone.length;
                     this.brojI = 1;
                   }
-                  }
+                  
                   this.buttonDisable = false;
                   this.hiddLay = [3,3,3,3,3];
                   this.nizCvorova = [3,3,3,3,3];
