@@ -815,8 +815,6 @@ export class ModelComponent implements OnInit {
     let idsnap = sessionStorage.getItem('idS');
     //console.log(snap);
     //console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
-    if( (<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML != snap)
-    {
       if(data == 0)
       {
         this.imeS("Default snapshot");
@@ -839,7 +837,6 @@ export class ModelComponent implements OnInit {
           }
         }
       }
-    }
   }
 
   ucitajNazivModela(id : any){
@@ -1880,8 +1877,11 @@ export class ModelComponent implements OnInit {
                     this.izlazneKolone[0] = this.kolone2[i].value;
                   }
                 }
-                this.brojU = this.ulazneKolone.length;
-                this.brojI = 1;
+                if(this.brojU == 0 || this.brojI == 0)
+                {
+                  this.brojU = this.ulazneKolone.length;
+                  this.brojI = 1;
+                }
                 console.log(this.brojU);
                 this.buttonDisable = false;
                 this.hiddLay = [3,3,3,3,3];
@@ -1985,8 +1985,11 @@ export class ModelComponent implements OnInit {
                       this.izlazneKolone[0] = this.kolone2[i].value;
                     }
                   }
-                  this.brojU = this.ulazneKolone.length;
-                  this.brojI = 1;
+                  if(this.brojU == 0 || this.brojI == 0)
+                  {
+                    this.brojU = this.ulazneKolone.length;
+                    this.brojI = 1;
+                  }
                   }
                   this.buttonDisable = false;
                   this.hiddLay = [3,3,3,3,3];

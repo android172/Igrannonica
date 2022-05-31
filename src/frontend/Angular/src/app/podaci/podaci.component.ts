@@ -2735,6 +2735,7 @@ sacuvajKaoNovu(ime:string){
         // this.ucitajSnapshotove();
         this.PosaljiPoruku.emit();
         this.ucitajPodatkeSnapshota(Number(this.idSnapshotaOverride));
+        this.PosaljiSnapshot.emit(Number(this.idSnapshotaOverride));
         (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapshot
       }
     );
