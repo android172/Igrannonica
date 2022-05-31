@@ -37,7 +37,8 @@ namespace dotNet.Controllers
                 if (eksperimenti.Count > 0)
                     return Ok(eksperimenti);
                 
-                return BadRequest(ErrorMessages.NoExperiments);
+                //return BadRequest(ErrorMessages.NoExperiments);
+                return Ok(0);
             }
             catch
             {
@@ -84,6 +85,30 @@ namespace dotNet.Controllers
                     return Ok(id);
                 }
                 return StatusCode(500);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [Authorize]
+        [HttpPost("Eksperiment/{ime}")]
+        public IActionResult ProveriNazivEksperimenta(string ime)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
+                {
+                    return Ok(1); // ako vec postoji
+                }
+                else
+                {
+                    return Ok(0);
+                }
             }
             catch
             {
