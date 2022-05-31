@@ -354,6 +354,7 @@ export class NoviEksperimentComponent implements OnInit {
   otvoriPolje()
   {
     (<HTMLDivElement>document.getElementById("noviEksperiment")).classList.toggle("otvori");
+    (<HTMLDivElement>document.getElementById("noviEksp")).classList.toggle("openn");
   }
   
 

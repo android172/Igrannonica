@@ -129,14 +129,15 @@ p
 #divEksperimenti{
 
   position: relative;
-  width: 800px;
-  height: 400px;
+  width: max-content;
+  height: 422px;
   background: rgba(32, 35, 66, 0.79);
   border-radius: 3px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   margin: auto;
-  padding-top: 40px;
+  padding-top: 1px;
+  padding-left: 18px;
 }
 
 #skrol{
@@ -370,7 +371,7 @@ input#exampleFormControlFile1{
   width: 25px;
   border:2px solid rgb(227, 140, 154);
   height: 25px;
-  cursor: pointer;
+  cursor: default;
   box-shadow: 0 0 2px 1px rgb(227, 140, 154);
   transition: box-shadow 0.2s;
   color: rgb(227, 140, 154);
@@ -431,20 +432,30 @@ input#exampleFormControlFile1{
 #noviEksperiment{
   position: relative;
   /* width: 400px; */
-  height: 400px;
-  background: rgba(32, 35, 66, 0.79);
-  border-radius: 3px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* height: 400px; */
+  /* background: rgba(32, 35, 66, 0.79); */
+  /* border-radius: 3px; */
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   box-sizing: border-box;
   margin: auto;
-  padding-top: 40px;
+  /* padding-top: 40px; */
 
-  /* transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);  */
-  width:400px; 
-  /* visibility: collapse; */
+   transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);  
+  width:0px; 
+  visibility: collapse;
 }
 
-/* #noviEksperiment.otvori{
+#noviEksperiment.otvori{
   visibility: visible!important;
-  width: 800px;
-} */
+  width: 384px;
+}
+#noviEksp{
+     transition: width 0.3s ease-in;
+    width:0px; 
+    visibility: collapse;
+}
+
+#noviEksp.openn{
+    visibility: visible!important;
+    width: max-content;
+}
