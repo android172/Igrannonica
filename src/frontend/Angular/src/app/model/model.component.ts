@@ -55,6 +55,7 @@ export class ModelComponent implements OnInit {
   private absoluteWeightMean: number[] = [];
 
   public inputsLocked: boolean = false;
+  public saveModelLocked : boolean = false;
   
   public kolone: any[] = [];
   message: any;
@@ -824,14 +825,16 @@ export class ModelComponent implements OnInit {
       this.brojI++;
       if(this.ulazneKolone.length == 0)
       {
-        if(this.buttonDisable == false)
+        if(this.buttonDisable == false && this.saveModelLocked == false)
         {
           this.buttonDisable = true;
+          this.saveModelLocked = true;
         }
       }
       else
       {
         this.buttonDisable = false;
+        this.saveModelLocked = false;
       }
     }
     else if (e.type === 'Output'){
@@ -848,14 +851,16 @@ export class ModelComponent implements OnInit {
       this.brojU++;
       if(this.izlazneKolone.length == 0)
       {
-        if(this.buttonDisable == false)
+        if(this.buttonDisable == false && this.saveModelLocked == false)
         {
           this.buttonDisable = true;
+          this.saveModelLocked = true;
         }
       }
       else
       {
         this.buttonDisable = false;
+        this.saveModelLocked = false;
       }
     }
     else
@@ -871,22 +876,25 @@ export class ModelComponent implements OnInit {
         }
         if(this.ulazneKolone.length == 0 || this.izlazneKolone.length == 0)
         {
-          if(this.buttonDisable == false)
+          if(this.buttonDisable == false && this.saveModelLocked == false)
         {
           this.buttonDisable = true;
+          this.saveModelLocked = true;
         }
           //console.log("TRUE-------------------------------");
         }
         else if(this.ulazneKolone.length == 0 && this.izlazneKolone.length == 0)
         {
-          if(this.buttonDisable == false)
+          if(this.buttonDisable == false && this.saveModelLocked == false)
           {
             this.buttonDisable = true;
+            this.saveModelLocked = true;
           }
         }
         else
         {
           this.buttonDisable = false;
+          this.saveModelLocked = false;
         }
     }
     this.recreateNetwork();
@@ -1235,6 +1243,7 @@ export class ModelComponent implements OnInit {
   disableInputs() {
     this.inputsLocked = true;
     this.buttonDisable = true;
+    this.saveModelLocked = true;
   }
 
   enableInputs() {
@@ -1251,6 +1260,7 @@ export class ModelComponent implements OnInit {
 
     this.modelText = this.modelStateTexts[0];
     this.buttonDisable = false;
+    this.saveModelLocked = false;
     this.buttonPlay = true;
     this.buttonContinue = false;
     this.buttonPause = false;
@@ -1836,6 +1846,7 @@ export class ModelComponent implements OnInit {
                 }
                 console.log(this.brojU);
                 this.buttonDisable = false;
+                this.saveModelLocked = false;
                 this.hiddLay = [3,3,3,3,3];
                 this.nizCvorova = [3,3,3,3,3];
                 this.brHL = 5;

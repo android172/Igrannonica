@@ -18,7 +18,7 @@
                 </div>
                 <div class="d-flex">
                     <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="enableInputs()">Unlock model</button>
-                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
+                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje" [class.input-disabled]="saveModelLocked == true">Save model</button>
                     <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                     <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
                 </div>
