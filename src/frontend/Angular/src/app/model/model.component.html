@@ -28,13 +28,13 @@
         <div class="row d-flex justify-content-between" style="margin-bottom: -1%;">
             <div class="col-md-4">
                 <div id="divUI">
-                    <p>Select I/O Columns</p>
                     <div id="ulaziIzlaz">
                         <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
                             <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                             <span class="checkmark"></span>
                         </label> -->
                         <div [class.input-disabled]="inputsLocked == true">
+                        <h3>Select I/O Columns</h3>
                         <div class="pb-3" *ngFor="let e of kolone2; let i = index" style="color: #fff; font-size: 15px;">
                             <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
                             <button class="kolona column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
@@ -52,13 +52,10 @@
                 </div>
             </div>
             <div class="col-md-8" id="div21">
-                <div id="poruke">
-                    <div id="poruka1"></div>
-                    <div id="poruka2"></div>
-                </div>
 
                 <div class="container-fluid" id="box">
                     <div [class.input-disabled]="inputsLocked == true">
+                    <h3>Network Settings</h3>
                     <div class="row">
                         <div class="col-md-12 d-flex" id="podesavanja">
                                 <div class="col-md-3">
