@@ -546,6 +546,7 @@ namespace dotNet.Controllers
                     eksperiment.LoadOutputs(kolone[1].ToArray());
 
                     eksperiment.ApplySettings(podesavanja);
+                    eksperiment.CreateNewNetwork();
 
                     // Save model weights
                     eksperiment.SaveModel(model.Name, modelIdOld);

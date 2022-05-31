@@ -160,7 +160,7 @@ export class ModeliComponent implements OnInit {
         res=>{
           this.json = res;
           this.modeli = Object.values(this.json);
-          console.log(this.modeli);
+          // console.log(this.modeli);
           this.formatirajDatum();
           
           if (this.modeli.length > 0) {
@@ -171,7 +171,7 @@ export class ModeliComponent implements OnInit {
           }
         },
         error=>{
-          console.log(error.error);
+          console.error(error.error);
         }
     );
   }
@@ -219,7 +219,7 @@ export class ModeliComponent implements OnInit {
     this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
       res => {
         this.json1=res;
-        console.log(this.json1);
+        // console.log(this.json1);
         (<HTMLDivElement>document.getElementById("n")).innerHTML=this.json1['name'];
         (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.json1['opis'];
         (<HTMLDivElement>document.getElementById("ann")).innerHTML=this.json1['problemType'];
@@ -250,7 +250,7 @@ export class ModeliComponent implements OnInit {
         else if((<HTMLDivElement>document.getElementById("ann")).innerHTML=="Classification")
         {
           this.type=1;
-          console.log(this.type);
+          // console.log(this.type);
           // (<HTMLDivElement>document.getElementById("statistikaR")).style.display="none";
           (<HTMLDivElement>document.getElementById("statistikaK")).style.display="block";
           // (<HTMLDivElement>document.getElementById("statistikaR")).style.visibility="hidden";
@@ -360,7 +360,7 @@ export class ModeliComponent implements OnInit {
     var p=0;
     var t;
     this.mtrain = this.jsonStatistika['confusionMatrix'];
-    console.log(this.mtrain);
+    // console.log(this.mtrain);
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)
        {

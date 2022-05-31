@@ -618,10 +618,9 @@ export class ModelComponent implements OnInit {
           this.snapshot    = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns   = this.modelData.IOColumns;
-          this.weights     = this.modelData.Weights;
 
-          console.log(this.weights);
-          
+          this.weights = JSON.parse(this.modelData.Weights);
+
           this.nizGeneral = Object.values(this.general);
 
           // Model name
@@ -705,6 +704,9 @@ export class ModelComponent implements OnInit {
               this.nizCvorova = Object.assign([], this.hiddLay);
               this.brHL       = this.nizCvorova.length;
 
+              console.log("DEBUG");
+              console.log(this.hiddLay);
+
               // Activation function
               this.aktFunk = this.nizAnnSettings[8];
 
@@ -762,33 +764,32 @@ export class ModelComponent implements OnInit {
     if(this.inputsLocked == false)
     {
       let snap = sessionStorage.getItem('idSnapshota');
-    let idsnap = sessionStorage.getItem('idS');
-    console.log(snap);
-    console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
-    if(data == 0)
-    {
-       this.imeS("Default snapshot");
-       this.selectSnapshot(data, "Default snapshot");
-    }
-    else
-    {
-      for(let i=0; i<this.snapshots.length; i++)
+      let idsnap = sessionStorage.getItem('idS');
+    
+      if(data == 0)
       {
-        if(this.snapshots[i].id == data)
+        this.imeS("Default snapshot");
+        this.selectSnapshot(data, "Default snapshot");
+      }
+      else
+      {
+        for(let i=0; i<this.snapshots.length; i++)
         {
-          if(this.imeS(this.snapshots[i].ime))
-           {
-            if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML === snap)
+          if(this.snapshots[i].id == data)
+          {
+            if(this.imeS(this.snapshots[i].ime))
             {
-              console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
-              console.log(data);
-              this.selectSnapshot(data, this.snapshots[i].ime);
+              if((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML === snap)
+              {
+                // console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
+                // console.log(data);
+                this.selectSnapshot(data, this.snapshots[i].ime);
+              }
             }
+              return;
           }
-            return;
         }
       }
-    }
     }
   }
 
@@ -1347,6 +1348,8 @@ export class ModelComponent implements OnInit {
   }
 
   drawCanvas() {
+    console.log(this.weights);
+
     var canvas = <HTMLCanvasElement>document.getElementById("model-canvas");
     const devicePixelRatio = window.devicePixelRatio || 1;
     const width  = 1920 * devicePixelRatio * 0.7;
@@ -1762,7 +1765,7 @@ export class ModelComponent implements OnInit {
            this.jsonPom =  JSON.parse(response.data);
            var br = 0;
           this.pomocniNiz = Object.values(this.jsonPom[0]);;
-          console.log(this.pomocniNiz);
+          // console.log(this.pomocniNiz);
           for(let i=0; i<this.pomocniNiz.length; i++)
           {
             if (typeof this.pomocniNiz[i] === 'string')
@@ -1834,7 +1837,7 @@ export class ModelComponent implements OnInit {
                   this.brojU = this.ulazneKolone.length;
                   this.brojI = 1;
                 }
-                console.log(this.brojU);
+                // console.log(this.brojU);
                 this.buttonDisable = false;
                 this.hiddLay = [3,3,3,3,3];
                 this.nizCvorova = [3,3,3,3,3];
@@ -1852,7 +1855,7 @@ export class ModelComponent implements OnInit {
    );
     
    this.selectedSS=id;
-   console.log(this.selectedSS);
+  //  console.log(this.selectedSS);
  }
 
 
