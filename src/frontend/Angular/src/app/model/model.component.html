@@ -2,7 +2,7 @@
     <div id="body1">
 
         <div class="row">
-            <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
+            <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center dugmici">
                 <div id="outliers-box">
                     <div class="dropdown" [class.input-disabled]="inputsLocked == true">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
@@ -17,8 +17,8 @@
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
                     <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="enableInputs()">Unlock model</button>
+                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
                     <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                     <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
                 </div>
@@ -28,13 +28,13 @@
         <div class="row d-flex justify-content-between" style="margin-bottom: -1%;">
             <div class="col-md-4">
                 <div id="divUI">
-                    <p>Select I/O Columns</p>
                     <div id="ulaziIzlaz">
                         <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
                             <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                             <span class="checkmark"></span>
                         </label> -->
                         <div [class.input-disabled]="inputsLocked == true">
+                        <h3>Select I/O Columns</h3>
                         <div class="pb-3" *ngFor="let e of kolone2; let i = index" style="color: #fff; font-size: 15px;">
                             <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
                             <button class="kolona column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
@@ -52,13 +52,10 @@
                 </div>
             </div>
             <div class="col-md-8" id="div21">
-                <div id="poruke">
-                    <div id="poruka1"></div>
-                    <div id="poruka2"></div>
-                </div>
 
                 <div class="container-fluid" id="box">
                     <div [class.input-disabled]="inputsLocked == true">
+                    <h3>Network Settings</h3>
                     <div class="row">
                         <div class="col-md-12 d-flex" id="podesavanja">
                                 <div class="col-md-3">
@@ -272,30 +269,35 @@
                                     <th>Training</th>
                                     <th *ngIf="imaTestni==true">Test</th>
                                     </tr>
+                                    
                                     <tr>
-                                    <td>AdjustedR2</td>
-                                    <td id="actest">{{Adj[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
+                                        <td>MAE</td>
+                                        <td id="batest">{{MAE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
                                     </tr>
-                                    <tr>
-                                    <td>MAE</td>
-                                    <td id="batest">{{MAE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
-                                    </tr>
+
                                     <tr>
                                         <td>MSE</td>
                                         <td id="celtest">{{MSE[ind]}}</td>
                                         <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
                                     </tr>
+
+                                    <tr>
+                                        <td>RSE</td>
+                                        <td id="htest">{{RSE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                    </tr>
+
                                     <tr>
                                         <td>R2</td>
                                         <td id="f1test">{{R2[ind]}}</td>
                                         <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
                                     </tr>
+
                                     <tr>
-                                        <td>RSE</td>
-                                        <td id="htest">{{RSE[ind]}}</td>
-                                        <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                        <td>AdjustedR2</td>
+                                        <td id="actest">{{Adj[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
                                     </tr>
                                 </table>
                             </div>
