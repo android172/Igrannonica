@@ -1643,6 +1643,8 @@ export class ModelComponent implements OnInit {
     //this.submit();
   }
 
+  private oldModelId: number = 0;
+
   kreirajModelCuvanje()
   {
     this.prikaziPredikciju = false;
@@ -1708,8 +1710,8 @@ export class ModelComponent implements OnInit {
     
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta+"&model="+nazivModela, null, {responseType: 'text'}).subscribe(
       res => {
-        var oldModelId = this.idModela;
-        this.idModela  = Number.parseInt(res);
+        this.oldModelId = this.idModela;
+        this.idModela = Number.parseInt(res);
         
         if(res == "-1") //kreira novi model
         {
@@ -1717,7 +1719,7 @@ export class ModelComponent implements OnInit {
             res => {
               this.idModela = Number.parseInt(res);;
               this.izadjiIzObaModala();
-              this.saveModel(oldModelId, this.idModela);
+              this.saveModel(this.oldModelId, this.idModela);
             },
             error =>{
               console.log(error.error);
@@ -1738,7 +1740,20 @@ export class ModelComponent implements OnInit {
     );
   }
 
+  overrideModel()
+  { console.log(this.idModela);
+    this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + this.idModela, this.jsonModel, {responseType: 'text'}).subscribe(
+        res=>{
+          this.saveModel(this.oldModelId, this.idModela);
+        },err=>{
+          this.onError("Model was not overrided."); 
+        }
+      ); 
+  }
+
   saveModel(oldModelId: number, newModelId: number) {
+    if (this.inputsLocked == false)
+      oldModelId = -1
     this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully created.");
@@ -1749,17 +1764,6 @@ export class ModelComponent implements OnInit {
         this.onError(error.error);
       }
     )
-  }
-
-  overrideModel()
-  { console.log(this.idModela);
-    this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + this.idModela, this.jsonModel, {responseType: 'text'}).subscribe(
-        res=>{
-          this.saveModel(this.idModela, this.idModela);
-        },err=>{
-          this.onError("Model was not overrided."); 
-        }
-      ); 
   }
 
   izadjiIzObaModala()
