@@ -272,30 +272,35 @@
                                     <th>Training</th>
                                     <th *ngIf="imaTestni==true">Test</th>
                                     </tr>
+                                    
                                     <tr>
-                                    <td>AdjustedR2</td>
-                                    <td id="actest">{{Adj[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
+                                        <td>MAE</td>
+                                        <td id="batest">{{MAE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
                                     </tr>
-                                    <tr>
-                                    <td>MAE</td>
-                                    <td id="batest">{{MAE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
-                                    </tr>
+
                                     <tr>
                                         <td>MSE</td>
                                         <td id="celtest">{{MSE[ind]}}</td>
                                         <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
                                     </tr>
+
+                                    <tr>
+                                        <td>RSE</td>
+                                        <td id="htest">{{RSE[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                    </tr>
+
                                     <tr>
                                         <td>R2</td>
                                         <td id="f1test">{{R2[ind]}}</td>
                                         <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
                                     </tr>
+
                                     <tr>
-                                        <td>RSE</td>
-                                        <td id="htest">{{RSE[ind]}}</td>
-                                        <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                        <td>AdjustedR2</td>
+                                        <td id="actest">{{Adj[ind]}}</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
                                     </tr>
                                 </table>
                             </div>
