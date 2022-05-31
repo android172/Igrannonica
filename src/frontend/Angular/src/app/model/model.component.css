@@ -76,10 +76,11 @@ p
 
 }
 
-#restart-model
+#sacuvaj
 {
-  margin-right: 5%;
+  margin-left: 5%;
 }
+
 
 #sacuvaj:hover, #restart-model:hover
 {
@@ -1911,4 +1912,9 @@ input:-webkit-autofill:active {
     height: 72px;
     opacity: 0;
   }
+}
+
+.dugmici
+{
+  padding-right: 23px;
 }
