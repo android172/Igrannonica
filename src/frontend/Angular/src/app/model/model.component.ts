@@ -646,7 +646,6 @@ export class ModelComponent implements OnInit {
             }
           }
           this.selectedSS=this.snapshot;
-          this.PosaljiSnapshot2.emit(this.snapshot);
 
           this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
             (response: any)=>{
