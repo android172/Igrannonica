@@ -108,6 +108,7 @@ class MLClientInstance(Thread):
             'LoadModel' : load_model,
             'LoadEpoch' : load_epoch,
             'MergeMIds' : merge_models,
+            'GetWeight' : get_weights,
             
             # Network calls
             'ComputeMetrics'    : compute_metrics,

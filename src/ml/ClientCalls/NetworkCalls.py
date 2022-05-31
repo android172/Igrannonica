@@ -173,12 +173,11 @@ def start(self):
             self.report_error("ERROR :: Output column is of wrong format.")
             return
     
+    self.active_models[id] = ann
+    ann.isRunning.set()
+    
     # Train
     Thread(target= lambda : train(self.token, id, ann)).start()
-    
-    running_network = ann
-    self.active_models = {id : running_network}
-    running_network.isRunning.set()
     
     self.connection.send("OK")
     print("Training commences.")

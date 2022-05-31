@@ -80,6 +80,8 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
+  public currentEpoch: number = 0;
+
   public momentum: boolean=false;
   public pomocna: boolean = false;
   public prikazi: boolean = false;
@@ -256,6 +258,8 @@ export class ModelComponent implements OnInit {
         this.absoluteWeightMean.push(count / sum)
       }
       this.drawCanvas();
+
+      this.currentEpoch += 1;
     });
   }
   sendMessage():void{
@@ -600,7 +604,6 @@ export class ModelComponent implements OnInit {
 
   ucitajModel(data2: number){
 
-    // console.table(data2);
     const idRead = sessionStorage.getItem('idModela')
 
     this.idModela = 0
@@ -612,31 +615,31 @@ export class ModelComponent implements OnInit {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
           this.modelData =  JSON.parse(res);
-           //console.log(res);
-          this.snapshot = this.modelData.Snapshot;
+          
+          this.general     = this.modelData.General;
+          this.snapshot    = this.modelData.Snapshot;
           this.annSettings = this.modelData.NetworkSettings;
-          this.ioColumns = this.modelData.IOColumns;
-          //console.log(this.modelData.IOColumns);
-          this.general = this.modelData.General;
+          this.ioColumns   = this.modelData.IOColumns;
+          this.weights     = this.modelData.Weights;
+
+          console.log(this.weights);
+          
           this.nizGeneral = Object.values(this.general);
+
+          // Model name
           (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
+          // Model description
           (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
-          //console.log(this.nizGeneral[1]);
-          //console.log(this.snapshot);
-          //console.log(this.annSettings);
+          
           /*  SNAPSHOT  */
-          if(this.snapshot == 0)
-          {
+          if(this.snapshot == 0) {
             this.imeS("Default snapshot");
             sessionStorage.setItem('idSnapshota',"Default snapshot");
             sessionStorage.setItem('idS',"0");
           }
-          else
-          {
-            for(let i = 0; i < this.snapshots.length; i++)
-            {
-              if(this.snapshot == this.snapshots[i].id)
-              {
+          else {
+            for(let i = 0; i < this.snapshots.length; i++) {
+              if(this.snapshot == this.snapshots[i].id) {
                 this.imeS(this.snapshots[i].ime);
                 sessionStorage.setItem('idSnapshota', this.snapshots[i].ime);
                 sessionStorage.setItem('idS', this.snapshot + "");
@@ -644,165 +647,113 @@ export class ModelComponent implements OnInit {
               }
             }
           }
+          this.selectedSS=this.snapshot;
+          this.PosaljiSnapshot2.emit(this.snapshot);
 
           this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
             (response: any)=>{
-                this.kolone = Object.assign([],response);   //imena kolona
-                this.kolone2 = [];
-                this.pomocniNizKolone = [];
-                this.ulazneKolone = [];
-                this.izlazneKolone = [];
-                let nizUlazi = this.ioColumns[0];
-                let nizIzlazi = this.ioColumns[1];
-                /* ULAZNE/IZLAZNE KOLONE */
-                for(let j = 0; j < nizUlazi.length; j++)
-                {
-                  for(let i = 0; i < this.kolone.length; i++)
-                  {
-                    if(nizUlazi[j] == i)
-                    {
-                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Input"});
-                    }
-                  }
+              this.kolone  = Object.assign([],response);   //imena kolona
+              this.kolone2 = [];
+              this.ulazneKolone  = [];
+              this.izlazneKolone = [];
+              let nizUlazi  = this.ioColumns[0];
+              let nizIzlazi = this.ioColumns[1];
+
+              /* ULAZNE/IZLAZNE KOLONE */
+              for (let i = 0; i < this.kolone.length; i++) {
+                
+                var c_type = "None";
+                if (nizUlazi.includes(i)) {
+                  c_type = "Input";
+                  this.ulazneKolone.push(this.kolone[i]);
                 }
-                for(let j = 0; j < nizIzlazi.length; j++)
-                {
-                  for(let i = 0; i < this.kolone.length; i++)
-                  {
-                    if(nizIzlazi[j] == i)
-                    {
-                      this.pomocniNizKolone.push({value : this.kolone[i], type : "Output"});
-                    }
-                  }
-                }
-                for(let i = 0; i < this.kolone.length; i++)
-                {
-                  let ind = 0;
-                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
-                  {
-                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
-                      ind=1;
-                  }
-                  if(ind == 0)
-                  {
-                    this.pomocniNizKolone.push({value : this.kolone[i], type : "None"});
-                  }
-                }
-                for(let i = 0; i < this.kolone.length; i++)
-                {
-                  for(let j = 0; j < this.pomocniNizKolone.length; j++)
-                  {
-                    if(this.kolone[i] === this.pomocniNizKolone[j].value)
-                    {
-                      this.kolone2.push(this.pomocniNizKolone[j]);
-                    }
-                  }
+                else if (nizIzlazi.includes(i)) {
+                  c_type = "Output";
+                  this.izlazneKolone.push(this.kolone[i]);
                 }
 
-                for(let i=0; i<this.kolone.length-1; i++)
-                {
-                  this.ulazneKolone[i] = this.kolone[i];
-                }
-                this.izlazneKolone[0] = this.kolone[this.kolone.length-1];
-                this.brojU = this.ulazneKolone.length;
-                this.brojI = 1;
-                //console.log(this.brojU);
-                
-                /* ANN SETTINGS */
-                
-                this.nizAnnSettings = Object.values(this.annSettings);
-                //console.log(this.nizAnnSettings);
-                (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
-                (<HTMLInputElement>document.getElementById("lr")).value = this.nizAnnSettings[1]+"";
-                (<HTMLInputElement>document.getElementById("bs")).value = this.nizAnnSettings[2]+"";
-                (<HTMLInputElement>document.getElementById("noe")).value = this.nizAnnSettings[3]+"";
-                // current epoch - 4
-                
-                // Is model trained (locked)
-                if (this.nizAnnSettings[4] > 0) {
-                  this.disableInputs();
-                  this.recreateNetwork(); // TEMP
-                }
-                else
-                  this.enableInputs();
+                this.kolone2.push({value : this.kolone[i], type : c_type});
+              }
+              
+              /* ANN SETTINGS */
+              this.nizAnnSettings = Object.values(this.annSettings);
+              
+              // Problem type
+              (<HTMLSelectElement>document.getElementById("dd4")).value = this.nizAnnSettings[0]+"";
+              // Learning rate
+              (<HTMLInputElement>document.getElementById("lr")).value   = this.nizAnnSettings[1]+"";
+              // Batch size
+              (<HTMLInputElement>document.getElementById("bs")).value   = this.nizAnnSettings[2]+"";
+              // Number of epochs
+              (<HTMLInputElement>document.getElementById("noe")).value  = this.nizAnnSettings[3]+"";
+              
+              // Current epoch
+              this.currentEpoch = this.nizAnnSettings[4];
 
-                this.brojU = this.nizAnnSettings[5];
-                this.brojI = this.nizAnnSettings[6];
-                this.hiddLay = [];
-                this.aktFunk = [];
-                this.nizCvorova = [];
-                this.brHL = 0;
-                this.hiddLay =  this.nizAnnSettings[7];
-                this.nizCvorova = Object.assign([], this.hiddLay);
-                this.brHL = this.nizCvorova.length;
-                //console.log("CVOROVI: " + this.nizCvorova);
-                //console.log("BR HL : " + this.brHL);
-                
-                this.aktFunk = this.nizAnnSettings[8];
-                (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9]+"";
-                (<HTMLInputElement>document.getElementById("rr")).value = this.nizAnnSettings[10]+"";
-                if(this.nizAnnSettings[0] == 1)
-                {
-                  this.klasifikacija = true;
-                  this.tip = 1;
-                  this.selectedLF = this.nizAnnSettings[11];
-                  // console.log(this.selectedLF);
-                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
-                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
-                }
-                else
-                {
-                  this.klasifikacija = false;
-                  this.tip = 0;
-                  this.selectedLF = this.nizAnnSettings[11];
-                  // console.log(this.selectedLF);
-                  //(<HTMLSelectElement>document.getElementById("dd2")).selectedIndex = this.selectedLF;
-                  // (<HTMLSelectElement>document.getElementById("dd2")).value = this.selectedLF+"";
-                }
-                (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
-                if(this.nizAnnSettings[13].length != 0)
-                {
-                  (<HTMLInputElement>document.getElementById("momentum")).value = this.nizAnnSettings[13]+"";
-                }
-                if(this.nizAnnSettings[14] == 0){
-                  this.flag = false;
-                  (<HTMLInputElement>document.getElementById("toggle")).checked = false;
-                }
-                else{
-                  this.flag = true;
-                  (<HTMLInputElement>document.getElementById("toggle")).checked = true;
-                  (<HTMLInputElement>document.getElementById("crossV")).value == this.nizAnnSettings[14]+"";
-                }
-                // //console.log("ULAZNE KOLONE: " + this.ulazneKolone);
-                this.ulazneKolone = [];
-                this.izlazneKolone = [];
-                for(let i = 0; i < this.kolone.length; i++)
-                {
-                  for(let j = 0; j < nizUlazi.length; j++)
-                  {
-                    if(i == nizUlazi[j])
-                      this.ulazneKolone.push(this.kolone[i]);
-                  }
-                }
-                for(let i = 0; i < this.kolone.length; i++)
-                {
-                  for(let j = 0; j < nizIzlazi.length; j++)
-                  {
-                    if(i == nizIzlazi[j])
-                      this.izlazneKolone.push(this.kolone[i]);
-                  }
-                }
+              // Is model trained (locked)
+              if (this.currentEpoch > 0) {
+                this.disableInputs();
+                this.drawCanvas();
                 this.prikaziPredikciju = true;
-                this.PosaljiSnapshot2.emit(this.snapshot);
-              },error =>{
-              console.log(error.error);
+              }
+              else
+                this.enableInputs();
+
+              // Number of I/O
+              this.brojU = this.nizAnnSettings[5];
+              this.brojI = this.nizAnnSettings[6];
+
+              // Hidden layers
+              this.hiddLay    = this.nizAnnSettings[7];
+              this.nizCvorova = Object.assign([], this.hiddLay);
+              this.brHL       = this.nizCvorova.length;
+
+              // Activation function
+              this.aktFunk = this.nizAnnSettings[8];
+
+              // Regularization
+              (<HTMLSelectElement>document.getElementById("dd1")).value = this.nizAnnSettings[9] +"";
+              (<HTMLInputElement>document.getElementById("rr")).value   = this.nizAnnSettings[10]+"";
+
+              // Loss function
+              if(this.nizAnnSettings[0] == 1) {
+                this.klasifikacija = true;
+                this.tip = 1;
+                this.selectedLF = this.nizAnnSettings[11];
+              }
+              else {
+                this.klasifikacija = false;
+                this.tip = 0;
+                this.selectedLF = this.nizAnnSettings[11];
+              }
+
+              // Optimizer
+              (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
+
+              // Momentum
+              if(this.nizAnnSettings[13].length != 0)
+                (<HTMLInputElement>document.getElementById("momentum")).value = this.nizAnnSettings[13][0]+"";
+
+              // Cross validation
+              if(this.nizAnnSettings[14] == 0) {
+                this.flag = false;
+                (<HTMLInputElement>document.getElementById("toggle")).checked = false;
+              }
+              else {
+                this.flag = true;
+                (<HTMLInputElement>document.getElementById("toggle")).checked = true;
+                (<HTMLInputElement>document.getElementById("crossV")).value   = this.nizAnnSettings[14]+"";
+              }
+            },
+            error =>{
+              console.error(error.error);
+              this.onError(error.error);
             }
-            );
-            this.selectedSS=this.snapshot;
-            //console.log(this.selectedSS);
+          );
         },
         error=>{
-          console.log(error.error);
+          console.error(error.error);
+          this.onError(error.error);
         }
       )
     }
@@ -1243,7 +1194,7 @@ export class ModelComponent implements OnInit {
           "learningRate"        : Number((<HTMLInputElement>document.getElementById("lr")).value),
           "batchSize"           : Number((<HTMLInputElement>document.getElementById("bs")).value),
           "numberOfEpochs"      : Number((<HTMLInputElement>document.getElementById("noe")).value),
-          "currentEpoch"        : 0, // TODO
+          "currentEpoch"        : this.currentEpoch,
           "inputSize"           : inputs.length,
           "outputSize"          : outputs.length,
           "hiddenLayers"        : this.nizCvorova,
@@ -1689,7 +1640,7 @@ export class ModelComponent implements OnInit {
           "learningRate"        : Number((<HTMLInputElement>document.getElementById("lr")).value),
           "batchSize"           : Number((<HTMLInputElement>document.getElementById("bs")).value),
           "numberOfEpochs"      : Number((<HTMLInputElement>document.getElementById("noe")).value),
-          "currentEpoch"        : 0, // TODO
+          "currentEpoch"        : this.currentEpoch,
           "inputSize"           : inputs.length,
           "outputSize"          : outputs.length,
           "hiddenLayers"        : this.nizCvorova,

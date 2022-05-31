@@ -407,22 +407,56 @@ namespace dotNet.Controllers
         {
             try
             {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+
+                if (!Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                eksperiment = Experiment.eksperimenti[idEksperimenta];
+
                 var model = db.dbmodel.modelFull(idModela);
                 if (model == null) return BadRequest(ErrorMessages.ModelNotFound);
-                var snapshot = db.dbmodel.dajSnapshot(idModela);
-                if (snapshot == -1) return StatusCode(500);
+                var snapshotId = db.dbmodel.dajSnapshot(idModela);
+                if (snapshotId == -1) return StatusCode(500);
                 var settings = db.dbmodel.podesavanja(idModela);
                 if (settings == null) return StatusCode(500);
                 var kolone = db.dbmodel.Kolone(idModela);
 
+                // Select snapshot
+                if (snapshotId == 0)
+                    eksperiment.LoadDataset(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
+                else {
+                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(snapshotId);
+                    eksperiment.LoadDataset(snapshot.csv);
+                }
+
+                // I/O
+                eksperiment.LoadInputs(kolone[0].ToArray());
+                eksperiment.LoadOutputs(kolone[1].ToArray());
+
+                // Ann settings
+                eksperiment.ApplySettings(settings);
+
+                // Save as new model
+                eksperiment.CreateNewNetwork();
+
+                // Load weights
+                eksperiment.LoadModel(model.Name, idModela);
+                var weights = eksperiment.GetWeights();
+
                 var result = new Dictionary<string, object> {
                     { "General", model },
-                    { "Snapshot", snapshot },
+                    { "Snapshot", snapshotId },
                     { "NetworkSettings", settings },
-                    { "IOColumns", kolone }
+                    { "IOColumns", kolone },
+                    { "Weights", weights }
                 };
                 Console.WriteLine("Load-an model "+idModela);
                 return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(result));
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
             }
             catch
             {
@@ -489,91 +523,80 @@ namespace dotNet.Controllers
             {
                 MLExperiment eksperiment = Experiment.eksperimenti[ideksperimenta];
 
-                ANNSettings podesavanja = db.dbmodel.podesavanja(modelIdNew);
-                eksperiment.ApplySettings(podesavanja);
-
-                if (modelIdNew != modelIdOld && modelIdOld != -1)
-                    eksperiment.MergeModels(modelIdOld, modelIdNew);
-
                 Model model = db.dbmodel.model(modelIdNew);
-                eksperiment.SaveModel(model.Name, modelIdOld);
-                try {
-                    string metrika = eksperiment.ComputeMetrics(modelIdOld);
-                    JObject met = JObject.Parse(metrika);
-                    List<List<int>> kolone = db.dbmodel.Kolone(modelIdNew);
-                    JArray kol;
-                    int snapshotid = db.dbmodel.dajSnapshot(modelIdNew);
-                        if (snapshotid != 0) {
-                            kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(snapshotid).csv));
-                        }
-                        else
-                        {
-                            kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.uzmi_naziv_csv(ideksperimenta)));
-                        }
-                    if (podesavanja.ANNType == ProblemType.Regression)
-                    {
-                        //JArray kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(idmodela)).csv));
-                        int k = 0;
-                        foreach(JToken i  in met.GetValue("train").Values())
-                        {
-                            StatisticsRegression rg = i.ToObject<StatisticsRegression>();
-                            saveModelStatistics(modelIdNew, rg, kol[kolone[1][k]].ToString());
-                            //db.dbmodel.prepisiStatistiku(idmodela, rg, kol[kolone[1][k]].ToString());
-                            k++;
-                        }
-                        //StatisticsRegression rg = met.GetValue("train").ToObject<StatisticsRegression>();
-                        //saveModelStatistics(idmodela, rg);
-                        Console.WriteLine("Model sacuvan");
+                
+                ANNSettings podesavanja = db.dbmodel.podesavanja(modelIdNew);
+                List<List<int>>  kolone = db.dbmodel.Kolone(modelIdNew);
+                int          snapshotid = db.dbmodel.dajSnapshot(modelIdNew);
+
+                string snapshotName = "";
+                if (snapshotid != 0)
+                    snapshotName = db.dbeksperiment.dajSnapshot(snapshotid).csv;
+                else
+                    snapshotName = db.dbeksperiment.uzmi_naziv_csv(ideksperimenta);
+
+                JArray kol = JArray.Parse(eksperiment.GetColumns(snapshotName));
+
+                if (modelIdOld == -1) {
+                    // Select snapshot
+                    eksperiment.LoadDataset(snapshotName);
+
+                    // I/O
+                    eksperiment.LoadInputs(kolone[0].ToArray());
+                    eksperiment.LoadOutputs(kolone[1].ToArray());
+
+                    eksperiment.ApplySettings(podesavanja);
+
+                    // Save model weights
+                    eksperiment.SaveModel(model.Name, modelIdOld);
+
+                    // Save model statistics
+                    if (podesavanja.ANNType == ProblemType.Regression) {
+                        StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
+                        foreach (var i in kolone[1])
+                            saveModelStatistics(modelIdNew, reg, kol[i].ToString());
                         return Ok("Model sacuvan");
                     }
-                    else if (podesavanja.ANNType == ProblemType.Classification)
-                    {
+                    else if (podesavanja.ANNType == ProblemType.Classification) {
+                        string kolonestr = "";
+                        for (int i = 0; i < kolone[1].Count; i++) {
+                            kolonestr += kol[kolone[1][i]];
+                            if (i < kolone[1].Count - 1) kolonestr += ", ";
+                        }
+                        StatisticsClassification cls = new StatisticsClassification(0f, 0f, 0f, 0f, 0f, 0f, 0f, null);
+                        saveModelStatistics(modelIdNew, cls, kolonestr);
+                        return Ok("Model sacuvan");
+                    }
+                }
+                else {
+                    if (modelIdNew != modelIdOld)
+                        eksperiment.MergeModels(modelIdOld, modelIdNew);
+
+                    // Save model weights
+                    eksperiment.SaveModel(model.Name, modelIdOld);
+
+                    // Save model statistics
+                    string metrika = eksperiment.ComputeMetrics(modelIdOld);
+                    JObject met = JObject.Parse(metrika);
+
+                    if (podesavanja.ANNType == ProblemType.Regression) {
+                        int k = 0;
+                        foreach(JToken i  in met.GetValue("train").Values()) {
+                            StatisticsRegression rg = i.ToObject<StatisticsRegression>();
+                            saveModelStatistics(modelIdNew, rg, kol[kolone[1][k]].ToString());
+                            k++;
+                        }
+                        return Ok("Model sacuvan");
+                    }
+                    else if (podesavanja.ANNType == ProblemType.Classification) {
                         var cs = met.GetValue("train")["0"].ToObject<StatisticsClassification>();
-                        //StatisticsClassification cs = met.GetValue("train").ToObject<StatisticsClassification>();
                         string kolonestr = "";
                         for(int i=0;i<kolone[1].Count; i++)
                         {
                             kolonestr += kol[kolone[1][i]];
                             if (i < kolone[1].Count - 1) kolonestr += ", ";
                         }
-
-
                         saveModelStatistics(modelIdNew, cs,kolonestr);
-                        //db.dbmodel.prepisiStatistiku(idmodela, cs);
-                        Console.WriteLine("Model sacuvan");
-                        return Ok("Model sacuvan");
-                    }
-                }
-                catch (MLException) {
-                        List<List<int>> kolone = db.dbmodel.Kolone(modelIdNew);
-                        JArray kol;
-                        int snapshotid = db.dbmodel.dajSnapshot(modelIdNew);
-                        if (snapshotid != 0)
-                        {
-                            kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.dajSnapshot(snapshotid).csv));
-                        }
-                        else
-                        {
-                            kol = JArray.Parse(eksperiment.GetColumns(db.dbeksperiment.uzmi_naziv_csv(ideksperimenta)));
-                        }
-                    if (podesavanja.ANNType == ProblemType.Regression)
-                    {
-                        StatisticsRegression reg = new StatisticsRegression(0f, 0f, 0f, 0f, 0f);
-                        foreach (var i in kolone[1]) { 
-                            saveModelStatistics(modelIdNew, reg,kol[i].ToString());
-                        }
-                        return Ok("Model sacuvan");
-                    }
-                    else if (podesavanja.ANNType == ProblemType.Classification)
-                    {
-                        string kolonestr = "";
-                        for (int i = 0; i < kolone[1].Count; i++)
-                        {
-                            kolonestr += kol[kolone[1][i]];
-                            if (i < kolone[1].Count - 1) kolonestr += ", ";
-                        }
-                        StatisticsClassification cls = new StatisticsClassification(0f, 0f, 0f, 0f, 0f, 0f, 0f, null);
-                        saveModelStatistics(modelIdNew, cls, kolonestr);
                         return Ok("Model sacuvan");
                     }
                 }

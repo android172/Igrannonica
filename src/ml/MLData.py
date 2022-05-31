@@ -51,7 +51,7 @@ class MLData:
     
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
-        dataset = pd.read_csv(pathOrBuffer, sep=None)
+        dataset = pd.read_csv(pathOrBuffer, sep=None, engine='python')
         self._load_dataset(dataset)
     
     def load_from_json(self, pathOrBuffer):
@@ -81,7 +81,7 @@ class MLData:
             self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def load_test_from_csv(self, pathOrBuffer):
-        dataset_test = pd.read_csv(pathOrBuffer, sep=None)
+        dataset_test = pd.read_csv(pathOrBuffer, sep=None, engine='python')
         self._load_test_dataset(dataset_test)
     
     def load_test_from_json(self, pathOrBuffer):

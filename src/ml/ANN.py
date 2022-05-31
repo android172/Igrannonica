@@ -284,7 +284,8 @@ class ANN:
     def load_state_dict(self, state_dict):
         if state_dict is None:
             return False
-        a, b = self.model.load_state_dict(state_dict)
+        try: a, b = self.model.load_state_dict(state_dict)
+        except: return False
         if len(a) > 0 or len(b) > 0:
             return False
         return True
