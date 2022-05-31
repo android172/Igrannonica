@@ -513,6 +513,7 @@ export class ModelComponent implements OnInit {
     }
 
     this.lossPlot.update();
+    (<HTMLDivElement>document.getElementById('spinner')).style.display = "none";
     this.updateXAxis();
     this.updateYAxis();
   }

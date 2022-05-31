@@ -233,7 +233,11 @@
         <div class="container-fluid" id="centrirano3">
             <div class="row justify-content-between">
                 <div class="col-md-7" id="collapse1" *ngIf="prikazi==true">
-                    <div id="grafik">
+                    <div id="grafik">           
+                        <div id="spinner">
+                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                        </div> 
+
                         <div class="legend-wrapper d-flex justify-content-center align-items-bottom">
                             <div class="legend">
                                 <div class="legend-line" *ngFor="let line of this.lossLineParams; let i=index" (click)="toggleLineEnable(i)">
