@@ -24,7 +24,6 @@ export class PodaciComponent implements OnInit {
   private eventsSubscription!: Subscription;
 
   @Output() PosaljiSnapshot:EventEmitter<number> = new EventEmitter<number>();
-  @Input() idS2! : Observable<number>;
 
   @Input() snapshots!: any[];
 
@@ -41,7 +40,6 @@ export class PodaciComponent implements OnInit {
   
   ngOnInit(): void {
     //this.getStat();
-    this.eventsSubscription = this.idS2.subscribe((data)=>{this.primiSnapshot2(data);});
     this.flag = 0;
     this.pomSnapshot = -1;
     this.pomImeS = "";
@@ -53,25 +51,6 @@ export class PodaciComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("input-ratio")).value = this.value + "";
   }
 
-  primiSnapshot2(data : number){
-
-    let snap = sessionStorage.getItem('idSnapshota');
-    let idsnap = sessionStorage.getItem('idS');
-    if((<HTMLButtonElement>document.getElementById("dropdownMenuButton1")).innerHTML != snap)
-    {
-      this.ucitajPodatkeSnapshotaP(data);
-      for(let i=0; i<this.snapshots.length; i++)
-      {
-        if(this.snapshots[i].id == data)
-        {
-          this.imeSnapshota(this.snapshots[i].ime);
-          return;
-        }
-      }
-      this.imeSnapshota("Default snapshot");
-    }
- 
-  }
 
   @ViewChild('contentmdl') content:any;
   @ViewChild('btnexit') btnexit:any;
@@ -3089,14 +3068,6 @@ zamenaTipaKolone(event:any)
     this.open(this.modalSnapshot);
   }
  }
-
- ucitajPodatkeSnapshotaP(id:number){
-  this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
-    res=>{
-     this.loadDefaultItemsPerPage();
-    }
-  );
-}
 
 discardChanges(){
 

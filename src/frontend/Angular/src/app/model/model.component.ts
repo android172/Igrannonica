@@ -28,8 +28,6 @@ export class ModelComponent implements OnInit {
 
   @Input() idM! : Observable<number>;
 
-  @Output() PosaljiSnapshot2:EventEmitter<number> = new EventEmitter<number>();
-
   @Output() PosaljiModel:EventEmitter<number> = new EventEmitter<number>();
 
   @Input() snapshots!: any[];
@@ -793,7 +791,6 @@ export class ModelComponent implements OnInit {
                   }
                 }
                 this.prikaziPredikciju = true;
-                this.PosaljiSnapshot2.emit(this.snapshot);
               },error =>{
               console.log(error.error);
             }
@@ -811,14 +808,16 @@ export class ModelComponent implements OnInit {
 
   primiSnapshot(data:number){
 
-    let snap = sessionStorage.getItem('idSnapshota');
+    if(this.inputsLocked == false)
+    {
+      let snap = sessionStorage.getItem('idSnapshota');
     let idsnap = sessionStorage.getItem('idS');
     console.log(snap);
     console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
     if(data == 0)
     {
        this.imeS("Default snapshot");
-       this.selectSnapshotM(data);
+       this.selectSnapshot(data, "Default snapshot");
     }
     else
     {
@@ -832,12 +831,13 @@ export class ModelComponent implements OnInit {
             {
               console.log((<HTMLButtonElement>document.getElementById("dropdownMenuButton2")).innerHTML);
               console.log(data);
-              this.selectSnapshotM(data);
+              this.selectSnapshot(data, this.snapshots[i].ime);
             }
           }
             return;
         }
       }
+    }
     }
   }
 
@@ -1862,7 +1862,6 @@ export class ModelComponent implements OnInit {
                     }
                   }
                 }
-                // this.PosaljiSnapshot2.emit(id);
                 var brojac = 0;
                 for(let i=0; i<this.kolone2.length-1; i++)
                 {
@@ -1890,7 +1889,6 @@ export class ModelComponent implements OnInit {
                 this.nizCvorova = [3,3,3,3,3];
                 this.brHL = 5;
                 this.aktFunk = [0,0,0,0,0];
-                this.PosaljiSnapshot2.emit(id);
                 this.recreateNetwork();
                }
                
@@ -1906,110 +1904,6 @@ export class ModelComponent implements OnInit {
    console.log(this.selectedSS);
  }
 
- selectSnapshotM(id: any)
- {
-   this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
-     res=>{
-       this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
-         (response: any) => {
-           this.pomocniNiz = [];
-           this.pomocniNizKoloneString = [];
-           this.jsonPom =  JSON.parse(response.data);
-           var br = 0;
-          this.pomocniNiz = Object.values(this.jsonPom[0]);;
-          // console.log(this.pomocniNiz);
-          for(let i=0; i<this.pomocniNiz.length; i++)
-          {
-            if (typeof this.pomocniNiz[i] === 'string')
-            {
-              this.pomocniNizKoloneString[br] = i;
-              // console.log(this.pomocniNizKoloneString[br]);
-              br++;
-            }
-          }
-          this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
-           (response: any)=>{
-              //  this.nizKolonaStr = [];
-                this.nizNedozvoljenih = [];
-               this.kolone = Object.assign([],response);   //imena kolona
-               this.kolone2 = [];
-               this.brojI = 0;
-               this.brojU = 0;
-               this.ulazneKolone = [];
-               this.izlazneKolone = [];
-               if(this.kolone2.length == 0)
-               {
-                for (var kolona of this.kolone) {
-                  this.kolone2.push({value : kolona, type : "Input"});
-                 }
-                 this.kolone2[this.kolone2.length - 1].type = "Output";
-                 for(let i=0; i< this.pomocniNizKoloneString.length; i++)
-                  {
-                      (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
-                    // console.log(this.kolone2[this.nizKolonaStr[i]]);
-                    this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
-                  }
-                  var ind = 0;
-                  for(let i=0; i< this.kolone2.length; i++)
-                  {
-                      if(this.kolone2[i].type == "Output")
-                      {
-                        ind = 1;
-                      }
-                  }
-                  if(ind == 0)
-                  {
-                    for(let i=this.kolone2.length-1; i>=0; i--)
-                    {
-                      if(this.kolone2[i].type == "Input")
-                      {
-                        (this.kolone2[i]).type = 'Output';
-                        break;
-                      }
-                    }
-                  }
-                  // this.PosaljiSnapshot2.emit(id);
-                  var brojac = 0;
-                  for(let i=0; i<this.kolone2.length-1; i++)
-                  {
-                    if(this.kolone2[i].type === 'Input')
-                    {
-                      this.ulazneKolone[brojac] = this.kolone2[i].value;
-                      brojac++;
-                    }
-                  }
-                  for(let i=0; i<this.kolone2.length; i++)
-                  {
-                    if(this.kolone2[i].type === 'Output')
-                    {
-                      this.izlazneKolone[0] = this.kolone2[i].value;
-                    }
-                  }
-                  if(this.brojU == 0 || this.brojI == 0)
-                  {
-                    this.brojU = this.ulazneKolone.length;
-                    this.brojI = 1;
-                  }
-                  
-                  this.buttonDisable = false;
-                  this.hiddLay = [3,3,3,3,3];
-                  this.nizCvorova = [3,3,3,3,3];
-                  this.brHL = 5;
-                  this.aktFunk = [0,0,0,0,0];
-                  this.recreateNetwork();
-               }
-               
-            },error =>{
-             console.log(error.error);
-           }
-          );
-       })
-     }
-   );
-    
-   this.selectedSS=id;
-  //  console.log(this.selectedSS);
- }
 
   dajMetriku(modelId:number)
   {
