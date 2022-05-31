@@ -60,7 +60,7 @@ export class ModelComponent implements OnInit {
   
   public kolone: any[] = [];
   message: any;
-  public idModela : any;
+  public idModela : number = 0;
 
   public brojU : number = 0;
   public brojI : number = 0;
@@ -601,7 +601,12 @@ export class ModelComponent implements OnInit {
   ucitajModel(data2: number){
 
     // console.table(data2);
-    this.idModela = sessionStorage.getItem('idModela');
+    const idRead = sessionStorage.getItem('idModela')
+
+    this.idModela = 0
+    if (idRead != null)
+      this.idModela = Number.parseInt(idRead);
+
     if(Number(this.idModela) != -1)
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
@@ -1196,24 +1201,68 @@ export class ModelComponent implements OnInit {
     )
   }
 
-  treniraj(broj:number){
-    if(this.idModela == undefined)
+  treniraj(){
+    // Cross validation
+    var crossVK;
+    if(this.flag == false)
+      crossVK = 0;
+    else
+      crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
+
+    // Inputs and outputs
+    var inputs = [];
+    var outputs = [];
+    for (let i in this.kolone2) {
+      var kolona = this.kolone2[i];
+      if (kolona.type === 'Input')
+        inputs.push(i);
+      else if (kolona.type === 'Output')
+        outputs.push(i);
+    }
+
+    // ?
+    this.inputCol  = inputs;
+    this.outputCol = outputs;
+
+    // Momentum
+    if(this.momentum==true)
+      this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+
+    const trainingData = 
     {
-      this.onInfo("You have to save the model before training.");
-      return;
-    }
+        "ModelId"  : this.idModela,
+        "Snapshot" : this.selectedSS,
+        "Columns"  :
+        {
+          "ulazne":inputs,
+          "izlazne":outputs
+        },
+        "AnnSettings":
+        {
+          "annType"             : this.selectedPT,
+          "learningRate"        : Number((<HTMLInputElement>document.getElementById("lr")).value),
+          "batchSize"           : Number((<HTMLInputElement>document.getElementById("bs")).value),
+          "numberOfEpochs"      : Number((<HTMLInputElement>document.getElementById("noe")).value),
+          "currentEpoch"        : 0, // TODO
+          "inputSize"           : inputs.length,
+          "outputSize"          : outputs.length,
+          "hiddenLayers"        : this.nizCvorova,
+          "activationFunctions" : this.aktFunk,
+          "regularization"      : this.selectedRM,
+          "regularizationRate"  : Number((<HTMLInputElement>document.getElementById("rr")).value),
+          "lossFunction"        : this.selectedLF,
+          "optimizer"           : this.selectedO,
+          "optimizationParams"  : this.optimizationParams,
+          "kFoldCV"             : crossVK
+        }
+    };
     
-    (<HTMLDivElement>document.getElementById('boxZT')).scrollIntoView();
-    
-    if(broj == 1){
-      this.izmeniPodesavanja();
-      this.uzmiCekirane();
-      //console.log("sacuvano");
-    }
     // loading ... 
-    this.http.get(url+"/api/Model/Model/Treniraj?id="+ this.idModela + "&idEksperimenta=" + this.idEksperimenta,{responseType:"text"}).subscribe(
+    this.http.post(url+"/api/Model/Model/Treniraj?idEksperimenta=" + this.idEksperimenta, trainingData, {responseType:"text"}).subscribe(
       res => {
         this.onInfo("Trening je zapocet.");
+        (<HTMLDivElement>document.getElementById('boxZT')).scrollIntoView();
+
         // pauza   
         this.buttonPause = true;
         this.buttonPlay = false;
@@ -1225,6 +1274,10 @@ export class ModelComponent implements OnInit {
 
         // Disable network changes
         this.disableInputs()
+      },
+      err => {
+        console.error(err.error);
+        this.onError(err.error);
       }
     )
   }
@@ -1616,8 +1669,8 @@ export class ModelComponent implements OnInit {
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
-    var a = (<HTMLInputElement>document.getElementById("bs2")).value;
-    if(a.trim()==="")
+    const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+    if(nazivModela.trim()==="")
     {
       this.onError("Model name is required");
       return;
@@ -1625,47 +1678,44 @@ export class ModelComponent implements OnInit {
 
     this.jsonModel = 
     {
-        "naziv": (<HTMLInputElement>document.getElementById("bs2")).value,
-        "opis": (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
-        "snapshot": this.selectedSS,
-        "podesavalja": {  
-        "annType":this.selectedPT,
-        "learningRate": Number((<HTMLInputElement>document.getElementById("lr")).value),
-        "batchSize": Number((<HTMLInputElement>document.getElementById("bs")).value),
-        "numberOfEpochs": Number((<HTMLInputElement>document.getElementById("noe")).value),
-        "currentEpoch":0,
-        "inputSize": inputs.length,
-        "outputSize": outputs.length,
-        "hiddenLayers":this.nizCvorova,
-        "activationFunctions":this.aktFunk,
-        "regularization": this.selectedRM,
-        "regularizationRate": Number((<HTMLInputElement>document.getElementById("rr")).value),
-        "lossFunction": this.selectedLF,
-        "optimizer": this.selectedO,
-        "optimizationParams": this.optimizationParams,
-        "kFoldCV":crossVK
+        "naziv"       : nazivModela,
+        "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+        "snapshot"    : this.selectedSS,
+        "podesavalja" :
+        {  
+          "annType"             : this.selectedPT,
+          "learningRate"        : Number((<HTMLInputElement>document.getElementById("lr")).value),
+          "batchSize"           : Number((<HTMLInputElement>document.getElementById("bs")).value),
+          "numberOfEpochs"      : Number((<HTMLInputElement>document.getElementById("noe")).value),
+          "currentEpoch"        : 0, // TODO
+          "inputSize"           : inputs.length,
+          "outputSize"          : outputs.length,
+          "hiddenLayers"        : this.nizCvorova,
+          "activationFunctions" : this.aktFunk,
+          "regularization"      : this.selectedRM,
+          "regularizationRate"  : Number((<HTMLInputElement>document.getElementById("rr")).value),
+          "lossFunction"        : this.selectedLF,
+          "optimizer"           : this.selectedO,
+          "optimizationParams"  : this.optimizationParams,
+          "kFoldCV"             :crossVK
         },
-        "kolone":{
-          "ulazne":inputs,
-          "izlazne":outputs
+        "kolone" :
+        {
+          "ulazne"  : inputs,
+          "izlazne" : outputs
         }
     };
-    //console.log((<HTMLInputElement>document.getElementById("bs2")).value);
-    //console.log(this.jsonModel);
-    this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
+    
+    this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta+"&model="+nazivModela, null, {responseType: 'text'}).subscribe(
       res => {
-        //console.log(this.jsonModel);
         var oldModelId = this.idModela;
-        if (oldModelId == undefined)
-          oldModelId = res;
-        
-        this.idModela=res;
+        this.idModela  = Number.parseInt(res);
         
         if(res == "-1") //kreira novi model
         {
           this.http.post(url+"/api/Model/KreirajNoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
             res => {
-              this.idModela=res;
+              this.idModela = Number.parseInt(res);;
               this.izadjiIzObaModala();
               this.saveModel(oldModelId, this.idModela);
             },
@@ -1682,13 +1732,8 @@ export class ModelComponent implements OnInit {
         }
       },
       error =>{
-        console.log(error.error);
+        console.error(error.error);
         this.onError("Model was not created.");
-        // if(error.error === "ERROR :: Model with this name already exists.")
-        // {
-        //   (<HTMLDivElement>document.getElementById("greska")).innerHTML = "*Model with that name already exists";
-        //   this.onError("Model with that name already exists.");
-        // }
       }
     );
   }

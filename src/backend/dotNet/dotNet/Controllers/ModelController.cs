@@ -170,41 +170,44 @@ namespace dotNet.Controllers
         }
 
         [Authorize]
-        [HttpGet("Model/Treniraj")]
-        public IActionResult ModelTreniraj(int idEksperimenta, int id)
+        [HttpPost("Model/Treniraj")]
+        public IActionResult ModelTreniraj(int idEksperimenta, [FromBody] TrainingData trainingData)
         {
             try
             {
                 var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                 MLExperiment eksperiment;
-                Model model = db.dbmodel.model(id);
 
+                // Error checks
                 if (!Experiment.eksperimenti.ContainsKey(idEksperimenta))
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                if (trainingData == null)
+                    return BadRequest(ErrorMessages.NoTrainingData);
+                if (trainingData.Columns == null)
+                    return BadRequest(ErrorMessages.NoTrainingData);
+                if (trainingData.AnnSettings == null)
+                    return BadRequest(ErrorMessages.NoTrainingData);
 
                 eksperiment = Experiment.eksperimenti[idEksperimenta];
-                /*if (!eksperiment.IsDataLoaded(model.Vlasnik))
-                {
-                    string csv = db.dbeksperiment.uzmi_naziv_csv(model.Vlasnik);
-                    eksperiment.LoadDataset(model.Vlasnik, csv);
-                }*/
-                int idSnapshot = db.dbmodel.dajSnapshot(id);
+
+
+                int idSnapshot = trainingData.Snapshot;
                 if (idSnapshot == 0)
-                {
                     eksperiment.SelectTrainingData(db.dbeksperiment.uzmi_naziv_csv(idEksperimenta));
-                }
-                else 
-                {
-                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(db.dbmodel.dajSnapshot(id));
+                else  {
+                    Snapshot snapshot = db.dbeksperiment.dajSnapshot(idSnapshot);
                     eksperiment.SelectTrainingData(snapshot.csv);
                 }
-                List<List<int>> kolone = db.dbmodel.Kolone(id);
-                eksperiment.LoadInputs(kolone[0].ToArray());
-                eksperiment.LoadOutputs(kolone[1].ToArray());
-                ANNSettings podesavanja = db.dbmodel.podesavanja(id);
+
+                eksperiment.LoadInputs(trainingData.Columns.ulazne);
+                eksperiment.LoadOutputs(trainingData.Columns.izlazne);
+
+                ANNSettings podesavanja = trainingData.AnnSettings;
                 eksperiment.ApplySettings(podesavanja);
+
                 eksperiment.CreateNewNetwork();
-                eksperiment.Start(id);
+                eksperiment.Start(trainingData.ModelId);
+
                 Console.WriteLine("Otpocelo treniranje");
                 return Ok("Pocelo treniranje");
             }
@@ -321,11 +324,11 @@ namespace dotNet.Controllers
 
         [Authorize]
         [HttpPost("NoviModel")]
-        public IActionResult noviModel(int idEksperimenta,[FromBody]NovModel model)
+        public IActionResult noviModel(int idEksperimenta, string model)
         {
             try
             {
-                int modela = db.dbmodel.proveriModel(model.naziv, idEksperimenta);
+                int modela = db.dbmodel.proveriModel(model, idEksperimenta);
                 if(modela == -1)
                 {
                     return Ok("-1");
