@@ -1739,6 +1739,8 @@ export class ModelComponent implements OnInit {
   }
 
   saveModel(oldModelId: number, newModelId: number) {
+    if (this.inputsLocked == false)
+      oldModelId = -1
     this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully created.");
