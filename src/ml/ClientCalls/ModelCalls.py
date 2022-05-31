@@ -80,3 +80,19 @@ def load_epoch(self):
         
     self.connection.send("OK")
     print(f"Model loaded from epoch {epoch}")
+
+def merge_models(self):
+    # Receive id to merge from
+    idF = int(self.connection.receive())
+    # Receive id to mere into
+    idI = int(self.connection.receive())
+    
+    networkF = self.active_models.get(idF, None)
+    if networkF is None or idI < 1:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+    
+    self.active_models[idI] = networkF
+    
+    self.connection.send("OK")
+    print(f"Models {idF} and {idI} merged.")

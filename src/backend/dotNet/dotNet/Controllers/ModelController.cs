@@ -491,6 +491,10 @@ namespace dotNet.Controllers
 
                 ANNSettings podesavanja = db.dbmodel.podesavanja(modelIdNew);
                 eksperiment.ApplySettings(podesavanja);
+
+                if (modelIdNew != modelIdOld)
+                    eksperiment.MergeModels(modelIdOld, modelIdNew);
+
                 Model model = db.dbmodel.model(modelIdNew);
                 eksperiment.SaveModel(model.Name, modelIdOld);
                 try {

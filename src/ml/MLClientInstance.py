@@ -107,6 +107,7 @@ class MLClientInstance(Thread):
             'SaveModel' : save_model,
             'LoadModel' : load_model,
             'LoadEpoch' : load_epoch,
+            'MergeMIds' : merge_models,
             
             # Network calls
             'ComputeMetrics'    : compute_metrics,

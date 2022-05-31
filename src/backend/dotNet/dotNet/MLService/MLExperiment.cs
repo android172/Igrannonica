@@ -537,6 +537,15 @@ namespace dotNet.MLService {
             }
         }
 
+        public void MergeModels(int ModelIdFrom, int ModelIdInto) {
+            lock (_lock) {
+                connection.Send(Command.MergeMIds);
+                connection.Send(ModelIdFrom);
+                connection.Send(ModelIdInto);
+                CheckStatus();
+            }
+        }
+
         // Working with ANN-s
         public string ComputeMetrics(int modelId = -1) {
             lock (_lock) {
@@ -698,10 +707,12 @@ namespace dotNet.MLService {
         DrawHexbin,
         DrawDensityPlot,
         DrawPiePlot,
-        // Network
+        // Model
         SaveModel,
         LoadModel,
         LoadEpoch,
+        MergeMIds,
+        // Network
         ComputeMetrics,
         ChangeSettings,
         CreateNewNetwork,
