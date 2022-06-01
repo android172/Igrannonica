@@ -751,6 +751,55 @@ namespace dotNet.DBFunkcije
             }
         }
 
+        public List<Classification> ComparableClassification(int experimentId, string modelOutput)
+        {
+            using MySqlConnection connection = new(connectionString);
+            List<Classification> results = new();
+            string query = "select * from classification " +
+                "where id in (select id from model where idEksperimenta = @id) " +
+                "and Kolona = @col; ";
+
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", experimentId);
+            cmd.Parameters.AddWithValue("@col", modelOutput);
+
+            connection.Open();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                    results.Add(new Classification(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
+            }
+            return results;
+        }
+
+        public List<Regression> ComparableRegression(int experimentId, string[] modelOutputs)
+        {
+            using MySqlConnection connection = new MySqlConnection(connectionString);
+            List<Regression> results = new List<Regression>();
+
+            string columnsForOutput = $"Kolona = '{modelOutputs[0]}'";
+            for (int i = 1; i < modelOutputs.Length; i++)
+                columnsForOutput += $" or Kolona = '{modelOutputs[i]}'";
+
+            string query = "select * from reggresion as r " +
+                "where id in (select id from model where idEksperimenta = @id) " +
+                "and @outputCount = (select COUNT(*) from reggresion where id = r.id and(" +
+                columnsForOutput +
+                ")) and 0 = (select COUNT(*) from reggresion where id = r.id and not(" +
+                columnsForOutput + "));";
+
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", experimentId);
+            cmd.Parameters.AddWithValue("@outputCount", modelOutputs.Length);
+            connection.Open();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                    results.Add(new Regression(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
+            }
+            return results;
+        }
+
         public List<Classification> eksperimentKlasifikacija(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -808,7 +857,7 @@ namespace dotNet.DBFunkcije
             }
             return results;
         }
-        public StatisticsClassification modelKlasifikacija(int id)
+        public Classification modelKlasifikacija(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -821,7 +870,7 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        return new StatisticsClassification(reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix")));
+                        return new Classification(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix")));
                     }
                 }
             }
