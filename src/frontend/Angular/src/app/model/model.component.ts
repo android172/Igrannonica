@@ -7,6 +7,7 @@ import { SignalRService } from '../services/signal-r.service';
 import { tokenGetter, url } from '../app.module';
 import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
+import { saveAs } from 'file-saver';
 import { ModalService } from '../_modal';
 import {Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications'; 
@@ -637,7 +638,8 @@ export class ModelComponent implements OnInit {
           this.nizGeneral = Object.values(this.general);
 
           // Model name
-          (<HTMLInputElement>document.getElementById("bs2")).value = this.nizGeneral[1];
+          this.nazivModela = this.nizGeneral[1];
+          (<HTMLInputElement>document.getElementById("bs2")).value = this.nazivModela;
           // Model description
           (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
           
@@ -1285,6 +1287,22 @@ export class ModelComponent implements OnInit {
     this.currentEpoch = 0;
   }
 
+  downloadModel() {
+    var fileName = this.nazivModela;
+    if (fileName == undefined)
+      fileName = "Model"
+    this.http.post(url+"/api/File/downloadCurrentModel/" + this.idEksperimenta + "?modelId=" + this.idModela + "&modelName=" + fileName, null, {responseType:"text"}).subscribe(
+      res => {
+      saveAs(new Blob([res]), fileName + ".pt");
+       this.onSuccess("Model was successfully downloaded.");
+      },
+      err => {
+        this.onError(err.error);
+        console.error(err.error); 
+      }
+     );
+  }
+
   forkTraining() {
     // Za sada samo odbacuje trening
     this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
@@ -1658,6 +1676,7 @@ export class ModelComponent implements OnInit {
       this.onError("Model name is required");
       return;
     }
+    this.nazivModela = nazivModela;
 
     this.jsonModel = 
     {

@@ -137,7 +137,47 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
-        
+
+        [HttpPost("downloadCurrentModel/{idEksperimenta}")]
+        public ActionResult DownloadModel(int idEksperimenta, int modelId, string modelName)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                Korisnik korisnik;
+
+                if (tokenS == null)
+                    return BadRequest(ErrorMessages.Unauthorized);
+                if (!Experiment.eksperimenti.ContainsKey(idEksperimenta)) 
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+
+                korisnik = db.dbkorisnik.Korisnik(int.Parse(tokenS.Claims.ToArray()[0].Value));
+
+                MLExperiment experiment = Experiment.eksperimenti[idEksperimenta];
+                experiment.SaveModel("__UNSAVEDMODEL__", modelId);
+
+                string fileName = modelName + ".pt";
+
+                string path = System.IO.Path.Combine(
+                    Directory.GetCurrentDirectory(), "Files",
+                    korisnik.Id.ToString(), idEksperimenta.ToString(), "Models", "__UNSAVEDMODEL__.pt"
+                    );
+
+                return DownloadFile(fileName, path);
+            }
+            catch (MLException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
         [Authorize]
         [HttpGet("GetImage")]
         public IActionResult GetImage(int idEksperimenta)
