@@ -257,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5" id="collapse" *ngIf="prikazi1==true">
+                <div class="col-md-5" id="collapse" *ngIf="prikazi1==true" style="position:relative;">
                     <div id="metrika">
                         <h3>Train and test dataset statistics</h3>
                         <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
@@ -350,6 +350,9 @@
                             </button> -->
                             <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalM">Show confusion matrix</button>  
                         </div>
+                    </div>
+                    <div class="progress" style="position: absolute; width:96%; bottom:10px; background-color: #d2a9e3dc;">
+                        <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'" [style.width]="currentEpochPercent +'%'" [attr.aria-valuenow]="currentEpoch" aria-valuemin="0" [attr.aria-valuenow]="numOfEpochsTotal" >{{currentEpoch}}</div>
                     </div>
                 </div>
             </div>
