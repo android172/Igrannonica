@@ -1261,7 +1261,6 @@ export class ModelComponent implements OnInit {
   disableInputs() {
     this.inputsLocked = true;
     this.buttonDisable = true;
-    this.saveModelLocked = true;
   }
 
   enableInputs() {
