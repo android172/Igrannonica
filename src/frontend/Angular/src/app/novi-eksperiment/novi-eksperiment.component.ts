@@ -95,10 +95,22 @@ export class NoviEksperimentComponent implements OnInit {
             {
               this.http.post(url+"/api/Upload/uploadTest/" + idEksperimenta, this.formDataTest, {responseType: 'text'}).subscribe(
                 res=>{
-                  this.router.navigate(['/eksperiment'],{ queryParams: { id: idEksperimenta } });
-              },error =>{
-                console.log(error.error);	
-              });
+                  const defaultTest = "Default snapshot (Test)";
+                  this.http.post(url+"/api/File/SaveAsSnapshot?idEksperimenta="+idEksperimenta+"&naziv="+defaultTest,null,{responseType:"text"}).subscribe(
+                    res=>{
+                      if(res!="-1") {
+                        sessionStorage.setItem('idSnapshota',defaultTest);
+                        sessionStorage.setItem('idS',res);
+                        this.router.navigate(['/eksperiment'],{ queryParams: { id: idEksperimenta } });
+                      }
+                    },
+                    err=>{}
+                  );
+                },
+                error =>{
+                  console.log(error.error);	
+                }
+              );
             }
             else
             {
