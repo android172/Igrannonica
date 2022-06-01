@@ -30,7 +30,8 @@
     </div>
     <div id="info">
         <div id="naslov1">
-          <div style="width: 400px; float: left; margin-left: 200px;">Details of selected model</div>
+          <button id="dugmeDL" (click)="downloadModel()">Download Model</button>
+          <div style="width: 400px; float: left; margin-left: 120px;">Details of selected model</div>
           <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'>
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
               <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
@@ -76,7 +77,7 @@
               <div id="maeData">{{j.mae}}</div>
               <div id="nazivK">MSE(Mean squared error)</div>
               <div id="mseData">{{j.mse}}</div>
-              <div id="nazivK">RMSE(Root mean squared error)</div>
+              <div id="nazivK">RSE(Residual squared error)</div>
               <div id="rseData">{{j.rse}}</div>
               <div id="nazivK">R2(R-squared)</div>
               <div id="r2Data">{{j.r2}}</div>
@@ -109,6 +110,9 @@
           </div>
           <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
         </div>
+    </div>
+    <div id="compare">
+
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

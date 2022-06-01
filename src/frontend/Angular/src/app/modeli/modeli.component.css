@@ -1,5 +1,5 @@
 #body1{
-  min-height: 650px;
+  min-height: 1050px;
 }
 
 #naslov,#naslov1{
@@ -8,7 +8,7 @@
   font-size: 15px;
   height: 45px;
   padding-top: 7px;
-  padding-left: 15px;
+  padding-left: 9px;
   color: #CED9FF;
 }
 
@@ -52,7 +52,7 @@ transform: scale(1.04);
   background: transparent;
   /* border: 2.5px solid #bc7ca1; */
   background:linear-gradient(#bc7ca1 -16.65%,#cb96b5 97.46%);
-  color: #C4C4C4;
+  color: #e4e4e4;
   transform: scale(1.04);
 }
  
@@ -60,7 +60,7 @@ transform: scale(1.04);
   float: left;
   font-weight: bolder;
   width: 140px;
-  height: 23px;
+  height: 20px;
   text-align: left;
   color:#bc7ca1 ;
   font-size: 16px;
@@ -72,7 +72,7 @@ transform: scale(1.04);
   float: left;
   font-weight: bolder;
   width: 140px;
-  height: 23px;
+  height: 20px;
   text-align: left;
   color:rgb(248, 211, 224) ;
   font-size: 16px;
@@ -94,7 +94,7 @@ transform: scale(1.04);
 }
 
 .model-selected-false > .date{
-  color: #989797;
+  color: #e4e4e4;
 }
 .model-selected-false:hover > .date{
   color: #e4e4e4;
@@ -109,7 +109,7 @@ transform: scale(1.04);
   max-width: 250px;
   height: 20px;
   text-align: left;
-  color: #979696;
+  color: #e4e4e4;
 }
 
 .model-selected-true > .o, .model-selected-false:hover > .o {
@@ -132,7 +132,7 @@ transform: scale(1.04);
 #divModeli{
     position: relative;
     width: 350px;
-    height: 540px;
+    height: 500px;
     float: left;
     margin-left: 70px;
 }
@@ -392,7 +392,7 @@ input:-webkit-autofill:active
 #osnovneI
 {
   width: 290px;
-  height: 380px;
+  height: 360px;
   float: left;
   padding-left: 40px;
 }
@@ -440,7 +440,7 @@ input:-webkit-autofill:active
 #pod{
   float: left;
   width: 270px;
-  height: 320px;
+  height: 360px;
   padding-left: 60px;
 }
 
@@ -621,4 +621,30 @@ input:-webkit-autofill:active
   overflow-x: hidden;
   width: 250px;
   height: 285px;
+}
+
+#compare{
+  float: left;
+  border: 2px solid #6D7B9F;  
+  width: 1210px;
+  height: 450px;
+  margin-right: 0px;
+  border-radius: 10px;
+  background-color: #272741;
+  margin-left: 90px;
+}
+
+#dugmeDL{
+  background-color: #2f3048; 
+  font-size: smaller;
+  padding: 5px; 
+  border-radius: 5px; 
+  border: 1px solid rgb(36, 36, 76);
+  color:rgb(197, 197, 197);
+  float: left;
+}
+
+#dugmeDL:hover{
+  background-color: #4e4f64; 
+  color:rgb(255, 255, 255);
 }

@@ -6,6 +6,7 @@ import { SharedService } from '../shared/shared.service';
 import { Observable, Subscription } from 'rxjs';
 import { url } from '../app.module';
 import {NotificationsService} from 'angular2-notifications';
+import * as saveAs from 'file-saver';
 
 @Component({
   selector: 'app-modeli',
@@ -495,6 +496,26 @@ export class ModeliComponent implements OnInit {
         )
       }
     }
+  }
+
+  downloadModel()
+  {
+    var imeModela="Model";
+    for(let i=0;i<this.modeli.length;i++)
+    {
+      if(this.izabranId==this.modeli[i].id)
+        imeModela = this.modeli[i].name;
+    }
+    this.http.post(url+"/api/File/downloadModel/" + this.id + "?modelName=" + imeModela, null, {responseType: 'text'}).subscribe(
+      res=>{
+        saveAs(new Blob([res]), imeModela + ".pt");
+        this.onSuccess("Model was successfully downloaded.")
+      },
+      error=>{
+        console.log(error.error);
+      }
+      
+    );
   }
 
   nastaviTreniranje(){
