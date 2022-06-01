@@ -195,6 +195,10 @@ export class ModelComponent implements OnInit {
 
   @ViewChild('btnexitoverridemodel') btnexitoverridemodel:any;
 
+  // progress bar
+  public numOfEpochsTotal : number = 0;
+  public currentEpochPercent : number = 0;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private ngbModalService: NgbModal, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -259,6 +263,9 @@ export class ModelComponent implements OnInit {
       this.drawCanvas();
 
       this.currentEpoch += 1;
+      // progress bar
+      this.currentEpochPercent = this.currentEpoch;
+      this.currentEpochPercent = this.currentEpochPercent / this.numOfEpochsTotal * 100; 
     });
   }
   sendMessage():void{
@@ -1161,6 +1168,7 @@ export class ModelComponent implements OnInit {
   }
 
   treniraj(){
+    this.currentEpochPercent = 0;
     // Cross validation
     var crossVK;
     if(this.flag == false)
@@ -1186,6 +1194,13 @@ export class ModelComponent implements OnInit {
     // Momentum
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+    
+    // number of Epochs (Progress bar)
+    var numOfE = Number((<HTMLInputElement>document.getElementById("noe")).value);
+    if(crossVK == 0)
+        this.numOfEpochsTotal = numOfE;
+    else
+        this.numOfEpochsTotal = numOfE * crossVK;
 
     const trainingData = 
     {
