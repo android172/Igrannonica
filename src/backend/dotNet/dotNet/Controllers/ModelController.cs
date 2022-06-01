@@ -647,7 +647,7 @@ namespace dotNet.Controllers
         }
         [Authorize]
         [HttpPost("Model/NastaviTrening")]
-        public IActionResult ModelNastaviTrening(int idEksperimenta, int idModela)
+        public IActionResult ModelNastaviTrening(int idEksperimenta, int idModela, int numberOfEpoch, float learningRate)
         {
             try
             {
@@ -661,7 +661,7 @@ namespace dotNet.Controllers
                 else
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
 
-                eksperiment.Continue(idModela);
+                eksperiment.Continue(idModela, numberOfEpoch, learningRate);
                 Console.WriteLine("Model " + idModela + " nastavio sa treniranjem");
                 return Ok("Nastavak treniranja");
             }

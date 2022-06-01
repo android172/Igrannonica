@@ -205,14 +205,16 @@
                         <div id="grupa1" class="col-md-12 d-flex justify-content-between">
 
                             <div class="col-md-6 d-flex justify-content-center" id="podesavanja2">
-                                <div class="d-flex justify-content-center grupaPom">
-                                    <div class="marPom" id="grupa">
-                                        <h4> Number of epochs </h4>
-                                        <input type="number" id="noe" name="noe" value="15">
-                                    </div>
-                                    <div id="grupa">
-                                        <h4> Learning rate </h4>
-                                        <input type="number" id="lr" name="lr" value="0.03" (change)="checkLR()">
+                                <div [class.input-disabled]="buttonPause === true">
+                                    <div class="d-flex justify-content-center grupaPom">
+                                        <div class="marPom" id="grupa">
+                                            <h4> Number of epochs </h4>
+                                            <input type="number" id="noe" name="noe" [(ngModel)]="numberOfEpoch" (input)="numberOfEpochChanged()">
+                                        </div>
+                                        <div id="grupa">
+                                            <h4> Learning rate </h4>
+                                            <input type="number" id="lr" name="lr" value="0.03" (change)="checkLR()">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +223,7 @@
                                 <h4 id="tekstZT">{{this.modelText}}</h4>
                                 <ng-template [ngIf]="buttonPlay">
                                     <a class="play-btn" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal3" *ngIf="!buttonDisable; else onesposobi"></a>
+                                        data-bs-target="#exampleModal3" *ngIf="(currentEpoch < numberOfEpoch) && !buttonDisable; else onesposobi"></a>
                                 </ng-template>
                                 <ng-template #onesposobi>
                                     <a class="play-btn-disable"></a>
@@ -236,7 +238,9 @@
                                     </a>
                                 </ng-template>
                                 <ng-template [ngIf]="buttonContinue">
-                                    <a class="play-btn-continue" (click)="nastaviTrening()"></a>
+                                    <a class="play-btn-continue" (click)="nastaviTrening()"
+                                        *ngIf="currentEpoch < numberOfEpoch; else onesposobi"
+                                    ></a>
                                 </ng-template>
                             </div>
                         </div>

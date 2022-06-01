@@ -192,6 +192,14 @@ class ANN:
         self.regularization_method = annSettings.regularization
         self.regularization_rate = annSettings.regularizationRate
         
+    def update_settings(self, number_of_epochs, learning_rate):
+        self.learning_rate = learning_rate
+        self.num_epochs    = number_of_epochs
+        
+        if self.optimizer is not None:
+            for g in self.optimizer.param_groups:
+                g['lr'] = learning_rate
+        
     def create_new_network(self):
         if self.hidden_layers is None:
             return False

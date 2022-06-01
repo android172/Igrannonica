@@ -75,12 +75,12 @@ export class ModelComponent implements OnInit {
   public nizCvorovaStr: string[] = [];
   public brCvorova : any;
   public pom : string = "";
-  public s: string = "";
   public broj : number = 0;
   public crossV : number = 5;
   public flag: boolean = true;
 
   public currentEpoch: number = 0;
+  public numberOfEpoch: number = 15;
 
   public momentum: boolean=false;
   public pomocna: boolean = false;
@@ -1100,16 +1100,16 @@ export class ModelComponent implements OnInit {
 
 
   izmeniPodesavanja(){
-    this.s = (<HTMLInputElement>document.getElementById("bs")).value;
-    var bs = Number(this.s);
-    this.s = (<HTMLInputElement>document.getElementById("lr")).value;
-    var lr = Number(this.s);
+    var s = (<HTMLInputElement>document.getElementById("bs")).value;
+    var bs = Number(s);
+    s = (<HTMLInputElement>document.getElementById("lr")).value;
+    var lr = Number(s);
     var ins = this.brojU;
-    this.s = (<HTMLInputElement>document.getElementById("noe")).value;
-    var noe = Number(this.s);
+    s = (<HTMLInputElement>document.getElementById("noe")).value;
+    var noe = Number(s);
     var os = this.brojI;
-    this.s = (<HTMLInputElement>document.getElementById("rr")).value;
-    var rr = Number(this.s);
+    s = (<HTMLInputElement>document.getElementById("rr")).value;
+    var rr = Number(s);
     if(this.flag == true){
       var str = (<HTMLInputElement>document.getElementById("crossV")).value;
       this.cv = Number(str);
@@ -1262,7 +1262,6 @@ export class ModelComponent implements OnInit {
 
   disableInputs() {
     this.inputsLocked = true;
-    this.buttonDisable = true;
   }
 
   enableInputs() {
@@ -2369,9 +2368,17 @@ export class ModelComponent implements OnInit {
     )
   }
 
+  numberOfEpochChanged() {
+    console.log(this.numberOfEpoch);
+  }
+
   nastaviTrening()
   {
-    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+    const numberOfEpoch = Number((<HTMLInputElement>document.getElementById("noe")).value)
+    const learningRate  = Number((<HTMLInputElement>document.getElementById("lr")).value)
+    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + 
+                   this.idEksperimenta + "&idModela=" + this.idModela + "&numberOfEpoch="+numberOfEpoch+
+                   "&learningRate=" + learningRate, null ,{responseType:'text'}).subscribe(
       res => {
         console.table(res);
         //console.log("Nastavljam"); 

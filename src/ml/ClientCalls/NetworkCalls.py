@@ -5,6 +5,8 @@ import requests
 import json
 import os
 
+from sklearn.model_selection import learning_curve
+
 from SignalRConnection import SignalRConnection
 from Models.ANNSettings import ANNSettings
 
@@ -199,11 +201,17 @@ def stop(self):
 def continue_training(self):
     # Receive model identifier
     model_id = int(self.connection.receive())
+    # Receive number of epochs
+    number_of_epochs = int(self.connection.receive())
+    # Receive learning rate
+    learning_rate = float(self.connection.receive())
     
     running_network = self.active_models.get(model_id, None)
     if running_network is None:
         self.report_error("ERROR :: Wrong model identifier.")
         return
+
+    running_network.update_settings(number_of_epochs, learning_rate)
 
     running_network.isRunning.set()
 

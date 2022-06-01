@@ -602,10 +602,12 @@ namespace dotNet.MLService {
             }
         }
 
-        public void Continue(int modelId) {
+        public void Continue(int modelId, int numberOfEpoch, float learningRate) {
             lock (_lock) {
                 connection.Send(Command.Continue);
                 connection.Send(modelId);
+                connection.Send(numberOfEpoch);
+                connection.Send(learningRate);
                 CheckStatus();
             }
         }
