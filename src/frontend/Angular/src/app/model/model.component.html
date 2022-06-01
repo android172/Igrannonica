@@ -352,7 +352,7 @@
                         </div>
                     </div>
                     <div class="progress" style="position: absolute; width:96%; bottom:10px; background-color: #d2a9e3dc;">
-                        <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'" [style.width]="currentEpochPercent +'%'" [attr.aria-valuenow]="currentEpoch" aria-valuemin="0" [attr.aria-valuenow]="numOfEpochsTotal" >{{currentEpoch}}</div>
+                        <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'" [style.width]="currentEpochPercent +'%'" [attr.aria-valuenow]="currentEpochPercent" aria-valuemin="0" aria-valuemax="100" >{{currentEpochPercent}}%</div>
                     </div>
                 </div>
             </div>

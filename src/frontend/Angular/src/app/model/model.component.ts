@@ -252,7 +252,7 @@ export class ModelComponent implements OnInit {
       this.currentEpoch += 1;
       // progress bar
       this.currentEpochPercent = this.currentEpoch;
-      this.currentEpochPercent = this.currentEpochPercent / this.numOfEpochsTotal * 100; 
+      this.currentEpochPercent = Math.floor(this.currentEpochPercent / this.numOfEpochsTotal * 100); 
     });
   }
   sendMessage():void{
