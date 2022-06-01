@@ -29,20 +29,21 @@
     justify-content: center;
 }
 
-#podaci{
+.podaci{
 
     color: #fff;
     margin-top: 5px;
     padding-bottom: 20px;
     font-family: 'Roboto';
     font-style: normal;
+    font-size: larger;
 }
 
 input[type=text]{
-    width: 250px;
+    width: 240px;
     height: 45px;
-    background: #646f8e;
-    border: 3px #354f97;
+    background: #815978;
+    border: 3px #783769;
     color: white;
     border-radius: 7px;
     font-family: 'Roboto';
@@ -58,12 +59,12 @@ input[type=text]:focus{
   background: rgb(241, 71, 125);
   height: 35px;
   padding:5px;
-  margin: 20px 0 0 100px;
+  /* margin: 20px 0 0 100px; */
   text-align: center;
   border-radius: 10px;
   color: whitesmoke;
   display: block;
-  width: 70px;
+  width: 60px;
   border: none;
   box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
   
@@ -83,7 +84,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #7584AE inset !important;
+    -webkit-box-shadow: 0 0 0 30px #966c8c inset !important;
     -webkit-text-fill-color: white;
 }
 
@@ -421,6 +422,7 @@ input#exampleFormControlFile1{
 .place{
   display: grid;
   width: max-content;
+  min-width: 290px;
   /* -webkit-transtition: left .3s ease-in-out, right .3s ease-in-out; */
   /* transition: left .3s ease-in-out, right .3s ease-in-out; */
   margin-left: 20px;
@@ -459,3 +461,80 @@ input#exampleFormControlFile1{
     visibility: visible!important;
     width: max-content;
 }
+
+/* Dugme za novi eksperiment */
+
+#newExpBtn{
+
+  background: rgb(241, 71, 125);
+  height: 35px;
+  padding:5px;
+  text-align: center;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: block;
+  border: none;
+  box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+  width: max-content!important; 
+  margin: 10px 0 10px 0;
+}
+
+#newExpBtn:focus
+{
+  /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+  box-shadow: none;
+}
+
+#newExpBtn:hover
+{
+  box-shadow: 0px 0px 20px 0.5px rgba(255, 155, 197, 0.5);
+}
+
+
+/* Placeholder color */
+
+#ime::placeholder {
+    color:rgb(196, 196, 196); 
+    opacity: 1; /* Firefox */
+  }
+  
+  #ime:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color: rgb(196, 196, 196); 
+  }
+  
+  #ime::-ms-input-placeholder { /* Microsoft Edge */
+   color: rgb(196, 196, 196); 
+  }
+
+  /* dugmici next/back  */
+
+  
+.nextbackbtn{
+
+    background: rgb(241, 71, 125);
+    height: 35px;
+    padding:5px;
+    text-align: center;
+    border-radius: 7px;
+    color: whitesmoke;
+    display: block;
+    border: none;
+    box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
+    width: 60px; 
+  }
+  
+  .nextbackbtn:focus
+  {
+    /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
+    box-shadow: none;
+  }
+  
+  .nextbackbtn:hover
+  {
+    box-shadow: 0px 0px 20px 0.5px rgba(255, 155, 197, 0.5);
+  }
+
+
+  .rowBody{
+      height: 145px;
+  }

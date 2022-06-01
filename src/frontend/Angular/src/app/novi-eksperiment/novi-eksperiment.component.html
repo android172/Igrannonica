@@ -3,12 +3,13 @@
 		<div class="col-md-12">
 
             <div id="divEksperimenti">
-                <!-- <button type="button" class="btn btn-danger" (click)="otvoriPolje()">
-                    New Experiment
-                </button> -->
-                <button id="dodaj" style="width: max-content!important; margin-bottom: 5px;" type="button" class="btn btn-outline-primary" (click)="otvoriPolje()">New Experiment</button>  
-
+               
                <div class="container-fluid">
+                <div class="row" >
+                    <div class="col-md-12">
+                        <button id="newExpBtn" type="button" class="btn btn-outline-primary" (click)="otvoriPolje()">New Experiment</button>  
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-8">
                         
@@ -22,7 +23,7 @@
                                     </svg></span></button>
                               </div>
                             </div>
-                           </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div id="noviEksperiment">
@@ -52,20 +53,45 @@
                                     <div class="col-md-11">
                         
                                         <ng-template [ngIf]="firstStep">
-                                            <div class="place">                       
-                                                <div id="podaci">Create New Experiment</div>
+                                            <!-- <div class="place">                       
+                                                <div class="podaci">Create New Experiment</div>
                                                 <div id="polje">
                                                 <div *ngIf="experimentName==''"><input id="ime" placeholder="Enter experiment name"  type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
                                                 <div *ngIf="experimentName!=''"><input id="ime" placeholder="Enter experiment name" value="{{experimentName}}" type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
                                                 <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 20px; margin-left: 10px;"></div>
                                                 </div>
                                                 <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="proveriNazivEksperimenta()">Next</button>  
+                                            </div> -->
+                                            <div class="container-fluid" style="min-width: 290px;">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="podaci">Create New Experiment</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row rowBody">
+                                                    <div class="col-md-12">
+                                                        <div id="polje">
+                                                            <div *ngIf="experimentName==''"><input id="ime" placeholder="Enter experiment name"  type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
+                                                            <div *ngIf="experimentName!=''"><input id="ime" placeholder="Enter experiment name" value="{{experimentName}}" type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
+                                                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 20px; margin-left: 10px; max-width: 140px;"></div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 d-flex justify-content-end">
+                                                        <button class="nextbackbtn" type="button" (click)="proveriNazivEksperimenta()">Next</button> 
+                                                       
+                                                    </div>
+                                                </div>
                                             </div>
+
                                         </ng-template>
+
+
                         
                                         <ng-template [ngIf]="secondStep">
-                                            <div class="place">                       
-                                                <div id="podaci">Load Dataset</div>
+                                            <!-- <div class="place">                       
+                                                <div class="podaci">Load Dataset</div>
                                                 <div class="col-md-2 p-0">
                                                     <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
                                             
@@ -83,16 +109,78 @@
                                                         </span>
                                                         </div>
                                                     </div>
+                                                    <div id="greskaDataset" style="color: rgba(243, 48, 95, 0.85); height: 20px; margin-left: 10px;"></div>
                                                 <div class="d-flex justify-content-between">
-                                                    <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="backStep2()">Back</button>  
-                                                    <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="nextStep2()">Next</button>  
+                                                    <button class="nextbackbtn" type="button"  (click)="backStep2()">Back</button>  
+                                                    <button class="nextbackbtn" type="button"  (click)="nextStep2()">Next</button>  
+                                                </div>
+                                            </div> -->
+                                            <div class="container-fluid" style="min-width: 290px;">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="podaci">Load Dataset</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row rowBody">
+                                                    <div class="col-md-12">
+                                                            <!-- <div id="unos-fajla-dataset"> 
+                                                                <form id="forma">
+                                                                    <div class="form-group1">       
+                                                                        <label id="label-input" for="exampleFormControlFile11">
+                                                                           Load Dataset</label>                 
+                                                                        <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" id="exampleFormControlFile11" (change)="onFileSelected($event)">
+                                                                        <span style="color: rgb(216, 221, 251);  text-align: center; font-size: 14px;">{{fileName || "Podaci nisu učitani."}} </span>
+                                                                    </div>
+                                                                  </form>
+                                                                  <div id="greskaDataset" style="color: rgba(243, 48, 95, 0.85); height: 20px; margin-left: 10px;"></div> 
+                                                            </div> -->
+
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
+                                                
+                                                                    <div class="okvir2">
+                                                            
+                                                                        <button mat-mini-fab color="primary" id="ucitaj1" class="upload-btn" (click)="fileUpload.click()">
+                                                                            Load Data
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    
+                                                                        <div style="color:white; margin-top: 50px; ">
+                                                                            {{fileName || "Dataset is not loaded."}}
+                                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div id="greskaDataset" style="color: rgba(243, 48, 95, 0.85); height: 20px;"></div>
+                                                                </div>
+
+                                                            </div>
+                                                        
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 d-flex justify-content-between ">
+                                                        <button class="nextbackbtn" type="button"  (click)="backStep2()">Back</button> 
+                                                        <button class="nextbackbtn" type="button"  (click)="nextStep2()">Next</button>   
+                                                    </div>
                                                 </div>
                                             </div>
                                         </ng-template>
                         
+
+
                                         <ng-template [ngIf]="thirdStep">
-                                            <div class="place">                       
-                                                <div id="podaci">Load Test Dataset <i>*Optional</i></div>
+                                            <!-- <div class="place">                       
+                                                <div class="podaci">Load Test Dataset <i>*Optional</i></div>
                                                 <div id="unos-fajla" class="invisible-testniskup"> 
                                                     <form id="forma-test">
                                                         <div class="form-group">       
@@ -105,21 +193,76 @@
                                                       </form>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
-                                                <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="backStep3()">Back</button>  
-                                                <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="nextStep3()">Next</button>  
+                                                <button class="nextbackbtn" type="button"  (click)="backStep3()">Back</button>  
+                                                <button class="nextbackbtn" type="button"  (click)="nextStep3()">Next</button>  
+                                                </div>
+                                            </div> -->
+                                            <div class="container-fluid" style="min-width: 290px;">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="podaci">Load Test Dataset <i>*Optional</i></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row rowBody">
+                                                    <div class="col-md-12">
+                                                        <div id="unos-fajla" class="invisible-testniskup"> 
+                                                            <form id="forma-test">
+                                                                <div class="form-group">       
+                                                                    <label id="label-input" for="exampleFormControlFile1">
+                                                                        <img src="assets/uploadfile.png"> 
+                                                                        &nbsp; Load test dataset</label>                 
+                                                                    <input type="file" class="form-control-file" accept=".csv" id="exampleFormControlFile1" (change)="onFileSelectedTest($event)">
+                                                                    <span style="color: rgb(216, 221, 251);  text-align: center; font-size: 14px;">{{fileNameTest || "Data is not loaded."}} </span>
+                                                                </div>
+                                                              </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 d-flex justify-content-between">
+                                                        <button class="nextbackbtn" type="button"  (click)="backStep3()">Back</button>  
+                                                        <button class="nextbackbtn" type="button"  (click)="nextStep3()">Next</button>  
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </ng-template>
+
+
+
                                         <ng-template [ngIf]="goToExperiment">
-                                            <div class="place">                       
-                                                <div id="podaci">Go to experiment</div>
+                                            <!-- <div class="place">                       
+                                                <div class="podaci">Go to experiment</div>
                                                 
                                                 <div class="d-flex justify-content-between">
-                                                <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="backStepGoToE()">Back</button>  
-                                                <button id="dodaj" type="button" class="btn btn-outline-primary" (click)="predji()">Next</button>  
+                                                <button class="nextbackbtn" type="button"  (click)="backStepGoToE()">Back</button>  
+                                                <button class="nextbackbtn" type="button" (click)="predji()">Next</button>  
+                                                </div>
+                                            </div> -->
+                                            <div class="container-fluid" style="min-width: 290px;">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="podaci">Go to experiment</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row rowBody">
+                                                    <div class="col-md-12 d-flex justify-content-center align-items-center" style="color: rgb(23, 181, 23);">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                          </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                    <div class="col-md-12 d-flex justify-content-between">
+                                                        <button class="nextbackbtn" type="button"  (click)="backStepGoToE()">Back</button>  
+                                                        <button class="nextbackbtn" type="button" (click)="predji()">Next</button>  
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </ng-template>
+
                                     </div>
                                 </div>
                             </div>
@@ -129,9 +272,6 @@
             </div>
            </div>
 
-		
-
-            
         </div>
 		
 	</div>

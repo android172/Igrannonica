@@ -212,15 +212,16 @@ export class NoviEksperimentComponent implements OnInit {
 
     if (file) 
     {
+      (<HTMLDivElement>document.getElementById("greskaDataset")).innerHTML = "";
       this.fileName = file.name;
 
       const formData = new FormData();
       formData.append("file", file, this.fileName); 
       this.form = formData;
 
-      (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
-      (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
-      this.onSuccess('Dataset loaded');
+      // (<HTMLDivElement>document.getElementById("poruka")).className="visible-y";  
+      // (<HTMLDivElement>document.getElementById("porukaGreske")).className="nonvisible-n";  
+      this.onSuccess('Dataset is loaded');
     }
   }
 
@@ -234,7 +235,7 @@ export class NoviEksperimentComponent implements OnInit {
       const formData = new FormData();
       formData.append("file", filetest, this.fileNameTest);  
       this.formDataTest = formData;
-
+      this.onSuccess('Test Dataset is loaded.');
     }
 
   }
@@ -260,6 +261,7 @@ export class NoviEksperimentComponent implements OnInit {
   {
     if(this.form == null)
     {
+      (<HTMLDivElement>document.getElementById("greskaDataset")).innerHTML = "*You have not loaded dataset!";
       return;
     }
     this.secondStep = false;
