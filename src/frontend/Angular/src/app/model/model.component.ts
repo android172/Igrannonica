@@ -200,6 +200,9 @@ export class ModelComponent implements OnInit {
   public numOfEpochsTotal : number = 0;
   public currentEpochPercent : number = 0;
 
+  // show/disable statistics after training
+  public showStat : boolean = false;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private ngbModalService: NgbModal, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -1173,6 +1176,7 @@ export class ModelComponent implements OnInit {
 
   treniraj(){
     this.currentEpochPercent = 0;
+    this.showStat = false;
     // Cross validation
     var crossVK;
     if(this.flag == false)
@@ -1912,6 +1916,7 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        this.showStat = true;
         console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);

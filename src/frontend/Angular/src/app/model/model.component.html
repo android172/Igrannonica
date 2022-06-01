@@ -299,31 +299,36 @@
 
                                         <tr>
                                             <td>MAE</td>
-                                            <td id="batest">{{MAE[ind]}}</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="batest">{{MAE[ind]}}</td>
                                             <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
                                         </tr>
 
                                         <tr>
                                             <td>MSE</td>
-                                            <td id="celtest">{{MSE[ind]}}</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="celtest">{{MSE[ind]}}</td>
                                             <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
                                         </tr>
 
                                         <tr>
                                             <td>RSE</td>
-                                            <td id="htest">{{RSE[ind]}}</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="htest">{{RSE[ind]}}</td>
                                             <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
                                         </tr>
 
                                         <tr>
                                             <td>R2</td>
-                                            <td id="f1test">{{R2[ind]}}</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="f1test">{{R2[ind]}}</td>
                                             <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
                                         </tr>
 
                                         <tr>
                                             <td>AdjustedR2</td>
-                                            <td id="actest">{{Adj[ind]}}</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="actest">{{Adj[ind]}}</td>
                                             <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
                                         </tr>
                                     </table>
@@ -339,37 +344,44 @@
                                     <tr>
                                         <td>Accuracy</td>
                                         <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
-                                        <td id="actrain">{{atrain}}</td>
+                                        <td *ngIf="showStat==true" id="actrain">{{atrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>Balanced Accuracy</td>
                                         <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
-                                        <td id="batrain">{{btrain}}</td>
+                                        <td *ngIf="showStat==true" id="batrain">{{btrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>CrossEntropyLoss</td>
                                         <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
-                                        <td id="celtrain">{{ctrain}}</td>
+                                        <td *ngIf="showStat==true" id="celtrain">{{ctrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>F1Score</td>
                                         <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
-                                        <td id="f1train">{{ftrain}}</td>
+                                        <td *ngIf="showStat==true" id="f1train">{{ftrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>HammingLoss</td>
                                         <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
-                                        <td id="htrain">{{htrain}}</td>
+                                        <td *ngIf="showStat==true" id="htrain">{{htrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>Precision</td>
                                         <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
-                                        <td id="ptrain">{{ptrain}}</td>
+                                        <td *ngIf="showStat==true" id="ptrain">{{ptrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                     <tr>
                                         <td>Recall</td>
                                         <td *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
-                                        <td id="rtrain">{{rtrain}}</td>
+                                        <td *ngIf="showStat==true" id="rtrain">{{rtrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
                                     </tr>
                                 </table>
                                 <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
