@@ -1282,6 +1282,8 @@ export class ModelComponent implements OnInit {
     this.buttonPlay = true;
     this.buttonContinue = false;
     this.buttonPause = false;
+
+    this.currentEpoch = 0;
   }
 
   forkTraining() {
