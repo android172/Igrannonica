@@ -245,21 +245,8 @@ export class ModelComponent implements OnInit {
       this.updateInfo();
       
       // Weights
-      var weights = epochRes.weights;
-      this.weights = weights;
-      
-      this.absoluteWeightMean = []
-      for (let a of this.weights) {
-        var sum = 0.0;
-        var count = 0;
-        for (let b of a) {
-          for (let weight of b) {
-            sum += Math.abs(weight);
-            count++;
-          }
-        }
-        this.absoluteWeightMean.push(count / sum)
-      }
+      const weights = epochRes.weights;
+      this.setWeights(weights);
       this.drawCanvas();
 
       this.currentEpoch += 1;
@@ -315,6 +302,23 @@ export class ModelComponent implements OnInit {
     }
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
 
+  }
+
+  setWeights(weights: number[][][]) {
+    this.weights = weights;
+      
+    this.absoluteWeightMean = []
+    for (let a of this.weights) {
+      var sum = 0.0;
+      var count = 0;
+      for (let b of a) {
+        for (let weight of b) {
+          sum += Math.abs(weight);
+          count++;
+        }
+      }
+      this.absoluteWeightMean.push(count / sum)
+    }
   }
 
   addSquares(points: number[], color: ColorRGBA) {
@@ -627,7 +631,8 @@ export class ModelComponent implements OnInit {
           this.annSettings = this.modelData.NetworkSettings;
           this.ioColumns   = this.modelData.IOColumns;
 
-          this.weights = JSON.parse(this.modelData.Weights);
+          const weights = JSON.parse(this.modelData.Weights);
+          this.setWeights(weights);
 
           this.nizGeneral = Object.values(this.general);
 
@@ -694,15 +699,6 @@ export class ModelComponent implements OnInit {
               // Current epoch
               this.currentEpoch = this.nizAnnSettings[4];
 
-              // Is model trained (locked)
-              if (this.currentEpoch > 0) {
-                this.disableInputs();
-                this.drawCanvas();
-                this.prikaziPredikciju = true;
-              }
-              else
-                this.enableInputs();
-
               // Number of I/O
               this.brojU = this.nizAnnSettings[5];
               this.brojI = this.nizAnnSettings[6];
@@ -711,9 +707,6 @@ export class ModelComponent implements OnInit {
               this.hiddLay    = this.nizAnnSettings[7];
               this.nizCvorova = Object.assign([], this.hiddLay);
               this.brHL       = this.nizCvorova.length;
-
-              console.log("DEBUG");
-              console.log(this.hiddLay);
 
               // Activation function
               this.aktFunk = this.nizAnnSettings[8];
@@ -751,6 +744,15 @@ export class ModelComponent implements OnInit {
                 (<HTMLInputElement>document.getElementById("toggle")).checked = true;
                 (<HTMLInputElement>document.getElementById("crossV")).value   = this.nizAnnSettings[14]+"";
               }
+
+              // Is model trained (locked)
+              if (this.currentEpoch > 0) {
+                this.disableInputs();
+                this.drawCanvas();
+                this.prikaziPredikciju = true;
+              }
+              else
+                this.enableInputs();
             },
             error =>{
               console.error(error.error);
@@ -1796,7 +1798,7 @@ export class ModelComponent implements OnInit {
             if (typeof this.pomocniNiz[i] === 'string')
             {
               this.pomocniNizKoloneString[br] = i;
-              console.log(this.pomocniNizKoloneString[br]);
+              // console.log(this.pomocniNizKoloneString[br]);
               br++;
             }
           }

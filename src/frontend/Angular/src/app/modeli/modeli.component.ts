@@ -276,7 +276,7 @@ export class ModeliComponent implements OnInit {
             this.indeksiData[i]=i;  
             nizJson.push({name: this.indeksiData[i] + '', data: this.matTrainData[i]});
           }
-          console.log(this.matTrainData);
+          // console.log(this.matTrainData);
 
           var options = {
             chart: {
@@ -381,7 +381,7 @@ export class ModeliComponent implements OnInit {
        }
     }
      this.maxNizaTr=this.nizPoljaTrain[0];
-     console.log(this.maxNizaTr);
+    //  console.log(this.maxNizaTr);
      return this.maxNizaTr; 
   }
 
