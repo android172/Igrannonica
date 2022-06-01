@@ -13,7 +13,8 @@ export class HeaderComponent implements OnInit {
   public prikaziMeni_1:any
   public nesto: boolean = true;
   constructor(private prikaziMeni: MeniService, public jwtHelper: JwtHelperService, private router:Router) {
-    this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
+    this.prikaziMeni_1 = this.prikaziMeni.sendTabs();
+    console.log(this.prikaziMeni_1);
   }
 
   ngDoCheck():void
@@ -36,29 +37,20 @@ export class HeaderComponent implements OnInit {
       this.prikaziMeni_1[1].style = "color:white"
     }
 
-    if(this.router.url == "/moji-eksperimenti")
-    {
-      this.prikaziMeni_1[2].style = "color:#F45E82"
-    }
-    else
-    {
-      this.prikaziMeni_1[2].style = "color:white"
-    }
-
     if(this.router.url == "/kontakt")
     {
-      this.prikaziMeni_1[3].style = "color:#F45E82;border-right:none"
+      this.prikaziMeni_1[2].style = "color:#F45E82;border-right:none"
     }
     else
     {
-      this.prikaziMeni_1[3].style = "color:white;border-right:none"
+      this.prikaziMeni_1[2].style = "color:white;border-right:none"
     }
   }
 
   ngOnInit(): void {
     //this.prikaziMeni_1[0].style = "color:#F45E82"
     this.nesto=this.jwtHelper.isTokenExpired();
-    this.prikaziMeni_1[2].id=this.jwtHelper.isTokenExpired();
+    // this.prikaziMeni_1[2].id=this.jwtHelper.isTokenExpired();
   }
 
   proba(){
