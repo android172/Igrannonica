@@ -1795,11 +1795,6 @@ body {
   opacity: 0.4;
 }
 
-.dropdown-toggle::after{
-  float: right;
-  margin-top: 10px;
-}
-
 .input-disabled {
   pointer-events: none;
   opacity: 0.4;
@@ -1909,4 +1904,28 @@ input:-webkit-autofill:active {
 .dugmici
 {
   padding-right: 23px;
+}
+/* .dropdown-toggle::after{
+    float: right;
+    margin-top: 10px;
+} */
+
+.dropdown-toggle::after{
+  position: absolute;
+  right: 5px;
+  top: 17px
+}
+
+#dropdownMenuButton2{
+
+  width: 200px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
 }

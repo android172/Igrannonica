@@ -1667,11 +1667,6 @@ th{
     color:rgb(255, 255, 255);
 }
 
-.dropdown-toggle::after{
-    float: right;
-    margin-top: 10px;
-}
-
 #izbaci-selekt-vrste
 {
     color: rgb(249, 237, 245);
@@ -1922,4 +1917,29 @@ ngb-pagination ::ng-deep ul > li.active > a {
   padding-right: 10px;
   padding-left: 10px;
   color: #eee;
+}
+
+/* .dropdown-toggle::after{
+    float: right;
+    margin-top: 10px;
+} */
+
+.dropdown-toggle::after{
+    position: absolute;
+    right: 5px;
+    top: 17px
+}
+
+
+#dropdownMenuButton1{
+    width: 200px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
 }
