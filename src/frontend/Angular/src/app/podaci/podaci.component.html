@@ -1,37 +1,27 @@
 
+<div class="container-fluid">
 <div id="body1">
+    <div class="row p-3">
+        <div class="col-md-12 d-flex align-items-center justify-content-between px-1">
 
-
-    <div class="row align-items-center justify-content-between p-3">
-
-        <div class="col-md-2 p-0">
-        <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
-
-        <div class="file-upload okvir2">
-
-            <button mat-mini-fab color="primary" id="ucitaj1" class="upload-btn" (click)="fileUpload.click()">
-                Load Data
-            </button>
-            <div id="okvir1">
-            <span style="color:white; margin-left: 10px; text-align: center;">
-                {{fileName || "Dataset is not loaded."}}
-                <span id="poruka" class="nonvisible-y" ><img src="assets/checkmarkyes.png"></span>
-                <span id="porukaGreske" class="nonvisible-n" ><img src="assets/markno.png"></span>
-            </span>
-            </div>
-        </div>
-        </div>
-
-        <div class="col-md-9 okvir">
-
-        <div class="d-flex align-items-center justify-content-between" id="desnielement">
-            <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
-            <div class="col-md-10 d-flex justify-content-left align-items-center">
-                <div id="tekstSnapshot">Dataset version<br>control</div>
-                <div class="space">
+            <!-- <input type="file" class="file-input" accept=".csv, .json, .xlsx, .xls, .xlsm, .xlsb, .odf, .ods, .odt" (change)="onFileSelected($event)" #fileUpload>
+    
+            <div class="file-upload okvir2">
+    
+                <button mat-mini-fab color="primary" id="ucitaj1" class="upload-btn" (click)="fileUpload.click()">
+                    Load Data
+                </button>
+                <div id="okvir1">
+                </div>
+            </div> -->
+    
+                <!--<div id="naziveksperimenta">Naziv Eksperimenta</div>-->
+            <div style="width: 50%;">
+                <div id="tekstSnapshot">Dataset version control</div>
+                <div class="d-flex align-items-center">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
-                          Select version
+                            Select version
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(0,'Default snapshot')" (click)="imeSnapshota('Default snapshot')">Default snapshot</a></li>
@@ -39,34 +29,37 @@
                             <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="ucitajPodatkeSnapshota(s.id,s.ime)" (click)="imeSnapshota(s.ime)">{{s.ime}}</a></li>
                             </div>
                         </ul>
-                      </div>
-                </div>
-                <!--BRISANJE SNAPSHOTA-->
-                <div class="space">
-                    <button id="deleteSnap" (click)="potvrdaZaBrisanjeVerzije()">
-                        <span class='text'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/></svg>
-                        </span>
-                    </button>
-                </div>
-                <!-- <div class="space">
-                    <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Save</button>
-                </div> -->
-                <div class="space">
-                    <button id="sacuvajKao" data-bs-toggle="modal" data-bs-target="#ModalSaveAs">Save as</button>
+                    </div>
+                    <!--BRISANJE SNAPSHOTA-->
+                    <div class="space">
+                        <button id="deleteSnap" (click)="potvrdaZaBrisanjeVerzije()">
+                            <span class='text'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/></svg>
+                            </span>
+                        </button>
+                    </div>
+                    <!-- <div class="space">
+                        <button id="sacuvaj" (click)="sacuvajTrenutnuVerziju();">Save</button>
+                    </div> -->
+                    <div class="space">
+                        <button id="sacuvajKao" data-bs-toggle="modal" data-bs-target="#ModalSaveAs">Save as</button>
+                    </div>
                 </div>
             </div>
-            <div>
-                <!--<button id="sacuvajizmene" (click)="submit()" style="dispay:hidden">Sačuvaj izmene</button> _-->
-            </div>
-        </div>
-        
         </div>
     </div>
     <div class="row d-flex align-items-center justify-content-between p-1 pb-3">
-        <div class="col-md-9 ">
+        <div class="col-md-9">
             <div class="okvir d-flex justify-content-left ">
+
+                <div class="d-flex align-items-center" style="color: white; padding-left: 5px;">
+                    {{fileName || "Dataset is not loaded."}}
+                    <span id="poruka" class="nonvisible-y" style="margin-left: 5px; margin-right: 5px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(116, 168, 102)" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg></span>
+                    <span id="porukaGreske" class="nonvisible-n"></span>
+                </div>
                 
                 <div id="brojRedovaTabelePoruka">
                     <div id="odabir-redova">Rows displayed:</div>
@@ -91,18 +84,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="okvir visinaIstorije row m-0 p-2">
-
-           
+        <div class="col-md-3 d-flex">
+            <div class="d-flex okvir justify-content-center" style="width: 100%;">
                <!-- <div class="col-sm-7"> <button id="dugmeIstorija" type="button" class="btn btn-secondary" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">Pogledaj istoriju</button> </div> -->
-               <div class="col-sm-7 justify-content-center">
+               <div style="width: 40%; margin-right: 10%;" class="justify-content-center">
                     <!-- Button trigger modal -->
                     <button type="button" id="dugmeIstorija" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style=" border-radius: 10px; background-color: #6070a7; box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.5);">
                         History
                     </button>
                </div>
-                <div class="col-sm-5 d-flex justify-content-center">        
+                <div class="d-flex justify-content-center">        
                     <button id="undoRedoDugme" (click)="tryUndoAction()" style="font-size:22px;color:#CED9FF;"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
                         <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
@@ -1051,4 +1042,5 @@
   </ng-template>
 
     <simple-notifications></simple-notifications>
+</div>
 </div>
