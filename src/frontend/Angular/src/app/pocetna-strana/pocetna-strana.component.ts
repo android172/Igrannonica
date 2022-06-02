@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ParticlesConfig} from './particles-config';
+import { Router } from '@angular/router';
 declare let particlesJS:any
 
 @Component({
@@ -11,7 +12,7 @@ export class PocetnaStranaComponent implements OnInit {
 
   particlesJS:any;
 
-  constructor() { }
+  constructor(private router: Router) { }
   
   ngOnInit(): void {
     this.invokeParticles();
@@ -19,6 +20,11 @@ export class PocetnaStranaComponent implements OnInit {
 
   public invokeParticles():void{
     particlesJS('particles-js', ParticlesConfig, function() {});
+  }
+
+  public nesto()
+  {
+    this.router.navigate(['/eksperimenti']);
   }
 
 }
