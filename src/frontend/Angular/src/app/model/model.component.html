@@ -247,6 +247,7 @@
                     <div id="model-buttons">
                         <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="enableInputs()">Unlock model</button>
                         <button id="download-model" [class.input-disabled]="this.inputsLocked == false" (click)="downloadModel()">Download model</button>
+                        <button id="show-prediction" [class.disable-prediction]="this.predictionDisabled == true" (click)="scrollToPrediction()">Prediction</button>
                     </div>
                 </div>
             </div>
@@ -464,7 +465,7 @@
                 </div>
             </div>
             <!-- PREDIKCIJA -->
-            <div class="container-fluid">
+            <div class="container-fluid" id="prediction">
                 <div class="row">
                     <div *ngIf="prikaziPredikciju==true" id="divPredikcija"
                         class="d-block justify-content-center align-items-center okvir2">
