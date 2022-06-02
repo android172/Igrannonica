@@ -15,6 +15,7 @@ export class MojiEksperimentiComponent implements OnInit {
   json: any;
   id: any;
   izabranId: number = -1;
+  provera: boolean = false;
   constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
@@ -30,9 +31,18 @@ export class MojiEksperimentiComponent implements OnInit {
   
     this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
-          // console.log(res);
-          this.json = res;
-          this.eksperimenti = Object.values(this.json);
+           console.log(res);
+          if(res != 0)
+          {
+            this.json = res;
+            this.eksperimenti = Object.values(this.json)
+            this.provera = true;      
+          }
+          else
+          {
+            this.provera = false; 
+            (<HTMLDivElement>document.getElementById("nemaEks")).innerHTML = "You haven't created any experiments yet!";
+          }
         }
     );
   }

@@ -200,6 +200,10 @@ export class ModelComponent implements OnInit {
   public numOfEpochsTotal : number = 0;
   public currentEpochPercent : number = 0;
 
+  // show/disable statistics after training
+  public showStat : boolean = false;
+  public predictionDisabled = true;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private ngbModalService: NgbModal, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -210,6 +214,7 @@ export class ModelComponent implements OnInit {
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
       this.dajMetriku(id);
       this.prikaziPredikciju = true;
+      this.predictionDisabled = false;
 
       this.buttonPlay = true;
       this.buttonPause = false;
@@ -754,6 +759,7 @@ export class ModelComponent implements OnInit {
                 this.disableInputs();
                 this.drawCanvas();
                 this.prikaziPredikciju = true;
+                this.predictionDisabled = false;
               }
               else
                 this.enableInputs();
@@ -1175,6 +1181,7 @@ export class ModelComponent implements OnInit {
 
   treniraj(){
     this.currentEpochPercent = 0;
+    this.showStat = false;
     // Cross validation
     var crossVK;
     if(this.flag == false)
@@ -1274,6 +1281,7 @@ export class ModelComponent implements OnInit {
     this.prikazi = false;
     this.prikazi1 = false;
     this.prikaziPredikciju = false;
+    this.predictionDisabled = true;
 
     if (this.buttonPlay == false)
       this.forkTraining();
@@ -1648,6 +1656,7 @@ export class ModelComponent implements OnInit {
   kreirajModelCuvanje()
   {
     this.prikaziPredikciju = false;
+    this.predictionDisabled = true;
     var crossVK;
     if(this.flag == false)
       crossVK = 0;
@@ -1914,6 +1923,7 @@ export class ModelComponent implements OnInit {
       res => {
         console.table(res);
         this.jsonMetrika = Object.values(res);
+        this.showStat = true;
         console.log(this.jsonMetrika);
         this.trainR=Object.assign([],this.jsonMetrika[1]);
         this.testR=Object.assign([],this.jsonMetrika[0]);
@@ -2395,6 +2405,11 @@ export class ModelComponent implements OnInit {
         console.log(error.error);
       }
     )
+  }
+
+  scrollToPrediction()
+  {
+    (<HTMLDivElement>document.getElementById('prediction')).scrollIntoView();
   }
 
   open(content: any) {

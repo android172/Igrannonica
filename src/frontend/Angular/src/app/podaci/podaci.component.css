@@ -55,9 +55,9 @@ ul .ngx-pagination
 #brojRedovaTabelePoruka{
    /* position: relative;*/
     /*left: 5%;*/
-    width: 26%;
     color: #CED9FF;
     display: flex;
+    width: 40%;
     /* padding: 8px 10px; */
     padding: 6px 10px;
     border-radius: 5px;
@@ -66,6 +66,7 @@ ul .ngx-pagination
     color: rgb(216, 221, 251);
     min-width: 130px;
     margin: 3px 5px 3px 3px;
+    max-width: 200px;
 }
 #odabir-redova{
     width: 100%;
@@ -252,6 +253,14 @@ ul .ngx-pagination
 {
     margin-bottom: 20px;
     font-size: 15px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /*  DROPDOWN SUBMENU *****/
@@ -342,6 +351,14 @@ ul .ngx-pagination
     margin-bottom: 20px;
     font-size: 15px;
     margin-top: 10px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .primeni-izuzeci{
@@ -783,7 +800,7 @@ th{
 #body1{
     width: 99%;
    /* background-color: #D74971; */
-    margin: auto;
+    /* margin: auto; */
     min-height: 60vh;
 }
 
@@ -916,6 +933,11 @@ th{
 
 .okvir2{
     margin: 0;
+}
+
+.floatRight
+{
+    float: right;
 }
 
 /* TESTNI SKUP - KOMPONENTE */
@@ -1283,10 +1305,10 @@ th{
 {
     display: flex;
     justify-content: center;
-    color: white;
     font-size: 17px;
     padding-top: 5px;
     padding-bottom: 10px;
+    color: rgb(216, 221, 251);
 }
 
 /*---------------------PODESAVANJA-----------------------*/
@@ -1400,6 +1422,14 @@ th{
     /* margin-top: 20px; */
     font-size: 15px;
     margin-bottom: 10px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #dropdownBasic3
@@ -1411,11 +1441,27 @@ th{
 #dropdownMenuButton
 {
     font-size: 15px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #dropdownLinReg
 {
     font-size: 15px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .btn-primary
@@ -1450,10 +1496,10 @@ th{
     margin-top: 10px;
 }
 
-.visinaIstorije{
+/* .visinaIstorije{
 
     height: 67px;
-}
+} */
 
 #undoRedoDugme{
     height: 40px;
@@ -1527,7 +1573,7 @@ th{
 }
 
 #dugmeIstorija{
-    width: 90%;
+    width: 100%;
     margin-top: 2px;
     color: white;
     font-size: 15px;
@@ -1581,6 +1627,7 @@ th{
     padding-bottom: 2px;
     padding-left: 10px;
     padding-right: 10px;
+    color: rgb(216, 221, 251);
 }
 
  #numericka-tabela td{
@@ -1667,11 +1714,6 @@ th{
     color:rgb(255, 255, 255);
 }
 
-.dropdown-toggle::after{
-    float: right;
-    margin-top: 10px;
-}
-
 #izbaci-selekt-vrste
 {
     color: rgb(249, 237, 245);
@@ -1694,7 +1736,7 @@ th{
 
 .space
 {
-    margin-left: 10px;
+    margin-right: 2%;
 }
 
 /* -----------------SNAPSHOTS------------------ */
@@ -1702,9 +1744,10 @@ th{
 #tekstSnapshot
 {
     color: rgb(216, 221, 251);
-    text-align: right;
-    font-size: 15px;
-    margin-left: 5px;
+    /* text-align: right; */
+    font-size: 16px;
+    margin-bottom: 10px;
+    /* margin-left: 5px; */
 }
 
 #verzijaSnapshotaSelect
@@ -1922,4 +1965,33 @@ ngb-pagination ::ng-deep ul > li.active > a {
   padding-right: 10px;
   padding-left: 10px;
   color: #eee;
+}
+
+/* .dropdown-toggle::after{
+    float: right;
+    margin-top: 10px;
+} */
+
+.dropdown-toggle::after{
+    position: absolute;
+    right: 5px;
+    top: 17px
+}
+
+.dropdown
+{
+    margin-right: 2%;
+}
+
+#dropdownMenuButton1{
+    width: 200px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
 }

@@ -5,13 +5,21 @@ p
     font-size: larger;
 }
 
-#model-buttons {
+/* #model-buttons {
   width:50%;
   padding-left:20px;
   display:grid;
   grid-template-columns: auto auto;
   grid-gap: 15%;
+} */
+
+#model-buttons {
+  width: 51%;
+  padding-left:20px;
+  display:flex;
+  justify-content: space-between;
 }
+
 
 #ulaziIzlaz{
   width: 100%;
@@ -66,6 +74,28 @@ p
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
 
+}
+
+#prediction
+{
+  margin-bottom: 20px;
+}
+
+.disable-prediction{
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+#show-prediction{
+    width: 120px;
+    height: 40px;
+    color: white;
+
+    background: linear-gradient(221.84deg, #5977DF 4.29%, #7C96F3 4.31%, #4B4C74 118.62%, #6E6E9C 118.63%);
+    border: 1px solid #0a1024;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
 }
 
 #sacuvaj
@@ -492,6 +522,7 @@ h4{
   /* width: 320px; */
   height: 110px;
   width: 100%;
+  margin-top: 25px;
   /* float: left; */
  /* padding-top: 25px;
   padding-left: 30px;*/
@@ -1795,11 +1826,6 @@ body {
   opacity: 0.4;
 }
 
-.dropdown-toggle::after{
-  float: right;
-  margin-top: 10px;
-}
-
 .input-disabled {
   pointer-events: none;
   opacity: 0.4;
@@ -1909,4 +1935,28 @@ input:-webkit-autofill:active {
 .dugmici
 {
   padding-right: 23px;
+}
+/* .dropdown-toggle::after{
+    float: right;
+    margin-top: 10px;
+} */
+
+.dropdown-toggle::after{
+  position: absolute;
+  right: 5px;
+  top: 17px
+}
+
+#dropdownMenuButton2{
+
+  width: 200px;
+    position: relative;
+    color: whitesmoke;
+    background-color: rgb(101, 72, 115);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
 }
