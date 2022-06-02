@@ -76,6 +76,11 @@ p
 
 }
 
+#prediction
+{
+  margin-bottom: 20px;
+}
+
 .disable-prediction{
   pointer-events: none;
   opacity: 0.4;
@@ -517,6 +522,7 @@ h4{
   /* width: 320px; */
   height: 110px;
   width: 100%;
+  margin-top: 25px;
   /* float: left; */
  /* padding-top: 25px;
   padding-left: 30px;*/
