@@ -22,13 +22,19 @@ input:focus, textarea:focus, select:focus{
 #button{
     width: 250px;
     height: 35px;
-    background: #D74971;
+    background: #9f549f;
     border-radius: 3px;
     border: none;
     /* box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5); */
-    box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25);
+    /* box-shadow: 6px 8px 9px 4px rgba(0, 0, 0, 0.25); */
     color: #fff;
 }
+
+#button:hover{
+    background-color: #c264c2;
+    box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+}
+
 
 .box{
     width: 380px;
@@ -54,7 +60,8 @@ input:focus, textarea:focus, select:focus{
 #podaci1, #podaci2, #podaci3, #podaci4, #podaci5
 {
     height: 30px;
-    color: rgba(243, 48, 95, 0.85);
+    width: 290px;
+    color: #9f549f;
 }
 
 #p{
@@ -99,7 +106,7 @@ input:focus, textarea:focus, select:focus{
     width: 125px;
     height: 1.5px;
     opacity: 1;
-    color: #D74971;
+    color: #9f549f;
     margin: auto;
     float: left;
 }
@@ -107,7 +114,7 @@ input:focus, textarea:focus, select:focus{
 
     width: 125px;
     height: 4px;
-    color: #D74971;
+    color: #9f549f;
     float: right;
     opacity: 1;
     border-radius: 1px;
@@ -115,9 +122,9 @@ input:focus, textarea:focus, select:focus{
 }
 
 #dugmePocetna:hover{
-    color: rgb(243, 48, 94);
-    border-color: rgb(243, 48, 94);
-    background: rgba(229, 229, 229);
+    color: #fdf6fd;
+    /* border-color: #9f549f; */
+    background: #9f549fc4;
 }
 
 #dugmePocetna{
@@ -129,8 +136,8 @@ input:focus, textarea:focus, select:focus{
     width: 110px;
     height: 40px;
 
-    background: rgba(243, 48, 95, 0.46);
-    border: 3px solid rgba(243, 48, 95, 0.85);
+    background: #9f549f;
+    /* border: 3px solid #9f549f; */
     box-sizing: border-box;
     border-radius: 15px;
 

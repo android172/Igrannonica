@@ -91,7 +91,7 @@ export class RegistracijaComponent implements OnInit {
     }
     else if(!test4 && sifra)
     {
-        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Password must be at least 8 characters and must contain one uppercase letter and one number";
+        var div4 = (<HTMLDivElement>document.getElementById("podaci4")).innerHTML = "*Password must be at least 8 characters and must contain 1 uppercase letter and 1 number";
     }
     else if(!sifra)
     {

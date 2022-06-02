@@ -112,7 +112,37 @@
         </div>
     </div>
     <div id="compare">
-
+      <div id="tabelaR" *ngIf="type==0">
+        <div *ngFor="let in of imenaK;let i=index">
+          <h3 style="color: white;">{{imenaK[i]}}</h3>
+          <table style="width:50%; color: white;">
+            <tr>
+              <th>Model name</th>
+              <th>MAE</th>
+              <th>MSE</th>
+              <th>RSE</th>
+              <th>R2</th>
+              <th>AdjustedR2</th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+      </div>
+      </div>
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

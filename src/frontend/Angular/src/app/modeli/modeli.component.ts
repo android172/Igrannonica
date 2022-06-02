@@ -29,10 +29,12 @@ export class ModeliComponent implements OnInit {
   jsonStatistika1: any;
   jsonStatistika: any;
   jsonStatistikaR: any[] = [];
+  uporediviM:  any[] = [];
   modeli : any[] = [];
   id: any;
   trenId: any;
   date: String ='';
+  imeModela: String ='';
   nizD: any[] = [];
   selektovanModel: string = '';
   ActivateAddEdit: boolean = false;
@@ -40,6 +42,8 @@ export class ModeliComponent implements OnInit {
   subscriptionName: Subscription = new Subscription;
   izabranId: number = -1;
   type: any;
+  brUp: number = 0;
+  imenaK: string [] = [];
 
   imaTestni: boolean = true;
   public testR: any[] = [];
@@ -217,6 +221,7 @@ export class ModeliComponent implements OnInit {
   modelDetaljnije(id: any)
   {
     this.ucitajStatistiku(id);
+    this.compareModels(id);
     this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
       res => {
         this.json1=res;
@@ -348,7 +353,6 @@ export class ModeliComponent implements OnInit {
           this.charts = new ApexCharts(document.querySelector("#chart2"), options);
 
         }
-
       },
       error => {
         console.log(error.error);
@@ -500,15 +504,14 @@ export class ModeliComponent implements OnInit {
 
   downloadModel()
   {
-    var imeModela="Model";
     for(let i=0;i<this.modeli.length;i++)
     {
       if(this.izabranId==this.modeli[i].id)
-        imeModela = this.modeli[i].name;
+        this.imeModela = this.modeli[i].name;
     }
-    this.http.post(url+"/api/File/downloadModel/" + this.id + "?modelName=" + imeModela, null, {responseType: 'text'}).subscribe(
+    this.http.post(url+"/api/File/downloadModel/" + this.id + "?modelName=" + this.imeModela, null, {responseType: 'text'}).subscribe(
       res=>{
-        saveAs(new Blob([res]), imeModela + ".pt");
+        saveAs(new Blob([res]), this.imeModela + ".pt");
         this.onSuccess("Model was successfully downloaded.")
       },
       error=>{
@@ -517,6 +520,36 @@ export class ModeliComponent implements OnInit {
       
     );
   }
+
+  compareModels(idM: any)
+  {
+    var brUporedivihPoK=0;
+    var brK=0;
+    this.http.get(url+"/api/Statistics/Comparison?experimentId=" + this.id + "&modelId=" + idM).subscribe(
+      res=>{
+        this.uporediviM=Object.assign([],res);
+        console.log(this.uporediviM);
+        for(let i=0;i<this.uporediviM.length;i++)
+        {
+          if(idM!==this.uporediviM[i]["id"])
+            brUporedivihPoK++;
+
+          else
+          {
+            this.imenaK[brK]=this.uporediviM[i]["kolona"];
+            brK++;
+          }
+        }
+        this.brUp=brUporedivihPoK/brK;
+        console.log(this.imenaK);
+      },
+      error=>{
+        console.log(error.error);
+      }
+    );
+  }
+
+
 
   nastaviTreniranje(){
 

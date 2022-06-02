@@ -25,7 +25,8 @@ const routes: Routes = [
   // {path:'moji-eksperimenti', component:MojiEksperimentiComponent,canActivate:[LoggedinGuard]},
   {path:'profilna-strana', component:ProfilnaStranaComponent,canActivate:[LoggedinGuard]},
   {path:'profilna-strana-izmena-podataka', component:ProfilnaStranaIzmenaPodatakaComponent,canActivate:[LoggedinGuard]},
-  {path:'eksperiment', component:EksperimentComponent,canActivate:[LoggedinGuard]}
+  {path:'eksperiment', component:EksperimentComponent,canActivate:[LoggedinGuard]},
+  {path:'**', redirectTo: "/pocetna-strana"}
 ];
 
 @NgModule({
