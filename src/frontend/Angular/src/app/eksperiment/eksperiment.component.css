@@ -52,10 +52,10 @@
 .nav-link.active
 {
     background: rgba(39, 39, 65, 0.92);
-    color: #F45E82;
+    color: #dbaac7;
     border: none;
     text-shadow: #222;
-    border: 1px solid #F45E82;
+    border: 1px solid #dbaac7;
     border-bottom: none;
     z-index: 10;   
 }
