@@ -39,7 +39,7 @@ def load_dataset(self):
         return
         
     with open(file_path, "wb") as file:
-        Thread(target = lambda : file.write(response.content)).start()
+        file.write(response.content)
         
     extension = file_name.split(".")[-1]
     if   extension == 'csv':
