@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
       this.prikaziMeni_1[0].style = "color:white"
     }
 
-    if(this.router.url == "/novi-eksperiment")
+    if(this.router.url == "/eksperimenti")
     {
       this.prikaziMeni_1[1].style = "color:#F45E82"
     }
