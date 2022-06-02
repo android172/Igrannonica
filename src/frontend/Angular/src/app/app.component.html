@@ -4,7 +4,7 @@
   <div id="sadrzaj">
     <router-outlet></router-outlet>
   </div>
-  <footer id="footer">
+  <footer *ngIf="footer==true"  id="footer">
     <app-footer></app-footer>
   </footer>
 </div>

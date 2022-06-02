@@ -1,6 +1,6 @@
 body
 {
-    background-image: url("/assets/pozadina.jpg");
+    background-image: url("/assets/wallpaper.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -11,7 +11,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /*        SCROLL BAR            */ 
 body::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
     height: 12px;
 
     /*margin-right: 10px;*/
@@ -24,16 +24,16 @@ body::-webkit-scrollbar-corner{
   /* Track */
 body::-webkit-scrollbar-track {
 
-    background-image: linear-gradient( #0d0b2a,#1a1e4e,#1a1e4e,#21235e,#1a1e4e,#272c5f,#353365,#564684,#564684);
+  background: linear-gradient(#030319,#150e2c);
   }
    
   /* Handle */
-body::-webkit-scrollbar-thumb {
-    background: #435079;
+  body::-webkit-scrollbar-thumb {
+    background: #303a59;
     border-radius: 10px;
   }
 
-body::-webkit-scrollbar-thumb:hover {
+  body::-webkit-scrollbar-thumb:hover {
     background: #4d5779;
   }
 
@@ -72,3 +72,6 @@ body::-webkit-scrollbar-thumb:hover {
   {
       color: green !important;
   } */
+
+  /* POZADINA */
+  /* background-image: linear-gradient(to right, #1e012c, #38084f, #1e012c, #38084f, #1e012c, #38084f, #1e012c); */

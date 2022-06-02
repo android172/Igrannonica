@@ -149,12 +149,15 @@
 
 
 #meni{
-    background: linear-gradient(180deg, rgba(0, 3, 34, 0.9) 0%,
+    /* background: linear-gradient(180deg, rgba(0, 3, 34, 0.9) 0%,
     rgba(0, 4, 40, 0.738) 45.15%, 
     rgba(0, 6, 58, 0.475714) 68.71%, 
     rgba(0, 4, 43, 0.227) 85.37%, 
-    rgba(28, 32, 67, 0) 100%);
+    rgba(28, 32, 67, 0) 100%) !important; */
     
-    height: 90px;
+    height: 100px;
+}
 
+nav{
+    z-index: 100;
 }

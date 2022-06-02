@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ParticlesConfig} from './particles-config';
+declare let particlesJS:any
 
 @Component({
   selector: 'app-pocetna-strana',
@@ -7,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PocetnaStranaComponent implements OnInit {
 
+  particlesJS:any;
+
   constructor() { }
   
   ngOnInit(): void {
+    this.invokeParticles();
   }
+
+  public invokeParticles():void{
+    particlesJS('particles-js', ParticlesConfig, function() {});
+  }
+
 }
