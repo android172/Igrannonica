@@ -65,7 +65,7 @@ export class PrijavaComponent implements OnInit {
         token=>{
           localStorage.setItem("token",token); 
           console.log(token)
-          this.router.navigate(['/']);  
+          this.router.navigate(['/eksperimenti']);  
         },error =>{
           console.log(error.error);
           var div = (<HTMLDivElement>document.getElementById("poruka")).innerHTML = "*Incorrect username or password";
