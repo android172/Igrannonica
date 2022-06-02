@@ -425,7 +425,7 @@
             <div class="okvir" id="table">
                 <div class="naslov">
                     <span id="ucitaniPodaci-naslov" style=" background-color: #5e609150; border-bottom: 1px solid rgb(160, 181, 189); border-top-left-radius: 2px; border-top-right-radius: 2px;" (click)="prikaziUcitanePodatke($event)" (click)="dodajTipovePoredKolona(this.nizTipova)" >Dataset</span> &nbsp; &nbsp; &nbsp; <span id="statPodaci-naslov" (click)="prikaziStatistickePodatke($event)"> Statistics </span>      
-                          <span style="position: absolute; left:6.5%; "><button  id="dugmecsv" (click)="preuzmiDataset()" >Download Dataset</button></span>
+                    <span style="position: absolute; left:8%; "><button  id="dugmecsv" (click)="preuzmiDataset()" >Download Dataset</button></span>
                 </div>
                 <div id="skrol" class="col-md-12">
                     <table *ngIf="this.indikator; else statistika">
