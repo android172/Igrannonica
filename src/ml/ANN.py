@@ -83,12 +83,22 @@ class ANN:
         new_ann.regularization_rate   = self.regularization_rate
         
         # Loss function
-        if   self.criterion is nn.L1Loss:
+        if   isinstance(self.criterion, nn.L1Loss):
             new_ann.criterion = nn.L1Loss()
-        elif self.criterion is nn.MSELoss:
+        elif isinstance(self.criterion, nn.MSELoss):
             new_ann.criterion = nn.MSELoss()
-        else:
+        elif isinstance(self.criterion, nn.SmoothL1Loss):
+            new_ann.criterion = nn.SmoothL1Loss()
+        elif isinstance(self.criterion, nn.HuberLoss):
+            new_ann.criterion = nn.HuberLoss()
+        elif isinstance(self.criterion, nn.NLLLoss):
+            new_ann.criterion = nn.NLLLoss()
+        elif isinstance(self.criterion, nn.CrossEntropyLoss):
             new_ann.criterion = nn.CrossEntropyLoss()
+        elif isinstance(self.criterion, nn.KLDivLoss):
+            new_ann.criterion = nn.KLDivLoss()
+        elif isinstance(self.criterion, nn.MultiMarginLoss):
+            new_ann.criterion = nn.MultiMarginLoss()
         
         new_ann.create_new_network()
         
@@ -187,7 +197,6 @@ class ANN:
             elif loss_function == 3:
                 self.criterion = nn.MultiMarginLoss()
                 
-            
         # Regularization
         self.regularization_method = annSettings.regularization
         self.regularization_rate = annSettings.regularizationRate
@@ -300,6 +309,11 @@ class ANN:
     
     # Training
     def train_epoch(self, train_loader):
+        if isinstance(self.criterion, (nn.NLLLoss, nn.CrossEntropyLoss, nn.MultiMarginLoss)):
+            transform = lambda tensor : tensor.to(device).argmax(1)
+        else:
+            transform = lambda tensor : tensor.to(device)
+            
         for bach_index, (data, target) in enumerate(train_loader):
             
             self.isRunning.wait()
@@ -307,7 +321,7 @@ class ANN:
                 sys.exit()
             
             data = data.to(device)
-            target = target.to(device)
+            target = transform(target)
             data = data.reshape(data.shape[0], -1)
             
             # Forward
@@ -328,6 +342,11 @@ class ANN:
         return loss.item()
 
     def test_epoch(self, test_loader):
+        if isinstance(self.criterion, (nn.NLLLoss, nn.CrossEntropyLoss, nn.MultiMarginLoss)):
+            transform = lambda tensor : tensor.to(device).argmax(1)
+        else:
+            transform = lambda tensor : tensor.to(device)
+        
         test_loss = 0.0
         
         self.model.eval()
@@ -338,7 +357,7 @@ class ANN:
                 sys.exit()
             
             data = data.to(device)
-            target = target.to(device)
+            target = transform(target)
             data = data.reshape(data.shape[0], -1)
             
             # Forward

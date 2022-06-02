@@ -243,6 +243,8 @@ export class ModelComponent implements OnInit {
       if (epochRes.valLoss < this.minPointY)
         this.minPointY = epochRes.valLoss;
 
+      console.log(epochRes.loss);
+
       this.lossPoints.push({
         fold : epochRes.fold,
         loss : epochRes.loss,

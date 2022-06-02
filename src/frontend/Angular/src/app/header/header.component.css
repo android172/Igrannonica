@@ -47,11 +47,12 @@
 #prijava, #pomocDugme1
 {
     width: 80px;
-    height: 30px;
+    height: 35px;
 
     background: rgba(229, 229, 229, 0.25);
-    border: 2px solid #E5E5E5;
-    box-sizing: border-box;
+    /* border: 2px solid #E5E5E5;
+    box-sizing: border-box; */
+    border: none;
     border-radius: 10px;
 
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -66,19 +67,19 @@
 
 #prijava:hover, #registracija:hover
 {
-    color: rgb(243, 48, 94);
-    border-color: rgb(243, 48, 94);
-    background: rgba(229, 229, 229);
+    box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
+    opacity: 0.85;
 }
 
 #registracija, #pomocDugme2
 {
     width: 90px;
-    height: 30px;
+    height: 35px;
 
-    background: rgba(243, 48, 95, 0.46);
-    border: 2px solid rgba(243, 48, 95, 0.85);
-    box-sizing: border-box;
+    background: #9f549f;
+    /* border: 2px solid rgba(243, 48, 95, 0.85);
+    box-sizing: border-box; */
+    border: none;
     border-radius: 10px;
 
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
