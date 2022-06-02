@@ -24,17 +24,17 @@ body::-webkit-scrollbar-corner{
   /* Track */
 body::-webkit-scrollbar-track {
 
-  background: linear-gradient(#03001b,#1e012c);
+  background: linear-gradient(#030319,#150e2c);
   }
    
   /* Handle */
-body::-webkit-scrollbar-thumb {
-    background: #1e012c;
+  body::-webkit-scrollbar-thumb {
+    background: #303a59;
     border-radius: 10px;
   }
 
-body::-webkit-scrollbar-thumb:hover {
-  background: #250236;
+  body::-webkit-scrollbar-thumb:hover {
+    background: #4d5779;
   }
 
 /* -----------------------SLIDER---------------------- */

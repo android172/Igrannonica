@@ -59,7 +59,7 @@ export class AppComponent {
     else if(this.router.url == "/pocetna-strana")
     {
       this.header = true;
-      this.footer = false;
+      this.footer = true;
       document.body.style.background = 'linear-gradient(#03001b,#1e012c)';
       (<HTMLDivElement>document.getElementById("sadrzaj")).style.paddingBottom = "0rem";
     }
