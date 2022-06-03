@@ -931,7 +931,7 @@ dajNaziveHeadera()
     this.nizNumerickihKolona = [];
     this.EnableDisableGrafik();
     //this.dodajKomandu("Nema selektovanih kolona");
-    this.flag++;
+    //this.flag++;
   }
   obrisiIstoriju()
   {
@@ -1333,7 +1333,7 @@ dajNaziveHeadera()
   izbrisiSelektovaneRedove()
   {
     this.rowsAndPages = [];
-    this.flag++;
+    //this.flag++;
     //this.dodajKomandu("Redovi deselektovani");
   }
 
