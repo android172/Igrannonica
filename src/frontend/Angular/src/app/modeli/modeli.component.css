@@ -152,8 +152,11 @@ transform: scale(1.04);
 #snap,#ann,#opt,#eph,#ce{
   color: #eee;
   height: 30px;
-  width: 200px;
+  width: 170px;
   margin-bottom: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 #n,#d{
@@ -627,7 +630,7 @@ input:-webkit-autofill:active
   float: left;
   border: 2px solid #6D7B9F;  
   width: 1210px;
-  height: 450px;
+  height: max-content;
   margin-right: 0px;
   border-radius: 10px;
   background-color: #272741;

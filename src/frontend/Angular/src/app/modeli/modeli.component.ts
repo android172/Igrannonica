@@ -44,7 +44,6 @@ export class ModeliComponent implements OnInit {
   type: any;
   brUp: number = 0;
   imenaK: string [] = [];
-
   imaTestni: boolean = true;
   public testR: any[] = [];
   public trainR: any[] = [];
@@ -57,6 +56,8 @@ export class ModeliComponent implements OnInit {
   public matTrainData: any[] = [];
   public indeksiData: any[]=[];
   public charts: any;
+  public nizGlavni: any[] = [];
+  public glavniNiz: any[] = [];
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -165,7 +166,7 @@ export class ModeliComponent implements OnInit {
         res=>{
           this.json = res;
           this.modeli = Object.values(this.json);
-          // console.log(this.modeli);
+          console.log(this.modeli);
           this.formatirajDatum();
           
           if (this.modeli.length > 0) {
@@ -225,7 +226,7 @@ export class ModeliComponent implements OnInit {
     this.http.get(url+"/api/Model/Detaljnije?id=" + id).subscribe(
       res => {
         this.json1=res;
-        // console.log(this.json1);
+        console.log(this.json1);
         (<HTMLDivElement>document.getElementById("n")).innerHTML=this.json1['name'];
         (<HTMLDivElement>document.getElementById("opis")).innerHTML=this.json1['opis'];
         (<HTMLDivElement>document.getElementById("ann")).innerHTML=this.json1['problemType'];
@@ -523,8 +524,13 @@ export class ModeliComponent implements OnInit {
 
   compareModels(idM: any)
   {
+    this.nizGlavni = [];
+    this.glavniNiz = [];
+    var idKolonaPoredjenje: any[] = [];
+    var imeKolonaPoredjenje: any[] = [];
     var brUporedivihPoK=0;
     var brK=0;
+
     this.http.get(url+"/api/Statistics/Comparison?experimentId=" + this.id + "&modelId=" + idM).subscribe(
       res=>{
         this.uporediviM=Object.assign([],res);
@@ -541,7 +547,45 @@ export class ModeliComponent implements OnInit {
           }
         }
         this.brUp=brUporedivihPoK/brK;
-        console.log(this.imenaK);
+        console.log(brK);
+
+        
+        for(let i=0;i<this.uporediviM.length;i=i+brK)
+          idKolonaPoredjenje.push(this.uporediviM[i].id);
+
+        for(let i=0;i<idKolonaPoredjenje.length;i++)
+        {
+          for(let j=0;j<this.modeli.length;j++)
+          {
+            if(this.modeli[j].id==idKolonaPoredjenje[i])
+              imeKolonaPoredjenje.push(this.modeli[j].name);
+          }
+        }
+        var pom=[];
+        for(let i=0;i<brK;i++)
+        {
+          pom=[];
+          for(let j=i;j<this.uporediviM.length;j=j+this.brUp+1)
+            pom.push(this.uporediviM[j]);
+          this.glavniNiz.push(pom);
+        }
+        //console.log(this.glavniNiz);
+        var pom1 = [];
+        if(brK==this.uporediviM.length)
+        {
+          for(let i=0;i<this.uporediviM.length;i++)
+          {
+            pom1.push(Object.assign([],this.uporediviM[i]));
+            this.nizGlavni.push(pom1);
+            pom1=[];
+          }
+          
+        }
+        else
+          this.nizGlavni=this.glavniNiz;
+        console.log(this.nizGlavni);
+
+
       },
       error=>{
         console.log(error.error);

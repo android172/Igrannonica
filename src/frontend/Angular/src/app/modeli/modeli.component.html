@@ -113,8 +113,8 @@
     </div>
     <div id="compare">
       <div id="tabelaR" *ngIf="type==0">
-        <div *ngFor="let in of imenaK;let i=index">
-          <h3 style="color: white;">{{imenaK[i]}}</h3>
+          <div *ngFor="let i of nizGlavni; let k=index">
+          <h3 style="color: white;">{{imenaK[k]}}</h3>
           <table style="width:50%; color: white;">
             <tr>
               <th>Model name</th>
@@ -124,24 +124,16 @@
               <th>R2</th>
               <th>AdjustedR2</th>
             </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr *ngFor="let j of i">
+              <td>{{j.id}}</td>
+              <td>{{j.mae}}</td>
+              <td>{{j.mse}}</td>
+              <td>{{j.rse}}</td>
+              <td>{{j.r2}}</td>
+              <td>{{j.adjustedR2}}</td>
             </tr>
           </table>
-      </div>
+        </div>
       </div>
     </div>
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
