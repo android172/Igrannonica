@@ -68,6 +68,21 @@ p {
   width: 100%;
 }
 
+/* Model notification */
+.model-notification-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: auto;
+}
+.model-notification {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background:black;
+}
+
 /* #model-buttons {
   width:50%;
   padding-left:20px;

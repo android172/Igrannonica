@@ -96,6 +96,8 @@ export class ModelComponent implements OnInit {
   public maxNizaTr: any;
   cv: number = 0;
 
+  public parallelModels: any[] = []
+
   public modelStateTexts: string[] = ["Start model training", "Pause training", "Continue training"]
   public modelText: string = this.modelStateTexts[0];
 
@@ -226,6 +228,12 @@ export class ModelComponent implements OnInit {
     });
     this.signalR.componentMethodLossCalled$.subscribe((res: any) => {
       
+      for (const m of this.parallelModels) {
+        if (m.modelId == res.modelId) {
+          m.jsonModel.podesavalja.currentEpoch += 1;
+          return;
+        }
+      }
       if (res.modelId != this.idModela)
         return;
 
@@ -242,8 +250,6 @@ export class ModelComponent implements OnInit {
         this.minPointY = epochRes.loss;
       if (epochRes.valLoss < this.minPointY)
         this.minPointY = epochRes.valLoss;
-
-      console.log(epochRes.loss);
 
       this.lossPoints.push({
         fold : epochRes.fold,
@@ -670,7 +676,7 @@ export class ModelComponent implements OnInit {
             }
           }
           this.selectedSS=this.snapshot;
-
+          this.momentum = true;
           this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ this.snapshot).subscribe(
             (response: any)=>{
               this.kolone  = Object.assign([],response);   //imena kolona
@@ -711,6 +717,16 @@ export class ModelComponent implements OnInit {
               // Current epoch
               this.currentEpoch = this.nizAnnSettings[4];
 
+              // Is model trained (locked)
+              if (this.currentEpoch > 0) {
+                this.disableInputs();
+                this.drawCanvas();
+                this.prikaziPredikciju = true;
+                this.predictionDisabled = false;
+              }
+              else
+                this.enableInputs();
+
               // Number of I/O
               this.brojU = this.nizAnnSettings[5];
               this.brojI = this.nizAnnSettings[6];
@@ -743,8 +759,12 @@ export class ModelComponent implements OnInit {
               (<HTMLSelectElement>document.getElementById("dd3")).value = this.nizAnnSettings[12]+"";
 
               // Momentum
-              if(this.nizAnnSettings[13].length != 0)
+              if(this.nizAnnSettings[12] > 7) {
+                this.momentum = true;
                 (<HTMLInputElement>document.getElementById("momentum")).value = this.nizAnnSettings[13][0]+"";
+              }
+              else
+                this.momentum = false;
 
               // Cross validation
               if(this.nizAnnSettings[14] == 0) {
@@ -756,16 +776,6 @@ export class ModelComponent implements OnInit {
                 (<HTMLInputElement>document.getElementById("toggle")).checked = true;
                 (<HTMLInputElement>document.getElementById("crossV")).value   = this.nizAnnSettings[14]+"";
               }
-
-              // Is model trained (locked)
-              if (this.currentEpoch > 0) {
-                this.disableInputs();
-                this.drawCanvas();
-                this.prikaziPredikciju = true;
-                this.predictionDisabled = false;
-              }
-              else
-                this.enableInputs();
             },
             error =>{
               console.error(error.error);
@@ -1294,10 +1304,7 @@ export class ModelComponent implements OnInit {
     this.prikazi1 = false;
     this.prikaziPredikciju = false;
     this.predictionDisabled = true;
-
-    if (this.buttonPlay == false)
-      this.forkTraining();
-
+    
     this.modelText = this.modelStateTexts[0];
     this.buttonDisable = false;
     this.saveModelLocked = false;
@@ -1326,14 +1333,88 @@ export class ModelComponent implements OnInit {
 
   forkTraining() {
     // Za sada samo odbacuje trening
-    this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
-      res => {
-        this.onInfo("Training dissmisted.");
-      },
-      err => {
-        this.onError(err.error);
+    if (this.idModela == 0) {
+      // TODO
+      this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+        res => {
+          this.onInfo("Training dissmisted.");
+        },
+        err => {
+          this.onError(err.error);
+        }
+      )
+    }
+    else {
+      var crossVK;
+      if(this.flag == false)
+        crossVK = 0;
+      else
+        crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
+
+      var inputs = [];
+      var outputs = [];
+
+      for (let i in this.kolone2) {
+        var kolona = this.kolone2[i];
+        if (kolona.type === 'Input')
+          inputs.push(i);
+        else if (kolona.type === 'Output')
+          outputs.push(i);
       }
-    )
+
+      if(this.momentum==true)
+        this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
+
+      const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+      if(nazivModela.trim()==="")
+      {
+        this.onError("Model name is required");
+        return;
+      }
+      this.nazivModela = nazivModela;
+
+      const jsonModel = 
+      {
+          "naziv"       : nazivModela,
+          "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+          "snapshot"    : this.selectedSS,
+          "podesavalja" :
+          {  
+            "annType"             : this.selectedPT,
+            "learningRate"        : Number((<HTMLInputElement>document.getElementById("lr")).value),
+            "batchSize"           : Number((<HTMLInputElement>document.getElementById("bs")).value),
+            "numberOfEpochs"      : Number((<HTMLInputElement>document.getElementById("noe")).value),
+            "currentEpoch"        : this.currentEpoch,
+            "inputSize"           : inputs.length,
+            "outputSize"          : outputs.length,
+            "hiddenLayers"        : this.nizCvorova,
+            "activationFunctions" : this.aktFunk,
+            "regularization"      : this.selectedRM,
+            "regularizationRate"  : Number((<HTMLInputElement>document.getElementById("rr")).value),
+            "lossFunction"        : this.selectedLF,
+            "optimizer"           : this.selectedO,
+            "optimizationParams"  : this.optimizationParams,
+            "kFoldCV"             :crossVK
+          },
+          "kolone" :
+          {
+            "ulazne"  : inputs,
+            "izlazne" : outputs
+          }
+      };
+
+      this.parallelModels.push({
+        'jsonModel': jsonModel,
+        'modelId':this.idModela
+      })
+    }
+    this.enableInputs();
+  }
+
+  openParallelModelView(model: any) {
+    console.log("DEBUG");
+    
+    console.log(model);
   }
 
   counter1(i:number){

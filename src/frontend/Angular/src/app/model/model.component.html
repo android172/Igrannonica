@@ -1,6 +1,13 @@
 <div class="container-fluid">
     <div id="body1">
 
+        <div class="model-notification-container">
+            <div class="model-notification" *ngFor="let m of parallelModels; let i = index">
+                <button data-bs-toggle="modal" (click)="openParallelModelView(m)" data-bs-target="#ModalParallelTraining">{{m.jsonModel.podesavalja.numberOfEpochs}}</button>
+            </div>
+        </div>
+
+        <!-- Hints -->
         <span id="tooltip-settings" class="hovertext" (mouseleave)="hideTooltip('settings')" data-tooltip=
             "           Network settings
 
@@ -304,7 +311,7 @@
                         </div>
                     </div>
                     <div id="model-buttons">
-                        <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="enableInputs()">Unlock model</button>
+                        <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="forkTraining()">Unlock model</button>
                         <button id="download-model" [class.input-disabled]="this.inputsLocked == false" (click)="downloadModel()">Download model</button>
                         <button id="show-prediction" [class.disable-prediction]="this.predictionDisabled == true" (click)="scrollToPrediction()">Prediction</button>
                     </div>
@@ -706,5 +713,25 @@
                 </div>
             </ng-template>
             <simple-notifications></simple-notifications>
+
+            <div  class="modal fade" id="ModalParallelTraining" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content"style="background: rgba(36, 38, 74, 0.95);">
+                    <div class="modal-header " style="border-bottom: none; color: wheat">
+                      <h3 class="modal-title" id="exampleModalLabel" style="font-size: large; margin-top: 10px; margin-left: 10px;"></h3>
+                      <button #btnexit type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+            
+                    <div class="modal-body justify-content-center align-items-center">
+                        <div style="margin: auto; width: 80%;">
+                        </div>
+                    </div>
+                
+                    <div class="modal-footer d-flex" style="border-top: none;">
+                    </div>
+            
+                </div>
+              </div>
+            </div>
         </div>
     </div>
