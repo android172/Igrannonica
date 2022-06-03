@@ -769,11 +769,16 @@ th{
 
 #table tr:hover:nth-child(even)
 {
-    background-color: #603753e2;
+    
+    background-color: #603c7cd2;
+    /* background-color: #603753e2;  */
+    /* background-color: #c545c931; */
 }
 #table tr:hover:nth-child(odd)
 {
-    background-color: rgba(255, 0, 0, 0.155);
+    /* background-color: #97399a41; */
+    background-color: rgba(221, 0, 255, 0.147);
+    /* background-color: rgba(255, 0, 0, 0.155); */
 }
 
 .selectedColHeader

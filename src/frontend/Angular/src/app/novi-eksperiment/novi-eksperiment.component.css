@@ -40,7 +40,7 @@
 }
 
 input[type=text]{
-    width: 240px;
+    width: 235px;
     height: 45px;
     background: #8f6385;
     border: 3px #783769;
@@ -270,19 +270,19 @@ body {
 #ucitaj1{
   padding: 5px;
   align-items: center;
-  height: 40px;
+  height: 42px;
   box-sizing: border-box;
   text-align: center;
   border-radius: 8px;
-  background: rgba(171, 76, 168, 0.893);
+  background: #a24c9fe4;
   border: 2px solid rgba(138, 62, 136, 0.893);
   color: white;
   position: absolute;
   z-index: 10;
-  width: 150px;
+  width: 160px;
 }
 #ucitaj1:hover{
-  background: linear-gradient(to left, rgba(155, 64, 152, 0.893), rgba(200, 95, 196, 0.893), rgba(208, 90, 204, 0.893) );
+  background: linear-gradient(to left, rgba(155, 64, 152, 0.893), rgba(187, 85, 184, 0.893), rgba(200, 77, 196, 0.893) );
 }
 
 #okvir1{
@@ -338,17 +338,18 @@ input#exampleFormControlFile1{
 }
 
 #label-input{
-  width: 145px;
-  background: linear-gradient(to right, rgb(87, 87, 156), rgb(98, 98, 182),rgb(113, 113, 189) ) ;
+  width: 147px;
+  background: linear-gradient(to right, rgb(115, 87, 156), rgb(108, 81, 149),rgb(120, 89, 165) ) ;
   color: rgb(255, 255, 255);
-  height: 35px;
+  height: 37px;
   align-items: center;
+  padding: 3px;
   font-size: 14px;
   display: flex;
   justify-content: center;
   /* margin: 20px auto 10px auto; */
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 7px;
   /* border: 2px solid rgba(44, 75, 90, 0.8); */
   cursor: pointer;
   -webkit-transition-duration: 0.2s;
