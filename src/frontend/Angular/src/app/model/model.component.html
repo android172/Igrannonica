@@ -238,7 +238,7 @@
                                 </ng-template>
                                 <ng-template [ngIf]="buttonContinue">
                                     <a class="play-btn-continue" (click)="nastaviTrening()"
-                                        *ngIf="currentEpoch < numberOfEpoch; else onesposobi"
+                                        *ngIf="canContinueTraining() == true; else onesposobi"
                                     ></a>
                                 </ng-template>
                             </div>

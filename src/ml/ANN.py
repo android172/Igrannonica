@@ -96,7 +96,7 @@ class ANN:
         elif isinstance(self.criterion, nn.CrossEntropyLoss):
             new_ann.criterion = nn.CrossEntropyLoss()
         elif isinstance(self.criterion, nn.KLDivLoss):
-            new_ann.criterion = nn.KLDivLoss()
+            new_ann.criterion = nn.KLDivLoss(reduction="batchmean")
         elif isinstance(self.criterion, nn.MultiMarginLoss):
             new_ann.criterion = nn.MultiMarginLoss()
         
@@ -193,7 +193,7 @@ class ANN:
             elif loss_function == 1:
                 self.criterion = nn.CrossEntropyLoss()
             elif loss_function == 2:
-                self.criterion = nn.KLDivLoss()
+                self.criterion = nn.KLDivLoss(reduction="batchmean")
             elif loss_function == 3:
                 self.criterion = nn.MultiMarginLoss()
                 
@@ -222,7 +222,7 @@ class ANN:
         # Add all hidden layers
         previous_layer = self.input_size
         for i in range(num_of_layers):
-            model.add_module(f"layer_{i}", nn.Linear(previous_layer, self.hidden_layers[i]))
+            model.add_module(f"Layer_{i}", nn.Linear(previous_layer, self.hidden_layers[i]))
             previous_layer = self.hidden_layers[i]
             
             activation_function = self.activation_fn[i]
@@ -234,7 +234,9 @@ class ANN:
                 model.add_module(f"Sigmoid[{i}]", nn.Sigmoid())
             elif activation_function == 3:
                 model.add_module(f"Tanh[{i}]", nn.Tanh())
-        model.add_module(f"layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
+        model.add_module(f"Layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
+        if isinstance(self.criterion, (nn.NLLLoss, nn.KLDivLoss)):
+            model.add_module(f"Log_LogSoftmax", nn.LogSoftmax(1))
         
         # Save model locally
         self.model = model

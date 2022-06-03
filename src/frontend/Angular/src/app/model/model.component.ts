@@ -566,7 +566,10 @@ export class ModelComponent implements OnInit {
       
       const leftShift = (i + 1).toString().length * 5;
       
-      this.xAxis.fillText(`${i + 1}`, x - leftShift, 25)
+      var xLab = (i + 1).toString()
+      if (xLab.length > 4)
+        xLab = (i + 1).toPrecision(4);
+      this.xAxis.fillText(`${xLab}`, x - leftShift, 25)
       this.xAxis.moveTo(x, 0);
       this.xAxis.lineTo(x, 10);
       this.xAxis.stroke();
@@ -603,7 +606,7 @@ export class ModelComponent implements OnInit {
       const y = this.yAxisHeight * (yNorm + actualMaxY / 2) / actualMaxY;
       
       const yDiff = this.maxPointY - this.minPointY;
-      const yLab = (yDiff * (1 - i / numberOfDvs) + this.minPointY).toFixed(2);
+      const yLab = (yDiff * (1 - i / numberOfDvs) + this.minPointY).toPrecision(2);
       
       const leftShift = yLab.toString().length * 5;
       
@@ -1177,6 +1180,15 @@ export class ModelComponent implements OnInit {
         }
       }
     )
+  }
+
+  canContinueTraining() {
+    var crossVK;
+    if(this.flag == false)
+      crossVK = 1;
+    else
+      crossVK = Number((<HTMLInputElement>document.getElementById("crossV")).value);
+    return this.currentEpoch < this.numberOfEpoch * crossVK;
   }
 
   treniraj(){
