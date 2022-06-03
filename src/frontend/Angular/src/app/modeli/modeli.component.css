@@ -1,6 +1,6 @@
-#body1{
+/* #body1{
   min-height: 1050px;
-}
+} */
 
 #naslov,#naslov1{
   text-align: center;
@@ -13,19 +13,20 @@
 }
 
 .model-selected-false {
-  color:black;
+  /* color:black; */
   font-size: large;
   padding-top: 10px;
   padding-left: 10px;
   text-align: center;
   float: left;
-  width: 265px;
+  width: 90%;
+  min-width: 265px;
   height: 60px;
   /* background-color: #c4c4c4; */
   background: transparent;
   border: 2.5px solid #bc7ca1;
   border-radius: 15px;
-  margin-left: 15px;
+  margin-left: 5%;
   margin-top: 5px;
   transform: scale(1);
 }
@@ -43,10 +44,11 @@ transform: scale(1.04);
   padding-left: 10px;
   text-align: center;
   float: left;
-  width: 265px;
+  width: 90%;
+  min-width: 265px;
   height: 60px;
   border-radius: 15px;
-  margin-left: 15px;
+  margin-left: 5%;
   margin-top: 5px;
   /* background:linear-gradient(162.06deg,#fa7795 -16.65%,#f0859e 97.46%); */
   background: transparent;
@@ -81,7 +83,7 @@ transform: scale(1.04);
 }
 
 #list{
-  width: 300px;
+  /* width: 300px; */
   height: 35px;
 }
 
@@ -130,18 +132,21 @@ transform: scale(1.04);
 }
 
 #divModeli{
-    position: relative;
-    width: 350px;
+    /* position: relative; */
+    /* width: 350px; */
     height: 500px;
-    float: left;
-    margin-left: 70px;
+    width: 80%;
+    /* float: left; */
+    /* margin-left: 70px; */
 }
 
 #info{
-  float: left;
+  /* float: left; */
   /* border: 1px solid #bc7ca1;  */
-  border: 2px solid #6D7B9F;  
-  width: 880px;
+  border: 2px solid #6D7B9F;
+  position: relative;
+  left: -10%;
+  width: 110%;
   height: 450px;
   margin-top: 35px;
   margin-right: 0px;
@@ -168,11 +173,11 @@ transform: scale(1.04);
 }
 
 #skrol{
-    width: 310px;
+    /* width: 310px; */
     height: 450px;
     /* border: 1px solid #bc7ca1;*/
     border: 2px solid #6D7B9F;
-    margin-left: 20px;
+    /* margin-left: 20px; */
     border-radius: 10px;
     color: #fff;
     font-family: 'Roboto';
@@ -185,14 +190,14 @@ transform: scale(1.04);
 #sk{
   overflow-y: auto;
   overflow-x: hidden;
-  width: 300px;
+  /* width: 300px; */
   height: 400px;
 }
 
 #m{
-   width: 290px;
+   /* width: 290px; */
    height: 70px;
-   float:left;
+   /* float:left; */
 }
 
 /* width */
