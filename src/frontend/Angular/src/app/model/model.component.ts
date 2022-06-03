@@ -2432,6 +2432,19 @@ export class ModelComponent implements OnInit {
     });
   }
 
+  showTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    var helper = (<HTMLDivElement>document.getElementById(`helper-${tooltipType}`));
+    tooltip.style.left = `${helper.getBoundingClientRect().left}px`;
+    tooltip.style.top = `${helper.getBoundingClientRect().top}px`;
+    tooltip.style.display = 'unset';
+  }
+
+  hideTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    tooltip.style.display = 'none';
+  }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
