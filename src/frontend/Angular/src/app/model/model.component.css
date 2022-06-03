@@ -101,7 +101,7 @@ p {
 
 .paraller-model:hover{
   box-shadow: 0px 0px 12px 4px #ffc0cb93;
-  transform: translateX(6px);
+  transform: translateX(7px);
   background: rgb(180, 107, 182);
 }
 /* #model-buttons {
