@@ -2377,7 +2377,7 @@ export class ModelComponent implements OnInit {
   {
     this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
       res => {
-        console.table(res);
+        this.dajMetriku(this.idModela);
 
         // nastavi trening 
         this.buttonContinue = true;
