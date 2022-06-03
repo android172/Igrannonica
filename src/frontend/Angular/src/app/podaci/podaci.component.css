@@ -62,7 +62,7 @@ ul .ngx-pagination
     padding: 6px 10px;
     border-radius: 5px;
     align-items: center;
-    background-color: #45457c;
+    background-color: #3e417f;
     color: rgb(216, 221, 251);
     min-width: 130px;
     margin: 3px 5px 3px 3px;
@@ -80,6 +80,7 @@ ul .ngx-pagination
     border-color: #7b7ba7;
     color: rgb(216, 221, 251);
     border-width: 2px;
+    cursor: pointer;
 }
 
 
@@ -647,12 +648,15 @@ input#exampleFormControlFile1{
 }
 #svi-redovi{
     color: rgb(249, 237, 245);
-    background-color: rgb(112, 51, 82);
+    background-color: #c545c952;
     border: 1px solid rgb(60, 26, 47);
     border-radius: 5px;
     margin-left: 5px;
     /* width: 140px; */
     padding: 7px 12px;
+}
+#svi-redovi:hover{
+    background-color: #c545c968;
 }
 #sve-kolone{
     color: rgb(216, 221, 251);
@@ -663,9 +667,12 @@ input#exampleFormControlFile1{
     /* width: 140px; */
     padding: 7px 12px;
 }
+#sve-kolone:hover{
+    background-color: rgb(57, 57, 131);
+}
 /****** SELEKTOVANJE REDOVA *****/
 .selectedRow{
-    background-color: rgba(255, 21, 21, 0.211);
+    background-color: #f715ff24;
 }
 
 
@@ -1577,11 +1584,15 @@ th{
     margin-top: 2px;
     color: white;
     font-size: 15px;
+    background-color: #5c6a8d;
+}
+#dugmeIstorija:hover{
+    background-color: rgb(110, 127, 165);
 }
 
-#dugmeIstorija:hover{
+/* #dugmeIstorija:hover{
     color: rgba(39, 39, 65);
-}
+} */
 
 .visinaVizuelizacije{
     height: 550px;
@@ -1611,11 +1622,11 @@ th{
 
 #numericka-tabela tr:hover:nth-child(even)
 {
-    background-color: #603753e2;
+    background-color: #f882f836;
 }
 #numericka-tabela tr:hover:nth-child(odd)
 {
-    background-color: #603753e2;
+    background-color: #f882f836;
 }
 #numericka-tabela{
     margin-top: -25px;
@@ -1691,7 +1702,7 @@ th{
     width: 100%;
     background-color: #3a3a53; 
     border-radius: 5px;
-    color: #e3536e;
+    color: #e773e7;
     box-shadow: none;
     height: 45px;
 }
@@ -1722,6 +1733,9 @@ th{
     border-radius: 5px;
     margin-left: 5px;
     padding: 7px 12px;
+}
+#izbaci-selekt-vrste:hover{
+    background-color: rgb(108, 120, 152);
 }
 
 #izbaci-selekt-kolone
@@ -1768,20 +1782,28 @@ th{
 #deleteSnap
 {
     border-radius: 5px;
-    background-color: rgb(112, 51, 82);
+    background-color: #eb46998a;
     border: 1px solid rgb(60, 26, 47);
     border: none;
     color: rgb(248, 236, 244);
     padding: 6px 12px;
 }
 
+#deleteSnap:hover{
+    background-color: #e65ca19f;
+}
+
 #sacuvaj, #sacuvajKao
 {
     border-radius: 5px;
+    width: 100px;
     background-color: #535393;
     border: none;
     padding: 7px 12px;
     color: rgb(242, 244, 252);
+}
+#sacuvajKao:hover{
+    background-color: #6767a6;
 }
 
 /* */

@@ -67,8 +67,8 @@
 
 #prijava:hover, #registracija:hover
 {
-    box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
-    opacity: 0.85;
+    box-shadow: 0px 0px 10px 3px rgba(243, 228, 255, 0.5);
+    opacity: 1;
 }
 
 #registracija, #pomocDugme2

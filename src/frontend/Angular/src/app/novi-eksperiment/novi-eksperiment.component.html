@@ -7,9 +7,23 @@
                <div class="container-fluid">
                 <div class="row" >
                     <div class="col-md-12">
-                        <button id="newExpBtn" type="button" class="btn btn-outline-primary" (click)="otvoriPolje()">New Experiment</button>  
+                        <button id="newExpBtn" type="button" class="btn btn-outline-primary" (click)="otvoriPolje()">Create New Experiment
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                              </svg>
+                        </button>  
                     </div>
                 </div>
+                <!-- <div class="row">
+                    <div class="col-md-11">
+                        <div style="width: 500px; margin: auto;" class=" d-flex justify-content-center">
+                            <h2 style="color: white;">Experiments</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+                </div> -->
                 <div class="row">
                     <div class="col-md-8" style="z-index: 100!important;">
                         
@@ -73,7 +87,7 @@
                                                         <div id="polje">
                                                             <div *ngIf="experimentName==''"><input id="ime" placeholder="Enter experiment name"  type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
                                                             <div *ngIf="experimentName!=''"><input id="ime" placeholder="Enter experiment name" value="{{experimentName}}" type="text" name="ime" (keyup)="handleKeyUp($event)"></div>
-                                                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 20px; margin-left: 10px; max-width: 140px;"></div>
+                                                            <div id="greska" style="color: rgba(251, 89, 138, 0.8); height: 20px; margin-left: 2px; max-width: 150px; margin-top: 10px;"></div>
                                                             </div>
                                                     </div>
                                                 </div>
@@ -200,7 +214,7 @@
                                             <div class="container-fluid" style="min-width: 290px;">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <div class="podaci">Load Test Dataset <i>*Optional</i></div>
+                                                        <div class="podaci">Load Test Dataset <i style="color: rgb(239, 197, 218); font-size: smaller;">*Optional</i></div>   
                                                     </div>
                                                 </div>
                                                 <div class="row rowBody">
@@ -248,7 +262,7 @@
                                                 <div class="row rowBody">
                                                     <div class="col-md-12 d-flex align-items-center" >
                                                         <span style="color: whitesmoke;">You have entered all required data </span> &nbsp;
-                                                        <span style="color: rgb(23, 181, 23);">
+                                                        <span style="color: rgb(119, 185, 225);">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
                                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                                             <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
