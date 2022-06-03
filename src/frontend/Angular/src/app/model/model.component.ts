@@ -2377,7 +2377,7 @@ export class ModelComponent implements OnInit {
   {
     this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
       res => {
-        console.table(res);
+        this.dajMetriku(this.idModela);
 
         // nastavi trening 
         this.buttonContinue = true;
@@ -2430,6 +2430,19 @@ export class ModelComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+
+  showTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    var helper = (<HTMLDivElement>document.getElementById(`helper-${tooltipType}`));
+    tooltip.style.left = `${helper.getBoundingClientRect().left}px`;
+    tooltip.style.top = `${helper.getBoundingClientRect().top}px`;
+    tooltip.style.display = 'unset';
+  }
+
+  hideTooltip(tooltipType: string) {
+    var tooltip = (<HTMLSpanElement>document.getElementById(`tooltip-${tooltipType}`));
+    tooltip.style.display = 'none';
   }
 
   private getDismissReason(reason: any): string {

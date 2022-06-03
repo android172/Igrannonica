@@ -1,6 +1,49 @@
 <div class="container-fluid">
     <div id="body1">
 
+        <span id="tooltip-settings" class="hovertext" (mouseleave)="hideTooltip('settings')" data-tooltip=
+            "           Network settings
+
+            Setup network Hyperparameters:
+            1) Problem type - For classification output column must be one 
+              categorical variable or its one-hot encoding (multi-class).
+              Regression can be run for any number of numerical variables.
+            2) Loss function - Used for model evaluation during training.
+              Different functions available depending on the problem type.
+            3) Optimizer - Determines optimization algorithm. Some
+              optimization algorithms may require additional hyperparameters. 
+            4) Regularization - Regularization type. None used for rate of 0.
+            5) Batch size - Number of rows computed per sample.
+            ">
+        </span>
+        <span id="tooltip-layers" class="hovertext" (mouseleave)="hideTooltip('layers')" data-tooltip=
+            "     Network architecture.
+
+            Configure number and structure of hidden
+            layers (up to 10). Each layer can be given 
+            a different activation function and neuron
+            count. Layer can have up to 14 neurons.
+            ">
+        </span>
+        <span id="tooltip-columns" class="hovertext" (mouseleave)="hideTooltip('columns')" data-tooltip=
+            "     Input and output columns
+
+            Select which columns will be used in the model,
+            and in which way. Input columns with left drift 
+            color-coded blue. Output columns with right
+            drift color-coded red. White columns not used.
+            ">
+        </span>
+        <span id="tooltip-statistics" class="hovertext" (mouseleave)="hideTooltip('statistics')" data-tooltip=
+            "    Model statistics
+
+            Displays a breakdown of computed 
+            model statistics. Available only
+            after training completion. Differs 
+            depending on the problem type.
+            ">
+        </span>
+
         <div class="row" style="padding-top: 20px;">
             <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center dugmici">
                 <div id="outliers-box">
@@ -39,6 +82,11 @@
                         </label> -->
                         <div [class.input-disabled]="inputsLocked == true">
                             <h3>Select I/O Columns</h3>
+                            <div id="header-help">
+                                <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                </div>
+                            </div>
                             <div class="pb-3" *ngFor="let e of kolone2; let i = index"
                                 style="color: #fff; font-size: 15px;">
                                 <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
@@ -63,7 +111,18 @@
 
                 <div class="container-fluid" id="box">
                     <div [class.input-disabled]="inputsLocked == true">
-                        <h3>Network Settings</h3>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <h3>Network Settings</h3>
+                            </div>
+                            <div class="col-md-1">
+                                <div id="header-help">
+                                    <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12 d-flex" id="podesavanja">
                                 <div class="col-md-3">
@@ -287,6 +346,11 @@
                     <div class="col-md-5" id="collapse" *ngIf="prikazi1==true" style="position:relative;">
                         <div id="metrika">
                             <h3>Train and test dataset statistics</h3>
+                            <div id="header-help">
+                                <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                </div>
+                            </div>
                             <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
                                 <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
                                     <table id="stat" style="width:100%">
@@ -408,6 +472,11 @@
                         <div class="container-fluid" [class.input-disabled]="inputsLocked == true">
                             <div class="row d-flex justify-content-center">
                                 <h3>Hidden layers</h3>
+                                <div id="header-help">
+                                    <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
+                                </div>
                                 <button id="minus1" (click)="promeni1(2)">—</button>
                                 <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
                                 <button id="plus1" (click)="promeni1(1)">+</button>

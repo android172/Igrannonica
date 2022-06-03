@@ -480,6 +480,7 @@ input#exampleFormControlFile1{
 #noviEksp.openn{
     visibility: visible!important;
     width: max-content;
+    padding-top:40px;
 }
 
 /* Dugme za novi eksperiment */
