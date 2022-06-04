@@ -905,7 +905,7 @@
 <div  class="modal fade" id="ModalSaveAs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content"style="background: rgba(36, 38, 74, 0.95);">
-        <div class="modal-header " style="border-bottom: none; color: wheat">
+        <div class="modal-header " style="border-bottom: none; color: #eee">
           <h3 class="modal-title" id="exampleModalLabel" style="font-size: large; margin-top: 10px; margin-left: 10px;">Save current dataset version</h3>
           <button #btnexit type="button" (click)="vratiTekstiNaziv()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -913,7 +913,7 @@
         <div class="modal-body justify-content-center align-items-center">
             <div style="margin: auto; width: 80%;">
                 <input placeholder="Enter version name" type="text" id="imeVerzije" [(ngModel)]="nazivSnapshot" >  <!--(change)="daLiPostoji()" -->
-                <div id="nijeUnetoImeVerzije" style="color: rgb(255, 43, 75);  visibility: hidden;">*Version name not given.</div>
+                <div id="nijeUnetoImeVerzije" style="color: #a16c8b;  visibility: hidden;">*Version name not given.</div>
             </div>
         </div>
     
@@ -955,11 +955,11 @@
   </ng-template>
 
   <ng-template #modalDelete let-modal>
-    <div class="modal-header" style= "background: rgba(36, 38, 74, 0.95); border-bottom: none; color: wheat;">
+    <div class="modal-header" style= "background: rgba(36, 38, 74, 0.95); border-bottom: none; color: #eee;">
       <h3 class="modal-title" id="modal-basic-title" style="margin-bottom: 0px; font-size:large">Delete</h3>
       <button type="button" class="btn-close" (click)="modal.close('Close click')" aria-label="Close" style="box-shadow: none"></button>
     </div>
-    <div class="modal-body  d-flex align-items-center " style= "background: rgba(36, 38, 74, 0.95); color: white">
+    <div class="modal-body  d-flex align-items-center " style= "background: rgba(36, 38, 74, 0.95); color: #eee">
         <div id="textDelete">
            
         </div>
@@ -972,7 +972,7 @@
 
   <ng-template #modalNew let-modal>
     <div class="modal-header" style="height: 50px; border-bottom: none; background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;" >
-      <h3 class="modal-title pt-3" id="modal-basic-title" style="color: wheat; font-size: large">Create New Row</h3>
+      <h3 class="modal-title pt-3" id="modal-basic-title" style="color: #eee; font-size: large">Create New Row</h3>
     </div>
     <div class="modal-body justify-content-center d-flex align-items-center" style="background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;">
         <div id="textNew" class="pt-2">
@@ -991,10 +991,11 @@
   </ng-template>
 
   <ng-template #modalNaValue let-modal>
-    <div class="modal-header" style="height:50px; background-color: #ddddf6;" >
-      <h3 class="modal-title pt-3" id="modal-basic-title">Replace NA values with new value</h3>
+    <div class="modal-header" style="height: 50px; border-bottom: none; background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;" >
+      <h3 class="modal-title pt-3" id="modal-basic-title" style="color: #eee; font-size: large">Replace NA values with new value</h3>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')" style="border: none;"></button>
     </div>
-    <div class="modal-body justify-content-center d-flex align-items-center">
+    <div class="modal-body justify-content-center d-flex align-items-center" style="background: rgba(36, 38, 74, 0.95); padding-bottom: 0px; color: #eee;">
         <div id="textNew" class="pt-2">
             <h4>Enter new value:</h4>
             <div class="d-flex justify-content-between">
@@ -1004,40 +1005,41 @@
             <div id="checkNumerical">*You entered wrong data type</div>
         </div>
     </div>
-    <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-otkazi-newrow"  class="btn btn-outline-dark"  (click)="modal.close('Close click')">Close</button>
-        <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="fillNaWithValue()" (click)="modal.close('Save click')" >Replace</button>
+    <div class="modal-footer  d-flex justify-content-between" style=" border-top: none; background: rgba(36, 38, 74, 0.95); ">
+        <button type="button" id="btn-otkazi-newrow"  class="btn btn-outline-dark"  (click)="modal.close('Close click')" id="dugmePopup2">Close</button>
+        <button type="button" id="btn-kreirajnovired" class="btn btn-outline-dark" (click)="fillNaWithValue()" (click)="modal.close('Save click')" id="dugmePopup1">Replace</button>
     </div>
   </ng-template>
 
-  <ng-template #modalSnapshot let-modal>
-    <div class="modal-header" >
-      <h3 class="modal-title" id="modal-basic-title">You have made changes!</h3>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  <ng-template #modalSnapshot let-modal >
+    <div class="modal-header" style="height: 50px; border-bottom: none; background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;" >
+      <h3 class="modal-title" id="modal-basic-title" style="color: #eee; font-size: large">You have made changes!</h3>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')" style="border: none;"></button>
     </div>
-    <div class="modal-body justify-content-center d-flex align-items-center ">
+    <div class="modal-body justify-content-center d-flex align-items-center " style="background: rgba(36, 38, 74, 0.95); padding-bottom: 0px; color: #eee;">
         <div id="textDelete">
             If you switch to another dataset version you will lose the changes you made. Are you sure you want to continue?
         </div>
     </div>
-    <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="modal.close('Save click')">No</button>
-        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="discardChanges()" (click)="modal.close('Close click')">Yes</button>
+    <div class="modal-footer  d-flex justify-content-between" style=" border-top: none; background: rgba(36, 38, 74, 0.95); ">
+        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="modal.close('Save click')" id="dugmePopup2">No</button>
+        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="discardChanges()" (click)="modal.close('Close click')" id="dugmePopup1">Yes</button>
     </div>
   </ng-template>
   
   <ng-template #modalBrisanjeVerzije let-modal>
-    <div class="modal-header" >
-      <h3 class="modal-title" id="modal-basic-title">Delete Version</h3>
+    <div class="modal-header" style="height: 50px; border-bottom: none; background: rgba(36, 38, 74, 0.95); padding-bottom: 0px;" >
+      <h3 class="modal-title" id="modal-basic-title" style="color: #eee; font-size: large">Delete Version</h3>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')" style="border: none;"></button>
     </div>
-    <div class="modal-body justify-content-center d-flex align-items-center ">
+    <div class="modal-body justify-content-center d-flex align-items-center " style="background: rgba(36, 38, 74, 0.95); padding-bottom: 0px; color: #eee;">
         <div id="textDelete">
             Are you sure you want to delete current dataset version? 
         </div>
     </div>
-    <div class="modal-footer  d-flex justify-content-between">
-        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
-        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="izbrisiSnapshot()" (click)="modal.close('Close click')">Delete</button>
+    <div class="modal-footer  d-flex justify-content-between" style=" border-top: none; background: rgba(36, 38, 74, 0.95); ">
+        <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="modal.close('Save click')" id="dugmePopup2">Cancel</button>
+        <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="izbrisiSnapshot()" (click)="modal.close('Close click')" id="dugmePopup1">Delete</button>
     </div>
   </ng-template>
 
