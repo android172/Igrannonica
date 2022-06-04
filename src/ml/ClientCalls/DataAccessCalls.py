@@ -40,3 +40,9 @@ def get_column_types(self):
     self.connection.send(json.dumps(column_types))
     
     print(f"Column types requested.")
+
+def get_column_numerical(self):
+    columns = self.network.data.get_column_numerical()
+    self.connection.send(json.dumps(columns))
+    
+    print(f"Column numerical check requested.")

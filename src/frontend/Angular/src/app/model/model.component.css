@@ -1644,6 +1644,11 @@ body {
   outline: none;
 }
 
+#pModel-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
 .model-button {
   background-color: #fa6698;
   border: none;

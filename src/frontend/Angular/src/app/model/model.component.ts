@@ -199,6 +199,7 @@ export class ModelComponent implements OnInit {
   @ViewChild('btnexitoverridemodel') btnexitoverridemodel:any;
 
   @ViewChild('parallel') parallel :any;
+  @ViewChild('notSaved') notSaved :any;
 
   // progress bar
   public numOfEpochsTotal : number = 0;
@@ -1354,15 +1355,15 @@ export class ModelComponent implements OnInit {
   forkTraining() {
     // Za sada samo odbacuje trening
     if (this.idModela == 0) {
-      // TODO
-      this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
-        res => {
-          this.onInfo("Training dissmisted.");
-        },
-        err => {
-          this.onError(err.error);
-        }
-      )
+      this.open(this.notSaved);
+      // this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      //   res => {
+      //     this.onInfo("Training dissmisted.");
+      //   },
+      //   err => {
+      //     this.onError(err.error);
+      //   }
+      // )
     }
     else {
       var crossVK;
