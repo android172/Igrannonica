@@ -248,7 +248,7 @@ export class ModelComponent implements OnInit {
       
       var epochRes = res.epochRes;
 
-      var epoch = epochRes.epoch;
+      var epoch = epochRes.epoch + 1;
       if (epochRes.fold !== undefined) {
         epoch += this.numberOfEpoch * epochRes.fold;
       }
@@ -341,6 +341,11 @@ export class ModelComponent implements OnInit {
       this.signalR.StartModelTrainingListener();
       ////console.log(this.signalR.data);
     }
+    var modelValue = sessionStorage.getItem('models');
+    if(modelValue != null){
+      this.parallelModels = JSON.parse(modelValue);
+    }  
+
     (<HTMLInputElement>document.getElementById("toggle")).checked = true;
 
   }
@@ -1460,6 +1465,7 @@ export class ModelComponent implements OnInit {
         'currentTrainStatus':0,
         'modelState': modelState
       })
+      sessionStorage.setItem('models',JSON.stringify(this.parallelModels));
 
       this.idModela = 0;
       this.enableInputs();
@@ -1515,6 +1521,7 @@ export class ModelComponent implements OnInit {
           this.parallelModels.splice(index, 1);
         modal.dismiss('Cross click');
         this.onInfo("Training dismisted.");
+        sessionStorage.setItem('models',JSON.stringify(this.parallelModels));
       },
       err => {
         this.onError(err.error);
