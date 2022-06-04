@@ -46,9 +46,10 @@
             "    Model statistics
 
             Displays a breakdown of computed 
-            model statistics. Available only
-            after training completion. Differs 
-            depending on the problem type.
+            model statistics. Updated after
+            training completion or on model
+            pause. Differs depending on the
+            problem type.
             ">
         </span>
 
@@ -781,7 +782,7 @@
                             *ngIf="modelparallel.modelState == 'r'">Pause training</button>
                         <button type="button" (click)="continueParallelTraining(modelparallel)"        class="model-button btn btn-primary"
                             *ngIf="modelparallel.modelState == 'p'">Continue training</button>
-                        <button type="button" (click)="dissmissParallelTraining(modelparallel, modal)" class="model-button btn btn-primary">Dissmiss model</button>
+                        <button type="button" (click)="dismissParallelTraining(modelparallel, modal)" class="model-button btn btn-primary">Dismiss model</button>
                     </div>
                 </div>
 
@@ -803,11 +804,12 @@
                     <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
                 </div>
                 <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
-                    
+                    <p>Upon unlock, unsaved models can only be dismissed. Are you sure you want to continue?</p>
                 </div>
 
                 <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
-                    
+                    <button type="button" class="model-button btn btn-primary" (click)="dismissTraining(modal)">Dismiss model</button>
+                    <button type="button" class="model-button btn btn-primary" (click)="saveTrainingForParralel(modal)">Save model</button>
                 </div>
             </ng-template>
 
