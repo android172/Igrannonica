@@ -191,8 +191,6 @@ export class ModelComponent implements OnInit {
   public lossLineEnabled: boolean[] = [];
 
   public nizNedozvoljenih : string[] = [];
-  pomocniNiz : any[] = [];
-  pomocniNizKoloneString : any[] = [];
   jsonPom : any;
 
   @ViewChild('overridemodela') overridemodela:any;
@@ -878,7 +876,7 @@ export class ModelComponent implements OnInit {
       {
         if(this.nizNedozvoljenih[i] === e.value)
         {
-          this.onError("All input columns need to be numerical or encoded");
+          this.onInfo("Columns need to be numerical or encoded and cannot contain NA");
           return;
         }
       }
@@ -2035,23 +2033,13 @@ export class ModelComponent implements OnInit {
    }
    this.http.post(url+"/api/Eksperiment/Eksperiment/Csv",null,{params:{idEksperimenta:this.idEksperimenta, idSnapshota:id.toString()}}).subscribe(
      res=>{
-       this.http.get(url+"/api/Upload/paging/1/10?idEksperimenta=" + this.idEksperimenta).subscribe(
-         (response: any) => {
-           this.pomocniNiz = [];
-           this.pomocniNizKoloneString = [];
-           this.jsonPom =  JSON.parse(response.data);
-           var br = 0;
-          this.pomocniNiz = Object.values(this.jsonPom[0]);;
-          // console.log(this.pomocniNiz);
-          for(let i=0; i<this.pomocniNiz.length; i++)
-          {
-            if (typeof this.pomocniNiz[i] === 'string')
-            {
-              this.pomocniNizKoloneString[br] = i;
-              // console.log(this.pomocniNizKoloneString[br]);
-              br++;
-            }
-          }
+      this.http.get(url+"/api/Upload/ColumnsNumericalCheck?idEksperimenta=" + this.idEksperimenta).subscribe(
+        (response: any) => {
+          
+          var pomocniNiz = response;
+
+          console.log(pomocniNiz);
+
           this.http.get(url+"/api/Model/Kolone?idEksperimenta=" + this.idEksperimenta + "&snapshot="+ id).subscribe(
            (response: any)=>{
               //  this.nizKolonaStr = [];
@@ -2068,12 +2056,15 @@ export class ModelComponent implements OnInit {
                   this.kolone2.push({value : kolona, type : "Input"});
                  }
                  this.kolone2[this.kolone2.length - 1].type = "Output";
-                 for(let i=0; i< this.pomocniNizKoloneString.length; i++)
-                {
-                    (this.kolone2[this.pomocniNizKoloneString[i]]).type = 'None';
-                    // console.log(this.kolone2[this.nizKolonaStr[i]]);
-                    this.nizNedozvoljenih.push((this.kolone2[this.pomocniNizKoloneString[i]]).value);
-                }
+                 for(let i=0; i<pomocniNiz.length; i++)
+                 {
+                   console.log(pomocniNiz[i]);
+                   if(pomocniNiz[i] == false)
+                   {
+                     (this.kolone2[i]).type = 'None';
+                     this.nizNedozvoljenih.push((this.kolone2[i]).value);
+                   }
+                 }
                 var ind = 0;
                 for(let i=0; i< this.kolone2.length; i++)
                 {
