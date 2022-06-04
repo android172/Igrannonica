@@ -75,6 +75,7 @@ def load_model(self):
             self.report_error("ERROR :: Output column is of wrong format.")
             return
         
+    ann.id = model_id
     self.active_models[model_id] = ann
     
     if not ann.load_weights(model_path):
@@ -106,6 +107,7 @@ def merge_models(self):
         self.report_error("ERROR :: Wrong model identifier.")
         return
     
+    networkF.id = idI
     self.active_models[idI] = networkF
     
     self.connection.send("OK")
