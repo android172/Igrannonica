@@ -580,6 +580,7 @@ export class ModeliComponent implements OnInit {
     );
   }
 
+  public K:any[] = [];
   compareModels(idM: any)
   {
     this.nizGlavni = [];
@@ -648,7 +649,7 @@ export class ModeliComponent implements OnInit {
                 this.nizGlavni[i][k].id=this.modeli[j].name;  
         }
         
-        console.log("DEBUG");
+        this.K=this.nizGlavni[0];
         
         
         // Compute best scores
