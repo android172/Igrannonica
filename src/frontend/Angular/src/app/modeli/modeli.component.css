@@ -103,7 +103,7 @@ transform: scale(1.04);
 
 .bold-score {
   font-weight: bold;
-  color: #CED9FF;
+  color: #e3aecdc1;
 }
 
 #list{
@@ -679,4 +679,42 @@ input:-webkit-autofill:active
 #dugmeDL:hover{
   background-color: #4e4f64; 
   color:rgb(255, 255, 255);
+}
+
+#tabelaK{
+  width: 70%;
+  margin: auto;
+  padding-bottom: 30px;
+}
+#tabelaR{
+  width: 100%;
+  margin: auto;
+  float: left;
+  padding-bottom: 30px;
+}
+
+table {
+  color: whitesmoke;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+ .bodytable:nth-child(even) {
+  background-color: #dba2c32e;
+} 
+
+.bodytable:nth-child(odd) {
+  background-color: #72445f44;
+
+}
+
+#poljeT{
+  text-align: left;
+  padding: 7px;
+  overflow: hidden;
+}
+#poljeH{
+  text-align: left;
+  padding: 7px;
+  color: #a16c8be0;
 }

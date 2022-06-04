@@ -299,7 +299,7 @@ export class ModeliComponent implements OnInit {
           this.type=0;
           console.log(this.type);
           (<HTMLDivElement>document.getElementById("statistikaK")).style.display="none";
-          (<HTMLDivElement>document.getElementById("statistikaR")).style.display="block";
+          //(<HTMLDivElement>document.getElementById("statistikaR")).style.display="block";
           // (<HTMLDivElement>document.getElementById("statistikaK")).style.visibility="hidden";
           // (<HTMLDivElement>document.getElementById("statistikaR")).style.visibility="visible";
 

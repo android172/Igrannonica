@@ -127,50 +127,50 @@
           <div id="compare" *ngIf="brUp>0">
             <div id="com">Compare your models</div>
             <div id="tabelaR" *ngIf="type==0">
-                <div *ngFor="let i of nizGlavni; let k=index">
-                <h3 style="color: white;">{{imenaK[k]}}</h3>
-                <table style="width:50%; color: white;">
+                <div *ngFor="let i of nizGlavni; let k=index" style="width: 50%; padding-left: 30px; padding-bottom: 30px; padding-right: 30px; float: left;">
+                <h3 style="color: #EEEEEE">{{imenaK[k]}}</h3>
+                <table>
                   <tr>
-                    <th>Model name</th>
-                    <th>MAE</th>
-                    <th>MSE</th>
-                    <th>RSE</th>
-                    <th>R2</th>
-                    <th>AdjustedR2</th>
+                    <th id="poljeH">Model name</th>
+                    <th id="poljeH">MAE</th>
+                    <th id="poljeH">MSE</th>
+                    <th id="poljeH">RSE</th>
+                    <th id="poljeH">R2</th>
+                    <th id="poljeH">AdjustedR2</th>
                   </tr>
-                  <tr *ngFor="let j of i">
-                    <td>{{j.id}}</td>
-                    <td [class.bold-score]="j.mae == maeBest">{{j.mae}}</td>
-                    <td [class.bold-score]="j.mse == mseBest">{{j.mse}}</td>
-                    <td [class.bold-score]="j.rse == rseBest">{{j.rse}}</td>
-                    <td [class.bold-score]="j.r2 == r2Best">{{j.r2}}</td>
-                    <td [class.bold-score]="j.adjustedR2 == adjustedR2Best">{{j.adjustedR2}}</td>
+                  <tr class="bodytable" *ngFor="let j of i">
+                    <td id="poljeT">{{j.id}}</td>
+                    <td id="poljeT" [class.bold-score]="j.mae == maeBest">{{j.mae}}</td>
+                    <td id="poljeT" [class.bold-score]="j.mse == mseBest">{{j.mse}}</td>
+                    <td id="poljeT" [class.bold-score]="j.rse == rseBest">{{j.rse}}</td>
+                    <td id="poljeT" [class.bold-score]="j.r2 == r2Best">{{j.r2}}</td>
+                    <td id="poljeT" [class.bold-score]="j.adjustedR2 == adjustedR2Best">{{j.adjustedR2}}</td>
                   </tr>
                 </table>
               </div>
             </div>
             <div id="tabelaK" *ngIf="type==1">
-              <h3 style="color: white;">{{K[0].kolona}}</h3>
-              <table style="width:50%; color: white;">
-                <tr>
-                  <th>Model name</th>
-                  <th>Accuracy</th>
-                  <th>Balanced Accuracy</th>
-                  <th>Cross Entropy loss</th>
-                  <th>Hamming loss</th>
-                  <th>Precision</th>
-                  <th>Recall</th>
-                  <th>F1Score</th>
+              <h3 style="color: #EEEEEE; width: 70%;">Classification with output columns: {{K[0].kolona}}</h3>
+              <table>
+                <tr class="headertable">
+                  <th id="poljeH">Model name</th>
+                  <th id="poljeH">Accuracy</th>
+                  <th id="poljeH">Balanced Accuracy</th>
+                  <th id="poljeH">Cross Entropy loss</th>
+                  <th id="poljeH">Hamming loss</th>
+                  <th id="poljeH">Precision</th>
+                  <th id="poljeH">Recall</th>
+                  <th id="poljeH">F1Score</th>
                 </tr>
-                <tr *ngFor="let i of nizGlavni[0]">
-                  <td>{{i.id}}</td>
-                  <td [class.bold-score]="i.accuracy == accuracyBest">{{i.accuracy}}</td>
-                  <td [class.bold-score]="i.balancedAccuracy == balancedAccuracyBest">{{i.balancedAccuracy}}</td>
-                  <td [class.bold-score]="i.crossEntropyLoss == crossEntropyLossBest">{{i.crossEntropyLoss}}</td>
-                  <td [class.bold-score]="i.hammingLoss == hammingLossBest">{{i.hammingLoss}}</td>
-                  <td [class.bold-score]="i.precision == precisionBest">{{i.precision}}</td>
-                  <td [class.bold-score]="i.recall == recallBest">{{i.recall}}</td>
-                  <td [class.bold-score]="i.f1Score == f1ScoreBest">{{i.f1Score}}</td>
+                <tr class="bodytable" *ngFor="let i of nizGlavni[0]">
+                  <td id="poljeT">{{i.id}}</td>
+                  <td id="poljeT" [class.bold-score]="i.accuracy == accuracyBest">{{i.accuracy}}</td>
+                  <td id="poljeT" [class.bold-score]="i.balancedAccuracy == balancedAccuracyBest">{{i.balancedAccuracy}}</td>
+                  <td id="poljeT" [class.bold-score]="i.crossEntropyLoss == crossEntropyLossBest">{{i.crossEntropyLoss}}</td>
+                  <td id="poljeT" [class.bold-score]="i.hammingLoss == hammingLossBest">{{i.hammingLoss}}</td>
+                  <td id="poljeT" [class.bold-score]="i.precision == precisionBest">{{i.precision}}</td>
+                  <td id="poljeT" [class.bold-score]="i.recall == recallBest">{{i.recall}}</td>
+                  <td id="poljeT" [class.bold-score]="i.f1Score == f1ScoreBest">{{i.f1Score}}</td>
                 </tr>
               </table>
             </div>
@@ -178,7 +178,7 @@
           </div>
           <div id="compare" *ngIf="brUp==0">
             <div id="com">Compare your models</div>
-            Selected model is not comparable to any of models in your list.
+            <div style="color: rgba(188, 124, 161, 0.811); text-align: center; padding: 30px;">Selected model is not comparable to any of models in your list.</div>
           </div>
         </div>
       </div>
