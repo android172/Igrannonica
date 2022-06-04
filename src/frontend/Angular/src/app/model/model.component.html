@@ -89,10 +89,12 @@
                             <span class="checkmark"></span>
                         </label> -->
                         <div [class.input-disabled]="inputsLocked == true">
-                            <h3>Select I/O Columns</h3>
-                            <div id="header-help">
-                                <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
-                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                            <div style="position:relative">
+                                <h3>Select I/O Columns</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="pb-3" *ngFor="let e of kolone2; let i = index"
@@ -119,15 +121,11 @@
 
                 <div class="container-fluid" id="box">
                     <div [class.input-disabled]="inputsLocked == true">
-                        <div class="row">
-                            <div class="col-md-11">
-                                <h3>Network Settings</h3>
-                            </div>
-                            <div class="col-md-1">
-                                <div id="header-help">
-                                    <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
-                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
-                                    </div>
+                        <div style="position:relative">
+                            <h3>Network Settings</h3>
+                            <div id="header-help" class="get-to-top-right">
+                                <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                         </div>
@@ -353,10 +351,12 @@
                     </div>
                     <div class="col-md-5" id="collapse" *ngIf="prikazi1==true" style="position:relative;">
                         <div id="metrika">
-                            <h3>Train and test dataset statistics</h3>
-                            <div id="header-help">
-                                <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
-                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                            <div style="position:relative">
+                                <h3>Train and test dataset statistics</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
                                 </div>
                             </div>
                             <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
@@ -479,10 +479,12 @@
                     <div class="col-md-3 justify-content-center okvir">
                         <div class="container-fluid" [class.input-disabled]="inputsLocked == true">
                             <div class="row d-flex justify-content-center">
-                                <h3>Hidden layers</h3>
-                                <div id="header-help">
-                                    <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
-                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                <div style="position:relative">
+                                    <h3>Hidden layers</h3>
+                                    <div id="header-help" class="get-to-top-right">
+                                        <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
+                                            <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <button id="minus1" (click)="promeni1(2)">—</button>
