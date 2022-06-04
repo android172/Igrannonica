@@ -2,7 +2,7 @@
   min-height: 1050px;
 } */
 
-#naslov,#naslov1{
+#naslov,#naslov1,#com{
   text-align: center;
   font-weight: 500;
   font-size: 15px;
@@ -634,12 +634,12 @@ input:-webkit-autofill:active
 #compare{
   float: left;
   border: 2px solid #6D7B9F;  
-  width: 1210px;
+  width: 100%;
   height: max-content;
   margin-right: 0px;
   border-radius: 10px;
   background-color: #272741;
-  margin-left: 90px;
+  position: relative;
 }
 
 #dugmeDL{
