@@ -9,116 +9,143 @@
       <div class="row">
         <div class="col-md-4">
           <div id="divModeli">
-              <div id="skrol">
-                <div id="list" class="d-flex justify-content-center" style="width: 100%;">
-                  <div id="naslov">List of models</div>
-                  <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisiSve" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-left: 20px; margin-top: 10px;'>
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                    </svg> -->
+            <div id="skrol">
+              <div *ngif="flag == true">
+                  <div id="list" class="d-flex justify-content-center" style="width: 100%;">
+                    <div id="naslov">List of models</div>
+                    <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisiSve" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-left: 20px; margin-top: 10px;'>
+                      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                      </svg> -->
+                    </div>
+                  </div>
+                  <div id="model-list-headers">
+                    <button class="model-list-button" (click)="changeSort('n')">Name</button>
+                    <button class="model-list-button" (click)="changeSort('d')">Date</button>
+                  </div>
+                  <div id="sk">
+                      <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
+                        <ng-template #unselectedModel>
+                        </ng-template>
+                          <div class="model-selected-{{'p' + i === this.selektovanModel}}" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)">
+                              <div class="name" id="p{{i}}">{{ m.name }}</div>
+                              <div class="date" id="p{{i}}">{{m.createdDate}}</div>
+                            <div class="o" id="p{{i}}">{{m.opis}}</div>
+                          </div>
+                      </div>
                   </div>
                 </div>
-                <div id="model-list-headers">
-                  <button class="model-list-button" (click)="changeSort('n')">Name</button>
-                  <button class="model-list-button" (click)="changeSort('d')">Date</button>
-                </div>
-                <div id="sk">
-                    <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
-                      <ng-template #unselectedModel>
-                      </ng-template>
-                        <div class="model-selected-{{'p' + i === this.selektovanModel}}" id="p{{i}}" (click)="promeni($event)" (click)="modelDetaljnije(m.id)" (click)="uzmiId(m.id)">
-                            <div class="name" id="p{{i}}">{{ m.name }}</div>
-                            <div class="date" id="p{{i}}">{{m.createdDate}}</div>
-                          <div class="o" id="p{{i}}">{{m.opis}}</div>
-                        </div>
+                <div *ngIf="flag == false">
+                  <div id="list" class="d-flex justify-content-center" style="width: 100%;">
+                    <div id="naslov">List of models</div>
+                    <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisiSve" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-left: 20px; margin-top: 10px;'>
+                      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                      </svg> -->
                     </div>
+                  </div>
+                  <div class="row d-flex align-items-center justify-content-center pt-3">
+                    <div class="col-md-12">
+                      <div style="text-align: center; color:#bc7ca1; font-size: 18px; font-weight: 500;">*You haven't created any models yet!</div>
+                    </div>
+                  </div>
                 </div>
               </div>
           </div>
         </div>
         <div class="col-md-8">
           <div id="info">
-              <div id="naslov1">
-                <button id="dugmeDL" (click)="downloadModel()">Download Model</button>
-                <div style="width: 400px; float: left; margin-left: 120px;">Details of selected model</div>
-                <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                  </svg>
-                </div>
-              </div>
-              <div id="osnovneI">
-                <div id="gi">General informations</div>
-                  <div id="nm">Model name</div>
-                  <div id="n"></div>
-                  <div id="nm">Creation date</div>
-                  <div id="d"></div>
-                  <div id="nmo">Model description</div>
-                  <div (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" style='font-size:30px;cursor: pointer; color: #bc7ca1;'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              <div *ngIf="flag == true">
+                <div id="naslov1">
+                  <button id="dugmeDL" (click)="downloadModel()">Download Model</button>
+                  <div style="width: 400px; float: left; margin-left: 120px;">Details of selected model</div>
+                  <div class="ikonicaTrash" data-bs-toggle="modal" data-bs-target="#exampleModalBrisi" style='font-size:30px;cursor: pointer; color: #CED9FF; float: right; margin-right: 8px;'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                     </svg>
                   </div>
-                  <div id="opis"></div>
-              </div>
-              <div id="pod">
-                <div id="se">Settings</div>
-                  <div id="nm">Problem type</div>
-                  <div id="ann"></div>
-                  <div id="nm">Snapshot version</div>
-                  <div id="snap"></div>
-                  <div id="nm">Optimizer</div>
-                  <div id="opt"></div>
-                  <div id="nm">Current epoch</div>
-                  <div id="ce"></div>
-                  <div id="nm">Number of epochs</div>
-                  <div id="eph"></div>
-                  <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
-              </div>
-              <div id="statistikaR" *ngIf="type==0">
-                <div id="st">Statistic</div>
-                <div id="skrol1">
-                  <div *ngFor="let j of jsonStatistikaR; let i=index">
-                    <div id="nazivK">Output column name</div>
-                    <div id="nameData">{{j.kolona}}</div>
-                    <div id="nazivK">MAE(Mean absolute error)</div>
-                    <div id="maeData">{{j.mae}}</div>
-                    <div id="nazivK">MSE(Mean squared error)</div>
-                    <div id="mseData">{{j.mse}}</div>
-                    <div id="nazivK">RSE(Residual squared error)</div>
-                    <div id="rseData">{{j.rse}}</div>
-                    <div id="nazivK">R2(R-squared)</div>
-                    <div id="r2Data">{{j.r2}}</div>
-                    <div id="nazivK">AdjustedR2</div>
-                    <div id="ar2Data">{{j.adjustedR2}}</div>
+                </div>
+                <div id="osnovneI">
+                  <div id="gi">General informations</div>
+                    <div id="nm">Model name</div>
+                    <div id="n"></div>
+                    <div id="nm">Creation date</div>
+                    <div id="d"></div>
+                    <div id="nmo">Model description</div>
+                    <div (click)="Izmeni()" data-bs-toggle="modal" data-bs-target="#exampleModal1" style='font-size:30px;cursor: pointer; color: #bc7ca1;'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                      </svg>
+                    </div>
+                    <div id="opis"></div>
+                </div>
+                <div id="pod">
+                  <div id="se">Settings</div>
+                    <div id="nm">Problem type</div>
+                    <div id="ann"></div>
+                    <div id="nm">Snapshot version</div>
+                    <div id="snap"></div>
+                    <div id="nm">Optimizer</div>
+                    <div id="opt"></div>
+                    <div id="nm">Current epoch</div>
+                    <div id="ce"></div>
+                    <div id="nm">Number of epochs</div>
+                    <div id="eph"></div>
+                    <!-- <button id="dugme" data-bs-toggle="modal" data-bs-target="#exampleModal3">Izbriši model</button> -->
+                </div>
+                <div id="statistikaR" *ngIf="type==0">
+                  <div id="st">Statistic</div>
+                  <div id="skrol1">
+                    <div *ngFor="let j of jsonStatistikaR; let i=index">
+                      <div id="nazivK">Output column name</div>
+                      <div id="nameData">{{j.kolona}}</div>
+                      <div id="nazivK">MAE(Mean absolute error)</div>
+                      <div id="maeData">{{j.mae}}</div>
+                      <div id="nazivK">MSE(Mean squared error)</div>
+                      <div id="mseData">{{j.mse}}</div>
+                      <div id="nazivK">RSE(Residual squared error)</div>
+                      <div id="rseData">{{j.rse}}</div>
+                      <div id="nazivK">R2(R-squared)</div>
+                      <div id="r2Data">{{j.r2}}</div>
+                      <div id="nazivK">AdjustedR2</div>
+                      <div id="ar2Data">{{j.adjustedR2}}</div>
+                    </div>
                   </div>
+                  <button id="dugmeR" (click)="nastaviTreniranje()">Continue training</button>
                 </div>
-                <button id="dugmeR" (click)="nastaviTreniranje()">Continue training</button>
+                <div id="statistikaK">
+                  <div id="st">Statistic</div>
+                  <div id="statistikaK1">
+                    <div id="nm">Accuracy</div>
+                  <div id="aData"></div>
+                  <div id="nm">Hamming loss</div>
+                  <div id="bData"></div>
+                  <div id="nm">Precision</div>
+                  <div id="cData"></div>
+                  <div id="nm">F1Score</div>
+                  <div id="fData"></div>
+                  </div>
+                  <div id="statistikaK1">
+                  <div id="nm">Balanced Accuracy</div>
+                  <div id="hData"></div>
+                  <div id="nm">Cross Entropy loss</div>
+                  <div id="pData"></div>
+                  <div id="nm">Recall</div>
+                  <div id="rData"></div>
+                  <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalModeli"> Confusion matrix</button>
+                  </div>
+                  <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
+                </div>
+            </div>
+            <div *ngIf="flag == false">
+              <div id="naslov1"><button id="dugmeDL" (click)="downloadModel()" style="visibility:hidden;">Download Model</button><div style="width: 400px; float: left; margin-left: 120px;">Details of selected model</div></div>
+              <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-md-12">
+                  <div id="naslov2"><button id="dugmeDL" (click)="downloadModel()" style="visibility:hidden;">Download Model</button><div style="width: 400px; float: left; margin-left: 100px;">*Nothing to show</div></div>
+                </div>
               </div>
-              <div id="statistikaK">
-                <div id="st">Statistic</div>
-                <div id="statistikaK1">
-                  <div id="nm">Accuracy</div>
-                <div id="aData"></div>
-                <div id="nm">Hamming loss</div>
-                <div id="bData"></div>
-                <div id="nm">Precision</div>
-                <div id="cData"></div>
-                <div id="nm">F1Score</div>
-                <div id="fData"></div>
-                </div>
-                <div id="statistikaK1">
-                <div id="nm">Balanced Accuracy</div>
-                <div id="hData"></div>
-                <div id="nm">Cross Entropy loss</div>
-                <div id="pData"></div>
-                <div id="nm">Recall</div>
-                <div id="rData"></div>
-                <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalModeli"> Confusion matrix</button>
-                </div>
-                <button id="dugme" (click)="nastaviTreniranje()">Continue training</button>
-              </div>
+            </div>
           </div>
         </div>
       </div>
