@@ -207,6 +207,8 @@ export class PodaciComponent implements OnInit {
   selectedData:string = "";
   selectedForRegression:number = -1;
 
+  selectedSnapshot : string = "Default snapshot";
+
   threshold:number = 0; 
 
   public kolone: any[] = [];
@@ -366,14 +368,14 @@ lineDatas :any = [
       const upload$ = this.http.post(url+"/api/Upload/uploadTest/" + this.idEksperimenta , formData, {responseType: 'text'}).subscribe(
         res=>{
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset loaded");
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset loaded " + "(" + this.selectedSnapshot + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.flag++;
           this.onSuccess('Test dataset loaded.');
       },error =>{
         console.log(error.error);	
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset is not loaded");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset is not loaded " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.onError(error.error);
         
@@ -731,7 +733,7 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.ucitajTipoveKolona();
@@ -739,7 +741,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is not performed.");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " OneHot Encoding is not performed. " + "(" + this.selectedSnapshot + ")");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.onError(error.error);
     })
@@ -768,7 +770,7 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         //this.loadDefaultItemsPerPage();
@@ -777,7 +779,7 @@ dajNaziveHeadera()
     },error=>{
       console.log(error.error);
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is not performed");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " LabelEncoding is not performed " + "(" + this.selectedSnapshot + ")");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.onError(error.error);
     })
@@ -1035,7 +1037,7 @@ dajNaziveHeadera()
       res => {
         ;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset ratio added: "+ ratio);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Test dataset ratio added: "+ ratio + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Ratio added.');
@@ -1081,7 +1083,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
        // this.dodajKomandu("Uspesno obrisane kolone");
@@ -1114,7 +1116,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mean values added " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mean values added " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Mean values added.');
@@ -1142,7 +1144,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Median values added " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Median values added " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Median values added.');
@@ -1171,7 +1173,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mode values added " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Mode values added " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Mode values added.');
@@ -1203,7 +1205,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Categorical values are changed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Categorical values are changed " + str + " "+ "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Categorical values are changed.');
@@ -1235,7 +1237,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Numerical values are changed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Numerical values are changed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess('Numerical values are changed.');
@@ -1434,7 +1436,7 @@ dajNaziveHeadera()
           this.rowsAndPages = []; // deselekcija redova 
          // this.dodajKomandu("Redovi obrisani");
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str);
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  str + " " + "(" + this.selectedSnapshot + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.flag++;
           this.onSuccess("Rows are deleted.");
@@ -1490,7 +1492,7 @@ dajNaziveHeadera()
       ;
       this.onSuccess("All changes have been saved.");
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All changes have been saved");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All changes have been saved " + + "(" + this.selectedSnapshot + ")");
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
     },error=>{
       console.log(error.error);
@@ -1525,7 +1527,7 @@ dajNaziveHeadera()
         this.EnableDisableGrafik();
         this.rowsAndPages = [];
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Row value changed: " + data.value + " (Row: " + rowPom + ", Column: " + this.nizImenaTrenutnihKolona[column] + ", Page: " + page + ")");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Row value changed: " + data.value + " (Row: " + rowPom + ", Column: " + this.nizImenaTrenutnihKolona[column] + ", Page: " + page + ")" + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Row value changed: "+ data.value);
@@ -1558,7 +1560,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Absolute Maximum Scaling is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Absolute Max Scaling is performed.");
@@ -1590,7 +1592,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Min-max Scaling is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Min-Max Scaling is performed.");
@@ -1622,7 +1624,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-score Scaling is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Z-score Scaling is performed.");
@@ -1695,7 +1697,7 @@ dajNaziveHeadera()
          this.nizNumerickihKolona = [];
          this.EnableDisableGrafik();
          let dateTime = new Date();
-         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation is performed " + str);
+         this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Standard Deviation is performed " + str + " " + "(" + this.selectedSnapshot + ")");
          this.nizKomandiTooltip.push("" + dateTime.toString() + "");
          this.flag++;
          this.onSuccess("Standard Deviation is performed.");
@@ -1726,7 +1728,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Quantiles is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Quantiles is performed.");
@@ -1758,7 +1760,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-Sore is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Z-Sore is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Z-Sore is performed.");
@@ -1790,7 +1792,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " IQR is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("IQR is performed.");
@@ -1822,7 +1824,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Isolation Forest is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Isolation Forest is performed.");
@@ -1854,7 +1856,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " One Class SVM is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("One Class SVM is performed.");
@@ -1886,7 +1888,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Local factor is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Local factor is performed.");
@@ -2026,7 +2028,7 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA rows are removed successfully");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA rows are removed successfully " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("NA rows are removed successfully.");
@@ -2046,7 +2048,7 @@ dajNaziveHeadera()
         this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All columns with NA values are removed successfully");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All columns with NA values are removed successfully " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("All columns with NA values are removed successfully.");
@@ -2079,7 +2081,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All rows with NA values for selected columns were removed successfully " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " All rows with NA values for selected columns were removed successfully " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("All rows with NA values are removed successfully.");
@@ -2180,7 +2182,7 @@ dajNaziveHeadera()
         this.nizNumerickihKolona = [];
         this.EnableDisableGrafik();
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Regression is performed " + str);
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Regression is performed " + str + " " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("Regression is performed.");
@@ -2882,7 +2884,7 @@ sacuvajKaoNovu(ime:string){
         //this.gtyLoadPageWithStatistics(this.page);
         this.brojacAkcija++;
         let dateTime = new Date();
-        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " New row added");
+        this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " New row added " + "(" + this.selectedSnapshot + ")");
         this.nizKomandiTooltip.push("" + dateTime.toString() + "");
         this.flag++;
         this.onSuccess("New row added.");
@@ -2931,7 +2933,7 @@ sacuvajKaoNovu(ime:string){
           this.gtyLoadPageWithStatistics(this.page);
           this.brojacAkcija++;
           let dateTime = new Date();
-          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values (Column: " + imeKolone + ", New value: " + vrednost + ")");
+          this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values (Column: " + imeKolone + ", New value: " + vrednost + ")" + " " + "(" + this.selectedSnapshot + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
           this.flag++;
           this.onSuccess("NA values are replaced by new values.");
@@ -2999,7 +3001,7 @@ zamenaTipaKolone(event:any)
       this.nizKategorickihKolona = [];
       this.EnableDisableGrafik();
       let dateTime = new Date();
-      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Column type is changed (Column: " + imeKolone + ")");
+      this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " Column type is changed (Column: " + imeKolone + ")" + " " + ")" + " " + "(" + this.selectedSnapshot + ")" );
       this.nizKomandiTooltip.push("" + dateTime.toString() + "");
       this.flag++;
       this.onSuccess("Column type is changed.");
@@ -3053,12 +3055,14 @@ zamenaTipaKolone(event:any)
        {
        sessionStorage.setItem('idSnapshota',"Default snapshot");
        sessionStorage.setItem('idS',"0");
+       this.selectedSnapshot = "Default snapshot";
        }
        else{ 
        //var indeks = Number(id);
        //localStorage.setItem('idSnapshota',this.snapshots[id-1].ime);
        sessionStorage.setItem('idSnapshota',ime);
        sessionStorage.setItem('idS',"" + id);
+       this.selectedSnapshot = ime;
        }
        this.PosaljiSnapshot.emit(id);
       }
