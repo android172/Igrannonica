@@ -264,6 +264,9 @@ class MLData:
     def get_column_types(self):
         return self.column_data_ty[:-1]
     
+    def get_column_numerical(self):
+        return [str(t) in ['int64', 'float64'] for t in self.dataset.dtypes[: -1]]
+    
     # ################# #
     # Data manipulation #
     # ################# #

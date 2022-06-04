@@ -3,7 +3,8 @@
 
         <div class="model-notification-container">
             <div class="model-notification" *ngFor="let m of parallelModels; let i = index">
-                <button class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.podesavalja.numberOfEpochs}}</button>
+                <button *ngIf="m.jsonModel.naziv.length == 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv}}</button>
+                <button *ngIf="m.jsonModel.naziv.length != 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv.slice(0,2)}}</button>
             </div>
         </div>
 
@@ -45,9 +46,10 @@
             "    Model statistics
 
             Displays a breakdown of computed 
-            model statistics. Available only
-            after training completion. Differs 
-            depending on the problem type.
+            model statistics. Updated after
+            training completion or on model
+            pause. Differs depending on the
+            problem type.
             ">
         </span>
 
@@ -88,10 +90,12 @@
                             <span class="checkmark"></span>
                         </label> -->
                         <div [class.input-disabled]="inputsLocked == true">
-                            <h3>Select I/O Columns</h3>
-                            <div id="header-help">
-                                <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
-                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                            <div style="position:relative">
+                                <h3>Select I/O Columns</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="pb-3" *ngFor="let e of kolone2; let i = index"
@@ -118,15 +122,11 @@
 
                 <div class="container-fluid" id="box">
                     <div [class.input-disabled]="inputsLocked == true">
-                        <div class="row">
-                            <div class="col-md-11">
-                                <h3>Network Settings</h3>
-                            </div>
-                            <div class="col-md-1">
-                                <div id="header-help">
-                                    <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
-                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
-                                    </div>
+                        <div style="position:relative">
+                            <h3>Network Settings</h3>
+                            <div id="header-help" class="get-to-top-right">
+                                <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
                                 </div>
                             </div>
                         </div>
@@ -352,10 +352,12 @@
                     </div>
                     <div class="col-md-5" id="collapse" *ngIf="prikazi1==true" style="position:relative;">
                         <div id="metrika">
-                            <h3>Train and test dataset statistics</h3>
-                            <div id="header-help">
-                                <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
-                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                            <div style="position:relative">
+                                <h3>Train and test dataset statistics</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
                                 </div>
                             </div>
                             <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
@@ -478,10 +480,12 @@
                     <div class="col-md-3 justify-content-center okvir">
                         <div class="container-fluid" [class.input-disabled]="inputsLocked == true">
                             <div class="row d-flex justify-content-center">
-                                <h3>Hidden layers</h3>
-                                <div id="header-help">
-                                    <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
-                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                <div style="position:relative">
+                                    <h3>Hidden layers</h3>
+                                    <div id="header-help" class="get-to-top-right">
+                                        <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
+                                            <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <button id="minus1" (click)="promeni1(2)">—</button>
@@ -773,24 +777,41 @@
                                 <td>{{modelparallel.jsonModel.podesavalja.kFoldCV}}</td>
                             </tr>
                         </table>
-                        <div *ngIf="modelparallel!=null"  style="margin: auto; width: 100%; color:white;">
-                            <!-- {{modelparal.jsonModel.podesavalja.currentEpoch}} -->
-                            <div class="progress" style="background-color: #d2a9e3dc; width:100%;">
-                            <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
-                                [style.width]="modelparallel.currentTrainStatus + '%'" [attr.aria-valuenow]="modelparallel.currentTrainStatus"
-                                aria-valuemin="0" aria-valuemax="100">{{modelparallel.currentTrainStatus}}%</div>
-                            </div>
-                        </div>
+                    </div>
+                    <div id="pModel-buttons">
+                        <button type="button" (click)="saveParallelModel(modelparallel)"               class="model-button btn btn-primary">Save model</button>
+                        <button type="button" (click)="stopParallelTraining(modelparallel)"            class="model-button btn btn-primary"
+                            *ngIf="modelparallel.modelState == 'r'">Pause training</button>
+                        <button type="button" (click)="continueParallelTraining(modelparallel)"        class="model-button btn btn-primary"
+                            *ngIf="modelparallel.modelState == 'p'">Continue training</button>
+                        <button type="button" (click)="dismissParallelTraining(modelparallel, modal)" class="model-button btn btn-primary">Dismiss model</button>
                     </div>
                 </div>
 
-                <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
-                    <button type="button" (click)="saveParallelModel(modelparallel)"        id="btn-model-save"     class="model-button btn btn-primary">Save model</button>
-                    <button type="button" (click)="stopParallelTraining(modelparallel)"     id="btn-model-state"    class="model-button btn btn-primary"
-                        *ngIf="modelparallel.modelState == 'r'">Pause training</button>
-                    <button type="button" (click)="continueParallelTraining(modelparallel)"     id="btn-model-state"    class="model-button btn btn-primary"
-                        *ngIf="modelparallel.modelState == 'p'">Continue training</button>
-                    <button type="button" (click)="dissmissParallelTraining(modelparallel, modal)" id="btn-model-dissmiss" class="model-button btn btn-primary">Dissmiss model</button>
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
+                    <div *ngIf="modelparallel!=null"  style="margin: auto; width: 100%; color:white;">
+                        <!-- {{modelparal.jsonModel.podesavalja.currentEpoch}} -->
+                        <div class="progress" style="background-color: #d2a9e3dc; width:100%;">
+                        <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                            [style.width]="modelparallel.currentTrainStatus + '%'" [attr.aria-valuenow]="modelparallel.currentTrainStatus"
+                            aria-valuemin="0" aria-valuemax="100">{{modelparallel.currentTrainStatus}}%</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #notSaved let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Model not saved.</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
+                    <p>Upon unlock, unsaved models can only be dismissed. Are you sure you want to continue?</p>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
+                    <button type="button" class="model-button btn btn-primary" (click)="dismissTraining(modal)">Dismiss model</button>
+                    <button type="button" class="model-button btn btn-primary" (click)="saveTrainingForParralel(modal)">Save model</button>
                 </div>
             </ng-template>
 

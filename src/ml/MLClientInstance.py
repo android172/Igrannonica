@@ -49,6 +49,7 @@ class MLClientInstance(Thread):
             'GetColumns'     : get_columns,
             'GetRowCount'    : get_row_count,
             'GetColumnTypes' : get_column_types,
+            'GetCNumerical'  : get_column_numerical,
             
             # Data manipulation calls
             'AddRow'                : add_row,

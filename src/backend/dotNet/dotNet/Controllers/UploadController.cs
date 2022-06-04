@@ -192,5 +192,30 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
+
+        [Authorize]
+        [HttpGet("ColumnsNumericalCheck")]
+        public IActionResult ColumnsNumericalCheck(int idEksperimenta)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                else
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                string kolone = eksperiment.ColumnsNumericalCheck();
+                return Ok(kolone);
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

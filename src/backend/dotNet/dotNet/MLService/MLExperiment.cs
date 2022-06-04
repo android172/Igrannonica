@@ -135,6 +135,13 @@ namespace dotNet.MLService {
             }
         }
 
+        public string ColumnsNumericalCheck() {
+            lock (_lock) {
+                connection.Send(Command.GetCNumerical);
+                return connection.Receive();
+            }
+        }
+
         // ///////////////// //
         // Data manipulation //
         // ///////////////// //
@@ -671,6 +678,7 @@ namespace dotNet.MLService {
         GetColumns,
         GetRowCount,
         GetColumnTypes,
+        GetCNumerical,
         // Data manipulation
         AddRow,
         AddRowToTest,
