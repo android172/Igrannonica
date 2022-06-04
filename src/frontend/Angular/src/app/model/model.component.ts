@@ -57,6 +57,8 @@ export class ModelComponent implements OnInit {
 
   public inputsLocked: boolean = false;
   public saveModelLocked : boolean = false;
+
+  public forkUponSave : boolean = false;
   
   public kolone: any[] = [];
   message: any;
@@ -198,6 +200,7 @@ export class ModelComponent implements OnInit {
 
   @ViewChild('parallel') parallel :any;
   @ViewChild('notSaved') notSaved :any;
+  @ViewChild('exampleModalCuvanje') exampleModalCuvanje :any;
 
   // progress bar
   public numOfEpochsTotal : number = 0;
@@ -243,9 +246,16 @@ export class ModelComponent implements OnInit {
     });
     this.signalR.componentMethodLossCalled$.subscribe((res: any) => {
       
+      var epochRes = res.epochRes;
+
+      var epoch = epochRes.epoch;
+      if (epochRes.fold !== undefined) {
+        epoch += this.numberOfEpoch * epochRes.fold;
+      }
+      
       for (const m of this.parallelModels) {
         if (m.modelId == res.modelId) {
-          m.jsonModel.podesavalja.currentEpoch += 1;
+          m.jsonModel.podesavalja.currentEpoch = epoch;
 
           // Progress Bar - Paraller Training 
           m.currentTrainStatus = m.jsonModel.podesavalja.currentEpoch;
@@ -256,8 +266,6 @@ export class ModelComponent implements OnInit {
       if (res.modelId != this.idModela)
         return;
 
-      var epochRes = res.epochRes;
-      
       // loss
       if (epochRes.epoch > this.maxPointX)
         this.maxPointX = epochRes.epoch;
@@ -282,7 +290,7 @@ export class ModelComponent implements OnInit {
       this.setWeights(weights);
       this.drawCanvas();
 
-      this.currentEpoch += 1;
+      this.currentEpoch += epoch;
       // progress bar
       this.currentEpochPercent = this.currentEpoch;
       this.currentEpochPercent = Math.floor(this.currentEpochPercent / this.numOfEpochsTotal * 100); 
@@ -1350,18 +1358,29 @@ export class ModelComponent implements OnInit {
      );
   }
 
+  dismissTraining(modal: any) {
+    this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
+      res => {
+        this.onInfo("Training dismisted.");
+        modal.dismiss('Cross click');
+        this.enableInputs();
+      },
+      err => {
+        this.onError(err.error);
+      }
+    )
+  }
+
+  saveTrainingForParralel(modal: any) {
+    modal.dismiss('Cross click');
+    this.forkUponSave = true;
+    this.open(this.exampleModalCuvanje);
+  }
+
   forkTraining() {
     // Za sada samo odbacuje trening
     if (this.idModela == 0) {
       this.open(this.notSaved);
-      // this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + this.idModela, null ,{responseType:'text'}).subscribe(
-      //   res => {
-      //     this.onInfo("Training dissmisted.");
-      //   },
-      //   err => {
-      //     this.onError(err.error);
-      //   }
-      // )
     }
     else {
       var crossVK;
@@ -1441,8 +1460,10 @@ export class ModelComponent implements OnInit {
         'currentTrainStatus':0,
         'modelState': modelState
       })
+
+      this.idModela = 0;
+      this.enableInputs();
     }
-    this.enableInputs();
   }
 
   openParallelModelView(model: any) {
@@ -1479,7 +1500,7 @@ export class ModelComponent implements OnInit {
       }
     )
   }
-  dissmissParallelTraining(model: any, modal: any) {
+  dismissParallelTraining(model: any, modal: any) {
     this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + model.modelId, null ,{responseType:'text'}).subscribe(
       res => {
         var index = -1;
@@ -1493,7 +1514,7 @@ export class ModelComponent implements OnInit {
         if (index > -1)
           this.parallelModels.splice(index, 1);
         modal.dismiss('Cross click');
-        this.onInfo("Training dissmisted.");
+        this.onInfo("Training dismisted.");
       },
       err => {
         this.onError(err.error);
@@ -1925,7 +1946,13 @@ export class ModelComponent implements OnInit {
           ); 
         }
         else // override modela
-        {  
+        {
+          for (const model of this.parallelModels) {
+            if (model.modelId == this.idModela) {
+              this.onError("Model with this id is already being trained in parallel.")
+              return;
+            }
+          }
           this.open(this.overridemodela);
         }
       },
@@ -1955,6 +1982,10 @@ export class ModelComponent implements OnInit {
         this.onSuccess("Model was successfully created.");
         if (isParallel == false)
           this.PosaljiModel.emit(this.selectedSS);
+        if (this.forkUponSave) {
+          this.forkUponSave = false;
+          this.forkTraining();
+        }
       },
       error => {
         console.log(error.error);
