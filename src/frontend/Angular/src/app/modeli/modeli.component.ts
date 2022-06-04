@@ -59,6 +59,9 @@ export class ModeliComponent implements OnInit {
   public nizGlavni: any[] = [];
   public glavniNiz: any[] = [];
 
+  public sortedBy: string = 'd';
+  public descending: boolean = true;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -166,8 +169,9 @@ export class ModeliComponent implements OnInit {
         res=>{
           this.json = res;
           this.modeli = Object.values(this.json);
-          console.log(this.modeli);
+          
           this.formatirajDatum();
+          this.sortModels();
           
           if (this.modeli.length > 0) {
             var id = this.modeli[0].id;
@@ -180,6 +184,43 @@ export class ModeliComponent implements OnInit {
           console.error(error.error);
         }
     );
+  }
+
+  sortModels() {
+    var ret = 1;
+    if (this.descending) {
+      ret = -1
+    }
+    if (this.sortedBy == 'd') {
+      this.modeli.sort((a, b) => {
+        const date1Splits = a.createdDate.split(".");
+        const date2Splits = b.createdDate.split(".");
+        const date1 = new Date(date1Splits[2], date1Splits[1], date1Splits[0]);
+        const date2 = new Date(date2Splits[2], date2Splits[1], date2Splits[0]);
+        
+        if (date1.getTime() > date2.getTime()) return ret;
+        else if (date1.getTime() < date2.getTime()) return -ret;
+        else return 0;
+      });
+    }
+    else if (this.sortedBy == 'n') {
+      this.modeli.sort((a, b) => {
+        if (a.name > b.name) return ret;
+        else if (a.name < b.name) return -ret;
+        else return 0;
+      });
+    }
+  }
+
+  changeSort(SortBy: string) {
+    if (this.sortedBy == SortBy)
+    this.descending = !this.descending;
+    else {
+      this.sortedBy = SortBy;
+      this.descending = true;
+    }
+    console.log(this.descending);
+    this.sortModels();
   }
 
   formatirajDatum()
@@ -276,6 +317,8 @@ export class ModeliComponent implements OnInit {
           this.matTrainData = this.jsonStatistika['confusionMatrix'];
 
           var nizJson = [];
+          if (this.matTrainData == null)
+            this.matTrainData = [];
           for(let i=this.matTrainData.length-1; i>=0; i--)
           {
             for(let j=this.matTrainData.length-1; j>=0; j--)
@@ -366,6 +409,7 @@ export class ModeliComponent implements OnInit {
     var p=0;
     var t;
     this.mtrain = this.jsonStatistika['confusionMatrix'];
+    if (this.mtrain == null) this.mtrain = [];
     // console.log(this.mtrain);
     for(let i=0;i<this.mtrain.length;i++)
        for(let j=0;j<this.mtrain[i].length;j++)

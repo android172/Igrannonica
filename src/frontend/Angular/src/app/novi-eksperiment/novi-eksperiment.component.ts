@@ -40,6 +40,7 @@ export class NoviEksperimentComponent implements OnInit {
 
     sessionStorage.removeItem('idSnapshota');
     sessionStorage.removeItem('idS');
+    sessionStorage.removeItem('models');
   }
   onSuccess(message:any)
   {
