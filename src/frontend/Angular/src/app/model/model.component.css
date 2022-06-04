@@ -2068,3 +2068,31 @@ input:-webkit-autofill:active {
   vertical-align: middle;
 
 }
+
+.tr-table-model{
+  border-bottom: 1px solid rgb(122, 122, 122);
+}
+
+#table-model{
+    padding: 1px;
+    box-sizing: border-box;
+    color: white;
+    margin: auto; 
+    color:white; 
+    margin-bottom:23px;
+}
+
+#table-model tr td{
+  width: 195px!important;
+  padding: 2px;
+}
+.color-model-tr{
+  background-color: #793287;
+}
+
+#button-model:focus{
+  outline: 0;
+}
+#button-model{
+  color: rgb(235, 152, 246);
+}

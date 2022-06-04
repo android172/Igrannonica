@@ -198,6 +198,8 @@ export class ModelComponent implements OnInit {
 
   @ViewChild('btnexitoverridemodel') btnexitoverridemodel:any;
 
+  @ViewChild('parallel') parallel :any;
+
   // progress bar
   public numOfEpochsTotal : number = 0;
   public currentEpochPercent : number = 0;
@@ -205,6 +207,11 @@ export class ModelComponent implements OnInit {
   // show/disable statistics after training
   public showStat : boolean = false;
   public predictionDisabled = true;
+
+  //parallel models
+  public modelparallel:any;
+  currentEpochPercentParallel : number = 0;
+  numOfEpochsTotalParallel : number = 0;
 
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared: SharedService,public signalR:SignalRService, public modalService : ModalService, private ngbModalService: NgbModal, private router: Router,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
@@ -231,6 +238,10 @@ export class ModelComponent implements OnInit {
       for (const m of this.parallelModels) {
         if (m.modelId == res.modelId) {
           m.jsonModel.podesavalja.currentEpoch += 1;
+
+          // Progress Bar - Paraller Training 
+          m.currentTrainStatus = m.jsonModel.podesavalja.currentEpoch;
+          m.currentTrainStatus = Math.floor( m.currentTrainStatus / m.numOfEpochsTotal * 100);
           return;
         }
       }
@@ -1402,19 +1413,28 @@ export class ModelComponent implements OnInit {
             "izlazne" : outputs
           }
       };
+      var epochTotal = 0;
+      if(jsonModel.podesavalja.kFoldCV == 0)
+         epochTotal = jsonModel.podesavalja.numberOfEpochs;
+      else
+         epochTotal = jsonModel.podesavalja.kFoldCV * jsonModel.podesavalja.numberOfEpochs;
 
       this.parallelModels.push({
         'jsonModel': jsonModel,
-        'modelId':this.idModela
+        'modelId':this.idModela,
+        'numOfEpochsTotal':epochTotal,
+        'currentTrainStatus':0
       })
     }
     this.enableInputs();
   }
 
   openParallelModelView(model: any) {
-    console.log("DEBUG");
-    
-    console.log(model);
+    //console.log("DEBUG");
+    this.modelparallel = model;
+
+    this.open(this.parallel);
+    // console.log(model);
   }
 
   counter1(i:number){

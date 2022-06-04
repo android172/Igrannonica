@@ -3,7 +3,7 @@
 
         <div class="model-notification-container">
             <div class="model-notification" *ngFor="let m of parallelModels; let i = index">
-                <button class="paraller-model" data-bs-toggle="modal" (click)="openParallelModelView(m)" data-bs-target="#ModalParallelTraining">{{m.jsonModel.podesavalja.numberOfEpochs}}</button>
+                <button class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.podesavalja.numberOfEpochs}}</button>
             </div>
         </div>
 
@@ -712,9 +712,8 @@
                     </div>
                 </div>
             </ng-template>
-            <simple-notifications></simple-notifications>
 
-            <div  class="modal fade" id="ModalParallelTraining" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <!-- <div  class="modal fade" id="ModalParallelTraining" tabindex="-1" aria-labelledby="exampleModalLabel">
                 <div class="modal-dialog">
                   <div class="modal-content"style="background: rgba(36, 38, 74, 0.95);">
                     <div class="modal-header " style="border-bottom: none; color: wheat">
@@ -723,15 +722,70 @@
                     </div>
             
                     <div class="modal-body justify-content-center align-items-center">
-                        <div style="margin: auto; width: 80%;">
+                        <div *ngIf="modelparal!=null && currentEpochPercentParallel != null && numOfEpochsTotalParallel != null"  style="margin: auto; width: 80%; color:white;">
+                           
+                            <div class="progress"
+                            style="background-color: #d2a9e3dc; position: absolute; width:96%; bottom:10px;">
+                            <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                                [style.width]="currentEpochPercentParallel +'%'" [attr.aria-valuenow]="currentEpochPercentParallel"
+                                aria-valuemin="0" aria-valuemax="100">{{currentEpochPercentParallel}}%</div>
+                            </div>
+
                         </div>
                     </div>
                 
                     <div class="modal-footer d-flex" style="border-top: none;">
                     </div>
-            
                 </div>
               </div>
-            </div>
+            </div> -->
+
+            <ng-template #parallel let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Model Description</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
+                    <div  style=" margin: auto;">
+                        <table id="table-model">
+                            <tr class="tr-table-model">
+                                <td>Model name</td>
+                                <td>{{modelparallel.jsonModel.naziv}}</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Learning Rate</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.learningRate}}</td>
+                            </tr>
+                            <tr class="tr-table-model">
+                                <td>Batch size</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.batchSize}}</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Number of Epochs</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.numberOfEpochs}}</td>
+                            </tr>
+                            <tr class="tr-table-model">
+                                <td>Current Epoch</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.currentEpoch}}</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Cross Validation</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.kFoldCV}}</td>
+                            </tr>
+                        </table>
+                        <div *ngIf="modelparallel!=null"  style="margin: auto; width: 100%; color:white;">
+                            <!-- {{modelparal.jsonModel.podesavalja.currentEpoch}} -->
+                            <div class="progress" style="background-color: #d2a9e3dc; width:100%;">
+                            <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                                [style.width]="modelparallel.currentTrainStatus + '%'" [attr.aria-valuenow]="modelparallel.currentTrainStatus"
+                                aria-valuemin="0" aria-valuemax="100">{{modelparallel.currentTrainStatus}}%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <simple-notifications></simple-notifications>
+
         </div>
     </div>
