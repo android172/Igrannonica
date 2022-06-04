@@ -23,6 +23,8 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class ModelComponent implements OnInit {
   private eventsSubscription!: Subscription;
 
+  @ViewChild('parallelModelExit') parallelModelExit:any;
+
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() idS! : Observable<number>;
@@ -221,6 +223,15 @@ export class ModelComponent implements OnInit {
       }
     )
     this.signalR.componentMethodCalled$.subscribe((id:number)=>{
+
+      for (const m of this.parallelModels) {
+        if (m.modelId == id) {
+          return;
+        }
+      }
+      if (id != this.idModela)
+        return;
+
       this.dajMetriku(id);
       this.prikaziPredikciju = true;
       this.predictionDisabled = false;
@@ -1419,14 +1430,27 @@ export class ModelComponent implements OnInit {
       else
          epochTotal = jsonModel.podesavalja.kFoldCV * jsonModel.podesavalja.numberOfEpochs;
 
+      // Model state
+      var modelState = 'r';
+      if (this.buttonContinue == true)
+        modelState = 'p';
+      else if (this.buttonPlay == true)
+        modelState = 'f';
+
       this.parallelModels.push({
         'jsonModel': jsonModel,
         'modelId':this.idModela,
         'numOfEpochsTotal':epochTotal,
-        'currentTrainStatus':0
+        'currentTrainStatus':0,
+        'modelState': modelState
       })
     }
     this.enableInputs();
+  }
+
+  exitPMModal() {
+    let el: HTMLElement = this.parallelModelExit.nativeElement;
+    el.click();
   }
 
   openParallelModelView(model: any) {
@@ -1435,6 +1459,63 @@ export class ModelComponent implements OnInit {
 
     this.open(this.parallel);
     // console.log(model);
+  }
+
+  stopParallelTraining(model: any) {
+    this.http.post(url+"/api/Model/Model/Pauziraj?idEksperimenta=" + this.idEksperimenta + "&idModela=" + model.modelId, null ,{responseType:'text'}).subscribe(
+      res => {
+        model.modelState = 'p';
+        this.onInfo("Training is paused.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+  continueParallelTraining(model: any) {
+    const numberOfEpoch = model.jsonModel.podesavalja.numberOfEpochs;
+    const learningRate  = model.jsonModel.podesavalja.learningRate;
+    this.http.post(url+"/api/Model/Model/NastaviTrening?idEksperimenta=" + 
+                   this.idEksperimenta + "&idModela=" + model.modelId + "&numberOfEpoch="+numberOfEpoch+
+                   "&learningRate=" + learningRate, null ,{responseType:'text'}).subscribe(
+      res => {
+        model.modelState = 'r';
+        this.onInfo("Training continues.");
+      },
+      error => {
+        console.log(error.error);
+      }
+    )
+  }
+  dissmissParallelTraining(model: any) {
+    this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + model.modelId, null ,{responseType:'text'}).subscribe(
+      res => {
+        var index = -1;
+        for (let i = 0; i < this.parallelModels.length; i++) {
+          const m = this.parallelModels[i];
+          if (m.modelId == model.modelId) {
+            index = i;
+            break;
+          }
+        }
+        if (index > -1)
+          this.parallelModels.splice(index, 1);
+        this.exitPMModal();
+        this.onInfo("Training dissmisted.");
+      },
+      err => {
+        this.onError(err.error);
+      }
+    )
+  }
+  saveParallelModel(model: any) {
+    this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + model.modelId, model.jsonModel, {responseType: 'text'}).subscribe(
+      res=>{
+        this.saveModel(model.modelId, model.modelId, true);
+      },err=>{
+        this.onError("Model was not saved."); 
+      }
+    );
   }
 
   counter1(i:number){
@@ -1874,13 +1955,14 @@ export class ModelComponent implements OnInit {
       ); 
   }
 
-  saveModel(oldModelId: number, newModelId: number) {
+  saveModel(oldModelId: number, newModelId: number, isParallel: boolean = false) {
     if (this.inputsLocked == false)
       oldModelId = -1
     this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully created.");
-        this.PosaljiModel.emit(this.selectedSS);
+        if (isParallel == false)
+          this.PosaljiModel.emit(this.selectedSS);
       },
       error => {
         console.log(error.error);

@@ -1644,6 +1644,28 @@ body {
   outline: none;
 }
 
+.model-button {
+  background-color: #fa6698;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
+.model-button:hover {
+  background-color: #f5597e;
+  border: none;
+  border-radius: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #eee;
+}
+
 #dgm {
   background-color: #fa6698;
   border: none;

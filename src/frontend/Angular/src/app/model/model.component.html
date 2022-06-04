@@ -743,7 +743,7 @@
             <ng-template #parallel let-modal>
                 <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
                     <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Model Description</h3>
-                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                    <button #parallelModelExit type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
                 </div>
                 <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
                     <div  style=" margin: auto;">
@@ -782,6 +782,15 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
+                    <button type="button" (click)="saveParallelModel(modelparallel)"        id="btn-model-save"     class="model-button btn btn-primary">Save model</button>
+                    <button type="button" (click)="stopParallelTraining(modelparallel)"     id="btn-model-state"    class="model-button btn btn-primary"
+                        *ngIf="modelparallel.modelState == 'r'">Pause training</button>
+                    <button type="button" (click)="continueParallelTraining(modelparallel)"     id="btn-model-state"    class="model-button btn btn-primary"
+                        *ngIf="modelparallel.modelState == 'p'">Continue training</button>
+                    <button type="button" (click)="dissmissParallelTraining(modelparallel)" id="btn-model-dissmiss" class="model-button btn btn-primary">Dissmiss model</button>
                 </div>
             </ng-template>
 
