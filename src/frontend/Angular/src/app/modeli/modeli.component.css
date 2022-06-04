@@ -31,6 +31,16 @@
   color: #CED9FF;
 }
 
+#naslov2{
+  text-align: center;
+  font-weight: 500;
+  font-size: 18px;
+  height: 45px;
+  padding-top: 7px;
+  padding-left: 9px;
+  color: #bc7ca1;
+}
+
 .model-selected-false {
   /* color:black; */
   font-size: large;

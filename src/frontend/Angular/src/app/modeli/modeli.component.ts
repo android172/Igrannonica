@@ -76,6 +76,8 @@ export class ModeliComponent implements OnInit {
   public r2Best: number = Number.MIN_VALUE;
   public adjustedR2Best: number = Number.MIN_VALUE;
 
+  public flag : boolean = false;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -192,10 +194,26 @@ export class ModeliComponent implements OnInit {
             this.modelDetaljnije(id);
             this.uzmiId(id);
             this.selektovanModel = 'p0';
+            if(this.flag == false)
+            {
+              this.flag = true;
+            }
+          }
+          else
+          {
+            if(this.flag == true)
+            {
+              this.flag = false;
+            }
           }
         },
         error=>{
           console.error(error.error);
+
+              if(this.flag == true)
+              {
+                this.flag = false;
+              }
         }
     );
   }
@@ -546,7 +564,7 @@ export class ModeliComponent implements OnInit {
       {
         this.http.delete(url+'/api/Model/Modeli/' + this.modeli[i].id).subscribe(
           res=>{
-            // console.log(res);
+              //console.log(res);
                this.onSuccess("Model je uspesno obrisan");
           },
           error=>{
@@ -667,6 +685,9 @@ export class ModeliComponent implements OnInit {
               if (el.adjustedR2 > this.adjustedR2Best)
                 this.adjustedR2Best = el.adjustedR2;
             }
+            else {
+              console.log(el.id);
+            }
           }
         }
         else {
@@ -686,9 +707,6 @@ export class ModeliComponent implements OnInit {
                 this.recallBest = el.recall;
               if (el.f1Score > this.f1ScoreBest)
                 this.f1ScoreBest = el.f1Score;
-            }
-            else {
-              console.log(el.id); 
             }
           }
         }

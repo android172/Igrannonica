@@ -81,6 +81,9 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
+  public modelName: string = "";
+  public modelDescription: string = "";
+
   public currentEpoch: number = 0;
   public numberOfEpoch: number = 15;
 
@@ -200,7 +203,10 @@ export class ModelComponent implements OnInit {
 
   @ViewChild('parallel') parallel :any;
   @ViewChild('notSaved') notSaved :any;
-  @ViewChild('exampleModalCuvanje') exampleModalCuvanje :any;
+  
+  @ViewChild('saveModel') saveModelDialog :any;
+
+  public modalToCloseOverride:any;
 
   // progress bar
   public numOfEpochsTotal : number = 0;
@@ -290,7 +296,7 @@ export class ModelComponent implements OnInit {
       this.setWeights(weights);
       this.drawCanvas();
 
-      this.currentEpoch += epoch;
+      this.currentEpoch = epoch;
       // progress bar
       this.currentEpochPercent = this.currentEpoch;
       this.currentEpochPercent = Math.floor(this.currentEpochPercent / this.numOfEpochsTotal * 100); 
@@ -687,9 +693,9 @@ export class ModelComponent implements OnInit {
 
           // Model name
           this.nazivModela = this.nizGeneral[1];
-          (<HTMLInputElement>document.getElementById("bs2")).value = this.nazivModela;
+          this.modelName = this.nazivModela;
           // Model description
-          (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
+          this.modelDescription = this.nizGeneral[5];
           
           /*  SNAPSHOT  */
           if(this.snapshot == 0) {
@@ -1379,7 +1385,7 @@ export class ModelComponent implements OnInit {
   saveTrainingForParralel(modal: any) {
     modal.dismiss('Cross click');
     this.forkUponSave = true;
-    this.open(this.exampleModalCuvanje);
+    this.open(this.saveModelDialog);
   }
 
   forkTraining() {
@@ -1388,6 +1394,7 @@ export class ModelComponent implements OnInit {
       this.open(this.notSaved);
     }
     else {
+      console.log("-------------------------");
       var crossVK;
       if(this.flag == false)
         crossVK = 0;
@@ -1408,7 +1415,7 @@ export class ModelComponent implements OnInit {
       if(this.momentum==true)
         this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
-      const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+      const nazivModela = this.modelName;
       if(nazivModela.trim()==="")
       {
         this.onError("Model name is required");
@@ -1419,7 +1426,7 @@ export class ModelComponent implements OnInit {
       const jsonModel = 
       {
           "naziv"       : nazivModela,
-          "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+          "opis"        : this.modelDescription,
           "snapshot"    : this.selectedSS,
           "podesavalja" :
           {  
@@ -1867,7 +1874,7 @@ export class ModelComponent implements OnInit {
 
   private oldModelId: number = 0;
 
-  kreirajModelCuvanje()
+  kreirajModelCuvanje(modal:any)
   {
     this.prikaziPredikciju = false;
     this.predictionDisabled = true;
@@ -1894,7 +1901,7 @@ export class ModelComponent implements OnInit {
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
-    const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+    const nazivModela = this.modelName;
     if(nazivModela.trim()==="")
     {
       this.onError("Model name is required");
@@ -1905,7 +1912,7 @@ export class ModelComponent implements OnInit {
     this.jsonModel = 
     {
         "naziv"       : nazivModela,
-        "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+        "opis"        : this.modelDescription,
         "snapshot"    : this.selectedSS,
         "podesavalja" :
         {  
@@ -1942,13 +1949,15 @@ export class ModelComponent implements OnInit {
           this.http.post(url+"/api/Model/KreirajNoviModel?idEksperimenta="+this.idEksperimenta, this.jsonModel, {responseType: 'text'}).subscribe(
             res => {
               this.idModela = Number.parseInt(res);;
-              this.izadjiIzObaModala();
+              //this.izadjiIzObaModala();
+              modal.dismiss('Save click');
               this.saveModel(this.oldModelId, this.idModela);
             },
             error =>{
               console.log(error.error);
               this.onError("Model was not created.");
-              this.izadjiIzObaModala();
+              //this.izadjiIzObaModala();
+              modal.dismiss('Save click');
             }
           ); 
         }
@@ -1960,6 +1969,7 @@ export class ModelComponent implements OnInit {
               return;
             }
           }
+          this.modalToCloseOverride = modal;
           this.open(this.overridemodela);
         }
       },
@@ -1975,8 +1985,10 @@ export class ModelComponent implements OnInit {
     this.http.put(url+"/api/Model/OverrideModel?idEksperimenta="+this.idEksperimenta + "&idModela=" + this.idModela, this.jsonModel, {responseType: 'text'}).subscribe(
         res=>{
           this.saveModel(this.oldModelId, this.idModela);
+          this.modalToCloseOverride.close('Close');
         },err=>{
           this.onError("Model was not overrided."); 
+          this.modalToCloseOverride.close('Close');
         }
       ); 
   }
@@ -1989,7 +2001,7 @@ export class ModelComponent implements OnInit {
         this.onSuccess("Model was successfully created.");
         if (isParallel == false)
           this.PosaljiModel.emit(this.selectedSS);
-        if (this.forkUponSave) {
+        if (this.forkUponSave == true) {
           this.forkUponSave = false;
           this.forkTraining();
         }
@@ -2651,6 +2663,10 @@ export class ModelComponent implements OnInit {
     tooltip.style.display = 'none';
   }
 
+  openSaveModelDialog()
+  {
+    this.open(this.saveModelDialog);
+  }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';

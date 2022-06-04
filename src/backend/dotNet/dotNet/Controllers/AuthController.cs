@@ -77,7 +77,7 @@ namespace dotNet.Controllers
             {
                 Experiment.eksperimenti[i.Id].SetupUser(token,i.Id);
             }
-            foreach(var i in EksperimentHub.users) {
+            /*foreach(var i in EksperimentHub.users) {
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadJwtToken(i.Key);
                 var tokenS = jsonToken as JwtSecurityToken;
@@ -86,7 +86,8 @@ namespace dotNet.Controllers
                     EksperimentHub.users.Add(token,i.Value);
                     Osvezi(id, token); return;
                 }
-            }
+            }*/
+            
             }
             catch(Exception ex)
             {

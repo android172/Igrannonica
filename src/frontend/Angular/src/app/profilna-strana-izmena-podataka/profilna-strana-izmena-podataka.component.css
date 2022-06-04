@@ -14,8 +14,10 @@
 
 
 input{
-    border: 3px solid #A2AFD2;
-    opacity: 0.85;
+
+    border: 3px solid #bc7ca1;;
+    background-color: rgba(229, 229, 229, 0.25);
+    color: #eee;
 }
 
 #podatak1,#podatak2,#podatak3,#podatak4,#podatak5,#podatak6{

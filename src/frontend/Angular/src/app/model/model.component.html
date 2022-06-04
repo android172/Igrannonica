@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje"
+                    <button id="sacuvaj" (click)="openSaveModelDialog()"
                         [class.input-disabled]="saveModelLocked == true">Save model</button>
                     <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
                     <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
@@ -668,7 +668,7 @@
             </div>
             </div>
         </div> -->
-            <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel"
+            <!-- <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog">
                     <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
@@ -680,15 +680,17 @@
                         </div>
                         <div class="modal-body"
                             style="padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
-                            <!-- <div style="color: beige;">Ime modela</div> -->
-                            <!-- <div style="color: bisque;">Ime modela</div> -->
+                            
                             <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
-                            <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
+                            
+                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
+                            
+                          
                             <div id="greska" style="color: #a16c8b; height: 30px;"></div>
-                            <!-- <div style="color: bisque;">Opis modela</div> -->
+                            
                             <textarea rows="5" cols="50" id="opisModela"
                                 placeholder="Enter model description"></textarea>
-                            <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
+                           
                         </div>
                         <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
                             <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()">Save
@@ -696,9 +698,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <ng-template #overridemodela let-modal>
+            <ng-template #overridemodela let-modal aria-hidden="true">
                 <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
                     <h3 class="modal-title" style="color: bisque;" id="modal-basic-title">Model with that name already
                         exists. Do you want to override it?</h3>
@@ -814,6 +816,28 @@
                     <button type="button" class="model-button btn btn-primary" (click)="saveTrainingForParralel(modal)">Save model</button>
                 </div>
             </ng-template>
+
+            <ng-template #saveModel let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Save model</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95); padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
+                            <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name" [(ngModel)]="modelName">
+                            <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
+                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;" ></div>
+                            <!-- <div style="color: bisque;">Opis modela</div> -->
+                            <textarea rows="5" cols="50" id="opisModela" [(ngModel)]="modelDescription"
+                                placeholder="Enter model description"></textarea>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95); padding-right: 40px;">
+                    <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje(modal)">Save
+                        model</button>
+                </div>
+            </ng-template>
+
+            
 
             <simple-notifications></simple-notifications>
 

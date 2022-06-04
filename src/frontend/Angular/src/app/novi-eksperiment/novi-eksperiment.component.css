@@ -247,7 +247,7 @@ body {
 {
   text-align: center;
   font-size: 17px;
-  color: #fc7098;
+  color: #bc7ca1;
   margin-top: 20px;
   text-shadow: 1px 1px #49232e;
 }
@@ -511,6 +511,9 @@ input#exampleFormControlFile1{
   box-shadow: 0px 0px 20px 0.5px rgba(255, 155, 197, 0.5);
 }
 
+#ime{
+  padding-left: 12px;
+}
 
 /* Placeholder color */
 
