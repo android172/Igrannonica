@@ -700,7 +700,7 @@
                 </div>
             </div> -->
 
-            <ng-template #overridemodela let-modal>
+            <ng-template #overridemodela let-modal aria-hidden="true">
                 <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
                     <h3 class="modal-title" style="color: bisque;" id="modal-basic-title">Model with that name already
                         exists. Do you want to override it?</h3>
@@ -823,11 +823,11 @@
                     <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
                 </div>
                 <div class="modal-body" style="background: rgba(36, 38, 74, 0.95); padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
-                            <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
+                            <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name" [(ngModel)]="modelName">
                             <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
-                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
+                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;" ></div>
                             <!-- <div style="color: bisque;">Opis modela</div> -->
-                            <textarea rows="5" cols="50" id="opisModela"
+                            <textarea rows="5" cols="50" id="opisModela" [(ngModel)]="modelDescription"
                                 placeholder="Enter model description"></textarea>
                 </div>
 

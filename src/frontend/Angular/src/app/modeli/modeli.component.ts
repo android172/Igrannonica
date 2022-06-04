@@ -667,6 +667,9 @@ export class ModeliComponent implements OnInit {
               if (el.adjustedR2 > this.adjustedR2Best)
                 this.adjustedR2Best = el.adjustedR2;
             }
+            else {
+              console.log(el.id);
+            }
           }
         }
         else {
@@ -686,9 +689,6 @@ export class ModeliComponent implements OnInit {
                 this.recallBest = el.recall;
               if (el.f1Score > this.f1ScoreBest)
                 this.f1ScoreBest = el.f1Score;
-            }
-            else {
-              console.log(el.id); 
             }
           }
         }

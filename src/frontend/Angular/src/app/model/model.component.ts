@@ -81,6 +81,9 @@ export class ModelComponent implements OnInit {
   public crossV : number = 5;
   public flag: boolean = true;
 
+  public modelName: string = "";
+  public modelDescription: string = "";
+
   public currentEpoch: number = 0;
   public numberOfEpoch: number = 15;
 
@@ -293,7 +296,7 @@ export class ModelComponent implements OnInit {
       this.setWeights(weights);
       this.drawCanvas();
 
-      this.currentEpoch += epoch;
+      this.currentEpoch = epoch;
       // progress bar
       this.currentEpochPercent = this.currentEpoch;
       this.currentEpochPercent = Math.floor(this.currentEpochPercent / this.numOfEpochsTotal * 100); 
@@ -690,9 +693,9 @@ export class ModelComponent implements OnInit {
 
           // Model name
           this.nazivModela = this.nizGeneral[1];
-          (<HTMLInputElement>document.getElementById("bs2")).value = this.nazivModela;
+          this.modelName = this.nazivModela;
           // Model description
-          (<HTMLTextAreaElement>document.getElementById("opisModela")).value = this.nizGeneral[5];
+          this.modelDescription = this.nizGeneral[5];
           
           /*  SNAPSHOT  */
           if(this.snapshot == 0) {
@@ -1412,7 +1415,7 @@ export class ModelComponent implements OnInit {
       if(this.momentum==true)
         this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
-      const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+      const nazivModela = this.modelName;
       if(nazivModela.trim()==="")
       {
         this.onError("Model name is required");
@@ -1423,7 +1426,7 @@ export class ModelComponent implements OnInit {
       const jsonModel = 
       {
           "naziv"       : nazivModela,
-          "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+          "opis"        : this.modelDescription,
           "snapshot"    : this.selectedSS,
           "podesavalja" :
           {  
@@ -1898,7 +1901,7 @@ export class ModelComponent implements OnInit {
     if(this.momentum==true)
       this.optimizationParams[0]=Number((<HTMLInputElement>document.getElementById("momentum")).value);
 
-    const nazivModela = (<HTMLInputElement>document.getElementById("bs2")).value;
+    const nazivModela = this.modelName;
     if(nazivModela.trim()==="")
     {
       this.onError("Model name is required");
@@ -1909,7 +1912,7 @@ export class ModelComponent implements OnInit {
     this.jsonModel = 
     {
         "naziv"       : nazivModela,
-        "opis"        : (<HTMLTextAreaElement>document.getElementById("opisModela")).value,
+        "opis"        : this.modelDescription,
         "snapshot"    : this.selectedSS,
         "podesavalja" :
         {  
