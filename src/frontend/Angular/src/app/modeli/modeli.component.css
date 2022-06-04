@@ -2,6 +2,25 @@
   min-height: 1050px;
 } */
 
+#model-list-headers {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.model-list-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+.model-list-button:hover {
+  background-color: #4e4f64; 
+}
+
 #naslov,#naslov1{
   text-align: center;
   font-weight: 500;

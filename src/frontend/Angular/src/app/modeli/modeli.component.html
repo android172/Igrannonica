@@ -18,6 +18,10 @@
                     </svg> -->
                   </div>
                 </div>
+                <div id="model-list-headers">
+                  <button class="model-list-button" (click)="changeSort('n')">Name</button>
+                  <button class="model-list-button" (click)="changeSort('d')">Date</button>
+                </div>
                 <div id="sk">
                     <div type="button" id="m" *ngFor="let m of modeli; let i=index"> 
                       <ng-template #unselectedModel>
