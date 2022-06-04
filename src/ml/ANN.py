@@ -24,6 +24,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class ANN:
     
     def __init__(self, annSettings = None) -> None:
+        self.id = 0
+        
         self.data = MLData()
         
         self.isRunning = threading.Event()
@@ -57,8 +59,9 @@ class ANN:
             self.load_settings(annSettings)
     
     def create_deep_copy(self):
-        
         new_ann = ANN()
+        
+        new_ann.id = self.id
         
         new_ann.data = self.data.create_deep_copy(self.dataset_version)
         

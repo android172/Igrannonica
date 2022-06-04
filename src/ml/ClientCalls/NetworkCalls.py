@@ -175,11 +175,12 @@ def start(self):
             self.report_error("ERROR :: Output column is of wrong format.")
             return
     
+    ann.id = id
     self.active_models[id] = ann
     ann.isRunning.set()
     
     # Train
-    Thread(target= lambda : train(self.token, id, ann)).start()
+    Thread(target= lambda : train(self.token, ann)).start()
     
     self.connection.send("OK")
     print("Training commences.")
@@ -234,7 +235,7 @@ def dismiss_training(self):
     print("Training dismissed.")
     
 # Helper functions #
-def train(token, id, network):
+def train(token, network):
     connection_established = threading.Event()
     sr_connection = SignalRConnection(token, connection_established)
         
@@ -243,17 +244,17 @@ def train(token, id, network):
     
     # Announce self
     sr_connection.set_method("StartModelTraining")
-    sr_connection.send_to_front(id)
+    sr_connection.send_to_front(network.id)
     
     sr_connection.set_method("Loss")
     for loss in network.train():
         results = {
-            'modelId' : id,
+            'modelId' : network.id,
             'epochRes' : loss
         }
         sr_connection.send_to_front(json.dumps(results))
     network.isRunning.clear()
     sr_connection.set_method("FinishModelTraining")
-    sr_connection.send_to_front(id)
+    sr_connection.send_to_front(network.id)
     
     print("Training complete.")
