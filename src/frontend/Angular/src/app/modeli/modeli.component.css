@@ -101,6 +101,11 @@ transform: scale(1.04);
   padding-left: 5px;
 }
 
+.bold-score {
+  font-weight: bold;
+  color: #CED9FF;
+}
+
 #list{
   /* width: 300px; */
   height: 35px;

@@ -140,17 +140,17 @@
                   </tr>
                   <tr *ngFor="let j of i">
                     <td>{{j.id}}</td>
-                    <td>{{j.mae}}</td>
-                    <td>{{j.mse}}</td>
-                    <td>{{j.rse}}</td>
-                    <td>{{j.r2}}</td>
-                    <td>{{j.adjustedR2}}</td>
+                    <td [class.bold-score]="j.mae == maeBest">{{j.mae}}</td>
+                    <td [class.bold-score]="j.mse == mseBest">{{j.mse}}</td>
+                    <td [class.bold-score]="j.rse == rseBest">{{j.rse}}</td>
+                    <td [class.bold-score]="j.r2 == r2Best">{{j.r2}}</td>
+                    <td [class.bold-score]="j.adjustedR2 == adjustedR2Best">{{j.adjustedR2}}</td>
                   </tr>
                 </table>
               </div>
             </div>
             <div id="tabelaK" *ngIf="type==1">
-              <h3 style="color: white;">{{nizGlavni[0][0].kolona}}</h3>
+              <!-- <h3 style="color: white;">{{nizGlavni[0][0].kolona}}</h3> -->
               <table style="width:50%; color: white;">
                 <tr>
                   <th>Model name</th>
@@ -164,13 +164,13 @@
                 </tr>
                 <tr *ngFor="let i of nizGlavni[0]">
                   <td>{{i.id}}</td>
-                  <td>{{i.accuracy}}</td>
-                  <td>{{i.balancedAccuracy}}</td>
-                  <td>{{i.crossEntropyLoss}}</td>
-                  <td>{{i.hammingLoss}}</td>
-                  <td>{{i.precision}}</td>
-                  <td>{{i.recall}}</td>
-                  <td>{{i.f1Score}}</td>
+                  <td [class.bold-score]="i.accuracy == accuracyBest">{{i.accuracy}}</td>
+                  <td [class.bold-score]="i.balancedAccuracy == balancedAccuracyBest">{{i.balancedAccuracy}}</td>
+                  <td [class.bold-score]="i.crossEntropyLoss == crossEntropyLossBest">{{i.crossEntropyLoss}}</td>
+                  <td [class.bold-score]="i.hammingLoss == hammingLossBest">{{i.hammingLoss}}</td>
+                  <td [class.bold-score]="i.precision == precisionBest">{{i.precision}}</td>
+                  <td [class.bold-score]="i.recall == recallBest">{{i.recall}}</td>
+                  <td [class.bold-score]="i.f1Score == f1ScoreBest">{{i.f1Score}}</td>
                 </tr>
               </table>
             </div>
