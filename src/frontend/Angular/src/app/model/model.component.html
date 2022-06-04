@@ -3,7 +3,8 @@
 
         <div class="model-notification-container">
             <div class="model-notification" *ngFor="let m of parallelModels; let i = index">
-                <button class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.podesavalja.numberOfEpochs}}</button>
+                <button *ngIf="m.jsonModel.naziv.length == 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv}}</button>
+                <button *ngIf="m.jsonModel.naziv.length != 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv.slice(0,2)}}</button>
             </div>
         </div>
 

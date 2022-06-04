@@ -71,7 +71,7 @@ p {
 /* Model notification */
 .model-notification-container {
   position: fixed;
-  bottom: 10%;
+  bottom: 7%;
   left: 0;
   display: grid;
   grid-template-columns: auto;
@@ -81,11 +81,11 @@ p {
   height: 50px;
   border-radius: 50%;
   background:black;
-  margin-top:5px;
+  margin-top:18px;
 }
 
 .paraller-model{
-  font-size: small;
+  /* font-size: small; */
   width: 50px;
   height: 50px;
   font-weight: 500;
