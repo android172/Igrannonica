@@ -609,7 +609,7 @@ export class ModeliComponent implements OnInit {
         for(let i=0;i<brK;i++)
         {
           pom=[];
-          for(let j=i;j<this.uporediviM.length;j=j+this.brUp+1)
+          for(let j=i;j<this.uporediviM.length;j=j+brK)
             pom.push(this.uporediviM[j]);
           this.glavniNiz.push(pom);
         }
@@ -627,9 +627,16 @@ export class ModeliComponent implements OnInit {
         }
         else
           this.nizGlavni=this.glavniNiz;
-        console.log(this.nizGlavni);
-
-
+        
+        for(let i=0;i<this.nizGlavni.length;i++)
+        {
+          for(let j=0;j<this.modeli.length;j++)
+            for(let k=0;k<this.brUp+1;k++)
+              if(this.nizGlavni[i][k].id==this.modeli[j].id)
+                this.nizGlavni[i][k].id=this.modeli[j].name;  
+        }
+        console.log(this.nizGlavni[0]);
+        console.log(this.modeli);
       },
       error=>{
         console.log(error.error);
