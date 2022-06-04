@@ -1948,7 +1948,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
 
 #btn-kreirajnovired
 {
-  background-color: #fa6698;
+  background-color: #a16c8b;
   border: none;
   border-radius: 5px;
   padding-top: 5px;
@@ -1960,7 +1960,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
 
 #btn-kreirajnovired:hover
 {
-  background-color: #e2466b;
+  background-color: #a16c8b;
   border: none;
   border-radius: 5px;
   padding-top: 5px;
@@ -1970,8 +1970,22 @@ ngb-pagination ::ng-deep ul > li.active > a {
   color: #eee;
 }
 
+#dugmePopup1{
+  
+  background-color: #a16c8b;
+  border: none;
+  color: #eee;
+}
+
+#dugmePopup2{
+
+    background: rgba(229, 229, 229, 0.25);
+    border: none;
+    color: #eee;
+}
+
 #sacuvajV,#obrisiK{
-  background-color: #fa6698;
+  background-color: #a16c8b;
   border: none;
   border-radius: 5px;
   padding-top: 5px;
@@ -1984,7 +1998,7 @@ ngb-pagination ::ng-deep ul > li.active > a {
 
 #sacuvajV:hover,#obrisiK:hover
 {
-  background-color: #e2466b;
+  background-color: #a16c8b;
   border: none;
   border-radius: 5px;
   padding-top: 5px;

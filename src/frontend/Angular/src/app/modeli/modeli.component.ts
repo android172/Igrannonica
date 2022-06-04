@@ -62,6 +62,20 @@ export class ModeliComponent implements OnInit {
   public sortedBy: string = 'd';
   public descending: boolean = true;
 
+  public accuracyBest: number = Number.MIN_VALUE;
+  public balancedAccuracyBest: number = Number.MIN_VALUE;
+  public crossEntropyLossBest: number = Number.MAX_VALUE;
+  public hammingLossBest: number = Number.MAX_VALUE;
+  public precisionBest: number = Number.MIN_VALUE;
+  public recallBest: number = Number.MIN_VALUE;
+  public f1ScoreBest: number = Number.MIN_VALUE;
+
+  public maeBest: number = Number.MAX_VALUE;
+  public mseBest: number = Number.MAX_VALUE;
+  public rseBest: number = Number.MAX_VALUE;
+  public r2Best: number = Number.MIN_VALUE;
+  public adjustedR2Best: number = Number.MIN_VALUE;
+
   constructor(public http: HttpClient,private activatedRoute: ActivatedRoute, private shared:SharedService,private service: NotificationsService) { 
     this.activatedRoute.queryParams.subscribe(
       params => {
@@ -566,6 +580,7 @@ export class ModeliComponent implements OnInit {
     );
   }
 
+  public K:any[] = [];
   compareModels(idM: any)
   {
     this.nizGlavni = [];
@@ -578,7 +593,7 @@ export class ModeliComponent implements OnInit {
     this.http.get(url+"/api/Statistics/Comparison?experimentId=" + this.id + "&modelId=" + idM).subscribe(
       res=>{
         this.uporediviM=Object.assign([],res);
-        console.log(this.uporediviM);
+        
         for(let i=0;i<this.uporediviM.length;i++)
         {
           if(idM!==this.uporediviM[i]["id"])
@@ -591,8 +606,6 @@ export class ModeliComponent implements OnInit {
           }
         }
         this.brUp=brUporedivihPoK/brK;
-        console.log(brK);
-
         
         for(let i=0;i<this.uporediviM.length;i=i+brK)
           idKolonaPoredjenje.push(this.uporediviM[i].id);
@@ -613,7 +626,7 @@ export class ModeliComponent implements OnInit {
             pom.push(this.uporediviM[j]);
           this.glavniNiz.push(pom);
         }
-        //console.log(this.glavniNiz);
+        
         var pom1 = [];
         if(brK==this.uporediviM.length)
         {
@@ -635,8 +648,50 @@ export class ModeliComponent implements OnInit {
               if(this.nizGlavni[i][k].id==this.modeli[j].id)
                 this.nizGlavni[i][k].id=this.modeli[j].name;  
         }
-        console.log(this.nizGlavni[0]);
-        console.log(this.modeli);
+        
+        this.K=this.nizGlavni[0];
+        
+        
+        // Compute best scores
+        if (this.type == 0) {
+          for (const el of this.nizGlavni) {
+            if (el.mae * el.mse * el.rse * el.r2 != 0.0) {
+              if (el.mae < this.maeBest)
+                this.maeBest = el.mae;
+              if (el.mse < this.mseBest)
+                this.mseBest = el.mse;
+              if (el.rse < this.rseBest)
+                this.rseBest = el.rse;
+              if (el.r2 > this.r2Best)
+                this.r2Best = el.r2;
+              if (el.adjustedR2 > this.adjustedR2Best)
+                this.adjustedR2Best = el.adjustedR2;
+            }
+          }
+        }
+        else {
+          for (const el of this.nizGlavni[0]) {
+            if (el.accuracy * el.balancedAccuracy * el.crossEntropyLoss * el.hammingLoss * el.precision != 0) {
+              if (el.accuracy > this.accuracyBest)
+                this.accuracyBest = el.accuracy;
+              if (el.balancedAccuracy > this.balancedAccuracyBest)
+                this.balancedAccuracyBest = el.balancedAccuracy;
+              if (el.crossEntropyLoss < this.crossEntropyLossBest)
+                this.crossEntropyLossBest = el.crossEntropyLoss;
+              if (el.hammingLoss < this.hammingLossBest)
+                this.hammingLossBest = el.hammingLoss;
+              if (el.precision > this.precisionBest)
+                this.precisionBest = el.precision;
+              if (el.recall > this.recallBest)
+                this.recallBest = el.recall;
+              if (el.f1Score > this.f1ScoreBest)
+                this.f1ScoreBest = el.f1Score;
+            }
+            else {
+              console.log(el.id); 
+            }
+          }
+        }
       },
       error=>{
         console.log(error.error);
