@@ -23,8 +23,6 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class ModelComponent implements OnInit {
   private eventsSubscription!: Subscription;
 
-  @ViewChild('parallelModelExit') parallelModelExit:any;
-
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   @Input() idS! : Observable<number>;
@@ -1448,11 +1446,6 @@ export class ModelComponent implements OnInit {
     this.enableInputs();
   }
 
-  exitPMModal() {
-    let el: HTMLElement = this.parallelModelExit.nativeElement;
-    el.click();
-  }
-
   openParallelModelView(model: any) {
     //console.log("DEBUG");
     this.modelparallel = model;
@@ -1487,7 +1480,7 @@ export class ModelComponent implements OnInit {
       }
     )
   }
-  dissmissParallelTraining(model: any) {
+  dissmissParallelTraining(model: any, modal: any) {
     this.http.post(url+"/api/Model/Model/PrekiniTrening?idEksperimenta=" + this.idEksperimenta + "&idModela=" + model.modelId, null ,{responseType:'text'}).subscribe(
       res => {
         var index = -1;
@@ -1500,7 +1493,7 @@ export class ModelComponent implements OnInit {
         }
         if (index > -1)
           this.parallelModels.splice(index, 1);
-        this.exitPMModal();
+        modal.dismiss('Cross click');
         this.onInfo("Training dissmisted.");
       },
       err => {
