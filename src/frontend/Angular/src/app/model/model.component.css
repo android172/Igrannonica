@@ -1692,6 +1692,24 @@ background-color: #5f6194!important;
     background-color: #af7777!important;
   }
 
+.dismiss-m-unlock{
+  background-color: #996363!important;
+}
+
+.save-m-unlock{
+  background-color: #5f6194!important;
+}
+
+.dismiss-m-unlock:hover{
+  background-color: #af7777!important;
+}
+
+.save-m-unlock:hover{
+  background-color: #7072a4!important;
+}
+
+
+
 .model-button:hover {
   background-color: #f5597e;
   border: none;
