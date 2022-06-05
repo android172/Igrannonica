@@ -192,7 +192,7 @@ transform: scale(1.04);
 #snap,#ann,#opt,#eph,#ce{
   color: #eee;
   height: 30px;
-  width: 170px;
+  /* width: 170px; */
   margin-bottom: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -202,8 +202,8 @@ transform: scale(1.04);
 #n,#d{
   color: #eee;
   height: 50px;
-  width: 500px;
-  position: relative;
+  /* width: 500px; */
+  /* position: relative; */
   margin-bottom: 0px;
 }
 
@@ -434,9 +434,9 @@ input:-webkit-autofill:active
 */
 #osnovneI
 {
-  width: 290px;
+  /* width: 290px; */
   height: 360px;
-  float: left;
+  /* float: left; */
   padding-left: 40px;
 }
 
@@ -444,7 +444,7 @@ input:-webkit-autofill:active
 {
   font-size: 17px;
   padding-bottom: 5px;
-  width: 150px;
+  width: 100%;
   color: #bc7ca1;
   
 }
@@ -452,15 +452,15 @@ input:-webkit-autofill:active
 {
   font-size: large;
   padding-bottom: 5px;
-  width: 200px;
+  /* width: 200px; */
   color: #bc7ca1;
-  float: left;
+  /* float: left; */
 }
 
 #n,#d
 {
   height: 30px;
-  width: 220px;
+  /* width: 220px; */
   color: #eee;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -471,7 +471,7 @@ input:-webkit-autofill:active
 
 #opis
 {
-  width: 220px;
+  /* width: 220px; */
   height: 180px;
   color: #eee;
   display: -webkit-box;
@@ -481,10 +481,10 @@ input:-webkit-autofill:active
 }
 
 #pod{
-  float: left;
-  width: 270px;
+  /* float: left; */
+  /* width: 270px; */
   height: 360px;
-  padding-left: 60px;
+  /* padding-left: 60px; */
 }
 
 /* #matrica
@@ -506,55 +506,71 @@ input:-webkit-autofill:active
   padding-bottom: 5px;
 }
 
-#statistikaK
+/* #statistikaK
 {
   width: 290px;
   float: left;
-}
+} */
 
 #statistikaR{
-  width: 290px;
+  /* width: 290px; */
   height: 330px;
-  float: left;
+  /* float: left; */
   padding-left: 40px;
 }
-#statistikaK1
+/* #statistikaK1
 {
   width: 140px;
   float: left;
-}
+} */
 
-#aData,#bData,#cData,#fData,#hData,#pData,#rData,#maeData,#mseData,#r2Data,#ar2Data,#rseData,#nameData
+#maeData,#mseData,#r2Data,#ar2Data,#rseData,#nameData
 {
   color: #eee;
   height: 30px;
-  width: 100px;
+  width: 80%;
   margin-bottom: 10px;
 }
 
+#aData,#bData,#cData,#fData,#hData,#pData,#rData
+{
+  color: #eee;
+  height: 30px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+
 #dugmeMetrika
 {
+  max-width: 160px;
   margin-top: 15px;
   height: 40px;
   text-align: center;
   border-radius: 10px;
   color: #bc7ca1;
   display: block;
-  width: 150px;
+  width: 80%;
   border: 2px solid #bc7ca1;
   box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
-  margin: auto;
+  /* margin: auto; */
   font-size: 13px;
 }
 
 #dugme
 {
-  width: 150px;
+  height: 40px;
+  width: 40%;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
-  margin-top: 45px;
-  margin-left: 140px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 160px;
+  /* margin-left: 140px; */
+  /* margin: auto; */
   color: whitesmoke;
   box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
   background: #a16c8b;
@@ -574,12 +590,14 @@ input:-webkit-autofill:active
 
 #dugmeR
 {
-  width: 150px;
+  height: 40px;
+  width: 40%;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
-  margin-top: 20px;
-  margin-left: 100px;
+  margin-top: 10px;
+  max-width: 160px;
+  /* margin-left: 100px; */
   color: whitesmoke;
   box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
   background: #a16c8b;
@@ -656,13 +674,14 @@ input:-webkit-autofill:active
   font-size: 15px;
   font-weight: 500;
   padding-bottom: 15px;
-  padding-left: 60px;
+  text-align: center;
+  /* padding-left: 60px; */
 }
 
 #skrol1{
   overflow-y: auto;
   overflow-x: hidden;
-  width: 250px;
+  width: 65%;
   height: 285px;
 }
 
@@ -684,7 +703,8 @@ input:-webkit-autofill:active
   border-radius: 5px; 
   border: 1px solid rgb(36, 36, 76);
   color:rgb(197, 197, 197);
-  float: left;
+  /* float: left; */
+  /* width: 30%; */
 }
 
 #dugmeDL:hover{
@@ -728,4 +748,8 @@ table {
   text-align: left;
   padding: 7px;
   color: #a16c8be0;
+}
+.space
+{
+  margin-bottom: 15px;
 }
