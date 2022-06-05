@@ -2006,7 +2006,7 @@ export class ModelComponent implements OnInit {
       oldModelId = -1
     this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
-        this.onSuccess("Model was successfully created.");
+        this.onSuccess("Model was successfully saved.");
         if (isParallel == false)
           this.PosaljiModel.emit(this.selectedSS);
         if (this.forkUponSave == true) {
