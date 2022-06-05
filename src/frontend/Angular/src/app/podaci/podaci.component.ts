@@ -2293,27 +2293,36 @@ dajNaziveHeadera()
   preuzmiDataset()
   {
     var id = sessionStorage.getItem("idS");
-    var name = sessionStorage.getItem("idSnapshota");
+    var snapshotName = sessionStorage.getItem("idSnapshota");
 
-    if(name == null) 
+    if(snapshotName == null) {
       this.onError("Dataset not found");
-    if(id == null)
+      return;
+    }
+    if(id == null) {
       this.onError("Dataset not found");
-    if(id == "0")
-      name = "test_data";
+      return;
+    }
+    
+    var name = this.fileName;
+    if(id != "0") {
+      const splits = this.fileName.split('.');
+      name = snapshotName + "." + splits[splits.length - 1];
+    }
 
-    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text',params:{"versionName":name+".csv"}}).subscribe(
+    this.http.post(url+"/api/File/download/" + this.idEksperimenta, null, {responseType: 'text',params:{"versionName":name}}).subscribe(
       res => {
 
-        if(id == "0")
-           name = "default";
+        if(id == "0" || snapshotName == null)
+          name = "default";
+        else
+          name = snapshotName;
            
-        var blob = new Blob([res], {type: 'text/csv' })
-        saveAs(blob, name + "_" + this.fileName);
+        saveAs(new Blob([res]), name + "_" + this.fileName);
 
         this.onSuccess("Dataset are downloaded successfully.");
     },error=>{
-      console.log(error.error);
+      console.error(error.error);
       this.onError(error.error);
     });
   }

@@ -288,7 +288,7 @@
                                 <h4 id="tekstZT">{{this.modelText}}</h4>
                                 <ng-template [ngIf]="buttonPlay">
                                     <a class="play-btn" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal3" *ngIf="(currentEpoch < numberOfEpoch) && !buttonDisable; else onesposobi"></a>
+                                        data-bs-target="#exampleModal3" *ngIf="canContinueTraining() && !buttonDisable; else onesposobi"></a>
                                 </ng-template>
                                 <ng-template #onesposobi>
                                     <a class="play-btn-disable"></a>

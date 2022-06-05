@@ -671,11 +671,18 @@ export class ModelComponent implements OnInit {
 
     const idRead = sessionStorage.getItem('idModela')
 
-    this.idModela = 0
-    if (idRead != null)
-      this.idModela = Number.parseInt(idRead);
+    if (idRead == null) return;
 
-    if(Number(this.idModela) != -1)
+    const id = Number.parseInt(idRead);
+    for (const model of this.parallelModels) {
+      if (model.modelId == id) {
+        this.onError("Model with this id is already being trained in parallel.")
+        return;
+      }
+    }
+    this.idModela = id;
+    
+    if(this.idModela != -1)
     {
       this.http.get(url+"/api/Model/LoadSelectedModel?idEksperimenta="+ this.idEksperimenta + "&idModela=" + data2, {responseType: 'text'}).subscribe(
         res=>{
@@ -1942,7 +1949,7 @@ export class ModelComponent implements OnInit {
     this.http.post(url+"/api/Model/NoviModel?idEksperimenta="+this.idEksperimenta+"&model="+nazivModela, null, {responseType: 'text'}).subscribe(
       res => {
         this.oldModelId = this.idModela;
-        this.idModela = Number.parseInt(res);
+        const newModelId = Number.parseInt(res);
         
         if(res == "-1") //kreira novi model
         {
@@ -1964,11 +1971,12 @@ export class ModelComponent implements OnInit {
         else // override modela
         {
           for (const model of this.parallelModels) {
-            if (model.modelId == this.idModela) {
+            if (model.modelId == newModelId) {
               this.onError("Model with this id is already being trained in parallel.")
               return;
             }
           }
+          this.idModela = newModelId;
           this.modalToCloseOverride = modal;
           this.open(this.overridemodela);
         }
