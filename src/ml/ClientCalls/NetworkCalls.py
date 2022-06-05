@@ -62,7 +62,7 @@ def predict(self):
     # receive model identifier
     model_id = int(self.connection.receive())
     
-    if model_id == -1:
+    if model_id == 0:
         active_network = self.network
     else:
         active_network = self.active_models.get(model_id, None)
