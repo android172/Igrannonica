@@ -763,8 +763,9 @@
                                 <td>{{modelparallel.jsonModel.podesavalja.learningRate}}</td>
                             </tr>
                             <tr class="tr-table-model">
-                                <td>Batch size</td>
-                                <td>{{modelparallel.jsonModel.podesavalja.batchSize}}</td>
+                                <td>Problem type</td>
+                                <td *ngIf="modelparallel.jsonModel.podesavalja.annType == 0">Regression</td>
+                                <td *ngIf="modelparallel.jsonModel.podesavalja.annType == 1">Classification</td>
                             </tr>
                             <tr class="tr-table-model color-model-tr">
                                 <td>Number of Epochs</td>
@@ -781,12 +782,12 @@
                         </table>
                     </div>
                     <div id="pModel-buttons">
-                        <button type="button" (click)="saveParallelModel(modelparallel)"               class="model-button btn btn-primary">Save model</button>
-                        <button type="button" (click)="stopParallelTraining(modelparallel)"            class="model-button btn btn-primary"
+                        <button type="button" (click)="saveParallelModel(modelparallel)"               class="save-m-btn model-button btn btn-primary">Save model</button>
+                        <button type="button" (click)="stopParallelTraining(modelparallel)"            class="stop-m-btn model-button btn btn-primary"
                             *ngIf="modelparallel.modelState == 'r'">Pause training</button>
-                        <button type="button" (click)="continueParallelTraining(modelparallel)"        class="model-button btn btn-primary"
+                        <button type="button" (click)="continueParallelTraining(modelparallel)"        class="continue-m-btn model-button btn btn-primary"
                             *ngIf="modelparallel.modelState == 'p'">Continue training</button>
-                        <button type="button" (click)="dismissParallelTraining(modelparallel, modal)" class="model-button btn btn-primary">Dismiss model</button>
+                        <button type="button" (click)="dismissParallelTraining(modelparallel, modal)" class="diss-m-btn model-button btn btn-primary">Dismiss model</button>
                     </div>
                 </div>
 

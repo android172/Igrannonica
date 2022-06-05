@@ -1666,6 +1666,32 @@ body {
   color: #eee;
 }
 
+.save-m-btn{
+background-color: #5f6194!important;
+}
+.stop-m-btn{
+  background-color: #698274!important;
+}
+.continue-m-btn{
+  background-color: #698274!important;
+}
+.diss-m-btn{
+  background-color: #996363!important;
+}
+
+.save-m-btn:hover{
+  background-color: #7072a4!important;
+  }
+  .stop-m-btn:hover{
+    background-color: #829e8d!important;
+  }
+  .continue-m-btn:hover{
+    background-color: #829e8d!important;
+  }
+  .diss-m-btn:hover{
+    background-color: #af7777!important;
+  }
+
 .model-button:hover {
   background-color: #f5597e;
   border: none;
@@ -2120,11 +2146,12 @@ input:-webkit-autofill:active {
   padding: 2px;
 }
 .color-model-tr{
-  background-color: #793287;
+  background-color: #71357d;
 }
 
 #button-model:focus{
   outline: 0;
+  box-shadow: none;
 }
 #button-model{
   color: rgb(235, 152, 246);
