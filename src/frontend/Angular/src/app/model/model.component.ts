@@ -1883,8 +1883,8 @@ export class ModelComponent implements OnInit {
 
   kreirajModelCuvanje(modal:any)
   {
-    this.prikaziPredikciju = false;
-    this.predictionDisabled = true;
+    //this.prikaziPredikciju = false;
+    //this.predictionDisabled = true;
     var crossVK;
     if(this.flag == false)
       crossVK = 0;
