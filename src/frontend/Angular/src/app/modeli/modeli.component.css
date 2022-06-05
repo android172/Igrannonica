@@ -546,7 +546,7 @@ input:-webkit-autofill:active
 {
   max-width: 160px;
   margin-top: 15px;
-  height: 40px;
+  min-height: 40px;
   text-align: center;
   border-radius: 10px;
   color: #bc7ca1;
@@ -560,7 +560,7 @@ input:-webkit-autofill:active
 
 #dugme
 {
-  height: 40px;
+  min-height: 40px;
   width: 40%;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -590,7 +590,7 @@ input:-webkit-autofill:active
 
 #dugmeR
 {
-  height: 40px;
+  min-height: 40px;
   width: 40%;
   padding-top: 10px;
   padding-bottom: 10px;
