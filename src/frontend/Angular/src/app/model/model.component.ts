@@ -1314,7 +1314,7 @@ export class ModelComponent implements OnInit {
     // loading ... 
     this.http.post(url+"/api/Model/Model/Treniraj?idEksperimenta=" + this.idEksperimenta, trainingData, {responseType:"text"}).subscribe(
       res => {
-        this.onInfo("Trening je zapocet.");
+        this.onInfo("Training has started.");
         (<HTMLDivElement>document.getElementById('boxZT')).scrollIntoView();
 
         // pauza   
