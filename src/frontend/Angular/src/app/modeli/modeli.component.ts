@@ -349,8 +349,12 @@ export class ModeliComponent implements OnInit {
           this.matTrainData = this.jsonStatistika['confusionMatrix'];
 
           var nizJson = [];
+          (<HTMLButtonElement>document.getElementById("dugmeMetrika")).style.pointerEvents='unset';
           if (this.matTrainData == null)
+          {
             this.matTrainData = [];
+            (<HTMLButtonElement>document.getElementById("dugmeMetrika")).style.pointerEvents='none';
+          }
           for(let i=this.matTrainData.length-1; i>=0; i--)
           {
             for(let j=this.matTrainData.length-1; j>=0; j--)
