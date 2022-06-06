@@ -460,7 +460,7 @@ dajNaziveHeadera()
             if(pomStrSpl[1].length > 4)
             {
               var pom:any = true;
-              var broj:any = strPom[1];
+              var broj:any = pomStrSpl[1];
               var brojac:any = 0;
               for(var i=0; i<broj.length; i++)
               {
@@ -502,7 +502,7 @@ dajNaziveHeadera()
             }
             else
               {
-                var decimale = strPom[1];
+                var decimale = pomStrSpl[1];
                 for(var i=decimale.length-1; i>=1; i--)
                 {
                   if(decimale[i] == '0')
@@ -2944,6 +2944,9 @@ sacuvajKaoNovu(ime:string){
           let dateTime = new Date();
           this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values (Column: " + imeKolone + ", New value: " + vrednost + ")" + " " + "(" + this.selectedSnapshot + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+          this.nizNumerickihKolona = [];
+          this.nizKategorickihKolona = [];
+          this.EnableDisableGrafik();
           this.flag++;
           this.onSuccess("NA values are replaced by new values.");
       },error=>{
