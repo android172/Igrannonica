@@ -3,6 +3,7 @@ from math import sqrt
 import random
 import sys
 import threading
+from matplotlib import transforms
 import numpy as np
 import torch
 import torch.nn as nn
@@ -312,12 +313,16 @@ class ANN:
             return False
         return True
     
-    # Training
-    def train_epoch(self, train_loader):
+    def get_transform(self):
         if isinstance(self.criterion, (nn.NLLLoss, nn.CrossEntropyLoss, nn.MultiMarginLoss)):
             transform = lambda tensor : tensor.to(device).argmax(1)
         else:
             transform = lambda tensor : tensor.to(device)
+        return transform
+    
+    # Training
+    def train_epoch(self, train_loader):
+        transform = self.get_transform()
             
         for bach_index, (data, target) in enumerate(train_loader):
             
@@ -347,10 +352,7 @@ class ANN:
         return loss.item()
 
     def test_epoch(self, test_loader):
-        if isinstance(self.criterion, (nn.NLLLoss, nn.CrossEntropyLoss, nn.MultiMarginLoss)):
-            transform = lambda tensor : tensor.to(device).argmax(1)
-        else:
-            transform = lambda tensor : tensor.to(device)
+        transform = self.get_transform()
         
         test_loss = 0.0
         
@@ -556,9 +558,10 @@ class ANN:
         
     # Prediction
     def predict(self, inputs):
-        inputs = torch.tensor(inputs).to(device)
+        inputs = torch.tensor([inputs]).to(device)
+        inputs = inputs.reshape(inputs.shape[0], -1)
         
-        outputs = self.model(inputs)
+        outputs = self.model(inputs)[0]
         
         if self.isRegression:
             return outputs.tolist()
