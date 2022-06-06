@@ -2,9 +2,10 @@
 {
     public class Regression
     {
-        public Regression(int id,float mAE, float mSE, float rSE, float r2, float adjustedR2)
+        public Regression(int id,string kolona ,float mAE, float mSE, float rSE, float r2, float adjustedR2)
         {
             this.id = id;
+            Kolona = kolona;
             MAE = mAE;
             MSE = mSE;
             RSE = rSE;
@@ -12,6 +13,7 @@
             AdjustedR2 = adjustedR2;
         }
         public int id { get; set; }
+        public string Kolona { get; set; }
         public float MAE { get; set; }
         public float MSE { get; set; }
         public float RSE { get; set; }

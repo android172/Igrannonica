@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `Baza`.`Podesavanja` (
   `LearningRate` FLOAT NULL,
   `BatchSize` INT NULL,
   `numberOfEpochs` INT NULL,
+  `currentEpoch` INT NULL,
   `InputSize` INT NULL,
   `OutputSize` INT NULL,
   `HiddenLayers` VARCHAR(256) NULL,
@@ -118,6 +119,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Classification` (
   `id` INT UNSIGNED NOT NULL,
+  `Kolona` VARCHAR(512) NOT NULL,
   `Accuracy` FLOAT NOT NULL,
   `BalancedAccuracy` FLOAT NOT NULL,
   `Precision` FLOAT NOT NULL,
@@ -134,12 +136,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Baza`.`Reggresion` (
   `id` INT UNSIGNED NOT NULL,
+  `Kolona` VARCHAR(512) NOT NULL,
   `MAE` FLOAT NOT NULL,
   `MSE` FLOAT NOT NULL,
   `RSE` FLOAT NOT NULL,
   `R2` FLOAT NOT NULL,
-  `AdjustedR2` FLOAT NOT NULL,
-  PRIMARY KEY (`id`))
+  `AdjustedR2` FLOAT NOT NULL)
 ENGINE = InnoDB;
 
 

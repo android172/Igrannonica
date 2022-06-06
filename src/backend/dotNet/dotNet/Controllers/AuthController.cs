@@ -13,6 +13,7 @@ using dotNet.ModelValidation;
 using Microsoft.Net.Http.Headers;
 using dotNet.DBFunkcije;
 using dotNet.MLService;
+using dotNet.SingalR;
 
 namespace dotNet.Controllers
 {
@@ -37,14 +38,14 @@ namespace dotNet.Controllers
                 if (user != null)
                 {
                     var token = Generate(user);
-                    //Osvezi(user.id,token)
+                    Osvezi(user.Id, token);
                     return Ok(token);
                 }
                 return NotFound("ERROR :: Requested user doesn't exist.");
             }
-            catch
+            catch(Exception ex)
             {
-                return StatusCode(500);
+                return BadRequest(ex.Message);
             }
 
         }
@@ -69,10 +70,28 @@ namespace dotNet.Controllers
 
         private void Osvezi(int id,string token)
         {
+            try
+            {
+
             foreach(var i in db.dbeksperiment.eksperimenti(id))
             {
-                // Funkcija za postavljanje tokena
-                //Experiment.eksperimenti[id]
+                Experiment.eksperimenti[i.Id].SetupUser(token,i.Id);
+            }
+            /*foreach(var i in EksperimentHub.users) {
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadJwtToken(i.Key);
+                var tokenS = jsonToken as JwtSecurityToken;
+                if (id == int.Parse(tokenS.Claims.ToArray()[0].Value) && i.Key != token) {
+                    EksperimentHub.users.Remove(i.Key);
+                    EksperimentHub.users.Add(token,i.Value);
+                    Osvezi(id, token); return;
+                }
+            }*/
+            
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -91,7 +110,7 @@ namespace dotNet.Controllers
                 {
                     Korisnik kor = db.dbkorisnik.dajKorisnika(request.KorisnickoIme, request.Sifra);
 
-                    string putanja = Directory.GetCurrentDirectory() + "\\Files\\" + kor.Id;
+                    string putanja = Path.Combine(Directory.GetCurrentDirectory() , "Files" , kor.Id.ToString());
                     if(!Directory.Exists(putanja))
                         Directory.CreateDirectory(putanja);
                     return Ok("Registrovan korisnik");

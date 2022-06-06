@@ -27,6 +27,6 @@ export class Header2Component implements OnInit {
   odjava(){
     this.nesto=false;
     localStorage.clear();
-    location.reload();
+    this.router.navigate(['/pocetna-strana']);
   }
 }

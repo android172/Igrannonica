@@ -132,6 +132,26 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
+
+        public bool izmeniModel(int idModela, string ime, int id, string opis, int snanpshot)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update model set naziv=@ime, idEksperimenta=@id, snapshot=@snapshot, obnovljen=now(), opis=@opis where id=@idModela";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ime", ime);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@opis", opis);
+                cmd.Parameters.AddWithValue("@snapshot", snanpshot);
+                cmd.Parameters.AddWithValue("@idModela", idModela);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
         public bool promeniImeModela(string ime, int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -219,7 +239,7 @@ namespace dotNet.DBFunkcije
                             reader.GetFloat("LearningRate"),
                             reader.GetInt32("BatchSize"),
                             reader.GetInt32("numberOfEpochs"),
-                            0,
+                            reader.GetInt32("currentEpoch"),
                             reader.GetInt32("inputSize"),
                             reader.GetInt32("OutputSize"),
                             HiddenLayers(reader.GetString("HiddenLayers")),
@@ -243,7 +263,7 @@ namespace dotNet.DBFunkcije
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam','',0,'','');";
+                string query = "insert into Podesavanja values(@id,'Classification',0.001,64,10,0,0,0,'','','L1',0.0001,'CrossEntropyLoss','Adam','',0,'','');";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
@@ -272,13 +292,14 @@ namespace dotNet.DBFunkcije
             String s;
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
+                string query = "update Podesavanja set `ProblemType`=@pt, `BatchSize`=@bs, `LearningRate`=@lr, `InputSize`=@ins, `numberOfEpochs`=@noe, `currentEpoch`=@ce, `OutputSize`=@os , `HiddenLayers`=@hl , `AktivacioneFunkcije`=@af   ,`LossFunction`=@lf, `RegularizationMethod`=@rm, `RegularizationRate`=@rr, `Optimizer`=@o , `optimizationParams`=@op,`CrossValidationK`=@Kv where id=@idp";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@idp", id);
                 cmd.Parameters.AddWithValue("@lr", json.LearningRate);
                 cmd.Parameters.AddWithValue("@bs", json.BatchSize);
                 cmd.Parameters.AddWithValue("@ins", json.InputSize);
                 cmd.Parameters.AddWithValue("@noe", json.NumberOfEpochs);
+                cmd.Parameters.AddWithValue("@ce", json.CurrentEpoch);
                 cmd.Parameters.AddWithValue("@os", json.OutputSize);
                 cmd.Parameters.AddWithValue("@rr", json.RegularizationRate);
                 cmd.Parameters.AddWithValue("@Kv", json.KFoldCV);
@@ -425,7 +446,7 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        Console.WriteLine("OK");
+
                         String naziv = reader.GetString("naziv");
                         return naziv;
                     }
@@ -505,7 +526,6 @@ namespace dotNet.DBFunkcije
 
         public ModelDetaljnije detaljnije(int id)
         {
-            Console.WriteLine(id.ToString());
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 if (dajSnapshot(id) > 0)
@@ -531,6 +551,7 @@ namespace dotNet.DBFunkcije
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
                             model.ProblemType = reader.GetString("ProblemType");
+                            model.trenutnaEpoha = reader.GetInt32("currentEpoch");
                             return model;
                         }
                     }
@@ -558,6 +579,7 @@ namespace dotNet.DBFunkcije
                             model.Optimizacija = reader.GetString("Optimizer");
                             model.IzlazneKolone = HiddenLayers(reader.GetString("IzlazneKolone"));
                             model.ProblemType = reader.GetString("ProblemType");
+                            model.trenutnaEpoha = reader.GetInt32("currentEpoch");
                             return model;
                         }
                     }
@@ -595,12 +617,13 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
-        public bool upisiStatistiku(int id, StatisticsRegression statistica) {
+        public bool upisiStatistiku(int id, StatisticsRegression statistica, string Kolona) {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Reggresion values ( @id ,@MAE , @MSE , @RSE , @R2 , @AR2);";
+                string query = "insert into Reggresion values ( @id , @Kolona ,@MAE , @MSE , @RSE , @R2 , @AR2);";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Kolona", Kolona);
                 cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
                 cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
                 cmd.Parameters.AddWithValue("@RSE" , statistica.RSE);
@@ -612,10 +635,30 @@ namespace dotNet.DBFunkcije
                 return false;
             }
         }
-
-        private string confusionMatrix(int[][] Matrix)
+        public bool prepisiStatistiku(int id, StatisticsRegression statistica, string Kolona)
         {
-            Console.WriteLine("Test");
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update Reggresion set MAE = @MAE, MSE = @MSE, RSE = @RSE, R2 = @R2, AdjustedR2 = @AR2 where id = @id and Kolona=@Kolona ;";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@Kolona", Kolona);
+                cmd.Parameters.AddWithValue("@MAE", statistica.MAE);
+                cmd.Parameters.AddWithValue("@MSE", statistica.MSE);
+                cmd.Parameters.AddWithValue("@RSE", statistica.RSE);
+                cmd.Parameters.AddWithValue("@R2", statistica.R2);
+                cmd.Parameters.AddWithValue("@AR2", statistica.AdjustedR2);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
+
+        private string confusionMatrix(int[][]? Matrix)
+        {
+            if (Matrix == null)
+                return "";
             string niz = "";
             for(int i = 0; i < Matrix.Length; i++)
             {
@@ -628,7 +671,6 @@ namespace dotNet.DBFunkcije
                 if (i < Matrix.Length - 1)
                     niz += ":";
             }
-            Console.WriteLine(niz);
             return niz;
         }
         private int[][] Matrix(string matrica)
@@ -654,13 +696,17 @@ namespace dotNet.DBFunkcije
         }
 
 
-        public bool upisiStatistiku(int id,StatisticsClassification statistica)
+        public bool upisiStatistiku(int id,StatisticsClassification statistica, string Kolona)
         {
+            try
+            {
+
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string query = "insert into Classification values ( @id ,@Accuracy , @BalancedAccuracy , @Precision , @Recall , @F1Score, @HammingLoss , @CrossEntropyLoss , @ConfusionMatrix );";
+                string query = "insert into Classification values(@id,@kolona,@Accuracy,@BalancedAccuracy,@Precision,@Recall,@F1Score,@HammingLoss,@CrossEntropyLoss,@ConfusionMatrix)";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@kolona",Kolona);
                 cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
                 cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
                 cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
@@ -674,6 +720,84 @@ namespace dotNet.DBFunkcije
                     return true;
                 return false;
             }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public bool prepisiStatistiku(int id, StatisticsClassification statistica,string Kolona)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "update Classification set `Kolona`=@kolona , `Accuracy`=@Accuracy , `BalancedAccuracy`=@BalancedAccuracy , `Precision`=@Precision , `Recall`=@Recall , `F1Score`=@F1Score, `HammingLoss`=@HammingLoss , `CrossEntropyLoss`=@CrossEntropyLoss , `ConfusionMatrix`=@ConfusionMatrix where `id`=@id ;";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@kolona",Kolona);
+                cmd.Parameters.AddWithValue("@Accuracy", statistica.Accuracy);
+                cmd.Parameters.AddWithValue("@BalancedAccuracy", statistica.BalancedAccuracy);
+                cmd.Parameters.AddWithValue("@Precision", statistica.Precision);
+                cmd.Parameters.AddWithValue("@Recall", statistica.Recall);
+                cmd.Parameters.AddWithValue("@F1Score", statistica.F1Score);
+                cmd.Parameters.AddWithValue("@HammingLoss", statistica.HammingLoss);
+                cmd.Parameters.AddWithValue("@CrossEntropyLoss", statistica.CrossEntropyLoss);
+                cmd.Parameters.AddWithValue("@ConfusionMatrix", confusionMatrix(statistica.ConfusionMatrix));
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                    return true;
+                return false;
+            }
+        }
+
+        public List<Classification> ComparableClassification(int experimentId, string modelOutput)
+        {
+            using MySqlConnection connection = new(connectionString);
+            List<Classification> results = new();
+            string query = "select * from classification " +
+                "where id in (select id from model where idEksperimenta = @id) " +
+                "and Kolona = @col; ";
+
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", experimentId);
+            cmd.Parameters.AddWithValue("@col", modelOutput);
+
+            connection.Open();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                    results.Add(new Classification(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
+            }
+            return results;
+        }
+
+        public List<Regression> ComparableRegression(int experimentId, string[] modelOutputs)
+        {
+            using MySqlConnection connection = new MySqlConnection(connectionString);
+            List<Regression> results = new List<Regression>();
+
+            string columnsForOutput = $"Kolona = '{modelOutputs[0]}'";
+            for (int i = 1; i < modelOutputs.Length; i++)
+                columnsForOutput += $" or Kolona = '{modelOutputs[i]}'";
+
+            string query = "select * from reggresion as r " +
+                "where id in (select id from model where idEksperimenta = @id) " +
+                "and @outputCount = (select COUNT(*) from reggresion where id = r.id and(" +
+                columnsForOutput +
+                ")) and 0 = (select COUNT(*) from reggresion where id = r.id and not(" +
+                columnsForOutput + "));";
+
+            MySqlCommand cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", experimentId);
+            cmd.Parameters.AddWithValue("@outputCount", modelOutputs.Length);
+            connection.Open();
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                    results.Add(new Regression(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
+            }
+            return results;
         }
 
         public List<Classification> eksperimentKlasifikacija(int id)
@@ -689,7 +813,7 @@ namespace dotNet.DBFunkcije
                 {
                     while (reader.Read())
                     {
-                        results.Add(new Classification(reader.GetInt32("id"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
+                        results.Add(new Classification(reader.GetInt32("id"),reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix"))));
                     }
                 }
                 return results;
@@ -708,32 +832,32 @@ namespace dotNet.DBFunkcije
                 {
                     while (reader.Read())
                     {
-                        results.Add(new Regression(reader.GetInt32("id"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
+                        results.Add(new Regression(reader.GetInt32("id"),reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
                     }
                 }
                 return results;
             }
         }
-        public StatisticsRegression modelRegresija(int id)
+        public List<Regression> modelRegresija(int id)
         {
+            List<Regression> results = new List<Regression>();
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                List<Regression> results = new List<Regression>();
                 string query = "select * from Reggresion where id = @id";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        return new StatisticsRegression( reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2"));
+                        results.Add( new Regression(id,reader.GetString("Kolona"), reader.GetFloat("MAE"), reader.GetFloat("MSE"), reader.GetFloat("RSE"), reader.GetFloat("R2"), reader.GetFloat("AdjustedR2")));
                     }
                 }
             }
-            return null;
+            return results;
         }
-        public StatisticsClassification modelKlasifikacija(int id)
+        public Classification modelKlasifikacija(int id)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -746,14 +870,41 @@ namespace dotNet.DBFunkcije
                 {
                     if (reader.Read())
                     {
-                        return new StatisticsClassification(reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix")));
+                        return new Classification(reader.GetInt32("id"), reader.GetString("Kolona"), reader.GetFloat("Accuracy"), reader.GetFloat("BalancedAccuracy"), reader.GetFloat("Precision"), reader.GetFloat("Recall"), reader.GetFloat("F1Score"), reader.GetFloat("HammingLoss"), reader.GetFloat("CrossEntropyLoss"), Matrix(reader.GetString("ConfusionMatrix")));
                     }
                 }
             }
             return null;
         }
 
-
+        public void izbrisiRegStatistiku(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from Reggresion where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return;
+                }
+            }
+        }
+        public void izbrisiClasStatistiku(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "delete from Classification where id=@id";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                if (cmd.ExecuteNonQuery() > 0)
+                {
+                    return;
+                }
+            }
+        }
 
     }
 }

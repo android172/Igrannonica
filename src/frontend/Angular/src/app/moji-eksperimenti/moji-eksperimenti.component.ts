@@ -15,6 +15,7 @@ export class MojiEksperimentiComponent implements OnInit {
   json: any;
   id: any;
   izabranId: number = -1;
+  provera: boolean = false;
   constructor(private http: HttpClient,public router: Router,private service: NotificationsService) { }
 
   ngOnInit(): void {
@@ -30,15 +31,24 @@ export class MojiEksperimentiComponent implements OnInit {
   
     this.http.get(url+'/api/Eksperiment/Eksperimenti').subscribe(
         res=>{
-          console.log(res);
-          this.json = res;
-          this.eksperimenti = Object.values(this.json);
+           console.log(res);
+          if(res != 0)
+          {
+            this.json = res;
+            this.eksperimenti = Object.values(this.json)
+            this.provera = true;      
+          }
+          else
+          {
+            this.provera = false; 
+            (<HTMLDivElement>document.getElementById("nemaEks")).innerHTML = "You haven't created any experiments yet!";
+          }
         }
     );
   }
   onSuccess(message:any)
   {
-    this.service.success('Uspešno',message,{
+    this.service.success('Success',message,{
       position: ["top","left"],
       timeOut: 2000,
       animate:'fade',
@@ -47,7 +57,7 @@ export class MojiEksperimentiComponent implements OnInit {
   }
   onError(message:any)
   {
-    this.service.error('Neuspešno',message,{
+    this.service.error('Unsuccessful',message,{
       position: ['top','left'],
       timeOut: 2000,
       animate:'fade',
@@ -83,14 +93,14 @@ export class MojiEksperimentiComponent implements OnInit {
       {
         this.http.delete(url+'/api/Eksperiment/Eksperiment/' + this.eksperimenti[i].id,{responseType: 'text'}).subscribe(
           res=>{
-            console.log(res);
+            // console.log(res);
             this.ucitajEksp();
             var div = (<HTMLDivElement>document.getElementById("e")).style.visibility="hidden";
-            this.onSuccess("Eksperiment je uspesno obrisan");
+            this.onSuccess("Experiment is successfully deleted.");
           },
           error=>{
             console.log(error.error);
-            this.onError("Eksperiment nije obrisan!");
+            this.onError("Experiment was not deleted.");
         }
         
         )

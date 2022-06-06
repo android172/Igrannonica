@@ -8,6 +8,10 @@ namespace dotNet.MLService {
 
         public MLExperiment(IConfiguration configuration, string token, int experimentId) {
             connection = new MLConnection(configuration);
+            SetupUser(token, experimentId);
+        }
+
+        public void SetupUser(string token, int experimentId) {
             connection.Send(Command.SetupUser);
             connection.Send(token);
             connection.Send(experimentId);
@@ -22,7 +26,9 @@ namespace dotNet.MLService {
                 var loaded = connection.Receive();
                 if (loaded != null && loaded.Equals("True"))
                     return true;
-                return false;
+                else if (loaded != null && loaded.Equals("False"))
+                    return false;
+                throw new MLException($"ERROR :: Server out of sync. Wrong message received: {loaded}");
             }
         }
 
@@ -125,6 +131,13 @@ namespace dotNet.MLService {
         public string GetColumnTypes() {
             lock (_lock) {
                 connection.Send(Command.GetColumnTypes);
+                return connection.Receive();
+            }
+        }
+
+        public string ColumnsNumericalCheck() {
+            lock (_lock) {
+                connection.Send(Command.GetCNumerical);
                 return connection.Receive();
             }
         }
@@ -509,16 +522,17 @@ namespace dotNet.MLService {
         public void SaveModel(string modelName, int modelId = -1) {
             lock (_lock) {
                 connection.Send(Command.SaveModel);
-                connection.Send(modelId);
                 connection.Send(modelName);
+                connection.Send(modelId);
                 CheckStatus();
             }
         }
 
-        public void LoadModel(string modelName) {
+        public void LoadModel(string modelName, int modelId) {
             lock (_lock) {
                 connection.Send(Command.LoadModel);
                 connection.Send(modelName);
+                connection.Send(modelId);
                 CheckStatus();
             }
         }
@@ -528,6 +542,22 @@ namespace dotNet.MLService {
                 connection.Send(Command.LoadEpoch);
                 connection.Send(epoch);
                 CheckStatus();
+            }
+        }
+
+        public void MergeModels(int ModelIdFrom, int ModelIdInto) {
+            lock (_lock) {
+                connection.Send(Command.MergeMIds);
+                connection.Send(ModelIdFrom);
+                connection.Send(ModelIdInto);
+                CheckStatus();
+            }
+        }
+
+        public string GetWeights() {
+            lock (_lock) {
+                connection.Send(Command.GetWeight);
+                return connection.Receive();
             }
         }
 
@@ -548,9 +578,16 @@ namespace dotNet.MLService {
             }
         }
 
-        public void SelectTraningData(string datasetVersion) {
+        public void CreateNewNetwork() {
             lock (_lock) {
-                connection.Send(Command.SelectTraningData);
+                connection.Send(Command.CreateNewNetwork);
+                CheckStatus();
+            }
+        }
+
+        public void SelectTrainingData(string datasetVersion) {
+            lock (_lock) {
+                connection.Send(Command.SelectTrainingData);
                 connection.Send(datasetVersion);
                 CheckStatus();
             }
@@ -568,13 +605,25 @@ namespace dotNet.MLService {
             lock (_lock) {
                 connection.Send(Command.Stop);
                 connection.Send(modelId);
+                CheckStatus();
             }
         }
 
-        public void Continue(int modelId) {
+        public void Continue(int modelId, int numberOfEpoch, float learningRate) {
             lock (_lock) {
                 connection.Send(Command.Continue);
                 connection.Send(modelId);
+                connection.Send(numberOfEpoch);
+                connection.Send(learningRate);
+                CheckStatus();
+            }
+        }
+
+        public void Dismiss(int modelId) {
+            lock (_lock) {
+                connection.Send(Command.Dismiss);
+                connection.Send(modelId);
+                CheckStatus();
             }
         }
 
@@ -629,6 +678,7 @@ namespace dotNet.MLService {
         GetColumns,
         GetRowCount,
         GetColumnTypes,
+        GetCNumerical,
         // Data manipulation
         AddRow,
         AddRowToTest,
@@ -675,16 +725,21 @@ namespace dotNet.MLService {
         DrawHexbin,
         DrawDensityPlot,
         DrawPiePlot,
-        // Network
+        // Model
         SaveModel,
         LoadModel,
         LoadEpoch,
+        MergeMIds,
+        GetWeight,
+        // Network
         ComputeMetrics,
         ChangeSettings,
-        SelectTraningData,
+        CreateNewNetwork,
+        SelectTrainingData,
         Start,
         Stop,
         Continue,
+        Dismiss,
         Predict
     }
 }

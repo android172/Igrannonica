@@ -5,6 +5,8 @@ import requests
 import json
 import os
 
+from sklearn.model_selection import learning_curve
+
 from SignalRConnection import SignalRConnection
 from Models.ANNSettings import ANNSettings
 
@@ -26,7 +28,31 @@ def compute_metrics(self):
         if ann is None:
             self.report_error("ERROR :: Wrong model identifier.")
             return
-    Thread(target = lambda : compute_metrics_a(self, ann)).start()
+    
+    if ann.isRunning.is_set():
+        self.report_error("ERROR :: Network is currently running.")
+        return
+    
+    # Setup dataset version
+    if ann.dataset_version is not None:
+        if not ann.data.load_dataset_version(ann.dataset_version):
+            self.report_error("ERROR :: Selected dataset not recognized.")
+            return
+    
+    if ann.isRegression:
+        train = ann.compute_regression_statistics("train")
+        test = ann.compute_regression_statistics("test")
+    else:
+        train = ann.compute_classification_statistics("train")
+        test = ann.compute_classification_statistics("test")
+    
+    if train == None: train = ""
+    if test  == None: test  = ""
+        
+    self.connection.send("OK")
+    self.connection.send(json.dumps({"test": test, "train": train}))
+
+    print("Network statistics requested.")
     
 def predict(self):
     # receive inputs
@@ -36,7 +62,7 @@ def predict(self):
     # receive model identifier
     model_id = int(self.connection.receive())
     
-    if model_id == -1:
+    if model_id == 0:
         active_network = self.network
     else:
         active_network = self.active_models.get(model_id, None)
@@ -72,8 +98,16 @@ def change_settings(self):
     self.network.load_settings(annSettings)
     
     print("ANN settings changed.")
+    
+def create_new_network(self):
+    if not self.network.create_new_network():
+        self.report_error("ERROR :: ANN settings not set, can't create a network.")
+        return
+    
+    self.connection.send("OK")
+    print("New ANN created.")
 
-def select_traning_data(self):
+def select_training_data(self):
     # Receive data version
     version_name = self.connection.receive()
     
@@ -123,7 +157,7 @@ def select_traning_data(self):
     self.network.data_version = version_name
     
     self.connection.send("OK")
-    print("Traning datset selected.")
+    print("Training dataset selected.")
     
 def start(self):
     # Receive id
@@ -141,15 +175,15 @@ def start(self):
             self.report_error("ERROR :: Output column is of wrong format.")
             return
     
-    # Train
-    Thread(target= lambda : train(self.token, id, ann)).start()
+    ann.id = id
+    self.active_models[id] = ann
+    ann.isRunning.set()
     
-    running_network = ann
-    self.active_models = {id : running_network}
-    running_network.isRunning.set()
+    # Train
+    Thread(target= lambda : train(self.token, ann)).start()
     
     self.connection.send("OK")
-    print("Traning commences.")
+    print("Training commences.")
     
 def stop(self):
     # Receive model identifier
@@ -163,9 +197,29 @@ def stop(self):
     running_network.isRunning.clear()
 
     self.connection.send("OK")
-    print("Traning stopped.")
+    print("Training stopped.")
 
 def continue_training(self):
+    # Receive model identifier
+    model_id = int(self.connection.receive())
+    # Receive number of epochs
+    number_of_epochs = int(self.connection.receive())
+    # Receive learning rate
+    learning_rate = float(self.connection.receive())
+    
+    running_network = self.active_models.get(model_id, None)
+    if running_network is None:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+
+    running_network.update_settings(number_of_epochs, learning_rate)
+
+    running_network.isRunning.set()
+
+    self.connection.send("OK")
+    print("Training continued.")
+
+def dismiss_training(self):
     # Receive model identifier
     model_id = int(self.connection.receive())
     
@@ -173,67 +227,34 @@ def continue_training(self):
     if running_network is None:
         self.report_error("ERROR :: Wrong model identifier.")
         return
-
-    running_network.isRunning.set()
-
+    
+    running_network.kys = True
+    self.active_models[model_id] = None
+    
     self.connection.send("OK")
-    print("Traning continued.")
+    print("Training dismissed.")
     
 # Helper functions #
-def compute_metrics_a(self, network):
-    
-    if network.isRunning.is_set():
-        self.report_error("ERROR :: Network is currently running.")
-        return
-    
-    # Setup dataset version
-    if network.dataset_version is not None:
-        if not network.data.load_dataset_version(network.dataset_version):
-            self.report_error("ERROR :: Selected dataset not recognized.")
-            return
-    
-    if network.isRegression:
-        train = network.compute_regression_statistics("train")
-        test = network.compute_regression_statistics("test")
-    else:
-        train = network.compute_classification_statistics("train")
-        test = network.compute_classification_statistics("test")
-    
-    if train == None: train = ""
-    if test  == None: test  = ""
-        
-    self.connection.send("OK")
-    self.connection.send(json.dumps({"test": test, "train": train}))
-
-    print("Network statistics requested.")
-    
-def train(token, id, network):
+def train(token, network):
     connection_established = threading.Event()
     sr_connection = SignalRConnection(token, connection_established)
-    
-    # Setup dataset version
-    if network.dataset_version is not None:
-        if not network.data.load_dataset_version(network.dataset_version):
-            sr_connection.set_method("SendError")
-            sr_connection.send_to_front("ERROR :: Selected dataset not recognized.")
-            return
         
     # Wait for connection
     connection_established.wait()
     
     # Announce self
     sr_connection.set_method("StartModelTraining")
-    sr_connection.send_to_front(id)
+    sr_connection.send_to_front(network.id)
     
     sr_connection.set_method("Loss")
     for loss in network.train():
         results = {
-            'modelId' : id,
+            'modelId' : network.id,
             'epochRes' : loss
         }
         sr_connection.send_to_front(json.dumps(results))
     network.isRunning.clear()
     sr_connection.set_method("FinishModelTraining")
-    sr_connection.send_to_front(id)
+    sr_connection.send_to_front(network.id)
     
-    print("Traning complete.")
+    print("Training complete.")

@@ -1,138 +1,234 @@
 <div class="container-fluid">
     <div id="body1">
-        <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center">
-            <div id="outliers-box">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"  style=" width: 200px; color: whitesmoke; background-color: rgb(101, 72, 115);">
-                    Izaberi snapshot
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"  (click)="selectSnapshot(0,'Default snapshot')" (click)="imeS('Default snapshot')">Default snapshot</a></li>
-                        <div *ngFor="let s of snapshots">
-                        <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid" (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModalCuvanje">Save model</button>
-                <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
-                <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
+
+        <div class="model-notification-container">
+            <div class="model-notification" *ngFor="let m of parallelModels; let i = index">
+                <button *ngIf="m.jsonModel.naziv.length == 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv}}</button>
+                <button *ngIf="m.jsonModel.naziv.length != 1" class="paraller-model"  (click)="openParallelModelView(m)" >{{m.jsonModel.naziv.slice(0,2)}}</button>
             </div>
         </div>
-        <div class="row d-flex justify-content-between">
-            <div class="col-md-4" id="div2">
+
+        <!-- Hints -->
+        <span id="tooltip-settings" class="hovertext" (mouseleave)="hideTooltip('settings')" data-tooltip=
+            "           Network settings
+
+            Setup network Hyperparameters:
+            1) Problem type - For classification output column must be one 
+              categorical variable or its one-hot encoding (multi-class).
+              Regression can be run for any number of numerical variables.
+            2) Loss function - Used for model evaluation during training.
+              Different functions available depending on the problem type.
+            3) Optimizer - Determines optimization algorithm. Some
+              optimization algorithms may require additional hyperparameters. 
+            4) Regularization - Regularization type. None used for rate of 0.
+            5) Batch size - Number of rows computed per sample.
+            ">
+        </span>
+        <span id="tooltip-layers" class="hovertext" (mouseleave)="hideTooltip('layers')" data-tooltip=
+            "     Network architecture.
+
+            Configure number and structure of hidden
+            layers (up to 10). Each layer can be given 
+            a different activation function and neuron
+            count. Layer can have up to 10 neurons.
+            ">
+        </span>
+        <span id="tooltip-columns" class="hovertext" (mouseleave)="hideTooltip('columns')" data-tooltip=
+            "     Input and output columns
+
+            Select which columns will be used in the model,
+            and in which way. Input columns with left drift 
+            color-coded blue. Output columns with right
+            drift color-coded red. White columns not used.
+            ">
+        </span>
+        <span id="tooltip-statistics" class="hovertext" (mouseleave)="hideTooltip('statistics')" data-tooltip=
+            "    Model statistics
+
+            Displays a breakdown of computed 
+            model statistics. Updated after
+            training completion or on model
+            pause. Differs depending on the
+            problem type.
+            ">
+        </span>
+
+        <div class="row" style="padding-top: 20px;">
+            <div class="col-md-12 mb-4 d-flex justify-content-between align-items-center dugmici">
+                <div id="outliers-box">
+                    <div class="dropdown" [class.input-disabled]="inputsLocked == true">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
+                            data-bs-toggle="dropdown">
+                            Izaberi snapshot
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                            <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"
+                                    (click)="selectSnapshot(0,'Default snapshot')"
+                                    (click)="imeS('Default snapshot')">Default snapshot</a></li>
+                            <div *ngFor="let s of snapshots">
+                                <li class="p-0"><a class="dropdown-item" role="button" class="dropdown-item" id="snapid"
+                                        (click)="selectSnapshot(s.id,s.ime)" (click)="imeS(s.ime)">{{s.ime}}</a></li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <button id="sacuvaj" (click)="openSaveModelDialog()"
+                        [class.input-disabled]="saveModelLocked == true">Save model</button>
+                    <!-- <button id="sacuvaj" data-bs-toggle="modal" data-bs-target="#exampleModal2">Sacuvaj model</button> -->
+                    <!-- <button (click)="colapseLoss()" (click)="colapseStatistics()" (click)="dajMetriku()">Metrika</button> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-between" style="margin-bottom: -1%;">
+            <div class="col-md-4">
                 <div id="divUI">
-                    <p>Select I/O Columns</p>
                     <div id="ulaziIzlaz">
                         <!-- <label class="container" *ngFor="let e of kolone2">{{e}}
                             <input type="checkbox" name="ulz" (change)="funkcija()" value="{{e}}"> 
                             <span class="checkmark"></span>
                         </label> -->
-                        <div class="pb-3" *ngFor="let e of kolone2; let i = index" style="color: #fff; font-size: 15px;">
-                            <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
-                            <button class="kolona column-type-input" (click)="funkcija(e)" style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
-                                {{e.value}}
-                            </button>
-                            <button class="kolona column-type-none" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 25%;" *ngIf="e.type==='None'">
-                                {{e.value}}
-                            </button>
-                            <button class="kolona column-type-output" (click)="funkcija(e)" style="padding-top: 0.4rem; margin-left: 50%;" *ngIf="e.type==='Output'">
-                                {{e.value}}
-                            </button>
+                        <div [class.input-disabled]="inputsLocked == true">
+                            <div style="position:relative">
+                                <h3>Select I/O Columns</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-columns" class="helper" (mouseenter)="showTooltip('columns')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pb-3" *ngFor="let e of kolone2; let i = index"
+                                style="color: #fff; font-size: 15px;">
+                                <!-- <input style="width: 16px; height: 16px;"  class="form-check-input" type="checkbox" name="ulz"(change)="funkcija()" value="{{e}}" id="flexCheckDefault" id="{{e}}1"> -->
+                                <button class="kolona column-type-input" (click)="funkcija(e)"
+                                    style="padding-top: 0.4rem;" *ngIf="e.type==='Input'">
+                                    {{e.value}}
+                                </button>
+                                <button class="kolona column-type-none" (click)="funkcija(e)"
+                                    style="padding-top: 0.4rem; margin-left: 25%;" *ngIf="e.type==='None'">
+                                    {{e.value}}
+                                </button>
+                                <button class="kolona column-type-output" (click)="funkcija(e)"
+                                    style="padding-top: 0.4rem; margin-left: 50%;" *ngIf="e.type==='Output'">
+                                    {{e.value}}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-8" id="div21">
-                <div id="poruke">
-                    <div id="poruka1"></div>
-                    <div id="poruka2"></div>
-                </div>
-                <div class="row" id="box">
-                    <div id="podesavanja">
-                        
-                        <div id="grupa12">
-                        
-                            <div id="grupaUI">
-                                <div type="text" id="is" >
-                                    <img src="assets/input.png" alt="">
-                                    <h3 id="inout"> Input size: {{brojU}}</h3>
-                                </div>
-                            </div>
-                            <div id="grupaUI">
-                                <div type="text" id="is" >
-                                    <img src="assets/output.png" alt="">
-                                    <h3 id="inout1"> Output size: {{brojI}}</h3>
-                                </div>
-                            </div>
 
+                <div class="container-fluid" id="box">
+                    <div [class.input-disabled]="inputsLocked == true">
+                        <div style="position:relative">
+                            <h3>Network Settings</h3>
+                            <div id="header-help" class="get-to-top-right">
+                                <div id="helper-settings" class="helper" (mouseenter)="showTooltip('settings')">
+                                    <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12 d-flex" id="podesavanja">
+                                <div class="col-md-3">
 
-                        <div id="grupaP2">
+                                    <div id="grupaUI">
+                                        <div type="text" id="is">
+                                            <img src="assets/input.png" alt="">
+                                            <h3 id="inout"> Input size: {{brojU}}</h3>
+                                        </div>
+                                    </div>
+                                    <div id="grupaUI">
+                                        <div type="text" id="is">
+                                            <img src="assets/output.png" alt="">
+                                            <h3 id="inout1"> Output size: {{brojI}}</h3>
+                                        </div>
+                                    </div>
 
-                            <div id="grupaP">
-                                <h4> Problem type </h4>
-                                <select name="" id="dd4" (change)="selectPT($event)">
-                                    <option id="ddp" value="1">Classification</option>
-                                    <option id="ddp" value="0">Regression</option>
-                                </select>
-                            </div>
-                    
-                            <div id="grupaP">
-                                <h4> Loss function </h4>
-                                <select *ngIf="tip; else regression" name="" id="dd2" (change)="selectLF($event)">
-                                    <option id="ddp" value="4">NLLLoss</option>
-                                    <option id="ddp" value="5">CrossEntropyLoss</option>
-                                    <option id="ddp" value="6">KLDivLoss</option>
-                                    <option id="ddp" value="7">MultiMarginLoss</option>
-                                </select>
-                                <ng-template #regression>
-                                    <select name="" id="dd2" (change)="selectLF($event)">
-                                        <option id="ddp" value="0">L1 loss</option>
-                                        <option id="ddp" value="1">L2 loss</option>
-                                        <option id="ddp" value="2">SmoothL1Loss</option>
-                                        <option id="ddp" value="3">HuberLoss</option>
-                                    </select>
-                                </ng-template>
-                            </div>
-                    
-                    
-                            <div id="grupaP">
-                                <h4> Optimizer </h4>
-                                <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
-                                    <option id="ddp" value="0">AdaDelta</option>
-                                    <option id="ddp" value="1">AdaGrad</option>
-                                    <option id="ddp" value="2">Adam</option>
-                                    <option id="ddp" value="3">AdamW</option>
-                                    <option id="ddp" value="4">Adamax</option>
-                                    <option id="ddp" value="5">ASGD</option>
-                                    <option id="ddp" value="6">NAdam</option>
-                                    <option id="ddp" value="7">RAdam</option>
-                                    <option id="ddp" value="8">RMSprop</option>
-                                    <option id="ddp" value="9">SGD</option>
-                                </select>
-                                <input placeholder="Add momentum" id="momentum" *ngIf="momentum==true">
-                                <!-- <input type="number" id="bs" name="bs" value="64"> -->
-                            </div>
-
-                        </div>
-
-                        <div id="grupa12">
-
-                            <div id="grupaCV">
-                                <h4 id="tekstCV">Cross<br> validation</h4>
-                                <label class="switch">
-                                    <input type="checkbox" id="toggle" (click)="dugmeCV()">
-                                    <span class="slider round"></span>
-                                </label>
-                                <div *ngIf="flag; else onemoguceno">
-                                    <input type="number" id="crossV" min="2" max="20" [defaultValue]="crossV" (change)="promeniK()">
                                 </div>
-                                <ng-template #onemoguceno>
-                                    <input id="crossVd" disabled>
-                                </ng-template>
-                                <!--
+
+                                <div class="col-md-8 d-inline-block justify-content-between"
+                                    style="padding: 0; margin-left: 5%;" id="grupaP2">
+
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Problem type </h4>
+                                        <select name="" id="dd4" (change)="selectPT($event)">
+                                            <option id="ddp" value="1">Classification</option>
+                                            <option id="ddp" value="0">Regression</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Loss function </h4>
+                                        <select [ngModel]="this.selectedLF" *ngIf="tip; else regression" name=""
+                                            id="dd2" (change)="selectLF($event)">
+                                            <option id="ddp" value="4">NLLLoss</option>
+                                            <option id="ddp" value="5">CrossEntropyLoss</option>
+                                            <option id="ddp" value="6">KLDivLoss</option>
+                                            <option id="ddp" value="7">MultiMarginLoss</option>
+                                        </select>
+                                        <ng-template #regression>
+                                            <select [ngModel]="this.selectedLF" name="" id="dd2"
+                                                (change)="selectLF($event)">
+                                                <option id="ddp" value="0">L1 loss</option>
+                                                <option id="ddp" value="1">L2 loss</option>
+                                                <option id="ddp" value="2">SmoothL1Loss</option>
+                                                <option id="ddp" value="3">HuberLoss</option>
+                                            </select>
+                                        </ng-template>
+                                    </div>
+
+
+                                    <div class="col-md-4" id="grupaP">
+                                        <h4> Optimizer </h4>
+                                        <select name="" id="dd3" (change)="selectO($event)" (click)="checkMomentum()">
+                                            <option id="ddp" value="0">AdaDelta</option>
+                                            <option id="ddp" value="1">AdaGrad</option>
+                                            <option id="ddp" value="2">Adam</option>
+                                            <option id="ddp" value="3">AdamW</option>
+                                            <option id="ddp" value="4">Adamax</option>
+                                            <option id="ddp" value="5">ASGD</option>
+                                            <option id="ddp" value="6">NAdam</option>
+                                            <option id="ddp" value="7">RAdam</option>
+                                            <option id="ddp" value="8">RMSprop</option>
+                                            <option id="ddp" value="9">SGD</option>
+                                        </select>
+                                        <input placeholder="Add momentum" id="momentum" *ngIf="momentum==true">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="container-fluid" style="padding: 3% 5%;" id="grupaCV">
+                                    <div class="row">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 id="tekstCV">Cross<br> validation</h4>
+                                            </div>
+                                            <div>
+                                                <label class="switch">
+                                                    <input type="checkbox" id="toggle" (click)="dugmeCV()">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div style="width:100%">
+                                            <div *ngIf="flag; else onemoguceno">
+                                                <input type="number" id="crossV" min="2" max="20"
+                                                    [defaultValue]="crossV" (change)="promeniK()">
+                                            </div>
+                                            <ng-template #onemoguceno>
+                                                <input id="crossVd" disabled>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <!--
                                 <button id="bcv" (click)="dugmeCV()"> Cross validation </button>
                                 <div *ngIf="!flag; else onemoguceno">
                                     <input id="crossV" min="2" max="20" [defaultValue]="crossV">
@@ -141,326 +237,348 @@
                                     <input id="crossVd" disabled>
                                 </ng-template>
                                 -->
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-md-8 d-inline-block justify-content-between" style="padding: 0;"
+                                id="grupaP3">
 
-                        <div id="grupaP2">
+                                <div class="col-md-4" id="grupaP">
+                                    <h4> Regularization</h4>
+                                    <select name="" id="dd1" (change)="selectRM($event)">
+                                        <option id="ddp" value="0">L1</option>
+                                        <option id="ddp" value="1">L2</option>
+                                    </select>
+                                </div>
 
-                            <div id="grupaP">
-                                <h4> Regularization</h4>
-                                <select name="" id="dd1" (change)="selectRM($event)">
-                                    <option id="ddp" value="0">L1</option>
-                                    <option id="ddp" value="1">L2</option>
-                                </select>
-                            </div>
-                    
-                            <div id="grupaP">
-                                <h4> Regularization rate </h4>
-                                <input type="number" id="rr" name="rr" value="0.01">
-                            </div>
-                    
-                            <div id="grupaP">
-                                <h4> Batch size </h4>
+                                <div class="col-md-4" id="grupaP">
+                                    <h4> Regularization rate </h4>
+                                    <input type="number" id="rr" name="rr" value="0.01">
+                                </div>
+
+                                <div class="col-md-4" id="grupaP">
+                                    <h4> Batch size </h4>
                                     <input type="number" id="bs" name="bs" value="64">
+                                </div>
                             </div>
-
                         </div>
-                        
                     </div>
                 </div>
-
                 <div style="clear: both;"></div>
 
+                <div class="container-fluid" style="padding: 0;">
+                    <div class="row">
+                        <div id="grupa1" class="col-md-12 d-flex justify-content-between">
+
+                            <div class="col-md-6 d-flex justify-content-center" id="podesavanja2">
+                                <div [class.input-disabled]="buttonPause === true">
+                                    <div class="d-flex justify-content-center grupaPom">
+                                        <div class="marPom" id="grupa">
+                                            <h4> Number of epochs </h4>
+                                            <input type="number" id="noe" name="noe" [(ngModel)]="numberOfEpoch" (input)="numberOfEpochChanged()">
+                                        </div>
+                                        <div id="grupa">
+                                            <h4> Learning rate </h4>
+                                            <input type="number" id="lr" name="lr" value="0.03" (change)="checkLR()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center" id="boxZT">
+                                <h4 id="tekstZT">{{this.modelText}}</h4>
+                                <ng-template [ngIf]="buttonPlay">
+                                    <a class="play-btn" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal3" *ngIf="canContinueTraining() && !buttonDisable; else onesposobi"></a>
+                                </ng-template>
+                                <ng-template #onesposobi>
+                                    <a class="play-btn-disable"></a>
+                                </ng-template>
+                                <ng-template [ngIf]="buttonPause">
+                                    <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"
+                                            fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                                            <path
+                                                d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z" />
+                                        </svg>
+                                    </a>
+                                </ng-template>
+                                <ng-template [ngIf]="buttonContinue">
+                                    <a class="play-btn-continue" (click)="nastaviTrening()"
+                                        *ngIf="canContinueTraining() == true; else onesposobi"
+                                    ></a>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="model-buttons">
+                        <button id="restart-model" [class.input-disabled]="this.inputsLocked == false" (click)="forkTraining()">Unlock model</button>
+                        <button id="download-model" [class.input-disabled]="this.inputsLocked == false" (click)="downloadModel()">Download model</button>
+                        <button id="show-prediction" [class.disable-prediction]="this.predictionDisabled == true" (click)="scrollToPrediction()">Prediction</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid" id="centrirano3">
+                <div class="row justify-content-between">
+                    <div class="col-md-7" id="collapse1" *ngIf="prikazi==true">
+                        <div id="grafik">
+                            <div id="spinner">
+                                <div class="lds-ripple">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+
+                            <div class="legend-wrapper d-flex justify-content-center align-items-bottom">
+                                <div class="legend">
+                                    <div class="legend-line" *ngFor="let line of this.lossLineParams; let i=index"
+                                        (click)="toggleLineEnable(i)">
+                                        <div class="legend-box" [style.background]="'rgba(' + line[1] + ', 0.5)'"
+                                            [style.border]="'3px solid rgb(' + line[1] + ')'"></div>
+                                        <div class="legend-text">{{line[0]}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="loss-content-wrapper d-flex justify-content-center align-items-center">
+                                <div id="loss-plot">
+                                    <div class="container">
+                                        <div class="y-axis"><canvas id="loss-y-axis"></canvas></div>
+                                        <div class="x-axis"><canvas id="loss-x-axis"></canvas></div>
+                                        <canvas id="loss-graph" class="loss-graph"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5" id="collapse" *ngIf="prikazi1==true" style="position:relative;">
+                        <div id="metrika">
+                            <div style="position:relative">
+                                <h3 id="h3">Train and test dataset statistics</h3>
+                                <div id="header-help" class="get-to-top-right">
+                                    <div id="helper-statistics" class="helper" (mouseenter)="showTooltip('statistics')">
+                                        <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
+                                <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
+                                    <table id="stat" style="width:100%">
+                                        <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
+                                        <tr>
+                                            <th id="poljeR">Parameters</th>
+                                            <th id="poljeR">Training</th>
+                                            <th *ngIf="imaTestni==true">Test</th>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="poljeR">MAE</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="batest">{{MAE[ind]}}</td>
+                                            <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="poljeR">MSE</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="celtest">{{MSE[ind]}}</td>
+                                            <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="poljeR">RSE</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="htest">{{RSE[ind]}}</td>
+                                            <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="poljeR">R2</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="f1test">{{R2[ind]}}</td>
+                                            <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="poljeR">AdjustedR2</td>
+                                            <td *ngIf="showStat==false"></td>
+                                            <td *ngIf="showStat==true" id="actest">{{Adj[ind]}}</td>
+                                            <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
+                                <table id="stat" style="width:100%">
+                                    <tr>
+                                        <th id="poljeR">Parameters</th>
+                                        <th *ngIf="imaTestni==true">Test</th>
+                                        <th id="poljeR">Training</th>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">Accuracy</td>
+                                        <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
+                                        <td *ngIf="showStat==true" id="actrain">{{atrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">Balanced Accuracy</td>
+                                        <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
+                                        <td *ngIf="showStat==true" id="batrain">{{btrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">CrossEntropyLoss</td>
+                                        <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
+                                        <td *ngIf="showStat==true" id="celtrain">{{ctrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">F1Score</td>
+                                        <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
+                                        <td *ngIf="showStat==true" id="f1train">{{ftrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">HammingLoss</td>
+                                        <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
+                                        <td *ngIf="showStat==true" id="htrain">{{htrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">Precision</td>
+                                        <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
+                                        <td *ngIf="showStat==true" id="ptrain">{{ptrain}}</td>
+                                        <td *ngIf="showStat==false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="poljeR">Recall</td>
+                                        <td id="poljeR" *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
+                                        <td id="poljeR" *ngIf="showStat==true" id="rtrain">{{rtrain}}</td>
+                                        <td id="poljeR" *ngIf="showStat==false"></td>
+                                    </tr>
+                                </table>
+                                <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
+                                    Show confusion matrix for training and test dataset
+                                </button> -->
+                                <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2"
+                                    (click)="this.prikaziMatrice()" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalM">Show confusion matrix</button>
+                            </div>
+                        </div>
+                        <div class="progress"
+                            style="position: sticky; width:100%; bottom:10px; background-color: #d2a9e3dc;">
+                            <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                                [style.width]="currentEpochPercent +'%'" [attr.aria-valuenow]="currentEpochPercent"
+                                aria-valuemin="0" aria-valuemax="100">{{currentEpochPercent}}%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row justify-content-between" id="centrirano2">
+                    <div class="col-md-3 justify-content-center okvir">
+                        <div class="container-fluid" [class.input-disabled]="inputsLocked == true">
+                            <div class="row d-flex justify-content-center">
+                                <div style="position:relative">
+                                    <h3>Hidden layers</h3>
+                                    <div id="header-help" class="get-to-top-right">
+                                        <div id="helper-layers" class="helper" (mouseenter)="showTooltip('layers')">
+                                            <div style="margin-left: 5.5px; margin-top: -1px">&#63;</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="minus1" (click)="promeni1(2)">—</button>
+                                <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
+                                <button id="plus1" (click)="promeni1(1)">+</button>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="d-flex justify-content-between">
+                                    <h4 class="text-center">Activation function</h4>
+                                    <h4 class="text-center">Neurons</h4>
+                                </div>
+
+                                <div *ngFor="let in of hiddLay;let i = index">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <select id="dd6" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
+                                            <option id="ddp" value="0">ReLU</option>
+                                            <option id="ddp" value="1">LeakyReLU</option>
+                                            <option id="ddp" value="2">Sigmoid</option>
+                                            <option id="ddp" value="3">Tahn</option>
+                                            <option id="ddp" value="4">Linear</option>
+                                        </select>
+                                        <input type="number" min="1" max="14" [defaultValue]="hiddLay[i]" id="{{i}}"
+                                            class="broj" (click)="brojCvorova(i)" (change)="brojCvorova(i)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 p-0">
+                        <div style="width: 96%; float: right;">
+                            <div class="model-content-wrapper">
+                                <div class="sixteen-by-nine aspect-ratio"></div>
+                                <div class="model-content d-flex justify-content-center align-items-center">
+                                    <canvas id="model-canvas">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- <div id="kolona">
+                                <div *ngFor="let brojac of counter1(brojU);let ind = index">
+                                        <div id="cvor"></div>
+                                </div>
+                            </div>
+                            <div id="kolona" *ngFor="let in of nizCvorova;let i = index">
+                                <div *ngFor="let br of counter1(nizCvorova[i]);let j = index">
+                                    <div id="cvor"></div>
+                                </div>
+                            </div>
+                            <div id="kolona">
+                                <div *ngFor="let brojac of counter1(brojI);let ind = index">
+                                    <div id="cvor"></div>
+                                </div>
+                            </div> -->
+                    </div>
+                </div>
+            </div>
+            <!-- PREDIKCIJA -->
+            <div class="container-fluid" id="prediction">
                 <div class="row">
-                    <div id="grupa1" class="col-md-12 d-flex">
-    
-                        <div class="col-md-6" id="podesavanja2">
-                            <div id="grupa">
-                                <h4> Number of epochs </h4>
-                                <input type="number" id="noe" name="noe" value="15">
-                            </div>
-                    
-                            <div id="grupa">
-                                <h4> Learning rate </h4>
-                                <input type="number" id="lr" name="lr" value="0.03">
+                    <div *ngIf="prikaziPredikciju==true" id="divPredikcija"
+                        class="d-block justify-content-center align-items-center okvir2">
+                        <div id="predikcijaNaslov">Prediction</div>
+                        <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="ulazi">
+                            <div class="unosVrednosti" *ngFor="let naziv of ulazneKolone; index as i">
+                                <div class="nazivKolone">{{naziv}}</div>
+                                <input type="text" id="vrednostUlaza{{i}}" class="inputPolje">
+                                <div class="greska" id="greskaIspis{{i}}">*Enter value</div>
                             </div>
                         </div>
-    
-                        <div class="d-flex justify-content-center" id="boxZT">
-
-                            <h4 id="tekstZT">Start model training</h4>
-                            <ng-template [ngIf]="buttonPlay">
-                                <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
-                            </ng-template>
-    
-                            <ng-template [ngIf]="buttonPause">
-                                <a id="pause-button-a" class="play-btn-pause" (click)="pauzirajTrening()" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
-                                        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
-                                      </svg>
-                                </a>
-                            </ng-template>
-    
-                            <!-- <ng-template [ngIf]="buttonDisable == false">
-                                <a class="play-btn-disable"></a>
-                            </ng-template> -->
-    
-                            <ng-template [ngIf]="buttonContinue">
-                                <a class="play-btn-continue" (click)="nastaviTrening()" ></a>
-                            </ng-template>
-                            
-                            <!-- stari kod -->
-                            <!-- <div *ngIf="!buttonDisable; else onesposobi">
-                                <a class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3"></a>
-                            </div>
-                            <ng-template #onesposobi>
-                                <a class="play-btn-disable"></a>
-                            </ng-template> -->
-                            
-                            <!--
-                            <button id="pokreniM" (click)="modalService.open('modal-1');">
-                                <img id="playbutton" src="assets/play-button.png">
-                            </button>
-                            -->
-                            <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                                    <div class="modal-header pt-4" style="border-bottom: none;">
-                                    <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are you sure you want to start training?</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-footer" style="border-top: none;">
-                                    <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(2)" data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;" (click)="colapseStatistics()">Yes</button>
-                                    <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
-                                    </div>
-                                </div>
+                        <div class="row d-flex justify-content-center">
+                            <button id="dugmePredikcija" type="button" class="btn btn-outline-primary col-md-2"
+                                (click)="predikcija()">Predict</button>
+                        </div>
+                        <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="izlazi">
+                            <div *ngIf="klasifikacija==false">
+                                <div class="unosVrednosti" *ngFor="let naziv of izlazneKolone; index as i">
+                                    <div class="nazivKolone" id="nazivIzlaza{{i}}">{{naziv}}</div>
+                                    <input type="text" id="vrednostIzlaza{{i}}" class="inputPolje inputIzlaz">
                                 </div>
                             </div>
-                            <!-- <jw-modal id="modal-1">
-                                <button id="popupDugme3" (click)="modalService.close('modal-1');">X</button>
-                                <p>
-                                    <br>
-                                    <br>
-                                    Da li zelite prvo da sacuvate izmene?
-                                    <br>
-                                    <br>
-                                    <br>
-                                    <button id="popupDugme1" (click)="treniraj(1);" (click)="modalService.close('modal-1');">Sacuvaj izmene</button>
-                                    <button id="popupDugme2" (click)="treniraj(2);" (click)="modalService.close('modal-1');">Pokreni bez cuvanja</button>
-                                </p>
-                            </jw-modal> -->
-                        </div>
-                        <!--
-                        <button id="pokreniM" (click)="treniraj()">
-                            <img id="playbutton" src="assets/play-button.png">
-                        </button>
-                        <h4 id="tekstZT">Započni treniranje</h4>
-                        -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row justify-content-between" id="centrirano2">
-            <div class="col-md-3 okvir">
-                <div class="container-fluid">
-                    <div class="row d-flex justify-content-center">
-                        <h3>Hidden layers</h3>
-                        <button id="minus1" (click)="promeni1(2)" >—</button>
-                        <div type="text" id="hl" name="hl">{{hiddLay.length}}</div>
-                        <button id="plus1" (click)="promeni1(1)">+</button>
-                    </div>
-                    <div class="row d-flex justify-content-center">
-                        <div class="d-flex justify-content-between"><h4 class="text-center">Activation function</h4><h4 class="text-center">Neurons</h4></div>
-                        
-                        <div *ngFor="let  in of hiddLay;let i = index">
-                            <div class="d-flex justify-content-between mb-3">
-                                <select id="dd4" [selectedIndex]="aktFunk[i]" (change)="uzmiAK(i,$event)">
-                                    <option id="ddp" value="0">ReLU</option>
-                                    <option id="ddp" value="1">LeakyReLU</option>
-                                    <option id="ddp" value="2">Sigmoid</option>
-                                    <option id="ddp" value="3">Tahn</option>
-                                    <option id="ddp" value="4">Linear</option>
-                                </select>
-                            <input type="number" min="1"  max="14" [defaultValue]="hiddLay[i]" id="{{i}}" class="broj" (click)="brojCvorova(i)" (change)="brojCvorova(i)">        
+                            <div *ngIf="klasifikacija==true">
+                                <div class="unosVrednosti">
+                                    <div id="nazivIzlaza" class="nazivKolone">Output</div>
+                                    <input id="vrednostIzlaza" type="text" class="inputPolje inputIzlaz">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
-                <div style="width: 98%; float: right;">
-                    <div class="model-content-wrapper">
-                        <div class="sixteen-by-nine aspect-ratio"></div>
-                        <div class="model-content d-flex justify-content-center align-items-center">
-                            <canvas id="model-canvas">
-                            </canvas>
-                        </div>
-                    </div>
-                </div>
-
-            
-                    <!-- <div id="kolona">
-                        <div *ngFor="let brojac of counter1(brojU);let ind = index">
-                                <div id="cvor"></div>
-                        </div>
-                    </div>
-                    <div id="kolona" *ngFor="let in of nizCvorova;let i = index">
-                        <div *ngFor="let br of counter1(nizCvorova[i]);let j = index">
-                            <div id="cvor"></div>
-                        </div>
-                    </div>
-                    <div id="kolona">
-                        <div *ngFor="let brojac of counter1(brojI);let ind = index">
-                            <div id="cvor"></div>
-                        </div>
-                    </div> -->
-            </div>
-        </div>
-        <div id="centrirano3">
-            <div id="collapse1" *ngIf="prikazi==true">
-                <div id="div">
-                    <div id="grafik">
-                        <div id="canvas">
-                            <canvas baseChart
-                                [data]="signalR.lineChartData"
-                                [options]="chartOptions"
-                                [type]="'line'"
-                            >
-                        </canvas>
-                        </div>
-                    </div>
-                    <!-- <table *ngFor="let elem of signalR.data" style="color:white">
-                        <tr><td>{{elem}}</td></tr>
-                    </table> -->
-                </div>
-            </div>
-        <div>
-            <div id="collapse" *ngIf="prikazi1==true">
-                <div id="metrika">
-                    <h3>Train and test dataset statistics</h3>
-                    <div *ngIf="pomocna==true" id="statistikaR" style="color: white">
-                        <div id="divzatabelu" *ngFor="let i of trainR; let ind=index">
-                            <table id="stat" style="width:100%">
-                                <h4 style="text-align: left; padding-left: 20px">{{izlazneKolone[ind]}}</h4>
-                                <tr>
-                                <th>Parameters</th>
-                                <th>Training</th>
-                                <th *ngIf="imaTestni==true">Test</th>
-                                </tr>
-                                <tr>
-                                <td>AdjustedR2</td>
-                                <td id="actest">{{Adj[ind]}}</td>
-                                <td *ngIf="imaTestni==true" id="actest">{{Adj1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                <td>MAE</td>
-                                <td id="batest">{{MAE[ind]}}</td>
-                                <td *ngIf="imaTestni==true" id="actest">{{MAE1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>MSE</td>
-                                    <td id="celtest">{{MSE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{MSE1[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>R2</td>
-                                    <td id="f1test">{{R2[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{R21[ind]}}</td>
-                                </tr>
-                                <tr>
-                                    <td>RSE</td>
-                                    <td id="htest">{{RSE[ind]}}</td>
-                                    <td *ngIf="imaTestni==true" id="actest">{{RSE1[ind]}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div *ngIf="pomocna==false" id="statistikaC" style="color: white">
-                        <table id="stat" style="width:100%">
-                            <tr>
-                            <th>Parametri</th>
-                            <th *ngIf="imaTestni==true">Testni</th>
-                            <th>Trening</th>
-                            </tr>
-                            <tr>
-                            <td>Accuracy</td>
-                            <td *ngIf="imaTestni==true" id="actest">{{atest}}</td>
-                            <td id="actrain">{{atrain}}</td>
-                            </tr>
-                            <tr>
-                            <td>Balanced Accuracy</td>
-                            <td *ngIf="imaTestni==true" id="batest">{{btest}}</td>
-                            <td id="batrain">{{btrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>CrossEntropyLoss</td>
-                                <td *ngIf="imaTestni==true" id="celtest">{{ctest}}</td>
-                                <td id="celtrain">{{ctrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>F1Score</td>
-                                <td *ngIf="imaTestni==true" id="f1test">{{ftest}}</td>
-                                <td id="f1train">{{ftrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>HammingLoss</td>
-                                <td *ngIf="imaTestni==true" id="htest">{{htest}}</td>
-                                <td id="htrain">{{htrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>Precision</td>
-                                <td *ngIf="imaTestni==true" id="ptest">{{ptest}}</td>
-                                <td id="ptrain">{{ptrain}}</td>
-                            </tr>
-                            <tr>
-                                <td>Recall</td>
-                                <td *ngIf="imaTestni==true" id="rtest">{{rtest}}</td>
-                                <td id="rtrain">{{rtrain}}</td>
-                            </tr>
-                        </table>
-                        <!-- <button (click)="this.prikaziMatrice()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalM" style="margin-left: 75px;">
-                            Show confusion matrix for training and test dataset
-                        </button> -->
-                        <button id="dugmeMetrika" type="button" class="btn btn-outline-primary col-md-2" (click)="this.prikaziMatrice()" data-bs-toggle="modal" data-bs-target="#exampleModalM">Show confusion matrix</button>  
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- PREDIKCIJA -->
-    <div class="container-fluid">
-        <div class="row">
-            <div *ngIf="prikaziPredikciju==true" id="divPredikcija" class="d-block justify-content-center align-items-center okvir2">
-                <div id="predikcijaNaslov">Prediction</div>
-                <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="ulazi">
-                    <div class="unosVrednosti" *ngFor="let naziv of ulazneKolone; index as i">
-                        <div class="nazivKolone">{{naziv}}</div>
-                        <input type="text" id="vrednostUlaza{{i}}" class="inputPolje">
-                        <div class="greska" id="greskaIspis{{i}}">*Enter value</div>
-                    </div>
-                </div>
-                <div class="row d-flex justify-content-center">
-                    <button id="dugmePredikcija" type="button" class="btn btn-outline-primary col-md-2" (click)="predikcija()">Predict</button>
-                </div>
-                <div class="col-md-12 d-inline-block justify-content-center align-items-center" id="izlazi">
-                    <div *ngIf="klasifikacija==false">
-                        <div class="unosVrednosti" *ngFor="let naziv of izlazneKolone; index as i">
-                            <div class="nazivKolone" id="nazivIzlaza{{i}}">{{naziv}}</div>
-                            <input type="text" id="vrednostIzlaza{{i}}" class="inputPolje inputIzlaz">
-                        </div>
-                    </div>
-                    <div *ngIf="klasifikacija==true">
-                        <div class="unosVrednosti">
-                            <div id="nazivIzlaza" class="nazivKolone">Output</div>
-                            <input id="vrednostIzlaza" type="text" class="inputPolje inputIzlaz">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <!-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border-bottom: none; padding: 30px;">
@@ -469,7 +587,7 @@
                 </div>
                 <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
                 <div style="color: beige;">Ime modela</div> -->
-                <!-- <div style="color: bisque;">Ime modela</div> 
+            <!-- <div style="color: bisque;">Ime modela</div> 
                 <input type="text" id="bs1" autocomplete="off" placeholder="Unesite naziv modela">
                 <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> 
                 <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
@@ -484,30 +602,54 @@
             </div>
         </div> -->
 
-        <div class="modal fade" id="exampleModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                <div class="modal-header" style="border: none; padding-bottom: 0px;">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div id="bodymodal" class="modal-body" style=" text-align: center;">
-                    <h6 class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Training dataset's confusion matrix</h6>
-                    <div id="chart">
-                        
+            <div class="modal fade" id="exampleModalM" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                        <div class="modal-header" style="border: none; padding-bottom: 0px;">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="bodymodal" class="modal-body" style=" text-align: center;">
+                            <h6 class="modal-title" id="exampleModalLabel"
+                                style="color: white; font-size: medium; float: left; margin-left: 10px;">Training
+                                dataset's confusion matrix</h6>
+                            <div id="chart">
+
+                            </div>
+                            <br>
+                            <br>
+                            <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel"
+                                style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's
+                                confusion matrix</h6>
+                            <div id="chart1">
+
+                            </div>
+                        </div>
+
                     </div>
-                    <br>
-                    <br>
-                    <h6 *ngIf="imaTestni==true" class="modal-title" id="exampleModalLabel" style="color: white; font-size: medium; float: left; margin-left: 10px;">Test dataset's confusion matrix</h6>
-                    <div id="chart1">
-                        
-                    </div>
                 </div>
-                
-              </div>
             </div>
-          </div>
-    
-        <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+            <div class="modal fade mt-5" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                        <div class="modal-header pt-4" style="border-bottom: none;">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: #C4C4C4;">Are
+                                you sure you want to start training?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer" style="border-top: none;">
+                            <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj()"
+                                data-bs-dismiss="modal" style="background: #a16c8b; border:none;"
+                                (click)="colapseStatistics()">Yes</button>
+                            <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal fade" id="exampleModalM1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
                 <div class="modal-header" style="border: none;">
@@ -526,30 +668,179 @@
             </div>
             </div>
         </div> -->
-        <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
-                <div class="modal-header" style="border-bottom: none; padding: 30px;">
-                <h5 class="modal-title" id="exampleModalLabel" style="font-size: large; color: bisque; margin: 0px;">Save model</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- <div class="modal fade" id="exampleModalCuvanje" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="background: rgba(36, 38, 74, 0.95);">
+                        <div class="modal-header" style="border-bottom: none; padding: 30px;">
+                            <h5 class="modal-title" id="exampleModalLabel"
+                                style="font-size: large; color: #eee; margin: 0px;">Save model</h5>
+                            <button #btnexitoverridemodel type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body"
+                            style="padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
+                            
+                            <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
+                            
+                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
+                            
+                          
+                            <div id="greska" style="color: #a16c8b; height: 30px;"></div>
+                            
+                            <textarea rows="5" cols="50" id="opisModela"
+                                placeholder="Enter model description"></textarea>
+                           
+                        </div>
+                        <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
+                            <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()">Save
+                                model</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body" style="padding-left: 50px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
-                <!-- <div style="color: beige;">Ime modela</div> -->
-                <!-- <div style="color: bisque;">Ime modela</div> -->
-                <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name">
-                <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
-                <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;"></div>
-                <!-- <div style="color: bisque;">Opis modela</div> -->
-                <textarea rows="5" cols="50" id="opisModela" placeholder="Enter model description"></textarea>
-                <!-- <input type="text" id="opisM" style="width: 200px; border-radius: 10px; height: 40px;"> -->
-                </div>
-                <div class="modal-footer" style="border-top: none; padding-right: 40px; padding-bottom: 28px;">
-                <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje()" data-bs-dismiss="modal">Save model</button>
-                </div>
-            </div>
-            </div>
-        </div>
-        <simple-notifications></simple-notifications>
-    </div>
-</div>
+            </div> -->
 
+            <ng-template #overridemodela let-modal aria-hidden="true">
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: bisque;" id="modal-basic-title">Model with that name already
+                        exists. Do you want to override it?</h3>
+                    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+                </div>
+
+                <div class="modal-body justify-content-center d-flex align-items-center "
+                    style="background: rgba(36, 38, 74, 0.95);">
+                    <div class=" d-flex justify-content-between" style="width: 60%; margin: auto;">
+                        <!-- <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="vratiTekst()" (click)="modal.close('Close click')">Cancel</button> -->
+                        <button type="button" id="btn-otkazi" class="btn btn-outline-dark"
+                            (click)="modal.close('Close click')">Cancel</button>
+                        <button type="button" id="dgm" class="btn btn-outline-dark" (click)="overrideModel()"
+                            (click)="izadjiIzObaModala()" (click)="modal.close('Save click')">Override</button>
+                    </div>
+                </div>
+            </ng-template>
+
+            <!-- <div  class="modal fade" id="ModalParallelTraining" tabindex="-1" aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog">
+                  <div class="modal-content"style="background: rgba(36, 38, 74, 0.95);">
+                    <div class="modal-header " style="border-bottom: none; color: wheat">
+                      <h3 class="modal-title" id="exampleModalLabel" style="font-size: large; margin-top: 10px; margin-left: 10px;"></h3>
+                      <button #btnexit type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+            
+                    <div class="modal-body justify-content-center align-items-center">
+                        <div *ngIf="modelparal!=null && currentEpochPercentParallel != null && numOfEpochsTotalParallel != null"  style="margin: auto; width: 80%; color:white;">
+                           
+                            <div class="progress"
+                            style="background-color: #d2a9e3dc; position: absolute; width:96%; bottom:10px;">
+                            <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                                [style.width]="currentEpochPercentParallel +'%'" [attr.aria-valuenow]="currentEpochPercentParallel"
+                                aria-valuemin="0" aria-valuemax="100">{{currentEpochPercentParallel}}%</div>
+                            </div>
+
+                        </div>
+                    </div>
+                
+                    <div class="modal-footer d-flex" style="border-top: none;">
+                    </div>
+                </div>
+              </div>
+            </div> -->
+
+            <ng-template #parallel let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Model Description</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
+                    <div  style=" margin: auto;">
+                        <table id="table-model">
+                            <tr class="tr-table-model">
+                                <td>Model name</td>
+                                <td>{{modelparallel.jsonModel.naziv}}</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Learning Rate</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.learningRate}}</td>
+                            </tr>
+                            <tr class="tr-table-model">
+                                <td>Problem type</td>
+                                <td *ngIf="modelparallel.jsonModel.podesavalja.annType == 0">Regression</td>
+                                <td *ngIf="modelparallel.jsonModel.podesavalja.annType == 1">Classification</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Number of Epochs</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.numberOfEpochs}}</td>
+                            </tr>
+                            <tr class="tr-table-model">
+                                <td>Current Epoch</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.currentEpoch}}</td>
+                            </tr>
+                            <tr class="tr-table-model color-model-tr">
+                                <td>Cross Validation</td>
+                                <td>{{modelparallel.jsonModel.podesavalja.kFoldCV}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="pModel-buttons">
+                        <button type="button" (click)="saveParallelModel(modelparallel)"               class="save-m-btn model-button btn btn-primary">Save model</button>
+                        <button type="button" (click)="stopParallelTraining(modelparallel)"            class="stop-m-btn model-button btn btn-primary"
+                            *ngIf="modelparallel.modelState == 'r'">Pause training</button>
+                        <button type="button" (click)="continueParallelTraining(modelparallel)"        class="continue-m-btn model-button btn btn-primary"
+                            *ngIf="modelparallel.modelState == 'p'">Continue training</button>
+                        <button type="button" (click)="dismissParallelTraining(modelparallel, modal)" class="diss-m-btn model-button btn btn-primary">Dismiss model</button>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
+                    <div *ngIf="modelparallel!=null"  style="margin: auto; width: 100%; color:white;">
+                        <!-- {{modelparal.jsonModel.podesavalja.currentEpoch}} -->
+                        <div class="progress" style="background-color: #d2a9e3dc; width:100%;">
+                        <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
+                            [style.width]="modelparallel.currentTrainStatus + '%'" [attr.aria-valuenow]="modelparallel.currentTrainStatus"
+                            aria-valuemin="0" aria-valuemax="100">{{modelparallel.currentTrainStatus}}%</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #notSaved let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Model not saved.</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95);">
+                    <p>Upon unlock, unsaved models can only be dismissed. Are you sure you want to continue?</p>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95);">
+                    <button type="button" class="dismiss-m-unlock model-button btn btn-primary" (click)="dismissTraining(modal)">Dismiss model</button>
+                    <button type="button" class="save-m-unlock model-button btn btn-primary" (click)="saveTrainingForParralel(modal)">Save model</button>
+                </div>
+            </ng-template>
+
+            <ng-template #saveModel let-modal>
+                <div class="modal-header" style="border: none; height: 80px; background: rgba(36, 38, 74, 0.95);">
+                    <h3 class="modal-title" style="color: rgb(244, 207, 255);" id="modal-basic-title">Save model</h3>
+                    <button type="button" id="button-model" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body" style="background: rgba(36, 38, 74, 0.95); padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-right: 30px;">
+                            <input type="text" id="bs2" autocomplete="off" placeholder="Enter model name" [(ngModel)]="modelName">
+                            <!-- <input autocomplete="off" type="text" id="imeM" placeholder="Ime modela" style="width: 200px; height: 30px; border: 1px solid beige; background-color: transparent; color: white; border-radius: 5px; padding: 15px;"> -->
+                            <div id="greska" style="color: rgba(243, 48, 95, 0.85); height: 30px;" ></div>
+                            <!-- <div style="color: bisque;">Opis modela</div> -->
+                            <textarea rows="5" cols="50" id="opisModela" [(ngModel)]="modelDescription"
+                                placeholder="Enter model description"></textarea>
+                </div>
+
+                <div class="modal-footer" style="border-top: none; padding-bottom: 28px; background: rgba(36, 38, 74, 0.95); padding-right: 40px;">
+                    <button type="button" id="dgm" class="btn btn-primary" (click)="kreirajModelCuvanje(modal)">Save
+                        model</button>
+                </div>
+            </ng-template>
+
+            
+
+            <simple-notifications></simple-notifications>
+
+        </div>
+    </div>

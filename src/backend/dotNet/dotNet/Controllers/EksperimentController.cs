@@ -37,7 +37,8 @@ namespace dotNet.Controllers
                 if (eksperimenti.Count > 0)
                     return Ok(eksperimenti);
                 
-                return BadRequest(ErrorMessages.NoExperiments);
+                //return BadRequest(ErrorMessages.NoExperiments);
+                return Ok(0);
             }
             catch
             {
@@ -84,6 +85,30 @@ namespace dotNet.Controllers
                     return Ok(id);
                 }
                 return StatusCode(500);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [Authorize]
+        [HttpPost("Eksperiment/{ime}")]
+        public IActionResult ProveriNazivEksperimenta(string ime)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(token);
+                var tokenS = jsonToken as JwtSecurityToken;
+                if (db.dbeksperiment.proveri_eksperiment(ime, int.Parse(tokenS.Claims.ToArray()[0].Value)) != -1)
+                {
+                    return Ok(1); // ako vec postoji
+                }
+                else
+                {
+                    return Ok(0);
+                }
             }
             catch
             {
@@ -174,21 +199,29 @@ namespace dotNet.Controllers
                 string csv = db.dbeksperiment.uzmi_naziv_csv(id);
                 if (csv != "")
                 {
+
                     var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
                     MLExperiment eksperiment;
                     if (Experiment.eksperimenti.ContainsKey(id))
                     {
+
                         eksperiment = Experiment.eksperimenti[id];
                         if (!eksperiment.IsDataLoaded())
+                        {
+
                             eksperiment.LoadDataset(csv);
+                        }
                         return Ok(csv);
                     }
+
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 }
+
                 return NotFound(ErrorMessages.FileNotFound);
             }
             catch (MLException e)
             {
+
                 return BadRequest(e.Message);
             }
             catch
@@ -346,5 +379,21 @@ namespace dotNet.Controllers
                 return StatusCode(500);
             }
         }
+        
+        [HttpGet("Statistika")]
+        public IActionResult statistika(int idEksperimenta)
+        {
+            try
+            {
+                List<Regression> reg = db.dbmodel.eksperimentRegression(idEksperimenta);
+                List<Classification> clas = db.dbmodel.eksperimentKlasifikacija(idEksperimenta);
+                return Ok(new { reg, clas });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

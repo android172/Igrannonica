@@ -6,8 +6,8 @@
     margin-bottom: 70px;
     border-radius: 25px;
     align-content: center;
-    padding: 20px;
-    background: rgba(39, 39, 65, 0.92);
+    padding: 0px 20px 20px;
+    background: rgba(39, 39, 65, 0.827);
     box-shadow: 13px 20px 29px rgba(0, 0, 0, 0.25);
 }
 
@@ -52,10 +52,10 @@
 .nav-link.active
 {
     background: rgba(39, 39, 65, 0.92);
-    color: #F45E82;
+    color: #dbaac7;
     border: none;
     text-shadow: #222;
-    border: 1px solid #F45E82;
+    border: 1px solid #dbaac7;
     border-bottom: none;
     z-index: 10;   
 }
@@ -67,9 +67,9 @@
 #naziveksperimenta{
     /*float: right;*/
     transition: box-shadow .2s;
-    min-width: 200px;
-    margin-right: 15px;
-    border: 2px solid rgb(59, 146, 180) ;
+    width: 220px;
+    /* margin-right: 15px; */
+    border: 2px solid #7f4b99 ;
     color: #CED9FF;
     background-color: #272741;
     padding-top:6px;
@@ -78,7 +78,13 @@
     box-sizing: border-box;
     text-align: center;
     box-shadow: 10px 20px 33px rgba(0, 0, 0, 0.25);
+    padding-left: 8px;
     border-radius: 10px;
+    display: inline;
+    padding-top: 7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 #naziveksperimenta:hover{
     /* box-shadow: 0px 0px 10px 5px rgba(33, 18, 255, 0.2);  */

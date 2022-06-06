@@ -3,16 +3,19 @@ import requests
 import os
 
 def save_model(self):
+    # Receive model name
+    model_name = self.connection.receive()
     # Receive model identification
     model_id = int(self.connection.receive())
     
-    network = self.network
-    running_network = self.active_models.get(model_id, None)
-    if running_network is not None:
-        network = running_network
+    network = self.active_models.get(model_id, None)
+    if network is None:
+        network = self.network.create_deep_copy()
+        if network.isRegression == False:
+            if not network.setup_output_columns():
+                self.report_error("ERROR :: Output column is of wrong format.")
+                return
     
-    # Receive model name
-    model_name = self.connection.receive()
     
     experiment_id = self.experiment_id
     model_dir = os.path.join(os.curdir, 'data', experiment_id, 'models')
@@ -21,7 +24,9 @@ def save_model(self):
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
     
-    network.save_weights(model_path)
+    if not network.save_weights(model_path):
+        self.report_error("ERROR :: ANN settings not set, can't create a network.")
+        return
     
     response = requests.post(
         f"http://localhost:5008/api/file/uploadModel/{experiment_id}", 
@@ -40,10 +45,12 @@ def save_model(self):
 def load_model(self):
     # Receive model name
     model_name = self.connection.receive()
+    # Receive model id
+    model_id = int(self.connection.receive())
     
     experiment_id = self.experiment_id
     model_dir = os.path.join(os.curdir, 'data', experiment_id, 'models')
-    model_path = os.path(model_dir, f"{model_name}.pt")
+    model_path = os.path.join(model_dir, f"{model_name}.pt")
     
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
@@ -60,8 +67,18 @@ def load_model(self):
 
     with open(model_path, "wb") as file:
         file.write(response.content)
+       
+    ann = self.network.create_deep_copy()
     
-    if not self.network.load_weights(model_path):
+    if ann.isRegression == False:
+        if not ann.setup_output_columns():
+            self.report_error("ERROR :: Output column is of wrong format.")
+            return
+        
+    ann.id = model_id
+    self.active_models[model_id] = ann
+    
+    if not ann.load_weights(model_path):
         self.report_error("ERROR :: Wrong model shape given.")
         return
     
@@ -78,3 +95,26 @@ def load_epoch(self):
         
     self.connection.send("OK")
     print(f"Model loaded from epoch {epoch}")
+
+def merge_models(self):
+    # Receive id to merge from
+    idF = int(self.connection.receive())
+    # Receive id to mere into
+    idI = int(self.connection.receive())
+    
+    networkF = self.active_models.get(idF, None)
+    if networkF is None or idI < 1:
+        self.report_error("ERROR :: Wrong model identifier.")
+        return
+    
+    networkF.id = idI
+    self.active_models[idI] = networkF
+    
+    self.connection.send("OK")
+    print(f"Models {idF} and {idI} merged.")
+
+def get_weights(self):
+    weights = self.network.get_weights()
+    self.connection.send(weights)
+    
+    print(f"Weights requested.")

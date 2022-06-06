@@ -3,6 +3,7 @@ from math import sqrt
 import random
 import sys
 import threading
+from matplotlib import transforms
 import numpy as np
 import torch
 import torch.nn as nn
@@ -24,9 +25,12 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class ANN:
     
     def __init__(self, annSettings = None) -> None:
+        self.id = 0
+        
         self.data = MLData()
         
         self.isRunning = threading.Event()
+        self.kys = False
         
         self.learning_rate = 0
         self.batch_size    = 0
@@ -56,10 +60,11 @@ class ANN:
             self.load_settings(annSettings)
     
     def create_deep_copy(self):
-        
         new_ann = ANN()
         
-        new_ann.data = self.data
+        new_ann.id = self.id
+        
+        new_ann.data = self.data.create_deep_copy(self.dataset_version)
         
         new_ann.learning_rate = self.learning_rate
         new_ann.batch_size    = self.batch_size   
@@ -82,12 +87,22 @@ class ANN:
         new_ann.regularization_rate   = self.regularization_rate
         
         # Loss function
-        if   self.criterion is nn.L1Loss:
+        if   isinstance(self.criterion, nn.L1Loss):
             new_ann.criterion = nn.L1Loss()
-        elif self.criterion is nn.MSELoss:
+        elif isinstance(self.criterion, nn.MSELoss):
             new_ann.criterion = nn.MSELoss()
-        else:
+        elif isinstance(self.criterion, nn.SmoothL1Loss):
+            new_ann.criterion = nn.SmoothL1Loss()
+        elif isinstance(self.criterion, nn.HuberLoss):
+            new_ann.criterion = nn.HuberLoss()
+        elif isinstance(self.criterion, nn.NLLLoss):
+            new_ann.criterion = nn.NLLLoss()
+        elif isinstance(self.criterion, nn.CrossEntropyLoss):
             new_ann.criterion = nn.CrossEntropyLoss()
+        elif isinstance(self.criterion, nn.KLDivLoss):
+            new_ann.criterion = nn.KLDivLoss(reduction="batchmean")
+        elif isinstance(self.criterion, nn.MultiMarginLoss):
+            new_ann.criterion = nn.MultiMarginLoss()
         
         new_ann.create_new_network()
         
@@ -115,6 +130,10 @@ class ANN:
             self.test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=True)
     
     def setup_output_columns(self):
+        for column in self.data.output_columns:
+            if self.data.column_types[column] == 'float64':
+                return False
+            
         if self.output_size > 1:
             return True
         if self.output_size < 1:
@@ -178,16 +197,26 @@ class ANN:
             elif loss_function == 1:
                 self.criterion = nn.CrossEntropyLoss()
             elif loss_function == 2:
-                self.criterion = nn.KLDivLoss()
+                self.criterion = nn.KLDivLoss(reduction="batchmean")
             elif loss_function == 3:
                 self.criterion = nn.MultiMarginLoss()
                 
-            
         # Regularization
         self.regularization_method = annSettings.regularization
         self.regularization_rate = annSettings.regularizationRate
         
+    def update_settings(self, number_of_epochs, learning_rate):
+        self.learning_rate = learning_rate
+        self.num_epochs    = number_of_epochs
+        
+        if self.optimizer is not None:
+            for g in self.optimizer.param_groups:
+                g['lr'] = learning_rate
+        
     def create_new_network(self):
+        if self.hidden_layers is None:
+            return False
+        
         self.weights_history = {}
     
         num_of_layers  = len(self.hidden_layers)
@@ -197,7 +226,7 @@ class ANN:
         # Add all hidden layers
         previous_layer = self.input_size
         for i in range(num_of_layers):
-            model.add_module(f"layer_{i}", nn.Linear(previous_layer, self.hidden_layers[i]))
+            model.add_module(f"Layer_{i}", nn.Linear(previous_layer, self.hidden_layers[i]))
             previous_layer = self.hidden_layers[i]
             
             activation_function = self.activation_fn[i]
@@ -209,7 +238,9 @@ class ANN:
                 model.add_module(f"Sigmoid[{i}]", nn.Sigmoid())
             elif activation_function == 3:
                 model.add_module(f"Tanh[{i}]", nn.Tanh())
-        model.add_module(f"layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
+        model.add_module(f"Layer_{num_of_layers}", nn.Linear(previous_layer, self.output_size))
+        if isinstance(self.criterion, (nn.NLLLoss, nn.KLDivLoss)):
+            model.add_module(f"Log_LogSoftmax", nn.LogSoftmax(1))
         
         # Save model locally
         self.model = model
@@ -244,6 +275,8 @@ class ANN:
             self.optimizer = optim.RMSprop   (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
         else:
             self.optimizer = optim.SGD       (model.parameters(), lr=self.learning_rate, weight_decay=weight_decay, momentum=self.momentum)
+
+        return True
     
     # Weights
     def get_weights(self):
@@ -264,24 +297,41 @@ class ANN:
         return self.load_state_dict(state_dict)
     
     def save_weights(self, path):
+        if self.model is None:
+            if not self.create_new_network():
+                return False
         torch.save(self.model.state_dict(), path)
+        return True
+        
     
     def load_state_dict(self, state_dict):
         if state_dict is None:
             return False
-        a, b = self.model.load_state_dict(state_dict)
+        try: a, b = self.model.load_state_dict(state_dict)
+        except: return False
         if len(a) > 0 or len(b) > 0:
             return False
         return True
     
+    def get_transform(self):
+        if isinstance(self.criterion, (nn.NLLLoss, nn.CrossEntropyLoss, nn.MultiMarginLoss)):
+            transform = lambda tensor : tensor.to(device).argmax(1)
+        else:
+            transform = lambda tensor : tensor.to(device)
+        return transform
+    
     # Training
     def train_epoch(self, train_loader):
+        transform = self.get_transform()
+            
         for bach_index, (data, target) in enumerate(train_loader):
             
             self.isRunning.wait()
+            if self.kys:
+                sys.exit()
             
             data = data.to(device)
-            target = target.to(device)
+            target = transform(target)
             data = data.reshape(data.shape[0], -1)
             
             # Forward
@@ -302,15 +352,19 @@ class ANN:
         return loss.item()
 
     def test_epoch(self, test_loader):
+        transform = self.get_transform()
+        
         test_loss = 0.0
         
         self.model.eval()
         for bach_index, (data, target) in enumerate(test_loader):
             
             self.isRunning.wait()
+            if self.kys:
+                sys.exit()
             
             data = data.to(device)
-            target = target.to(device)
+            target = transform(target)
             data = data.reshape(data.shape[0], -1)
             
             # Forward
@@ -329,41 +383,67 @@ class ANN:
             # Train with K-Fold Cross Validation
             train_dataset = self.data.get_train_dataset()
             
-            initial_state = {k:v for k,v in self.model.state_dict().items()}
+            initial_state = {k:v.clone() for k,v in self.model.state_dict().items()}
+            initial_state_o = {k:v for k,v in self.optimizer.state_dict().items()}
             
+            folds_to_skip = self.current_epoch // self.num_epochs
+            current_epoch = self.current_epoch %  self.num_epochs
             for fold, (train_indices, validation_indices) in enumerate(KFold(self.cv_k, shuffle=True).split(train_dataset)):
+                if fold < folds_to_skip: continue
+                
                 train_subs = SubsetRandomSampler(train_indices)
                 val_subs   = SubsetRandomSampler(validation_indices)
                 train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=train_subs)
                 val_loader   = DataLoader(dataset=train_dataset, batch_size=self.batch_size, sampler=val_subs)
                 
                 self.model.load_state_dict(initial_state)
+                self.optimizer.load_state_dict(initial_state_o)
                 
-                while self.current_epoch < self.num_epochs:
-                    loss = self.train_epoch(train_loader)
+                while current_epoch < self.num_epochs:
+                    self.train_epoch(train_loader)
+                    loss = self.test_epoch(train_loader)
                     valLoss = self.test_epoch(val_loader)
                     yield {
                         "fold"    : fold,
-                        "epoch"   : self.current_epoch,
+                        "epoch"   : current_epoch,
                         "loss"    : loss if loss != np.nan else sys.float_info.max,
-                        "valLoss" : valLoss,
+                        "valLoss" : valLoss if valLoss != np.nan else sys.float_info.max,
                         "weights" : self.get_weights()
                     }
-                    self.weights_history[f"{fold}:{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
-                    self.current_epoch = self.current_epoch + 1
+                    self.weights_history[f"{fold}:{current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    current_epoch += 1
+                    self.current_epoch += 1
+                current_epoch = 0
             
         else:
             if self.train_loader is None:
                 self.initialize_loaders()
-            while self.current_epoch < self.num_epochs:
-                loss = self.train_epoch(self.train_loader)
-                yield {
-                    "epoch" : self.current_epoch,
-                    "loss"  : loss if loss != np.nan else sys.float_info.max,
-                    "weights" : self.get_weights() 
-                }
-                self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
-                self.current_epoch = self.current_epoch + 1
+                
+            if self.test_loader is None:
+                while self.current_epoch < self.num_epochs:
+                    self.train_epoch(self.train_loader)
+                    loss = self.test_epoch(self.train_loader)
+                    yield {
+                        "epoch" : self.current_epoch,
+                        "loss"  : loss if loss != np.nan else sys.float_info.max,
+                        "weights" : self.get_weights() 
+                    }
+                    self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    self.current_epoch = self.current_epoch + 1
+            else:
+                while self.current_epoch < self.num_epochs:
+                    self.train_epoch(self.train_loader)
+                    loss = self.test_epoch(self.train_loader)
+                    valLoss = self.test_epoch(self.test_loader)
+                    yield {
+                        "epoch" : self.current_epoch,
+                        "loss"  : loss if loss != np.nan else sys.float_info.max,
+                        "valLoss" : valLoss if valLoss != np.nan else sys.float_info.max,
+                        "weights" : self.get_weights() 
+                    }
+                    self.weights_history[f"{self.current_epoch}"] = {j:k for j, k in self.model.state_dict().items()}
+                    self.current_epoch = self.current_epoch + 1
+                
     
     # Metrics
     def compute_regression_statistics(self, dataset):
@@ -478,9 +558,10 @@ class ANN:
         
     # Prediction
     def predict(self, inputs):
-        inputs = torch.tensor(inputs).to(device)
+        inputs = torch.tensor([inputs]).to(device)
+        inputs = inputs.reshape(inputs.shape[0], -1)
         
-        outputs = self.model(inputs)
+        outputs = self.model(inputs)[0]
         
         if self.isRegression:
             return outputs.tolist()

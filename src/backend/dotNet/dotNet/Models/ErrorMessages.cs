@@ -13,6 +13,7 @@ namespace dotNet.Models
         public const string FileWrongFormat      = "ERROR :: Wrong file format.";
         public const string ModelExists          = "ERROR :: Model with this name already exists.";
         public const string ModelNotFound        = "ERROR :: Model not found.";
+        public const string NoTrainingData       = "ERROR :: Wrong training data given";
 
         public const string RowNotSelected = "ERROR :: Row not selected.";
         public const string RowNotFilled   = "ERROR :: Row data not filled.";
@@ -25,7 +26,6 @@ namespace dotNet.Models
         public const string DatasetVersionExists = "ERROR :: Dataset version with this name already exists.";
 
         public const string RatioNotGiven = "ERROR :: Ratio not given.";
-
 
     }
 }

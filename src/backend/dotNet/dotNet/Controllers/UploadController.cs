@@ -142,6 +142,13 @@ namespace dotNet.Controllers
                     return new Paging(null, 1);
                 var j = page * size - size;
                 int ukupanBrRedovaFajla = eksperiment.GetRowCount();
+
+                if (j == ukupanBrRedovaFajla)
+                {
+                    page--;
+                    j = page * size - size;
+                }
+
                 if (j + size > ukupanBrRedovaFajla)
                 {
                     size = ukupanBrRedovaFajla - j;
@@ -174,6 +181,31 @@ namespace dotNet.Controllers
                 else
                     return BadRequest(ErrorMessages.ExperimentNotLoaded);
                 string kolone = eksperiment.GetColumnTypes();
+                return Ok(kolone);
+            }
+            catch (MLException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("ColumnsNumericalCheck")]
+        public IActionResult ColumnsNumericalCheck(int idEksperimenta)
+        {
+            try
+            {
+                var token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                MLExperiment eksperiment;
+                if (Experiment.eksperimenti.ContainsKey(idEksperimenta))
+                    eksperiment = Experiment.eksperimenti[idEksperimenta];
+                else
+                    return BadRequest(ErrorMessages.ExperimentNotLoaded);
+                string kolone = eksperiment.ColumnsNumericalCheck();
                 return Ok(kolone);
             }
             catch (MLException e)

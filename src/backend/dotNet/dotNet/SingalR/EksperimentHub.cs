@@ -3,6 +3,8 @@ using dotNet.DBFunkcije;
 using dotNet.MLService;
 using dotNet.Models;
 using Microsoft.AspNetCore.SignalR;
+using System.IdentityModel.Tokens.Jwt;
+
 namespace dotNet.SingalR
 {
     public class EksperimentHub : Hub
@@ -16,7 +18,18 @@ namespace dotNet.SingalR
         }
 
         public void ForwardToFrontEnd(string token, string method, string param) {
-            try { Clients.Clients(users[token]).SendAsync(method, param); }
+            try { 
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadJwtToken(token);
+                    var tokenS = jsonToken as JwtSecurityToken;
+                foreach (var i in users)
+                {
+                    if (int.Parse(handler.ReadJwtToken(i.Key).Claims.ToArray()[0].Value) == int.Parse(tokenS.Claims.ToArray()[0].Value))
+                    {
+                        Clients.Clients(users[i.Key]).SendAsync(method, param);
+                    }
+                }
+            }
             catch (Exception) {
                 //Console.WriteLine(param);
                 if (method.Equals("FinishModelTraining"))
@@ -32,19 +45,6 @@ namespace dotNet.SingalR
                     Console.WriteLine(param);
                 }
             }
-        }
-
-
-        public override Task OnConnectedAsync()
-        {
-            Console.WriteLine("connected");
-            users.Add(Context.ConnectionId,null);
-            return base.OnConnectedAsync();
-        }
-        public override Task OnDisconnectedAsync(Exception? exception)
-        {
-            users.Remove(Context.ConnectionId);
-            return base.OnDisconnectedAsync(exception);
         }
     }
 }

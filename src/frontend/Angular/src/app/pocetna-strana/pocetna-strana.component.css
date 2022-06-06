@@ -1,3 +1,31 @@
+#particles-js
+{
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-image: url('/assets/wallpaper.jpg');
+    /* margin-right: 0!important;
+    margin-left: 0!important;
+    margin-bottom: 0!important; */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /* z-index: -2; */
+    /* background: linear-gradient(#03001b,#1e012c); */
+    overflow: hidden;
+}
+
+.particles-js-canvas-el {
+    position: fixed;
+    top: 0;
+    z-index: -1;
+      /* color: #1e042b;   */
+    /* color: 150226;  trenutna  */
+}
+
+
 #container
 {
     position: relative;
@@ -32,4 +60,153 @@
     right: 70px;
     bottom: -170px;
     z-index: -1;
+}
+
+.panel {
+    /* font-family: 'Source Sans Pro'; */
+    font-size: 1.3em;
+    position: absolute;
+    z-index: 10;
+    width: 45%;
+    /* height: 30%; */
+    background: rgba(32, 35, 66, 0.79);
+    top: 25%;
+    left: 27.5%;
+    /*margin: -110px 0 0 -100px;*/
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 30px 7px rgb(0 0 0 / 25%);
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+h3{
+    color: rgb(216, 221, 251);
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 130%;
+  }
+
+h1{
+    color: rgb(216, 221, 251);
+    margin-top: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 160%;
+}
+
+#btn{
+    margin-left: 32.5%;
+    margin-right: 32.5%;
+    text-align: center;
+}
+
+button{
+    position: relative;
+    display: inline-block;
+    padding: 25px 30px;
+    margin: 40px 0;
+    color: #f882f8;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+    letter-spacing: 4px;
+    overflow: hidden;
+    /* margin-right: 50px; */  
+    border: none;
+    background: transparent;
+}
+button:hover{
+    background: #f882f8;
+    color: #050801;
+    box-shadow: 0 0 5px #f882f8,
+                0 0 25px #f882f8,
+                0 0 50px #f882f8,
+                0 0 200px #f882f8;
+     -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
+}
+button:nth-child(1){
+    filter: hue-rotate(270deg);
+}
+button:nth-child(2){
+    filter: hue-rotate(110deg);
+}
+button span{
+    position: absolute;
+    display: block;
+}
+button span:nth-child(1){
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,transparent,#f882f8);
+    animation: animate1 1s linear infinite;
+}
+@keyframes animate1{
+    0%{
+        left: -100%;
+    }
+    50%,100%{
+        left: 100%;
+    }
+}
+button span:nth-child(2){
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,transparent,#f882f8);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+@keyframes animate2{
+    0%{
+        top: -100%;
+    }
+    50%,100%{
+        top: 100%;
+    }
+}
+button span:nth-child(3){
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg,transparent,#f882f8);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+@keyframes animate3{
+    0%{
+        right: -100%;
+    }
+    50%,100%{
+        right: 100%;
+    }
+}
+
+
+button span:nth-child(4){
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg,transparent,#f882f8);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+@keyframes animate4{
+    0%{
+        bottom: -100%;
+    }
+    50%,100%{
+        bottom: 100%;
+    }
 }

@@ -27,7 +27,7 @@ export class EksperimentComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(
       params => {
         this.idEksperimenta = params['id'];
-        console.log(this.idEksperimenta);
+        //console.log(this.idEksperimenta);
       }
     )
   }
@@ -93,10 +93,10 @@ export class EksperimentComponent implements OnInit {
   {
     this.http.get(url+'/api/Eksperiment/Eksperiment/Naziv/' + this.idEksperimenta, {responseType: 'text'}).subscribe(
         res=>{
-          console.log(res);
+          //console.log(res);
           this.nazivEksperimenta = res;
           var div = (<HTMLDivElement>document.getElementById("naziveksperimenta")).innerHTML = this.nazivEksperimenta;
-          console.log(this.nazivEksperimenta);
+          //console.log(this.nazivEksperimenta);
         },error=>{
           console.log(error.error);
         }

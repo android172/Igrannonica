@@ -13,61 +13,45 @@ export class HeaderComponent implements OnInit {
   public prikaziMeni_1:any
   public nesto: boolean = true;
   constructor(private prikaziMeni: MeniService, public jwtHelper: JwtHelperService, private router:Router) {
-    this.prikaziMeni_1 = this.prikaziMeni.sendTabs()
+    this.prikaziMeni_1 = this.prikaziMeni.sendTabs();
+    console.log(this.prikaziMeni_1);
   }
 
   ngDoCheck():void
   {
     if(this.router.url == "/pocetna-strana")
     {
-      this.prikaziMeni_1[0].style = "color:#F45E82"
+      this.prikaziMeni_1[0].style = "color:#f882f8";
+      (<HTMLDivElement>document.getElementById("meni")).style.background = "linear-gradient(180deg, rgba(0, 3, 34, 0.9) 0%, rgba(0, 4, 40, 0.738) 45.15%, rgba(0, 6, 58, 0.475714) 68.71%, rgba(0, 4, 43, 0.227) 85.37%,  rgba(28, 32, 67, 0) 100%) !important";
     }
     else
     {
       this.prikaziMeni_1[0].style = "color:white"
     }
 
-    if(this.router.url == "/novi-eksperiment")
+    if(this.router.url == "/eksperimenti")
     {
-      this.prikaziMeni_1[1].style = "color:#F45E82"
+      this.prikaziMeni_1[1].style = "color:#f882f8"
     }
     else
     {
       this.prikaziMeni_1[1].style = "color:white"
     }
 
-    if(this.router.url == "/moji-eksperimenti")
-    {
-      this.prikaziMeni_1[2].style = "color:#F45E82"
-    }
-    else
-    {
-      this.prikaziMeni_1[2].style = "color:white"
-    }
-
     if(this.router.url == "/kontakt")
     {
-      this.prikaziMeni_1[3].style = "color:#F45E82"
+      this.prikaziMeni_1[2].style = "color:#f882f8;border-right:none"
     }
     else
     {
-      this.prikaziMeni_1[3].style = "color:white"
-    }
-
-    if(this.router.url == "/o-nama")
-    {
-      this.prikaziMeni_1[4].style = "color:#F45E82;border-right:none"
-    }
-    else
-    {
-      this.prikaziMeni_1[4].style = "color:white;border-right:none"
+      this.prikaziMeni_1[2].style = "color:white;border-right:none"
     }
   }
 
   ngOnInit(): void {
     //this.prikaziMeni_1[0].style = "color:#F45E82"
     this.nesto=this.jwtHelper.isTokenExpired();
-    this.prikaziMeni_1[2].id=this.jwtHelper.isTokenExpired();
+    // this.prikaziMeni_1[2].id=this.jwtHelper.isTokenExpired();
   }
 
   proba(){

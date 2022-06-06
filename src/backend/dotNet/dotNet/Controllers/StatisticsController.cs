@@ -55,7 +55,7 @@ namespace dotNet.Controllers
         {
             try
             {
-                if (db.dbmodel.upisiStatistiku(id, statistika))
+                if (db.dbmodel.upisiStatistiku(id, statistika,""))
                 {
                     return Ok();
                 }
@@ -72,7 +72,7 @@ namespace dotNet.Controllers
             try
             {
                 Console.WriteLine(id.ToString() + " " + statistika.Precision.ToString());
-                if (db.dbmodel.upisiStatistiku(id, statistika))
+                if (db.dbmodel.upisiStatistiku(id, statistika,null))
                 {
                     return Ok(1);
                 }
@@ -100,10 +100,10 @@ namespace dotNet.Controllers
         {
             try
             {
-                StatisticsClassification sc = db.dbmodel.modelKlasifikacija(id);
+                Classification sc = db.dbmodel.modelKlasifikacija(id);
                 if(sc !=null)
                     return Ok(sc);
-                StatisticsRegression sr = db.dbmodel.modelRegresija(id);
+                List<Regression> sr = db.dbmodel.modelRegresija(id);
                 if(sr !=null)
                     return Ok(sr);
                 return Ok();
@@ -114,5 +114,28 @@ namespace dotNet.Controllers
             }
         }
 
+        [HttpGet("Comparison")]
+        public IActionResult Comparison(int experimentId, int modelId)
+        {
+            try {
+                Model model = db.dbmodel.model(modelId);
+                if (model == null || model.Vlasnik != experimentId)
+                    return BadRequest(ErrorMessages.Unauthorized);
+
+                Classification classification = db.dbmodel.modelKlasifikacija(modelId);
+                if (classification != null)
+                    return Ok(db.dbmodel.ComparableClassification(experimentId, classification.Kolona));
+
+                List<Regression> regression = db.dbmodel.modelRegresija(modelId);
+                string[] outputColumns = new string[regression.Count];
+                for (int i = 0; i < regression.Count; i++)
+                    outputColumns[i] = regression[i].Kolona;
+
+                return Ok(db.dbmodel.ComparableRegression(experimentId, outputColumns));
+            }
+            catch {
+                return StatusCode(500);
+            }
+        }
     }
 }

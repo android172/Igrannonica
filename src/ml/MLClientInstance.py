@@ -49,6 +49,7 @@ class MLClientInstance(Thread):
             'GetColumns'     : get_columns,
             'GetRowCount'    : get_row_count,
             'GetColumnTypes' : get_column_types,
+            'GetCNumerical'  : get_column_numerical,
             
             # Data manipulation calls
             'AddRow'                : add_row,
@@ -107,14 +108,18 @@ class MLClientInstance(Thread):
             'SaveModel' : save_model,
             'LoadModel' : load_model,
             'LoadEpoch' : load_epoch,
+            'MergeMIds' : merge_models,
+            'GetWeight' : get_weights,
             
             # Network calls
             'ComputeMetrics'    : compute_metrics,
             'ChangeSettings'    : change_settings,
-            'SelectTraningData' : select_traning_data,
+            'CreateNewNetwork'  : create_new_network,
+            'SelectTrainingData': select_training_data,
             'Start'             : start,
             'Stop'              : stop,
             'Continue'          : continue_training,
+            'Dismiss'           : dismiss_training,
             'Predict'           : predict
         }
         
@@ -123,7 +128,10 @@ class MLClientInstance(Thread):
             command = self.connection.receive()
             
             # Execute command
-            calls[command](self)
+            try: calls[command](self)
+            except:
+                print(f"UNCAUGHT ERROR :: An uncaught error thrown while executing command: {command}.")
+                self.report_error("ERROR :: Internal MLServer Error.")
         
     def report_error(self, message):
         print(message, flush=True)

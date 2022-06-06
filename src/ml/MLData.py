@@ -34,10 +34,24 @@ class MLData:
         self.future_states = deque(maxlen=5)
         
         self.dataset_versions = {}
+        
+    def create_deep_copy(self, version):
+        data = MLData()
+        
+        if version is None:
+            data.dataset = self.dataset.copy(deep=True)
+        else:
+            data.dataset = self.dataset_versions[version].copy(deep=True)
+        
+        data.column_types   = [x for x in self.column_types]
+        data.column_data_ty = [x for x in self.column_data_ty]
+        data.input_columns  = [x for x in self.input_columns]
+        data.output_columns = [x for x in self.output_columns]
+        return data
     
     # Load dataset
     def load_from_csv(self, pathOrBuffer):
-        dataset = pd.read_csv(pathOrBuffer)
+        dataset = pd.read_csv(pathOrBuffer, sep=None, engine='python')
         self._load_dataset(dataset)
     
     def load_from_json(self, pathOrBuffer):
@@ -67,7 +81,7 @@ class MLData:
             self.column_data_ty.append('Numerical' if (type == 'int64' or type == 'float64') else 'Categorical')
     
     def load_test_from_csv(self, pathOrBuffer):
-        dataset_test = pd.read_csv(pathOrBuffer)
+        dataset_test = pd.read_csv(pathOrBuffer, sep=None, engine='python')
         self._load_test_dataset(dataset_test)
     
     def load_test_from_json(self, pathOrBuffer):
@@ -250,6 +264,9 @@ class MLData:
     def get_column_types(self):
         return self.column_data_ty[:-1]
     
+    def get_column_numerical(self):
+        return [str(t) in ['int64', 'float64'] for t in self.dataset.dtypes[: -1]]
+    
     # ################# #
     # Data manipulation #
     # ################# #
@@ -391,7 +408,7 @@ class MLData:
             return False
         
         self.save_change()
-        self.dataset.fillna(value, inplace=True)
+        self.dataset.iloc[:, column].fillna(value, inplace=True)
         
         if column_type == 'int64':
             self.dataset.iloc[:, column] = self.dataset.iloc[:, column].astype('int64')

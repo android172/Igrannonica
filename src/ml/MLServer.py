@@ -7,6 +7,8 @@
 #    requests
 #    signalrcore
 #    matplotlib
+#    xlrd
+#    xlwt
 
 import socket
 from MLClientInstance import MLClientInstance
