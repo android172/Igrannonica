@@ -30,7 +30,7 @@
             Configure number and structure of hidden
             layers (up to 10). Each layer can be given 
             a different activation function and neuron
-            count. Layer can have up to 14 neurons.
+            count. Layer can have up to 10 neurons.
             ">
         </span>
         <span id="tooltip-columns" class="hovertext" (mouseleave)="hideTooltip('columns')" data-tooltip=
@@ -466,7 +466,7 @@
                             </div>
                         </div>
                         <div class="progress"
-                            style="position: absolute; width:96%; bottom:10px; background-color: #d2a9e3dc;">
+                            style="position: sticky; width:100%; bottom:10px; background-color: #d2a9e3dc;">
                             <div class="progress-bar" role="progressbar" [style.background]="'#9640a8'"
                                 [style.width]="currentEpochPercent +'%'" [attr.aria-valuenow]="currentEpochPercent"
                                 aria-valuemin="0" aria-valuemax="100">{{currentEpochPercent}}%</div>
@@ -641,7 +641,7 @@
                         </div>
                         <div class="modal-footer" style="border-top: none;">
                             <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj()"
-                                data-bs-dismiss="modal" style="background: rgba(229, 229, 229, 0.25); border:none;"
+                                data-bs-dismiss="modal" style="background: #a16c8b; border:none;"
                                 (click)="colapseStatistics()">Yes</button>
                             <!-- <button type="button" (click)="colapseLoss()" class="btn btn-primary" (click)="treniraj(1)" data-bs-dismiss="modal" style="background:#F45E82; border: none;" (click)="colapseStatistics()">Sačuvaj izmene</button> -->
                         </div>

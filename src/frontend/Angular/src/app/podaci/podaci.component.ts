@@ -2723,10 +2723,14 @@ sacuvajKaoNovu(ime:string){
     this.http.post(url+"/api/File/SaveSnapshot?idEksperimenta="+this.idEksperimenta+"&idSnapshota="+this.idSnapshotaOverride,null,{responseType:"text"}).subscribe(
       res=>{
         // this.ucitajSnapshotove();
+        this.onSuccess("Snapshot was successfully overridden.");
         this.PosaljiPoruku.emit();
         this.ucitajPodatkeSnapshota(Number(this.idSnapshotaOverride));
         this.PosaljiSnapshot.emit(Number(this.idSnapshotaOverride));
-        (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapshot
+        (<HTMLSelectElement>document.getElementById("verzijaSnapshotaSelect")).value= this.idSnapshotaOverride;//Nekako da se override selektovan snapsho
+      },
+      error=>{
+        this.onError("Snapshot was not overridden.");
       }
     );
 

@@ -927,12 +927,12 @@
 </div>
 
 <ng-template #contentmdl let-modal>
-    <div class="modal-header" style="border: none; height: 80px;">
+    <div class="modal-header" style= "background: rgba(36, 38, 74, 0.95); border-bottom: none; color: #eee;">
       <h3 class="modal-title" id="modal-basic-title">Dataset version with given name already exists. Do you want to override it?</h3>
       <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
     </div>
 
-    <div class="modal-body justify-content-center d-flex align-items-center ">
+    <div class="modal-body justify-content-center d-flex align-items-center" style= "background: rgba(36, 38, 74, 0.95); color: #eee">
         <div class=" d-flex justify-content-between" style="width: 60%; margin: auto;">
             <button type="button" id="btn-otkazi"  class="btn btn-outline-dark" (click)="vratiTekst()" (click)="modal.close('Close click')">Cancel</button>
             <button type="button" id="btn-zameni" class="btn btn-outline-dark" (click)="overrideSnapshot()" (click)="izadjiIzObaModala()" (click)="modal.close('Save click')" >Override</button>

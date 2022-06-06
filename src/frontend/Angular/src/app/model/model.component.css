@@ -1896,6 +1896,7 @@ background-color: #5f6194!important;
   border: none;
   box-shadow: 5px 10px 20px rgba(34, 28, 34, 0.25);
   margin: auto;
+  margin-bottom: 20px;
 }
 
 #dugmeMetrika:focus {

@@ -2036,3 +2036,47 @@ ngb-pagination ::ng-deep ul > li.active > a {
     vertical-align: middle;
 
 }
+
+#btn-otkazi {
+    background-color: #4145ad;
+    border: none;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #eee;
+  }
+
+  #btn-otkazi:hover {
+    background-color: #51489f;
+    border: none;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #eee;
+  }
+
+  #btn-zameni {
+    background-color: #a16c8b;
+    border: none;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #eee;
+  }
+  
+  #btn-zameni:hover {
+    background-color: #a16c8b;
+    border: none;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #eee;
+  }

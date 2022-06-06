@@ -91,24 +91,28 @@ transform: scale(1.04);
  .model-selected-false > .name{
   float: left;
   font-weight: bolder;
-  width: 140px;
+  width: 170px;
   height: 20px;
   text-align: left;
   color:#bc7ca1 ;
   font-size: 16px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding-left: 5px;
 }
 
 .model-selected-true > .name, .model-selected-false:hover > .name {
   float: left;
   font-weight: bolder;
-  width: 140px;
+  width: 170px;
   height: 20px;
   text-align: left;
   color:rgb(248, 211, 224) ;
   font-size: 16px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding-left: 5px;
 }
 
@@ -127,7 +131,6 @@ transform: scale(1.04);
   width: 105px;
   font-size: 15px;
   text-align: right;
-  padding-right: 5px;
 }
 
 .model-selected-false > .date{
@@ -143,10 +146,11 @@ transform: scale(1.04);
   text-overflow: ellipsis;
   white-space: nowrap;
   float: left;
-  max-width: 250px;
+  max-width: 270px;
   height: 20px;
   text-align: left;
   color: #e4e4e4;
+  margin-left: 10px;
 }
 
 .model-selected-true > .o, .model-selected-false:hover > .o {
@@ -155,10 +159,11 @@ transform: scale(1.04);
   text-overflow: ellipsis;
   white-space: nowrap;
   float: left;
-  max-width: 250px;
+  max-width: 270px;
   height: 20px;
   text-align: left;
   color: #e4e4e4;
+  margin-left: 10px;
 }
 
 #greska{
@@ -193,6 +198,7 @@ transform: scale(1.04);
   color: #eee;
   height: 30px;
   /* width: 170px; */
+  max-width: 140px;
   margin-bottom: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -567,7 +573,7 @@ input:-webkit-autofill:active
   border-radius: 10px;
   margin-top: 15px;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 56px;
   max-width: 160px;
   /* margin-left: 140px; */
   /* margin: auto; */
@@ -619,12 +625,16 @@ input:-webkit-autofill:active
 {
   /* box-shadow: 0 0 0 0.2rem rgb(255, 130, 159); */
   background-color: transparent;
+  border: 2px solid #d096b8;
+  color: #d096b8;
 }
 
 #dugmeMetrika:hover
 {
   box-shadow: 0px 0px 20px 0.5px rgba(208, 155, 255, 0.5);
-  background-color: transparent;
+  background-color: #6d7b9f12;
+  border: 2px solid #a47891;
+  color: #a47891;
 }
 
 .modal-body:focus
