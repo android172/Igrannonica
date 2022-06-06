@@ -1472,6 +1472,7 @@ export class ModelComponent implements OnInit {
       else if (this.buttonPlay == true)
         modelState = 'f';
 
+      console.log(this.idModela);
       this.parallelModels.push({
         'jsonModel': jsonModel,
         'modelId':this.idModela,
@@ -2002,8 +2003,8 @@ export class ModelComponent implements OnInit {
   }
 
   saveModel(oldModelId: number, newModelId: number, isParallel: boolean = false) {
-    if (this.inputsLocked == false)
-      oldModelId = -1
+    if (this.inputsLocked == false && isParallel==false)
+      oldModelId = -1;
     this.http.post(url + "/api/Model/Save?idEksperimenta=" + this.idEksperimenta + "&modelIdOld=" + oldModelId + "&modelIdNew=" + newModelId, null, {responseType : 'text'}).subscribe(
       res => {
         this.onSuccess("Model was successfully saved.");
