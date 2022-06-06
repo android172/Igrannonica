@@ -2944,6 +2944,9 @@ sacuvajKaoNovu(ime:string){
           let dateTime = new Date();
           this.dodajKomandu(dateTime.toLocaleTimeString() + " — " +  " NA values are replaced by new values (Column: " + imeKolone + ", New value: " + vrednost + ")" + " " + "(" + this.selectedSnapshot + ")");
           this.nizKomandiTooltip.push("" + dateTime.toString() + "");
+          this.nizNumerickihKolona = [];
+          this.nizKategorickihKolona = [];
+          this.EnableDisableGrafik();
           this.flag++;
           this.onSuccess("NA values are replaced by new values.");
       },error=>{
