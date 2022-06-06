@@ -1535,7 +1535,7 @@ export class ModelComponent implements OnInit {
         if (index > -1)
           this.parallelModels.splice(index, 1);
         modal.dismiss('Cross click');
-        this.onInfo("Training dismisted.");
+        this.onInfo("Training dismissed.");
         sessionStorage.setItem('models',JSON.stringify(this.parallelModels));
       },
       err => {
@@ -1776,10 +1776,10 @@ export class ModelComponent implements OnInit {
         this.pom = x.toString();
         var str = (<HTMLInputElement>document.getElementById(this.pom)).value;
 
-        if(Number(str) >= 14)
+        if(Number(str) >= 10)
         {
-           this.broj = 14;
-           (<HTMLInputElement>document.getElementById(this.pom)).value = "14";
+           this.broj = 10;
+           (<HTMLInputElement>document.getElementById(this.pom)).value = "10";
         }
         else
           if(Number(str) <= 1)
