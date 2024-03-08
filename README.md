@@ -2,6 +2,18 @@
 
 ![Logo firme](slike/neuralnetic-git.png)
 
+## Demo
+
+![NNI0](https://github.com/android172/Igrannonica/assets/63978434/eb227a5b-884b-4f6a-9289-c22ca4c59e22)
+![NNI1](https://github.com/android172/Igrannonica/assets/63978434/ca5612c1-b75b-4001-afb4-ebae439199a3)
+![NNI2](https://github.com/android172/Igrannonica/assets/63978434/97615ac2-5ca4-42ec-be18-1c2008d8da97)
+![NNI3](https://github.com/android172/Igrannonica/assets/63978434/a0389985-5bcc-41f3-8574-04a577171f57)
+![NNI4](https://github.com/android172/Igrannonica/assets/63978434/7ccd362d-7bfd-42c3-a3e6-1c31a8400d28)
+![NNI5](https://github.com/android172/Igrannonica/assets/63978434/2ec180d1-a30d-4186-b6b5-b44bf339dc18)
+![NNI6](https://github.com/android172/Igrannonica/assets/63978434/a817e1c6-3d31-4261-be19-f185f04ffa09)
+
+
+
 ## Grane
 Posednja verzija projekta se postavlja na master svakog cetvrtka.<br>
 Na grani dev se push promene tokom nedelje
